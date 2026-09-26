@@ -103,7 +103,7 @@ PA_Calibration_Dlg::PA_Calibration_Dlg(wxWindow* parent, wxWindowID id, Plater* 
     : DPIDialog(parent, id, _L("PA Calibration"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -365,7 +365,7 @@ Temp_Calibration_Dlg::Temp_Calibration_Dlg(wxWindow* parent, wxWindowID id, Plat
     : DPIDialog(parent, id, _L("Temperature calibration"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -560,7 +560,7 @@ MaxVolumetricSpeed_Test_Dlg::MaxVolumetricSpeed_Test_Dlg(wxWindow* parent, wxWin
     : DPIDialog(parent, id, _L("Max volumetric speed test"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -666,7 +666,7 @@ VFA_Test_Dlg::VFA_Test_Dlg(wxWindow* parent, wxWindowID id, Plater* plater)
     , m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -921,7 +921,7 @@ Retraction_Test_Dlg::Retraction_Test_Dlg(wxWindow* parent, wxWindowID id, Plater
     : DPIDialog(parent, id, _L("Retraction"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -1027,7 +1027,7 @@ Input_Shaping_Freq_Test_Dlg::Input_Shaping_Freq_Test_Dlg(wxWindow* parent, wxWin
     : DPIDialog(parent, id, _L("Input shaping Frequency test"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     const auto* preset_bundle = wxGetApp().preset_bundle;
@@ -1245,7 +1245,7 @@ Input_Shaping_Damp_Test_Dlg::Input_Shaping_Damp_Test_Dlg(wxWindow* parent, wxWin
     : DPIDialog(parent, id, _L("Input shaping Damp test"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     const auto* preset_bundle = wxGetApp().preset_bundle;
@@ -1439,7 +1439,7 @@ Cornering_Test_Dlg::Cornering_Test_Dlg(wxWindow* parent, wxWindowID id, Plater* 
     : DPIDialog(parent, id, _L("Cornering test"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);
@@ -1625,7 +1625,7 @@ FlowRateCalibrationDialog::FlowRateCalibrationDialog(wxWindow* parent, wxWindowI
     : DPIDialog(parent, id, _L("Flow Ratio Calibration"), wxDefaultPosition, parent->FromDIP(wxSize(-1, 280)), wxDEFAULT_DIALOG_STYLE), m_plater(plater)
 {
     SetBackgroundColour(*wxWHITE); // make sure background color set for dialog
-    SetForegroundColour(wxColour("#363636"));
+    SetForegroundColour(wxColour("#26395A"));
     SetFont(Label::Body_14);
 
     wxBoxSizer* v_sizer = new wxBoxSizer(wxVERTICAL);

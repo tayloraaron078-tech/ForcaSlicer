@@ -2020,6 +2020,18 @@ void TreeSupport::draw_circles()
         return;
     BOOST_LOG_TRIVIAL(info) << "draw_circles for object: " << m_object->model_object()->name;
 
+    // [regional-supports fork][approach 2] region-aware Top-Z gap for tree roofs. The vertical gap is enforced
+    // in get_collision() below by unioning the object outlines of the layers ABOVE the current one, up to
+    // top_z_distance. Inside the modifier footprint we want a SMALLER gap, so beyond the region gap we exclude
+    // the footprint area from that above-object collision, letting the footprint roof rise closer/flush to the
+    // object. Pairs with the contact-node gap override in generate_contact_points(). Inert (byte-identical)
+    // when no modifier sets a smaller gap (regional_gap_active=false).
+    const ExPolygons region_iface_footprint = m_object->support_interface_modifier_footprint();
+    const double     region_iface_gap_mm    = m_object->support_interface_modifier_gap(); // <0 = unset
+    const bool       regional_gap_active     = !region_iface_footprint.empty() &&
+                                               region_iface_gap_mm >= 0.0 && region_iface_gap_mm < top_z_distance;
+    const Polygons   region_iface_polys      = regional_gap_active ? to_polygons(region_iface_footprint) : Polygons();
+
     tbb::parallel_for(tbb::blocked_range<size_t>(0, m_ts_data->layer_heights.size()),
         [&](const tbb::blocked_range<size_t>& range)
         {
@@ -2073,7 +2085,14 @@ void TreeSupport::draw_circles()
                             for (size_t layer_id = obj_layer_nr + 1;
                                  layer_id < m_ts_data->m_layer_outlines.size() && (accum_height += m_object->get_layer(layer_id)->height) && accum_height <= top_z_distance;
                                  layer_id++) {
-                                collision = union_ex(collision, offset_ex(m_ts_data->m_layer_outlines[layer_id], scale_(top_z_distance)));
+                                ExPolygons above = offset_ex(m_ts_data->m_layer_outlines[layer_id], scale_(top_z_distance));
+                                // [regional-supports fork][approach 2] once we are past the region's (smaller) gap,
+                                // stop this above-object outline from carving the footprint, so the footprint roof
+                                // rises to the region gap instead of the object gap. accum_height is the distance
+                                // above obj_layer_nr; region gap 0 excludes the footprint from every above layer.
+                                if (regional_gap_active && accum_height > region_iface_gap_mm + float(EPSILON))
+                                    above = diff_ex(above, region_iface_polys);
+                                collision = union_ex(collision, above);
                             }
                         }
                     }
@@ -3428,6 +3447,12 @@ std::vector<LayerHeightData> TreeSupport::plan_layer_heights()
         BOOST_LOG_TRIVIAL(debug) << format("plan_layer_heights adjust node's height print_z[%d]=%.2f: (%.3f,%d)->(%.3f,%.3f,%d)", layer_nr, node1->print_z,
             node1->height, node1->distance_to_top, new_height, accum_height, -num_layers);
         for (SupportNode *node : contact_nodes[layer_nr]) {
+            // [regional-supports fork] A regional zero-gap contact shares this layer with object-gap contacts,
+            // but num_layers above is derived from the layer's FRONT node and would clobber the region node to
+            // the object gap. Preserve the flush contact it was created with (distance_to_top ~0), mirroring how
+            // a GLOBAL zero gap is kept by the top_z_distance<EPSILON skip earlier. Keyed on an explicit tag so
+            // it survives the height overwrite; everything else keeps the stock per-layer behavior.
+            if (node->region_zero_gap) { node->height = new_height; continue; }
             node->height          = new_height;
             node->distance_to_top = -num_layers;
         }
@@ -3486,6 +3511,18 @@ void TreeSupport::generate_contact_points()
     const int z_distance_top_layers = round_up_divide(scale_(z_distance_top), scale_(layer_height)) + 1; //Support must always be 1 layer below overhang.
     int gap_layers = z_distance_top == 0 ? 0 : 1;
 
+    // [regional-supports fork] Legacy-tree regional Top-Z gap (Slim/Strong; Hybrid's normal-support path is
+    // not yet covered). When a support-interface modifier sets a SMALLER Z gap than the object, contact nodes
+    // whose XY lies inside the modifier footprint are seeded with the region's gap instead of the global one
+    // (per-node override at the create_node seam below). This alone is not enough — the roof plane is also
+    // carved by draw_circles get_collision(), which is made region-aware to match; the two work together.
+    // Inert (byte-identical) when no modifier sets a smaller gap (regional_gap_active=false).
+    const ExPolygons region_iface_footprint = m_object->support_interface_modifier_footprint();
+    const double     region_iface_gap_mm    = m_object->support_interface_modifier_gap(); // <0 = unset
+    const bool       regional_gap_active     = !region_iface_footprint.empty() &&
+                                               region_iface_gap_mm >= 0.0 && region_iface_gap_mm < z_distance_top;
+    const Polygons   region_iface_polys      = regional_gap_active ? to_polygons(region_iface_footprint) : Polygons();
+
     size_t support_roof_layers = config.support_interface_top_layers.value;
     coordf_t  thresh_angle = std::min(89.f, config.support_threshold_angle.value < EPSILON ? 30.f : config.support_threshold_angle.value);
     coordf_t  half_overhang_distance = scale_(tan(thresh_angle * M_PI / 180.0) * layer_height / 2);
@@ -3534,22 +3571,35 @@ void TreeSupport::generate_contact_points()
             relevant_forbidden = offset_ex(union_ex(relevant_forbidden), scaled<float>(0.005), jtMiter, 1.2);
 
 
-            auto insert_point = [&](Point pt, const ExPolygon& overhang, double radius, bool force_add = false, bool add_interface=true) {
+            auto insert_point = [&](Point pt, const ExPolygon& overhang, double radius, bool force_add = false, bool add_interface=true, bool force_region_gap=false) {
                 Point        hash_pos = pt / ((radius_scaled + 1) / 1);
                 SupportNode* contact_node = nullptr;
                 if (force_add || !already_inserted.count(hash_pos)) {
                     already_inserted.emplace(hash_pos);
                     bool to_buildplate = true;
                     size_t roof_layers = add_interface ? support_roof_layers : 0;
+                    // [regional-supports fork] per-node regional Top-Z gap override: points inside the
+                    // modifier footprint use the (smaller) region gap; everything else keeps the object gap.
+                    // force_region_gap is set by callers that already split their area by the footprint (Hybrid
+                    // normal support), so the region gap applies even when the piece's centroid falls in a hole.
+                    int      node_gap_layers = gap_layers;
+                    coordf_t node_z_distance = z_distance_top;
+                    bool     is_region_zero  = false;
+                    if (regional_gap_active && (force_region_gap || contains(region_iface_polys, pt))) {
+                        node_z_distance = region_iface_gap_mm;
+                        node_gap_layers = region_iface_gap_mm < EPSILON ? 0 : 1;
+                        is_region_zero  = region_iface_gap_mm < EPSILON;
+                    }
                     // add a new node as a virtual node which acts as the invisible gap between support and object
                     // distance_to_top=-1: it's virtual
                     // print_z=object_layer->bottom_z: it directly contacts the bottom
                     // height=z_distance_top: it's height is exactly the gap distance
                     // dist_mm_to_top=0: it directly contacts the bottom
-                    contact_node = m_ts_data->create_node(pt, -gap_layers, layer_nr-1, roof_layers, to_buildplate, SupportNode::NO_PARENT, bottom_z, z_distance_top, 0,
+                    contact_node = m_ts_data->create_node(pt, -node_gap_layers, layer_nr-1, roof_layers, to_buildplate, SupportNode::NO_PARENT, bottom_z, node_z_distance, 0,
                                                           radius);
                     contact_node->overhang = overhang;
                     contact_node->is_sharp_tail = is_sharp_tail;
+                    contact_node->region_zero_gap = is_region_zero; // [regional-supports fork] tag for plan_layer_heights preservation
                     curr_nodes.emplace_back(contact_node);
                     added = true;
                 };
@@ -3566,12 +3616,32 @@ void TreeSupport::generate_contact_points()
                     if (area(overhangs_normal) > m_support_params.thresh_big_overhang) {
                         // if the outside area is still big, we can need normal nodes
                         for (auto &overhang : overhangs_normal) {
-                            BoundingBox  overhang_bounds = get_extents(overhang);
-                            double       radius          = unscale_(overhang_bounds.radius());
-                            Point        candidate       = overhang_bounds.center();
-                            SupportNode *contact_node    = insert_point(candidate, overhang, radius, true, true);
-                            contact_node->type           = ePolygon;
-                            curr_nodes.emplace_back(contact_node);
+                            // [regional-supports fork] Hybrid big-overhang normal support becomes an ePolygon node
+                            // whose area is classified into roofs like any other node. To give the modifier region a
+                            // smaller Top-Z gap here too, split the piece by the footprint: the in-footprint part
+                            // gets the region gap (force_region_gap) so its roof rises, the rest keeps the object
+                            // gap. Ungated (no modifier gap) creates a single node exactly as before.
+                            ExPolygons pieces;
+                            std::vector<bool> piece_in_region;
+                            if (regional_gap_active) {
+                                ExPolygons in  = intersection_ex({overhang}, region_iface_polys);
+                                ExPolygons out = diff_ex({overhang}, region_iface_polys);
+                                for (ExPolygon &p : in)  { pieces.emplace_back(std::move(p)); piece_in_region.push_back(true); }
+                                for (ExPolygon &p : out) { pieces.emplace_back(std::move(p)); piece_in_region.push_back(false); }
+                            } else {
+                                pieces.emplace_back(overhang);
+                                piece_in_region.push_back(false);
+                            }
+                            for (size_t pi = 0; pi < pieces.size(); ++pi) {
+                                ExPolygon &piece = pieces[pi];
+                                if (piece.empty()) continue;
+                                BoundingBox  piece_bounds = get_extents(piece);
+                                double       radius       = unscale_(piece_bounds.radius());
+                                Point        candidate    = piece_bounds.center();
+                                SupportNode *contact_node = insert_point(candidate, piece, radius, true, true, piece_in_region[pi]);
+                                contact_node->type        = ePolygon;
+                                curr_nodes.emplace_back(contact_node);
+                            }
                         }
                     }else{
                         // otherwise, all nodes should be circle nodes

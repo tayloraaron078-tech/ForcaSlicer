@@ -77,7 +77,7 @@ CheckList::CheckList(
     m_info_allsel = _L("All items selected...");
     m_info_empty  = _L("No matching items...");
 
-    SetBackgroundColour(StateColor::darkModeColorFor("#DBDBDB")); // draws border on wxScrolledWindow
+    SetBackgroundColour(StateColor::darkModeColorFor("#CFDBED")); // draws border on wxScrolledWindow
 
     w_sizer->Add(m_scroll_area, 1, wxEXPAND | wxALL, FromDIP(1)); // 1 for border
     s_sizer->Layout();

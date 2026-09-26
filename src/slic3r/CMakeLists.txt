@@ -67,6 +67,22 @@ set(SLIC3R_GUI_SOURCES
     GUI/CrealityDiscoveryDialog.hpp
     GUI/calib_dlg.cpp
     GUI/calib_dlg.hpp
+    GUI/ForcaCalibrationWizard.cpp
+    GUI/ForcaCalibrationWizard.hpp
+    GUI/ForcaCalibrationTab.cpp
+    GUI/ForcaCalibrationTab.hpp
+    GUI/ForcaCalibrationStore.cpp
+    GUI/ForcaCalibrationStore.hpp
+    GUI/ForcaAI.cpp
+    GUI/ForcaAI.hpp
+    GUI/ForcaAITools.cpp
+    GUI/ForcaAIDialog.cpp
+    GUI/ForcaAIDialog.hpp
+    GUI/ForcaAIFiles.cpp
+    GUI/ForcaAIFiles.hpp
+    GUI/ForcaAIHands.cpp
+    GUI/ForcaAIPrint.cpp
+    GUI/ForcaAIPrinters.cpp
     GUI/Calibration.cpp
     GUI/Calibration.hpp
     GUI/CalibrationPanel.cpp
@@ -182,6 +198,8 @@ set(SLIC3R_GUI_SOURCES
     #GUI/Gizmos/GLGizmoFaceDetector.hpp
     GUI/Gizmos/GLGizmoFdmSupports.cpp
     GUI/Gizmos/GLGizmoFdmSupports.hpp
+    GUI/Gizmos/GLGizmoSupportInterfaceRegions.cpp
+    GUI/Gizmos/GLGizmoSupportInterfaceRegions.hpp
     GUI/Gizmos/GLGizmoFlatten.cpp
     GUI/Gizmos/GLGizmoFlatten.hpp
     GUI/Gizmos/GLGizmoFuzzySkin.cpp

@@ -43,7 +43,7 @@ CloneDialog::CloneDialog(wxWindow *parent)
     m_progress = new ProgressBar(this, wxID_ANY, 100);
     m_progress->SetHeight(FromDIP(8));
     m_progress->SetMaxSize(wxSize(-1, FromDIP(8)));
-    m_progress->SetProgressForedColour(StateColor::darkModeColorFor(wxColour("#DFDFDF")));
+    m_progress->SetProgressForedColour(StateColor::darkModeColorFor(wxColour("#D3DEEF")));
     m_progress->SetDoubleBuffered(true);
     m_progress->Hide();
     bottom_sizer->Add(m_progress, 2, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(10));

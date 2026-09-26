@@ -470,6 +470,15 @@ public:
     std::vector<Polygons>       slice_support_volumes(const ModelVolumeType model_volume_type) const;
     std::vector<Polygons>       slice_support_blockers() const { return this->slice_support_volumes(ModelVolumeType::SUPPORT_BLOCKER); }
     std::vector<Polygons>       slice_support_enforcers() const { return this->slice_support_volumes(ModelVolumeType::SUPPORT_ENFORCER); }
+    // [regional-supports fork] regional support-interface material feature (empty/absent when unused)
+    std::vector<unsigned int>   support_interface_modifier_filaments() const;
+    ExPolygons                  support_interface_modifier_footprint() const;
+    double                      support_interface_modifier_gap() const; // regional Top-Z gap (mm); <0 = unset
+    // [regional-supports fork] Phase A (N-region material): one entry per SUPPORT_INTERFACE_MODIFIER volume,
+    // each carrying its OWN footprint + 1-based filament, so multiple regions can print different interface
+    // materials. The union footprint + single gap above stay as-is for the shared regional gap engine.
+    struct RegionalIfaceRegion { unsigned int filament; ExPolygons footprint; };
+    std::vector<RegionalIfaceRegion> support_interface_modifier_regions() const;
 
     // Helpers to project custom facets on slices
     void project_and_append_custom_facets(bool seam, EnforcerBlockerType type, std::vector<Polygons>& expolys, std::vector<std::pair<Vec3f,Vec3f>>* vertical_points=nullptr) const;

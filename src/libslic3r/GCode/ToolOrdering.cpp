@@ -923,6 +923,16 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
     sort_remove_duplicates(firstLayerExtruders);
     const_cast<PrintObject&>(object).object_first_layer_wall_extruders = firstLayerExtruders;
 
+    // [regional-supports fork] Regional support-interface material (Phase A: N regions). Per-region
+    // {footprint, 1-based filament}; each region's filament must be scheduled on the layers its footprint
+    // covers, matching the N-way material split in GCode.cpp. Empty when the feature is unused, so the loop
+    // behaves exactly as before.
+    const std::vector<PrintObject::RegionalIfaceRegion> regional_iface_regions = object.support_interface_modifier_regions();
+    std::vector<Polygons> regional_iface_polys;
+    regional_iface_polys.reserve(regional_iface_regions.size());
+    for (const PrintObject::RegionalIfaceRegion &r : regional_iface_regions)
+        regional_iface_polys.emplace_back(to_polygons(r.footprint));
+
     // Collect the support extruders.
     for (auto support_layer : object.support_layers()) {
         LayerTools   &layer_tools   = this->tools_for_layer(support_layer->print_z);
@@ -966,6 +976,29 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
             }
         }
         if (has_interface) layer_tools.extruders.push_back(extruder_interface);
+        // [regional-supports fork] Schedule EACH region's filament on layers where THAT region's footprint
+        // actually covers support-interface toolpaths (so the tool change is planned there), matching the
+        // N-way material split in GCode.cpp. Geometric INTERSECTION, not first_point: a support-interface
+        // fill is one long serpentine whose first point is usually OUTSIDE the footprint even when most of
+        // the path lies inside, which would false-negative and leave the tool unscheduled (region interface
+        // then dropped). N regions (Phase A); a region whose filament equals the object interface needs no
+        // extra tool.
+        if (has_interface) {
+            for (size_t ri = 0; ri < regional_iface_regions.size(); ++ ri) {
+                const unsigned int region_ext = regional_iface_regions[ri].filament;
+                if (region_ext == 0 || region_ext == extruder_interface || regional_iface_polys[ri].empty())
+                    continue;
+                bool region_hits = false;
+                for (const ExtrusionEntity *ee : support_layer->support_fills.entities)
+                    if (ee->role() == erSupportMaterialInterface &&
+                        ! intersection_pl(ee->as_polylines(), regional_iface_polys[ri]).empty()) {
+                        region_hits = true;
+                        break;
+                    }
+                if (region_hits)
+                    layer_tools.extruders.push_back(region_ext);
+            }
+        }
         if (has_support || has_interface) {
             layer_tools.has_support = true;
             layer_tools.wiping_extrusions().is_support_overriddable_and_mark(role, object);

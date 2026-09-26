@@ -12,15 +12,15 @@ namespace Slic3r { namespace GUI {
 
 static const wxColour BgNormalColor  = wxColour("#FFFFFF");
 static const wxColour BgSelectColor  = wxColour("#E5F0EE"); // ORCA
-static const wxColour BgDisableColor = wxColour("#CECECE");
+static const wxColour BgDisableColor = wxColour("#C2CFE4");
 
-static const wxColour BorderNormalColor   = wxColour("#CECECE");
+static const wxColour BorderNormalColor   = wxColour("#C2CFE4");
 static const wxColour BorderSelectedColor = wxColour("#009688");
-static const wxColour BorderDisableColor  = wxColour("#EEEEEE");
+static const wxColour BorderDisableColor  = wxColour("#D7E2F3");
 
-static const wxColour TextNormalBlackColor = wxColour("#262E30");
+static const wxColour TextNormalBlackColor = wxColour("#1A2C4C");
 static const wxColour TextNormalGreyColor = wxColour("#6B6B6B");
-static const wxColour TextDisableColor = wxColour("#CECECE");
+static const wxColour TextDisableColor = wxColour("#C2CFE4");
 static const wxColour TextErrorColor = wxColour("#E14747");
 
 wxDEFINE_EVENT(wxEVT_INVALID_MANUAL_MAP, wxCommandEvent);

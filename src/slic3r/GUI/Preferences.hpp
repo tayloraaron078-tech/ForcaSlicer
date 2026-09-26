@@ -19,7 +19,7 @@
 
 namespace Slic3r { namespace GUI {
 
-#define DESIGN_GRAY900_COLOR wxColour("#363636") // Label color
+#define DESIGN_GRAY900_COLOR wxColour("#26395A") // Label color
 #define DESIGN_GRAY600_COLOR wxColour("#ACACAC") // Dimmed text color
 
 #define DESIGN_WINDOW_SIZE wxSize(FromDIP(640), FromDIP(640))

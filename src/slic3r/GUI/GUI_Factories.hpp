@@ -189,6 +189,9 @@ private:
     void        append_menu_item_per_object_process(wxMenu* menu);
     void        append_menu_item_per_object_settings(wxMenu* menu);
     void        append_menu_item_change_filament(wxMenu* menu);
+    // [regional-supports fork] dedicated controls for SUPPORT_INTERFACE_MODIFIER volumes
+    void        append_menu_item_support_interface_filament(wxMenu* menu);
+    void        append_menu_item_support_z_gap(wxMenu* menu);
     void        append_menu_item_set_printable(wxMenu* menu);
     void        append_menu_item_set_auto_drop(wxMenu* menu);
     void        append_menu_item_locked(wxMenu* menu);

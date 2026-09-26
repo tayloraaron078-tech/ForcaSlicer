@@ -470,6 +470,9 @@ public:
 
     //BBS: remove const qualifier
     void set_extruder_for_selected_items(const int extruder);
+    // [regional-supports fork] dedicated controls for SUPPORT_INTERFACE_MODIFIER volumes
+    void set_support_interface_filament_for_selected_items(const int filament_id);
+    void set_support_z_gap_for_selected_items(double gap);
     wxDataViewItemArray reorder_volumes_and_get_selection(int obj_idx, std::function<bool(const ModelVolume*)> add_to_selection = nullptr);
     void apply_volumes_order();
 

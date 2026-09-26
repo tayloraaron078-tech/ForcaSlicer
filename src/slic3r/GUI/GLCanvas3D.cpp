@@ -98,8 +98,10 @@ extern wxPopupWindow* wxCurrentPopupWindow;
 
 static constexpr const float TRACKBALLSIZE = 0.8f;
 
-static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR      = { 0.906f, 0.906f, 0.906f, 1.0f };
-static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.329f, 0.329f, 0.353f, 1.0f };
+// [regional-supports fork] Forca blue viewport background (was neutral grey) — light-blue in light mode,
+// dark-blue in dark mode, to match the app-wide blue retint and kill the big grey stage.
+static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR      = { 0.878f, 0.910f, 0.965f, 1.0f };
+static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.157f, 0.196f, 0.298f, 1.0f };
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR        = { 0.753f, 0.192f, 0.039f, 1.0f };
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR_DARK   = { 0.753f, 0.192f, 0.039f, 1.0f };
 

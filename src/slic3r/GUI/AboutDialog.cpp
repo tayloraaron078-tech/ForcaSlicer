@@ -1,5 +1,6 @@
 #include "AboutDialog.hpp"
 #include "I18N.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Color.hpp"
@@ -85,6 +86,10 @@ void CopyrightsDialog::fill_entries()
     m_entries = {
         { "Admesh",                                         "",      "https://admesh.readthedocs.io/" },
         { "Anti-Grain Geometry",                            "",      "http://antigrain.com" },
+        // Forca (B7): the slicers Forca descends from
+        { "OrcaSlicer",                                     "",      "https://github.com/OrcaSlicer/OrcaSlicer" },
+        { "Bambu Studio",                                   "",      "https://github.com/bambulab/BambuStudio" },
+        { "Slic3r",                                         "",      "https://github.com/Slic3r/Slic3r" },
         { "ArcWelderLib",                                   "",      "https://plugins.octoprint.org/plugins/arc_welder" },
         { "Boost",                                          "",      "http://www.boost.org" },
         { "Cereal",                                         "",      "http://uscilab.github.io/cereal" },
@@ -148,9 +153,9 @@ wxString CopyrightsDialog::get_html_text()
                 "<font size=\"3\">",
          bgr_clr_str, text_clr_str, text_clr_str,
         _L("License"),
-        _L("Orca Slicer is licensed under "),
+        _L("Forca Slicer is licensed under "),
         "https://www.gnu.org/licenses/agpl-3.0.html",_L("GNU Affero General Public License, version 3"),
-        _L("Orca Slicer is based on PrusaSlicer and BambuStudio"),
+        _L("Forca Slicer is a fork of OrcaSlicer, which is based on PrusaSlicer and BambuStudio"),
         _L("Libraries"),
         _L("This software uses open source components whose copyright and other proprietary rights belong to their respective owners"));
 
@@ -163,6 +168,16 @@ wxString CopyrightsDialog::get_html_text()
                     "<a href=\"%s\">%s</a><br/><br/>"
                     , entry.link, entry.link);
     }
+
+    // Forca (B7): where the source is (AGPL), and the third-party notices the README lists.
+    text += wxString::Format("<br/><font size=\"5\">%s</font><br/><br/>%s <a href=\"%s\">%s</a><br/><br/>%s<br/><br/>%s<br/>",
+                             _L("Source code and notices"),
+                             _L("The complete source code of this version of Forca Slicer is available at"),
+                             FORCA_REPO_URL, FORCA_REPO_URL,
+                             _L("The pressure advance calibration pattern test is adapted from Andrew Ellis' generator (GPL-3.0), "
+                                "itself adapted from a generator developed by Sineos for Marlin (GPL-3.0)."),
+                             _L("The Bambu network plug-in is based on non-free libraries from Bambu Lab. It is optional, downloaded "
+                                "separately, and provides extended functionality for Bambu Lab printers."));
 
     text += wxString(
                 "</font>"
@@ -244,9 +259,9 @@ AboutDialog::AboutDialog()
         // _build_string_font.SetStyle(wxFONTSTYLE_ITALIC);
 
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
-        auto          version_string = std::string(SoftFever_VERSION); // _L("Orca Slicer ") + " " + std::string(SoftFever_VERSION);
+        auto          version_string = std::string(FORCA_VERSION); // Forca's own version (Orca: SoftFever_VERSION)
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
-        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s", build_commit_label), wxDefaultPosition, wxDefaultSize);
+        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s, based on OrcaSlicer %s", build_commit_label, SoftFever_VERSION), wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
         wxFont version_font = GetFont();
         version_font = version_font.Scaled(1.85f); // SetPointSize(20) not works on macOS because it uses a 72 PPI reference
@@ -259,6 +274,18 @@ AboutDialog::AboutDialog()
         vesizer->Add(version, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
         vesizer->AddSpacer(FromDIP(5));
         vesizer->Add(credits_string, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
+        // [regional-supports fork] Forca Slicer branding
+        wxStaticText* forca_tagline = new wxStaticText(this, wxID_ANY, "Another Forca of Orca", wxDefaultPosition, wxDefaultSize);
+        wxStaticText* forca_author  = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("by A.T. Creations · Built for Makers"), /* Forca: UTF-8 literal */ wxDefaultPosition, wxDefaultSize);
+        forca_tagline->SetFont(_build_string_font);
+        forca_author->SetFont(_build_string_font);
+        forca_tagline->SetForegroundColour(wxColour("#949494"));
+        forca_author->SetForegroundColour(wxColour("#949494"));
+        forca_tagline->SetBackgroundColour(wxColour("#FFFFFF"));
+        forca_author->SetBackgroundColour(wxColour("#FFFFFF"));
+        vesizer->AddSpacer(FromDIP(5));
+        vesizer->Add(forca_tagline, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
+        vesizer->Add(forca_author, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
     }
 
@@ -270,6 +297,8 @@ AboutDialog::AboutDialog()
     text_list.push_back(_L("Open-source slicing stands on a tradition of collaboration and attribution. Slic3r, created by Alessandro Ranellucci and the RepRap community, laid the foundation. PrusaSlicer by Prusa Research built on that work, Bambu Studio forked from PrusaSlicer, and SuperSlicer extended it with community-driven enhancements. Each project carried the work of its predecessors forward, crediting those who came before."));
     text_list.push_back(_L("OrcaSlicer began in that same spirit, drawing from PrusaSlicer, BambuStudio, SuperSlicer, and CuraSlicer. But it has since grown far beyond its origins — introducing advanced calibration tools, precise wall and seam control and hundreds of other features."));
     text_list.push_back(_L("Today, OrcaSlicer is the most widely used and actively developed open-source slicer in the 3D printing community. Many of its innovations have been adopted by other slicers, making it a driving force for the entire industry."));
+    // [regional-supports fork] Forca Slicer credit — a fork of OrcaSlicer, keeping the attribution chain going.
+    text_list.push_back(_L("Forca Slicer continues that tradition: it is a fork of OrcaSlicer by A.T. Creations, adding regional support-interface control (paint-on and modifier-driven interface material and flush release gaps). It stands on all of the work above — Slic3r, PrusaSlicer, BambuStudio, SuperSlicer and OrcaSlicer — and credits everyone who came before."));
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
     bool is_zh = wxGetApp().app_config->get("language") == "zh_CN";
@@ -312,7 +341,9 @@ AboutDialog::AboutDialog()
 
     copyright_hor_sizer->Add(copyright_ver_sizer, 0, wxLEFT, FromDIP(20));
 
-    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, "Copyright(C) 2026 OrcaSlicer Pte Ltd All Rights Reserved", wxDefaultPosition, wxDefaultSize);
+    // Forca (B7): Forca's own notice first; OrcaSlicer's copyright notice is kept (AGPL: preserve existing notices).
+    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0. "
+                                                                                  "A fork of OrcaSlicer, © 2026 OrcaSlicer Pte Ltd."), /* Forca: UTF-8 literal */ wxDefaultPosition, wxDefaultSize);
     html_text->SetForegroundColour(wxColour(107, 107, 107));
 
     copyright_ver_sizer->Add(html_text, 0, wxALL , 0);
@@ -331,7 +362,9 @@ AboutDialog::AboutDialog()
               (boost::format(
               "<html>"
               "<body bgcolor= \"" + bgr_clr_str + "\" >"
-              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://www.orcaslicer.com\">https://www.orcaslicer.com</ a></p>"
+              // Forca (B7): Forca's source (AGPL) first, OrcaSlicer as the credit link.
+              "<p style=\"text-align:left\">" + _u8L("Source code") + ": <a style=\"color:#009789\" href=\"" + FORCA_REPO_URL + "\">" + FORCA_REPO_URL + "</a>"
+              " &nbsp;&middot;&nbsp; " + _u8L("Based on") + " <a style=\"color:#009789\" href=\"https://www.orcaslicer.com\">OrcaSlicer</a></p>"
               "</body>"
               "</html>")
             ).str());

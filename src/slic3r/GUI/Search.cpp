@@ -297,7 +297,7 @@ wxSize SearchItem::DrawTextString(wxDC &dc, const wxString &text, const wxPoint 
     }
 
     dc.SetBackgroundMode(wxTRANSPARENT);
-    dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#323A3C")));
+    dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#29384F")));
     dc.DrawText(text, pt);
     return dc.GetTextExtent(text);
 }

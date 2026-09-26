@@ -527,7 +527,7 @@ void MaterialItem::doRender(wxDC& dc)
 
 
     if (!m_mapped_nozzle_str.IsEmpty()) {
-        wxPen dashed_pen(wxColour("#CECECE"), 1, wxPENSTYLE_SHORT_DASH); // Orca: WXCOLOUR_GREY400 macro not in scope here
+        wxPen dashed_pen(wxColour("#C2CFE4"), 1, wxPENSTYLE_SHORT_DASH); // Orca: WXCOLOUR_GREY400 macro not in scope here
         dc.SetPen(dashed_pen);
         up += FromDIP(4); // spacing
         dc.DrawLine(FromDIP(1), up, FromDIP(size.x), up);
@@ -813,7 +813,7 @@ AmsMapingPopup::AmsMapingPopup(wxWindow *parent, bool use_in_sync_dialog) :
      m_sizer_ams_basket_right = new wxBoxSizer(wxVERTICAL);
 
      auto title_panel = new wxPanel(this, wxID_ANY);
-     title_panel->SetBackgroundColour(StateColor::darkModeColorFor("#F1F1F1"));
+     title_panel->SetBackgroundColour(StateColor::darkModeColorFor("#DAE5F5"));
      title_panel->SetSize(wxSize(-1, FromDIP(30)));
      title_panel->SetMinSize(wxSize(-1, FromDIP(30)));
 
@@ -825,7 +825,7 @@ AmsMapingPopup::AmsMapingPopup(wxWindow *parent, bool use_in_sync_dialog) :
      wxBoxSizer *title_sizer_v = new wxBoxSizer(wxVERTICAL);
 
      m_title_text = new wxStaticText(title_panel, wxID_ANY, _L("AMS Slots"));
-     m_title_text->SetForegroundColour(wxColour("#262E30"));
+     m_title_text->SetForegroundColour(wxColour("#1A2C4C"));
      m_title_text->SetFont(::Label::Body_16);
      title_sizer_v->Add(m_title_text, 0, wxALIGN_LEFT | wxLEFT,  FromDIP(15));
      title_sizer_h->Add(title_sizer_v, 1, wxALIGN_CENTER, 5);
@@ -1923,7 +1923,7 @@ AmsIntroducePopup::AmsIntroducePopup(wxWindow* parent)
 
     m_staticText_top = new Label(this, _L("Do not Enable AMS"));
     m_staticText_top->SetFont(::Label::Head_13);
-    // m_staticText_top->SetForegroundColour(wxColour("#323A3D"));
+    // m_staticText_top->SetForegroundColour(wxColour("#24395A"));
     m_staticText_top->Wrap(-1);
     bSizer4->Add(m_staticText_top, 0, wxALL, 5);
 
@@ -2070,7 +2070,7 @@ void MappingContainer::doRender(wxDC& dc)
     dc.SetFont(::Label::Head_11);
     auto size   = GetSize();
     auto extent = dc.GetTextExtent(m_ams_type);
-    dc.SetTextForeground(wxColour("#F1F1F1"));
+    dc.SetTextForeground(wxColour("#DAE5F5"));
     dc.DrawText(m_ams_type, FromDIP(10), size.GetHeight() - extent.GetHeight());
 }
 
@@ -2107,7 +2107,7 @@ void AmsReplaceMaterialDialog::create()
 
     label_txt = new Label(this, _L("When the current material run out, the printer will continue to print in the following order."));
     label_txt->SetFont(Label::Body_13);
-    label_txt->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#323A3C")));
+    label_txt->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#29384F")));
     label_txt->SetMinSize(wxSize(FromDIP(380), -1));
     label_txt->SetMaxSize(wxSize(FromDIP(380), -1));
     label_txt->Wrap(FromDIP(380));
@@ -2198,7 +2198,7 @@ AmsRMGroup* AmsReplaceMaterialDialog::create_backup_group(wxString gname, std::m
 void AmsReplaceMaterialDialog::paintEvent(wxPaintEvent& evt)
 {
     wxPaintDC dc(this);
-    dc.SetPen(StateColor::darkModeColorFor(wxColour("#DBDBDB"))); // Orca: popup border color fixed for dark mode
+    dc.SetPen(StateColor::darkModeColorFor(wxColour("#CFDBED"))); // Orca: popup border color fixed for dark mode
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.DrawRoundedRectangle(0, 0, GetSize().x, GetSize().y, 0);
 }
@@ -2483,7 +2483,7 @@ void AmsRMGroup::doRender(wxDC& dc)
 
         dc.SetPen(*wxTRANSPARENT_PEN);
 
-      if (tray_color == *wxWHITE) dc.SetPen(wxPen(wxColour("#EEEEEE"), 2));
+      if (tray_color == *wxWHITE) dc.SetPen(wxPen(wxColour("#D7E2F3"), 2));
         dc.SetBrush(wxBrush(tray_color));
 
         int x = size.x / 2;
@@ -2533,14 +2533,14 @@ void AmsRMGroup::doRender(wxDC& dc)
         //draw tray
         dc.SetFont(::Label::Body_12);
         auto text_size = dc.GetTextExtent(tray_name);
-        dc.SetTextForeground(tray_color.GetLuminance() < 0.6 ? *wxWHITE : wxColour("#262E30"));
-        if (tray_color.Alpha() == 0) { dc.SetTextForeground(wxColour("#262E30")); }
+        dc.SetTextForeground(tray_color.GetLuminance() < 0.6 ? *wxWHITE : wxColour("#1A2C4C"));
+        if (tray_color.Alpha() == 0) { dc.SetTextForeground(wxColour("#1A2C4C")); }
 
         dc.DrawText(tray_name, x_center - text_size.x / 2, size.y - y_center - text_size.y / 2);
 
         //draw split line
         dc.SetPen(wxPen(*wxWHITE, 2));
-        if (tray_color.Alpha() == 0) { dc.SetPen(wxPen(wxColour("#CECECE"), 2)); }
+        if (tray_color.Alpha() == 0) { dc.SetPen(wxPen(wxColour("#C2CFE4"), 2)); }
         dc.SetBrush(*wxTRANSPARENT_BRUSH);
         auto pos_sp_start = CalculateEndpoint(wxPoint(x, y), (360 - startAngle),  size.x / 2 - FromDIP(3));
         dc.DrawLine(wxPoint(x, y), pos_sp_start);
@@ -2564,7 +2564,7 @@ void AmsRMGroup::doRender(wxDC& dc)
     //dc.DrawBitmap(bitmap_backup_tips_1.bmp(), wxPoint((size.x - bitmap_backup_tips_1.GetBmpSize().x) / 2, (size.y - bitmap_backup_tips_1.GetBmpSize().y) / 2));
 
     //draw material
-    dc.SetTextForeground(wxColour("#323A3D"));
+    dc.SetTextForeground(wxColour("#24395A"));
     dc.SetFont(Label::Head_15);
     auto text_size = dc.GetTextExtent(m_material_name);
     dc.DrawText(m_material_name, (size.x - text_size.x) / 2,(size.y - text_size.y) / 2 - FromDIP(12));

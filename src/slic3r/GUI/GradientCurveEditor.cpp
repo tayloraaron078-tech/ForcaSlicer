@@ -29,13 +29,13 @@ constexpr int kStrokeUnselected = 2;
 constexpr int kStrokeSelected   = 4;
 
 // Light-mode design tokens. Resolved through StateColor::darkModeColorFor()
-// at paint time so the editor follows the app theme (#EEEEEE -> #4C4C55, #6B6B6B ->
-// #818183, #262E30 -> #EFEFF0, #ACACAC -> #65656A, *wxWHITE -> #2D2D31). Don't read these
+// at paint time so the editor follows the app theme (#D7E2F3 -> #4C4C55, #6B6B6B ->
+// #818183, #1A2C4C -> #E4EBF8, #ACACAC -> #65656A, *wxWHITE -> #2D2D31). Don't read these
 // directly in paint; always go through the resolved locals declared at the top of on_paint().
-const wxColour kGridColor   (238, 238, 238);   // #EEEEEE grey 300
+const wxColour kGridColor   (238, 238, 238);   // #D7E2F3 grey 300
 const wxColour kAxisColor   (107, 107, 107);   // #6B6B6B grey 700
 const wxColour kLabelMuted  (107, 107, 107);   // #6B6B6B grey 700
-const wxColour kLabelStrong ( 38,  46,  48);   // #262E30 grey 900
+const wxColour kLabelStrong ( 38,  46,  48);   // #1A2C4C grey 900
 const wxColour kOutlineColor(172, 172, 172);   // #ACACAC dimmed elements
 } // namespace
 

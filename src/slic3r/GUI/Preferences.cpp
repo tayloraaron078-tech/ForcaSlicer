@@ -1,4 +1,5 @@
 #include "Preferences.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 #include "OptionsGroup.hpp"
 #include "GUI_App.hpp"
 #include "MainFrame.hpp"
@@ -185,7 +186,7 @@ private:
         dc.SetBackground(wxBrush(GetParent() ? GetParent()->GetBackgroundColour() : *wxWHITE));
         dc.Clear();
  
-        wxColour textCol = StateColor::darkModeColorFor(m_hovered ? "#26A69A" : "#363636");
+        wxColour textCol = StateColor::darkModeColorFor(m_hovered ? "#26A69A" : "#26395A");
  
         dc.SetTextForeground(textCol);
         dc.SetFont(m_font);
@@ -650,7 +651,7 @@ wxBoxSizer *PreferencesDialog::create_item_input(wxString title, wxString title2
     wxBoxSizer *m_sizer = create_item_label(title, tip, wiki_url);
 
     auto       input = new ::TextInput(m_parent, wxEmptyString, wxEmptyString, wxEmptyString, wxDefaultPosition, DESIGN_INPUT_SIZE, wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(app_config->get(param));
     wxTextValidator validator(wxFILTER_DIGITS);
@@ -744,7 +745,7 @@ wxBoxSizer *PreferencesDialog::create_camera_orbit_mult_input(wxString title, wx
     auto param = "camera_orbit_mult";
 
     auto       input = new ::TextInput(m_parent, wxEmptyString, wxEmptyString, wxEmptyString, wxDefaultPosition, DESIGN_INPUT_SIZE, wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(app_config->get(param));
     wxTextValidator validator(wxFILTER_NUMERIC);
@@ -791,7 +792,7 @@ wxBoxSizer *PreferencesDialog::create_item_decimal_input(wxString title, wxStrin
     wxBoxSizer *m_sizer = create_item_label(title, tip, wiki_url);
 
     auto       input = new ::TextInput(m_parent, wxEmptyString, title2, wxEmptyString, wxDefaultPosition, DESIGN_INPUT_SIZE, wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(app_config->get(param));
     wxTextValidator validator(wxFILTER_NUMERIC);
@@ -849,7 +850,7 @@ wxBoxSizer *PreferencesDialog::create_item_backup(wxString title, wxString toolt
     m_backup_interval_time = app_config->get("backup_interval");
 
     auto input = new ::TextInput(m_parent, wxEmptyString, _L("sec"), "loop", wxDefaultPosition, wxSize(FromDIP(97), -1), wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(m_backup_interval_time);
     wxTextValidator validator(wxFILTER_DIGITS);
@@ -903,7 +904,7 @@ wxBoxSizer *PreferencesDialog::create_item_auto_reslice(wxString title, wxString
         delay_value = "0";
 
     auto input = new ::TextInput(m_parent, wxEmptyString, _L("sec"), wxEmptyString, wxDefaultPosition, wxSize(FromDIP(97), -1), wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(delay_value);
     wxTextValidator validator(wxFILTER_DIGITS);
@@ -1502,7 +1503,7 @@ void PreferencesDialog::create()
 
     auto item_color = StateColor(
         std::make_pair(wxColour("#6B6B6C"), (int) StateColor::NotChecked),
-        std::make_pair(wxColour("#363636"), (int) StateColor::Normal)
+        std::make_pair(wxColour("#26395A"), (int) StateColor::Normal)
     );
 
     for (size_t i = 0; i < m_pref_tabs->GetCount(); ++i)
@@ -2090,7 +2091,7 @@ void PreferencesDialog::create_items()
     auto item_region           = create_item_region_combobox(_L("Login region"), "");
     g_sizer->Add(item_region);
  
-    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud."), "stealth_mode");
+    auto item_stealth_mode     = create_item_checkbox(_L("Stealth mode"), _L("This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."), "stealth_mode"); // Forca (B9): no Orca Cloud
     g_sizer->Add(item_stealth_mode);
 
     auto item_hide_login_side_panel = create_item_checkbox(_L("Hide login side panel"), _L("Hide the login side panel on the home page."), "hide_login_side_panel");
@@ -2105,7 +2106,7 @@ void PreferencesDialog::create_items()
     //// ONLINE > Cloud Providers
     g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
 
-    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."));
+    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage.")); // Forca (B9)
     g_sizer->Add(item_bambu_cloud);
 
     //// ONLINE > Update & sync
@@ -2114,8 +2115,10 @@ void PreferencesDialog::create_items()
     auto item_stable_updates   = create_item_checkbox(_L("Check for stable updates only"), "", "check_stable_update_only");
     g_sizer->Add(item_stable_updates);
 
+    if (FORCA_ORCA_CLOUD_ENABLED) { // Forca: preset sync is Orca Cloud only (B9)
     auto item_user_sync        = create_item_checkbox(_L("Auto sync user presets (Printer/Filament/Process)"), "", "sync_user_preset");
     g_sizer->Add(item_user_sync);
+    }
 
     if (app_config->get_stealth_mode()) {
         if (m_bambu_cloud_checkbox)      m_bambu_cloud_checkbox->Enable(false);
@@ -2204,6 +2207,10 @@ void PreferencesDialog::create_items()
 
     auto associate_url_cura    = create_item_link_association(L"cura", "Thingiverse.com");
     g_sizer->Add(associate_url_cura);
+
+    // Forca: orcaslicer:// ("Open in OrcaSlicer" on model sites) is no longer claimed automatically; opt in here.
+    auto associate_url_orca    = create_item_link_association(L"orcaslicer", "Makerworld.com / Printables.com (\"Open in OrcaSlicer\")");
+    g_sizer->Add(associate_url_orca);
 
     g_sizer->AddSpacer(FromDIP(10));
     sizer_page->Add(g_sizer, 0, wxEXPAND);

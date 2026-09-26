@@ -547,6 +547,11 @@ std::vector<unsigned int> Print::support_material_extruders() const
             	unsigned int i = (unsigned int)object->config().support_interface_filament - 1;
                 extruders.emplace_back((i >= num_extruders) ? 0 : i);
             }
+            // [regional-supports fork] regional support-interface override filaments used by this object
+            for (unsigned int f : object->support_interface_modifier_filaments()) {
+                unsigned int i = f - 1;
+                extruders.emplace_back((i >= num_extruders) ? 0 : i);
+            }
         }
     }
 

@@ -513,7 +513,7 @@ void TempInput::render(wxDC &dc)
         pt.y = (size.y - labelSize.y) / 2;
     }
 
-    dc.SetTextForeground(StateColor::darkModeColorFor("#323A3C"));
+    dc.SetTextForeground(StateColor::darkModeColorFor("#29384F"));
     dc.DrawText(text, pt);
 
     // separator

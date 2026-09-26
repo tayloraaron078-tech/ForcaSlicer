@@ -1,0 +1,25 @@
+# Forca Slicer retint mapping — CANONICAL source of truth.
+# One replacement per line:  <base-Orca-grey-hex>\t<Forca-blue-hex>
+# Read by apply_retint.ps1 and apply_retint.sh. See docs/forca/retint.md.
+# Lines starting with # and blank lines are ignored. Matching is case-insensitive.
+#
+# base grey	Forca blue
+#242428	#1E2436
+#262E30	#1A2C4C
+#323A3C	#29384F
+#323A3D	#24395A
+#363636	#26395A
+#3B4446	#2D4468
+#3E3E45	#333A4E
+#CECECE	#C2CFE4
+#D7D7D7	#CDD8EA
+#D9D9D9	#CDDAEC
+#DBDBDB	#CFDBED
+#DFDFDF	#D3DEEF
+#EEEEEE	#D7E2F3
+#EFEFF0	#E4EBF8
+#F0F0F1	#D9E4F5
+#F1F1F1	#DAE5F5
+#F4F4F4	#DDE8F6
+#F7F7F7	#E9EFFA
+#F8F8F8	#E3EBF8

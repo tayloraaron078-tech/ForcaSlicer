@@ -1,4 +1,5 @@
 #include "NetworkTestDialog.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 #include "I18N.hpp"
 
 #include "libslic3r/Utils.hpp"
@@ -248,7 +249,7 @@ void NetworkTestDialog::start_all_job_sequence()
 		update_status(-1, "start_test_sequence");
         start_test_url(TEST_BING_JOB, "Bing", "http://www.bing.com");
         if (m_closing) return;
-		start_test_url(TEST_ORCA_JOB, "OrcaSlicer(GitHub)", "https://github.com/OrcaSlicer/OrcaSlicer");
+		start_test_url(TEST_ORCA_JOB, "Forca Slicer (GitHub)", FORCA_REPO_URL); // Forca (B4)
 		if (m_closing) return;
 		update_status(-1, "end_test_sequence");
 	});
@@ -306,7 +307,7 @@ void NetworkTestDialog::start_test_github_thread()
     if (m_in_testing[TEST_ORCA_JOB])
         return;
     test_job[TEST_ORCA_JOB] = new boost::thread([this] {
-        start_test_url(TEST_ORCA_JOB, "OrcaSlicer(GitHub)", "https://github.com/OrcaSlicer/OrcaSlicer");
+        start_test_url(TEST_ORCA_JOB, "Forca Slicer (GitHub)", FORCA_REPO_URL); // Forca (B4)
     });
 }
 void NetworkTestDialog::start_test_bing_thread()
@@ -333,7 +334,7 @@ void NetworkTestDialog::on_close(wxCloseEvent& event)
 
 wxString NetworkTestDialog::get_studio_version()
 {
-	return wxString(SoftFever_VERSION);
+	return wxString(FORCA_VERSION); // Forca (B3)
 }
 
 void NetworkTestDialog::set_default()

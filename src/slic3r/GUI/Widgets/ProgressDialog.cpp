@@ -229,7 +229,7 @@ bool ProgressDialog::Create(const wxString &title, const wxString &message, int 
         m_gauge = new wxGauge(this, wxID_ANY, maximum, wxDefaultPosition, PROGRESSDIALOG_GAUGE_SIZE, gauge_style);
         m_gauge->SetValue(0);
         m_gauge->SetForegroundColour(wxColour("#009688"));
-        m_gauge->SetBackgroundColour(wxColour("#D9D9D9"));
+        m_gauge->SetBackgroundColour(wxColour("#CDDAEC"));
         wxGetApp().UpdateDarkUI(m_gauge);
         m_sizer_main->Add(m_gauge, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(28));
     }

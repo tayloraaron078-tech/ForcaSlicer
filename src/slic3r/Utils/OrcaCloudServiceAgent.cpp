@@ -1,4 +1,5 @@
 #include "OrcaCloudServiceAgent.hpp"
+#include "ForcaFeatures.hpp"
 #include "Http.hpp"
 #include "libslic3r/Utils.hpp"
 #include "slic3r/GUI/GUI_App.hpp"
@@ -638,6 +639,8 @@ static bool parse_stored_secret(const std::string& secret, std::string& out_refr
 int OrcaCloudServiceAgent::start()
 {
     regenerate_pkce();
+    if (!FORCA_ORCA_CLOUD_ENABLED)
+        return BAMBU_NETWORK_SUCCESS; // Forca: never restore an Orca Cloud login (ForcaFeatures.hpp)
 
     // Attempt silent sign-in from stored refresh token
     std::string stored_secret;
@@ -785,6 +788,8 @@ int OrcaCloudServiceAgent::change_user(std::string user_info)
 
 bool OrcaCloudServiceAgent::is_user_login()
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED)
+        return false; // Forca: Orca Cloud is off
     std::lock_guard<std::mutex> lock(session_mutex);
     return session.logged_in;
 }
@@ -1535,6 +1540,9 @@ void OrcaCloudServiceAgent::update_redirect_uri()
 
 void OrcaCloudServiceAgent::persist_user_secret(const std::string& secret)
 {
+    // Forca: the "OrcaSlicer/Auth" secret belongs to stock OrcaSlicer (same OS credential-store slot); never touch it.
+    if (!FORCA_ORCA_CLOUD_ENABLED)
+        return;
     if (secret.empty()) {
         clear_user_secret();
         return;
@@ -1609,6 +1617,8 @@ void OrcaCloudServiceAgent::persist_user_secret(const std::string& secret)
 bool OrcaCloudServiceAgent::load_user_secret(std::string& out_secret)
 {
     out_secret.clear();
+    if (!FORCA_ORCA_CLOUD_ENABLED)
+        return false; // Forca: see persist_user_secret
 
     if (m_use_encrypted_token_file) {
         // Load from encrypted file only
@@ -1671,6 +1681,8 @@ bool OrcaCloudServiceAgent::load_user_secret(std::string& out_secret)
 
 void OrcaCloudServiceAgent::clear_user_secret()
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED)
+        return; // Forca: deleting it would sign the user out of stock OrcaSlicer (see persist_user_secret)
     wxSecretStore store = wxSecretStore::GetDefault();
     if (store.IsOk()) {
         store.Delete(SECRET_STORE_SERVICE);
@@ -2081,6 +2093,7 @@ bool OrcaCloudServiceAgent::resolve_unauthorized(HttpResult& res,
 
 int OrcaCloudServiceAgent::http_get(const std::string& path, std::string* response_body, unsigned int* http_code)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return BAMBU_NETWORK_ERR_CONNECT_FAILED; } // Forca: no Orca Cloud traffic
     std::string url = api_base_url + path;
     BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: GET " << url;
 
@@ -2141,6 +2154,7 @@ int OrcaCloudServiceAgent::http_get(const std::string& path, std::string* respon
 
 int OrcaCloudServiceAgent::http_post(const std::string& path, const std::string& body, std::string* response_body, unsigned int* http_code)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return BAMBU_NETWORK_ERR_CONNECT_FAILED; } // Forca: no Orca Cloud traffic
     std::string url = api_base_url + path;
     BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: POST " << url;
 
@@ -2206,6 +2220,7 @@ int OrcaCloudServiceAgent::http_post(const std::string& path, const std::string&
 
 int OrcaCloudServiceAgent::http_put(const std::string& path, const std::string& body, std::string* response_body, unsigned int* http_code)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return BAMBU_NETWORK_ERR_CONNECT_FAILED; } // Forca: no Orca Cloud traffic
     std::string url = api_base_url + path;
     BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: PUT " << url;
 
@@ -2268,6 +2283,7 @@ int OrcaCloudServiceAgent::http_put(const std::string& path, const std::string& 
 
 int OrcaCloudServiceAgent::http_delete(const std::string& path, std::string* response_body, unsigned int* http_code)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return BAMBU_NETWORK_ERR_CONNECT_FAILED; } // Forca: no Orca Cloud traffic
     std::string url = api_base_url + path;
     BOOST_LOG_TRIVIAL(trace) << "OrcaCloudServiceAgent: DELETE " << url;
 
@@ -2330,6 +2346,7 @@ bool OrcaCloudServiceAgent::http_post_token(const std::string& body,
                                             unsigned int* http_code,
                                             const std::string& custom_url)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return false; } // Forca: no Orca Cloud traffic
     std::map<std::string, std::string> headers_copy;
     std::string url;
     {
@@ -2410,6 +2427,7 @@ bool OrcaCloudServiceAgent::http_post_auth(const std::string& path,
                                            std::string* response_body,
                                            unsigned int* http_code)
 {
+    if (!FORCA_ORCA_CLOUD_ENABLED) { if (http_code) *http_code = 0; return false; } // Forca: no Orca Cloud traffic
     std::string url = auth_base_url + path + "?scope=local";
     std::string token;
     std::map<std::string, std::string> headers_copy;

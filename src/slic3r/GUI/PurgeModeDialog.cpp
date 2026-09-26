@@ -17,10 +17,10 @@ namespace Slic3r { namespace GUI {
 static const wxColour BgNormalColor = wxColour("#FFFFFF");
 static const wxColour BgSelectColor = wxColour("#EBF9F0");
 
-static const wxColour BorderNormalColor   = wxColour("#CECECE");
+static const wxColour BorderNormalColor   = wxColour("#C2CFE4");
 static const wxColour BorderSelectedColor = wxColour("#00AE42");
 
-static const wxColour TextNormalBlackColor = wxColour("#262E30");
+static const wxColour TextNormalBlackColor = wxColour("#1A2C4C");
 static const wxColour TextNormalGreyColor  = wxColour("#6B6B6B");
 
 PurgeModeDialog::PurgeModeDialog(wxWindow *parent, PurgeModeDialogType dialog_type)

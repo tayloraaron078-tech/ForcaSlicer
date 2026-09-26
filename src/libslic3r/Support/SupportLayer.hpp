@@ -102,6 +102,10 @@ public:
 	size_t 	 idx_object_layer_below { size_t(-1) };
 	// Use a bridging flow when printing this support layer.
 	bool 	 bridging { false };
+	// [regional-supports fork] True for a top contact layer emitted for a SUPPORT_INTERFACE_MODIFIER
+	// region at its own Top-Z gap (P2). Lets generate() trim it against the object with the region's
+	// (possibly smaller/zero) gap instead of the object-global gap. Default false = every stock layer.
+	bool 	 regional { false };
 
 	// Polygons to be filled by the support pattern.
 	Polygons polygons;

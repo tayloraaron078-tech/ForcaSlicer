@@ -10,8 +10,8 @@ static std::map<wxColour, wxColour> gDarkColors{
     {"#1F8EEA", "#2778D2"}, // rgb(31, 142, 234)   ???
     {"#FF6F00", "#D15B00"}, // rgb(255, 111, 0)    Secondary color
     {"#D01B1B", "#BB2A3A"}, // rgb(208, 27, 27)    ???
-    {"#262E30", "#EFEFF0"}, // rgb(38, 46, 48)     Button text color | Input Text Color
-    {"#DFDFDF", "#3E3E45"}, // rgb(223, 223, 223)  Button Background color
+    {"#1A2C4C", "#E4EBF8"}, // rgb(38, 46, 48)     Button text color | Input Text Color
+    {"#D3DEEF", "#333A4E"}, // rgb(223, 223, 223)  Button Background color
     {"#D4D4D4", "#4D4D54"}, // rgb(212, 212, 212)  Button Background color on Hover
     {"#6B6A6A", "#909090"}, // rgb(107, 107, 106)  Button Dimmed text
     {"#26A69A", "#008172"}, // rgb(0, 150, 136)    Button Confirm Color hover | ORCA Color Hover
@@ -19,36 +19,57 @@ static std::map<wxColour, wxColour> gDarkColors{
     {"#2C2C2E", "#B3B3B4"}, // rgb(44, 44, 46)     ???
     {"#6B6B6B", "#818183"}, // rgb(107, 107, 107)  Disabled Text
     {"#ACACAC", "#65656A"}, // rgb(172, 172, 172)  Disabled Text on boxes | Dimmed Elements
-    {"#EEEEEE", "#4C4C55"}, // rgb(238, 238, 238)  Separator Line | Title Line Color
-    {"#E8E8E8", "#3E3E45"}, // rgb(232, 232, 232)  ???
-    {"#323A3D", "#E5E5E4"}, // rgb(50, 58, 61)     Softer text color
+    {"#D7E2F3", "#4C4C55"}, // rgb(238, 238, 238)  Separator Line | Title Line Color
+    {"#E8E8E8", "#333A4E"}, // rgb(232, 232, 232)  ???
+    {"#24395A", "#E5E5E4"}, // rgb(50, 58, 61)     Softer text color
     {"#FFFFFF", "#2D2D31"}, // rgb(255, 255, 255)  Window background
-    {"#F8F8F8", "#36363C"}, // rgb(248, 248, 248)  Sidebar > Titlebar > Gradient Top | BBL monitor page titlebar bg
-    {"#F1F1F1", "#36363B"}, // rgb(241, 241, 241)  Sidebar > Titlebar > Gradient Bottom
-    {"#3B4446", "#2D2D30"}, // rgb(59, 68, 78)     Top Bar / Main tab bar bg color
-    {"#CECECE", "#54545B"}, // rgb(206, 206, 206)  Sidebar wxPanel bg | 
+    {"#E3EBF8", "#36363C"}, // rgb(248, 248, 248)  Sidebar > Titlebar > Gradient Top | BBL monitor page titlebar bg
+    {"#DAE5F5", "#36363B"}, // rgb(241, 241, 241)  Sidebar > Titlebar > Gradient Bottom
+    {"#2D4468", "#2D2D30"}, // rgb(59, 68, 78)     Top Bar / Main tab bar bg color
+    {"#C2CFE4", "#54545B"}, // rgb(206, 206, 206)  Sidebar wxPanel bg | 
     {"#DBFDD5", "#3B3B40"}, // rgb(219, 253, 213)  Not Used anymore // Was used for BBS combo boxes etc
     {"#000000", "#FFFFFE"}, // rgb(0, 0, 0)        Mostly Text color wxBlack
-    {"#F4F4F4", "#36363D"}, // rgb(244, 244, 244)  ???
-    {"#DBDBDB", "#4A4A51"}, // rgb(219, 219, 219)  Input/Combo Box Border Color
+    {"#DDE8F6", "#36363D"}, // rgb(244, 244, 244)  ???
+    {"#CFDBED", "#4A4A51"}, // rgb(219, 219, 219)  Input/Combo Box Border Color
     {"#EDFAF2", "#283232"}, // rgb(229, 240, 238)  Not Used anymore // Was used for BBS Combo / Dropdown focused background color
-    {"#323A3C", "#E5E5E6"}, // rgb(50, 58, 60)     Text color used on search list | 
+    {"#29384F", "#E5E5E6"}, // rgb(50, 58, 60)     Text color used on search list | 
     {"#303A3C", "#E5E5E5"}, // rgb(48, 58, 60)     Object Table > Column header text color | StaticBox Border Color
-    {"#FEFFFF", "#242428"}, // rgb(254, 255, 255)  Side Tabbar bg | 
+    {"#FEFFFF", "#1E2436"}, // rgb(254, 255, 255)  Side Tabbar bg | 
     {"#A6A9AA", "#2D2D29"}, // rgb(166, 169, 170)  Seperator color
-    {"#363636", "#B2B3B5"}, // rgb(54, 54, 54)     Sidebar > Parameter Label/Title color | Sidebar tab text | Create Filament window text
-    {"#F0F0F1", "#333337"}, // rgb(240, 240, 241)  Disabled element background // ORCA Used better background color for dark mode
+    {"#26395A", "#B2B3B5"}, // rgb(54, 54, 54)     Sidebar > Parameter Label/Title color | Sidebar tab text | Create Filament window text
+    {"#D9E4F5", "#333337"}, // rgb(240, 240, 241)  Disabled element background // ORCA Used better background color for dark mode
     {"#9E9E9E", "#53545A"}, // rgb(158, 158, 158)  ???
     {"#D7E8DE", "#1F2B27"}, // rgb(215, 232, 222)  Not Used anymore // Leftover from BBS
     {"#2B3436", "#808080"}, // rgb(43, 52, 54)     Not Used anymore // Leftover from BBS. Was used as main fill color of icons
     {"#ABABAB", "#ABABAB"},
-    {"#D9D9D9", "#27272A"}, // rgb(217, 217, 217)  Sidebar > Toggle button track color
-    {"#FFFEFE", "#D9D9D9"}, // rgb(255, 254, 254)  Sidebar > Toggle button thumb color
+    {"#CDDAEC", "#27272A"}, // rgb(217, 217, 217)  Sidebar > Toggle button track color
+    {"#FFFEFE", "#CDDAEC"}, // rgb(255, 254, 254)  Sidebar > Toggle button thumb color
     {"#EBF9F0", "#293F34"},
     //{"#F0F0F0", "#4C4C54"},
     // ORCA
     {"#BFE1DE", "#223C3C"}, // rgb(191, 225, 222)  Dropdown checked item background color > ORCA color with %25 opacity
     {"#E5F0EE", "#283232"}, // rgb(229, 240, 238)  Combo / Dropdown focused background color > ORCA color with %10 opacity
+};
+
+// Forca: the retint (tools/forca/apply_retint.ps1) rewrote the keys above from Orca's greys to Forca blues, but it only
+// rewrites "#RRGGBB" strings, so colours given as numbers (e.g. TextInput's 0x262E30 text) no longer matched in dark
+// mode and stayed dark on a dark background. Each Orca grey here aliases to its retinted key. Written as RGB numbers
+// on purpose: the retint must not rewrite this table.
+static const std::map<wxColour, wxColour> gForcaRetintedKeys{
+    {wxColour(0x26, 0x2E, 0x30), wxColour(0x1A, 0x2C, 0x4C)}, // Button text | Input text
+    {wxColour(0xDF, 0xDF, 0xDF), wxColour(0xD3, 0xDE, 0xEF)}, // Button background
+    {wxColour(0xEE, 0xEE, 0xEE), wxColour(0xD7, 0xE2, 0xF3)}, // Separator line | Title line
+    {wxColour(0x32, 0x3A, 0x3D), wxColour(0x24, 0x39, 0x5A)}, // Softer text
+    {wxColour(0xF8, 0xF8, 0xF8), wxColour(0xE3, 0xEB, 0xF8)}, // Sidebar title bar
+    {wxColour(0xF1, 0xF1, 0xF1), wxColour(0xDA, 0xE5, 0xF5)}, // Sidebar
+    {wxColour(0x3B, 0x44, 0x46), wxColour(0x2D, 0x44, 0x68)}, // Top bar
+    {wxColour(0xCE, 0xCE, 0xCE), wxColour(0xC2, 0xCF, 0xE4)}, // Sidebar borders
+    {wxColour(0xF4, 0xF4, 0xF4), wxColour(0xDD, 0xE8, 0xF6)},
+    {wxColour(0xDB, 0xDB, 0xDB), wxColour(0xCF, 0xDB, 0xED)}, // Input / combo border
+    {wxColour(0x32, 0x3A, 0x3C), wxColour(0x29, 0x38, 0x4F)}, // Search list text
+    {wxColour(0x36, 0x36, 0x36), wxColour(0x26, 0x39, 0x5A)}, // Sidebar label / title text
+    {wxColour(0xF0, 0xF0, 0xF1), wxColour(0xD9, 0xE4, 0xF5)}, // Disabled background
+    {wxColour(0xD9, 0xD9, 0xD9), wxColour(0xCD, 0xDA, 0xEC)}, // Toggle track
 };
 
 std::tuple<double, double, double> StateColor::GetLAB(const wxColour& color) {
@@ -193,6 +214,10 @@ inline wxColour darkModeColorFor2(wxColour const &color)
         return color;
     auto iter = gDarkColors.find(color);
     if (iter != gDarkColors.end()) return iter->second;
+    if (auto alias = gForcaRetintedKeys.find(color); alias != gForcaRetintedKeys.end()) { // Forca
+        iter = gDarkColors.find(alias->second);
+        if (iter != gDarkColors.end()) return iter->second;
+    }
     return color;
 }
 

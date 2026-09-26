@@ -86,7 +86,7 @@ ManualNozzleCountDialog::ManualNozzleCountDialog(
     wxBoxSizer *choice_sizer = new wxBoxSizer(wxVERTICAL);
     auto nozzle_label = new wxStaticText(content, wxID_ANY, _L("Please set nozzle count"));
     nozzle_label->SetFont(Label::Body_14);
-    nozzle_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#262E30")));
+    nozzle_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#1A2C4C")));
     choice_sizer->Add(nozzle_label, 0, wxTOP | wxRIGHT, FromDIP(15));
 
     wxArrayString nozzle_choices;
@@ -99,7 +99,7 @@ ManualNozzleCountDialog::ManualNozzleCountDialog(
         wxBoxSizer *standard_sizer = new wxBoxSizer(wxHORIZONTAL);
         auto standard_label = new wxStaticText(content, wxID_ANY, _L(get_nozzle_volume_type_string(nvtStandard)), wxDefaultPosition, wxSize(FromDIP(100), -1));
         standard_label->SetFont(Label::Body_14);
-        standard_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        standard_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         standard_sizer->Add(standard_label, 0, wxALIGN_CENTER_VERTICAL);
         m_standard_choice = new ComboBox(content, wxID_ANY, "", wxDefaultPosition, wxSize(FromDIP(80), -1), 0, nullptr, wxCB_READONLY);
         std::vector<wxString>::iterator iter;
@@ -113,7 +113,7 @@ ManualNozzleCountDialog::ManualNozzleCountDialog(
         wxBoxSizer *highflow_sizer = new wxBoxSizer(wxHORIZONTAL);
         auto highflow_label = new wxStaticText(content, wxID_ANY, _L(get_nozzle_volume_type_string(nvtHighFlow)), wxDefaultPosition, wxSize(FromDIP(100), -1));
         highflow_label->SetFont(Label::Body_14);
-        highflow_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        highflow_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         highflow_sizer->Add(highflow_label, 0, wxALIGN_CENTER_VERTICAL);
         m_highflow_choice = new ComboBox(content, wxID_ANY, "", wxDefaultPosition, wxSize(FromDIP(80), -1), 0, nullptr, wxCB_READONLY);
         std::vector<wxString>::iterator iter;
@@ -343,7 +343,7 @@ void manuallySetNozzleCount(int extruder_id)
 ExtruderBadge::ExtruderBadge(wxWindow* parent) : wxPanel(parent)
 {
     wxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
-    SetBackgroundColour("#F8F8F8");
+    SetBackgroundColour("#E3EBF8");
     wxBitmap icon = create_scaled_bitmap("extruder_badge_none_selected", nullptr, FromDIP(90));
 
     auto extruder_label = new Label(this, _L("Extruder"));
@@ -484,14 +484,14 @@ HotEndTable::HotEndTable(wxWindow* parent) :  wxPanel(parent, wxID_ANY, wxDefaul
     Bind(wxEVT_PAINT, &HotEndTable::OnPaint, this);
     auto main_sizer = new wxBoxSizer(wxVERTICAL);
     auto label = new Label(this, _L("Induction Hotend Rack"));
-    label->SetBackgroundColour("#F8F8F8");
+    label->SetBackgroundColour("#E3EBF8");
 
     m_arow_nozzle_box = CreateNozzleBox({ 0,2,4 });
     m_brow_nozzle_box = CreateNozzleBox({ 1,3,5 });
     main_sizer->Add(label, 0, wxALIGN_CENTER_HORIZONTAL | wxTOP | wxBOTTOM, FromDIP(5));
     main_sizer->Add(m_arow_nozzle_box, 0, wxLEFT | wxRIGHT, FromDIP(5));
     main_sizer->Add(m_brow_nozzle_box, 0, wxLEFT | wxRIGHT, FromDIP(5));
-    SetBackgroundColour("#F8F8F8");
+    SetBackgroundColour("#E3EBF8");
 
     SetSizer(main_sizer);
     Layout();
@@ -571,8 +571,8 @@ void HotEndTable::MarkRelatedItems(const NozzleOption& option)
 
 void HotEndTable::UnMarkRelatedItems(const NozzleOption& option)
 {
-    static const wxColour bg_color("#EEEEEE");
-    static const wxColour bd_color("#CECECE");
+    static const wxColour bg_color("#D7E2F3");
+    static const wxColour bd_color("#C2CFE4");
     const static StateColor bg_green(
         std::pair<wxColour, int>(bg_color, StateColor::Normal)
     );
@@ -600,16 +600,16 @@ void HotEndTable::UnMarkRelatedItems(const NozzleOption& option)
 StaticBox* HotEndTable::CreateNozzleBox(const std::vector<int>& nozzle_indices)
 {
     StaticBox* nozzle_box = new StaticBox(this);
-    nozzle_box->SetBackgroundColour("#F8F8F8");
-    nozzle_box->SetBorderColorNormal("#F8F8F8");
+    nozzle_box->SetBackgroundColour("#E3EBF8");
+    nozzle_box->SetBorderColorNormal("#E3EBF8");
     nozzle_box->SetCornerRadius(0);
 
     wxSizer* h_sizer = new wxBoxSizer(wxHORIZONTAL);
     for (auto idx : nozzle_indices) {
         wgtDeviceNozzleRackNozzleItem* nozzle_item = new wgtDeviceNozzleRackNozzleItem(nozzle_box, idx);
-        nozzle_item->SetBackgroundColorNormal("#EEEEEE");
+        nozzle_item->SetBackgroundColorNormal("#D7E2F3");
         for (auto& child : nozzle_item->GetChildren())
-            child->SetBackgroundColour("#EEEEEE");
+            child->SetBackgroundColour("#D7E2F3");
         m_nozzle_items[idx] = nozzle_item;
         h_sizer->Add(nozzle_item, 0, wxALL, FromDIP(8));
     }
@@ -630,7 +630,7 @@ void HotEndTable::OnPaint(wxPaintEvent& evt)
     wxPaintDC dc(this);
     wxSize size = GetClientSize();
 
-    dc.SetPen(wxPen(wxColour("#EEEEEE"), 2));
+    dc.SetPen(wxPen(wxColour("#D7E2F3"), 2));
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
     dc.DrawRoundedRectangle(0, 0, size.GetWidth()-2, size.GetHeight()-2, 5);
 }
@@ -777,7 +777,7 @@ MultiNozzleStatusTable::MultiNozzleStatusTable(wxWindow* parent): wxPanel(parent
 {
     m_badge = new ExtruderBadge(this);
 
-    SetBackgroundColour(wxColour("#F8F8F8"));
+    SetBackgroundColour(wxColour("#E3EBF8"));
 
     auto main_sizer    = new wxBoxSizer(wxVERTICAL);
 

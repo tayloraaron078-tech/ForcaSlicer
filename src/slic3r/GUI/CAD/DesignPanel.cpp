@@ -161,11 +161,11 @@ static wxColour dp_item_text()    { return dp_dark() ? wxColour(0xE0,0xE0,0xE0) 
 static wxColour dp_item_dim()     { return dp_dark() ? wxColour(0x80,0x80,0x80) : wxColour(0xA0,0xA0,0xA2); }
 
 // Prepare's control-outline grey, sampled from its sidebar: #4A4A51 on the #2D2D31 dark
-// panel, #DBDBDB on light. Every framed thing in Design uses this so the tab matches.
+// panel, #CFDBED on light. Every framed thing in Design uses this so the tab matches.
 static wxColour dp_border_col()   { return dp_dark() ? wxColour(0x4A,0x4A,0x51) : wxColour(0xDB,0xDB,0xDB); }
 
 // A tool card: Prepare's rounded white-bordered panel (Plater.cpp's panel_printer_preset
-// idiom — radius 8, #EEEEEE border, green on hover). Every card's controls are parented
+// idiom — radius 8, #D7E2F3 border, green on hover). Every card's controls are parented
 // to it, so the border actually encloses them.
 static StaticBox* make_card(wxWindow* parent)
 {
@@ -1239,7 +1239,7 @@ DesignPanel::DesignPanel(wxWindow* parent)
             sadd(b);
         };
         // Onshape-style family flyout, rendered with Orca's themed DropDown
-        // (white/teal selector, #DBDBDB border, HarmonyOS Body_14) — same widget
+        // (white/teal selector, #CFDBED border, HarmonyOS Body_14) — same widget
         // as the settings combo dropdowns. The button shows the current variant's
         // icon; clicking drops the variants; a small chevron marks it as a group.
         struct SkVar { const char* icon; DesignSketchTool::Mode mode; wxString tip; wxString hint; };

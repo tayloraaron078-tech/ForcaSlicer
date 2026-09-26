@@ -1,259 +1,119 @@
 <div align="center">
 
 <picture>
-  <img alt="OrcaSlicer logo" src="resources/images/OrcaSlicer.png" width="15%" height="15%">
+  <img alt="Forca Slicer logo" src="resources/images/OrcaSlicer.png" width="15%" height="15%">
 </picture>
 
-<a href="https://trendshift.io/repositories/15552" target="_blank"><img src="https://trendshift.io/api/badge/repositories/15552" alt="OrcaSlicer%2FOrcaSlicer | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+# Forca Slicer
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/OrcaSlicer/OrcaSlicer)](https://github.com/OrcaSlicer/OrcaSlicer/stargazers) [![Build all](https://github.com/OrcaSlicer/OrcaSlicer/actions/workflows/build_all.yml/badge.svg?branch=main)](https://github.com/OrcaSlicer/OrcaSlicer/actions/workflows/build_all.yml)
+**Another Forca of Orca** — by A.T. Creations · Built for Makers
 
-OrcaSlicer: an open source Next-Gen Slicing Software for Precision 3D Prints.  
-Optimize your prints with ultra-fast slicing, intelligent support generation, and seamless printer compatibility—engineered for perfection.
+**Alpha** · Windows 64-bit · Free and open source (AGPL-3.0) · Based on [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer)
 
-# Official links and community
-
-#### Official Website:
-
-<a href="https://www.orcaslicer.com/" style="font-size:2em;">OrcaSlicer.com</a>
-
-#### Github Repository:
-
-<a href="https://github.com/OrcaSlicer/OrcaSlicer"><img src="https://img.shields.io/badge/OrcaSlicer-181717?style=flat&logo=github&logoColor=white" width="200" alt="GitHub Logo"/> </a>
-
-#### Follow us:
-
-<a href="https://twitter.com/real_OrcaSlicer"><img src="https://img.shields.io/badge/real__OrcaSlicer-000000?style=flat&logo=x&logoColor=white" width="200" alt="X Logo"/> </a>  
-<a href="https://www.youtube.com/@OfficialOrcaSlicer"><img src="https://img.shields.io/badge/OfficialOrcaSlicer-FF0000?style=flat&logo=youtube&logoColor=white" width="200" alt="YouTube Logo"/> </a>
-
-#### Join our Discord community:
-
-<a href="https://discord.gg/P4VE9UY9gJ"><img src="https://img.shields.io/badge/-Discord-5865F2?style=flat&logo=discord&logoColor=fff" width="200" alt="discord logo"/> </a>
-
-<table border="2" style="border-color: #ffa500; background-color:rgb(232, 220, 180); color: #856404;">
-<tr>
-<td>
-<strong>⚠️ CAUTION:</strong><br>
-Several clickbait and malicious websites, such as <b>orca-slicer[.]com</b> and <b>orcaslicer[.]net</b>, are pretending to be the official OrcaSlicer site. These sites may redirect you to dangerous downloads or contain misleading information.<br>
-<b>Our only official website is <a href="https://www.orcaslicer.com/">www.orcaslicer.com</a>.</b><br><br>
-If you come across any of these in search results, please <b>report them</b> as unsafe or phishing to help keep the community secure with:<br>
- - <a href="https://safebrowsing.google.com/safebrowsing/report_phish/">Google Safe Browsing</a><br>
- - <a href="https://www.microsoft.com/en-us/wdsi/support/report-unsafe-site">Microsoft Security Intelligence</a><br>
- - <a href="https://ipthreat.net/tools/reportphishing">IPThreat</a>
-</td>
-</tr>
-</table>
+[Download the latest alpha](https://github.com/tayloraaron078-tech/ForcaSlicer/releases) · [How to test and report](docs/forca/release/TESTING.md) · [Known issues](docs/forca/release/KNOWN_ISSUES.md)
 
 </div>
 
-# Main features
+> **This is an alpha.** Everything below works on the author's printers (Bambu Lab, mainly an H2S), but it has not been
+> tested on yours yet — that's what this release is for. Keep your normal slicer installed, check the first layers
+> of anything important, and please report what you find. Forca keeps its settings in its own folder, so it won't
+> change your OrcaSlicer setup.
 
-- **[Advanced Calibration Tools](https://www.orcaslicer.com/wiki/calibration_guide)**  
-  Comprehensive suite: temperature towers, flow rate, retraction & more for optimal performance.
-- **[Precise Wall](https://www.orcaslicer.com/wiki/quality_settings_precision#precise-wall) and [Seam Control](https://www.orcaslicer.com/wiki/quality_settings_seam)**  
-  Adjust outer wall spacing and apply scarf seams to enhance print accuracy.
-- **[Sandwich Mode](https://www.orcaslicer.com/wiki/quality_settings_wall_and_surfaces#innerouterinner) and [Polyholes](https://www.orcaslicer.com/wiki/quality_settings_precision#polyholes) Support**  
-  Use varied infill [patterns](https://www.orcaslicer.com/wiki/strength_settings_patterns) and accurate hole shapes for improved clarity.
-- **[Overhang](https://www.orcaslicer.com/wiki/quality_settings_overhangs) and [Support Optimization](https://www.orcaslicer.com/wiki#support-settings)**  
-  Modify geometry for printable overhangs with precise support placement.
-- **[Granular Controls and Customization](https://www.orcaslicer.com/wiki#process-settings)**  
-  Fine-tune print speed, layer height, pressure, and temperature with precision.
-- **Network Printer Support**  
-  Seamless integration with Klipper, PrusaLink, and OctoPrint for remote control.
-- **[Mouse Ear Brims](https://www.orcaslicer.com/wiki/others_settings_brim) & [Adaptive Bed Mesh](https://www.orcaslicer.com/wiki/printer_basic_information_adaptive_bed_mesh)**  
-  Automatic brims and adaptive mesh calibration ensure consistent adhesion.
-- **User-Friendly Interface**  
-  Intuitive drag-and-drop design with pre-made profiles for popular printers.
-- **[Open-Source](https://github.com/OrcaSlicer/OrcaSlicer) & [Community Driven](https://discord.gg/P4VE9UY9gJ)**  
-  Regular updates fueled by continuous community contributions.
-- **Wide Printer Compatibility**  
-  Supports a broad range of printers: Bambu Lab, Prusa, Creality, Voron, and more.
-- Additional features can be found in the [change notes](https://github.com/OrcaSlicer/OrcaSlicer/releases/).
+Forca Slicer is a fork of [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer). It keeps everything that makes
+Orca a great slicer and adds three things:
 
-# Wiki
+1. **Regional support interfaces** — a clean, removable release (for example a PETG interface under a PLA part),
+   exactly where you choose, instead of everywhere.
+2. **A guided Calibration Wizard** — take a filament from untuned to calibrated, step by step, inside the slicer.
+3. **Forca AI (experimental, optional)** — let *your own* AI assistant, such as Claude, work in the slicer with you,
+   under safety rules built into Forca. **Forca has no AI built in:** no AI model, no AI account, nothing sent to an
+   AI service. If you don't bring one, there is no AI.
 
-The [wiki](https://www.orcaslicer.com/wiki) aims to provide a detailed explanation of the slicer settings, including how to maximize their use and how to calibrate and set up your printer.
+Projects (`.3mf`) and printer/filament profiles are OrcaSlicer's formats, so your files open in both.
 
-- **[Access the wiki here](https://www.orcaslicer.com/wiki)**
-- **[Contribute to the wiki](https://www.orcaslicer.com/wiki/how_to_wiki)**
+# What Forca adds
 
-# Download
+## Regional support interfaces
+Give a bounded area of a model its own support-interface **filament**, top-Z **gap** (including a flush 0 mm gap)
+and interface layers, while the rest of the supports follow the object's normal settings.
 
-## Stable Release
+- **Place a box** (support-interface modifier) or **paint the surface** with a dedicated paint tool; each painted
+  filament becomes its own region.
+- Works with **Grid, Snug, Tree (Slim / Strong / Hybrid) and Organic** supports.
+- Paint helpers: Vertical / Horizontal stroke lock and "on overhangs only".
 
-📥 **[Download the Latest Stable Release](https://github.com/OrcaSlicer/OrcaSlicer/releases/latest)**  
-Visit our GitHub Releases page for the latest stable version of OrcaSlicer, recommended for most users.
+## Calibration Wizard
+A per-filament guided flow in its own tab: **Temperature → Max Volumetric Speed → Flow → Pressure Advance →
+(flow recheck) → Retraction → Shrinkage → (final check print)**.
 
-## Nightly Builds
+- Uses OrcaSlicer's own test prints, with a choice of method where Orca has several.
+- Slice & send straight to the printer, or generate only (SD card).
+- Progress bar and before/after table; results go into **one new "(calibrated)" filament preset** — your starting
+  preset is never changed.
 
-🌙 **[Download the Latest Nightly Build](https://github.com/OrcaSlicer/OrcaSlicer/releases/tag/nightly-builds)**  
-Explore the latest developments in OrcaSlicer with our nightly builds. Feedback on these versions is highly appreciated.
+## Forca AI (experimental, off by default)
+**Bring your own AI — or don't.** Forca doesn't contain an AI and doesn't need one. Forca AI is only a door that
+*your* AI app can use, and it stays shut unless you open it: while it's off, the connection isn't running at all,
+and Forca works exactly like a slicer with no AI. You choose which AI to use (Claude Desktop, Claude Code, or any
+other app that supports MCP, cloud or local), and your account and data stay with that app.
 
-### Belt Printer Builds
+When you do turn it on, it lets an AI assistant (Claude Code, or any app that speaks MCP) see and operate Forca — load and arrange models,
+choose presets, add support regions, slice and read the results, save a copy. For printers you choose, it can read
+status and take a camera snapshot (Bambu, over your local network).
 
-The [nightly release](https://github.com/OrcaSlicer/OrcaSlicer/releases/tag/nightly-builds) ships **two parallel builds**: the standard build and a belt-printer build. Both are attached to the same release — tell them apart by the filename suffix:
+Built-in rules the AI cannot switch off:
+- It **never saves over your files or presets** — its saves get new "(Claude <date>)" names.
+- It **never prints on its own** — it can only ask; you approve on a card in Forca, then send as usual.
+- It only sees the printers you tick, runs only on your computer, and needs a key you give it.
 
-- **Standard** — no suffix (e.g. `OrcaSlicer_Windows_Installer_x64_nightly.exe`)
-- **Belt** — `_belt` suffix (e.g. `OrcaSlicer_Windows_Installer_x64_nightly_belt.exe`)
+See [SECURITY.md](SECURITY.md) for how it's protected.
 
-The `_belt` builds add **experimental support for belt / conveyor (infinite-Z) printers**, where the model is sliced against a tilted belt surface instead of a flat horizontal bed. They include ready-to-use belt printer profiles, the full belt slicing pipeline (mesh rotation and G-code transforms), belt-aware support generation, and a tilted-bed preview.
+# Install (Windows)
+Download one of these from [Releases](https://github.com/tayloraaron078-tech/ForcaSlicer/releases):
+- **Installer** — `Forca_Slicer_<version>_win64_setup.exe`: installs to Program Files, adds a Start-menu entry
+  (and a desktop icon if you tick it) and an uninstaller.
+- **Portable zip** — `Forca_Slicer_<version>_win64_portable.zip`: unzip anywhere (for example `C:\Forca Slicer`)
+  and run `forca-slicer.exe` in the `ForcaSlicer` folder. Nothing is installed.
 
-> ⚠️ Belt printer support is under active development and is **not yet merged into `main`** — it currently ships only in these parallel `_belt` builds, produced from the [`belt-printer`](https://github.com/OrcaSlicer/OrcaSlicer/tree/belt-printer) branch. See tracking PR [#14394](https://github.com/OrcaSlicer/OrcaSlicer/pull/14394) and the original documentation in [#12998](https://github.com/OrcaSlicer/OrcaSlicer/pull/12998).
+Then:
+- Windows may show "Windows protected your PC" because the alpha isn't code-signed: click **More info → Run
+  anyway**. (Compare the SHA-256 on the release page if you want to be sure the file is ours.)
+- On first start, Forca can copy your OrcaSlicer settings. It copies — your OrcaSlicer folder is never changed.
+- Forca checks this repository's releases for a newer Forca when it starts (not in Stealth mode); nothing else is
+  sent.
 
-# How to install
+macOS and Linux builds are not available yet.
 
-## Windows
+# Report problems and ideas
+Please use [GitHub Issues](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/new/choose) (the forms ask for exactly what's
+needed) and [Discussions](https://github.com/tayloraaron078-tech/ForcaSlicer/discussions) for questions. **Please don't report Forca
+problems to OrcaSlicer** — if it's a Forca build, report it here even if you think the bug is Orca's; we'll
+forward it upstream if it is. The [tester guide](docs/forca/release/TESTING.md) explains what's most useful.
 
-Download the **Windows Installer exe** for your preferred version from the [releases page](https://github.com/OrcaSlicer/OrcaSlicer/releases). Both `x64` and `arm64` installers are published — pick the one matching your CPU.
+# Built on OrcaSlicer
+Everything outside the three features above is OrcaSlicer, and Orca's documentation applies:
+<https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to late
+September 2026) and merges newer Orca occasionally, not continuously. That includes OrcaSlicer's own experimental
+**Design (CAD) tab**, which stays off until you enable it in Preferences.
 
-- *For convenience there is also a portable build available.*
-    <details>
-    <summary>Troubleshooting</summary>
+Open-source slicing is built on a tradition of collaboration and attribution: [Slic3r](https://github.com/Slic3r/Slic3r)
+(Alessandro Ranellucci and the RepRap community) → [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) →
+[Bambu Studio](https://github.com/bambulab/BambuStudio) and [SuperSlicer](https://github.com/supermerill/SuperSlicer)
+→ [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer). Forca continues that chain. Full credit and thanks to
+SoftFever and the OrcaSlicer community, and to everyone upstream of them. Forca is not affiliated with or endorsed
+by OrcaSlicer or Bambu Lab.
 
-  - *If you have troubles to run the build, you might need to install following runtimes:*
-  - [MicrosoftEdgeWebView2RuntimeInstallerX64](https://github.com/OrcaSlicer/OrcaSlicer/releases/download/v1.0.10-sf2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe)
-    - [Details of this runtime](https://aka.ms/webview2)
-    - [Alternative Download Link Hosted by Microsoft](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
-  - [vcredist2019_x64](https://github.com/OrcaSlicer/OrcaSlicer/releases/download/v1.0.10-sf2/vcredist2019_x64.exe)
-    - [Alternative Download Link Hosted by Microsoft](https://aka.ms/vs/17/release/vc_redist.x64.exe)
-    - This file may already be available on your computer if you've installed visual studio.  Check the following location: `%VCINSTALLDIR%Redist\MSVC\v142`
-    </details>
-
-### Microsoft Store
-
-Install from the [Microsoft Store](https://apps.microsoft.com/detail/9mv6gl23xm59) when you prefer a Store-signed package (helps on Windows 11 Smart App Control).
-
-### Windows Package Manager
-
-```shell
-winget install --id=SoftFever.OrcaSlicer -e
-```
-
-## Mac
-
-1. Download the universal DMG, which runs on both Apple Silicon and Intel Macs.
-2. Drag OrcaSlicer.app to Application folder.
-3. *If you want to run a build from a PR, you also need to follow the instructions below:*
-
-    <details>
-    <summary>Quarantine</summary>
-
-    - Option 1 (You only need to do this once. After that the app can be opened normally.):
-      - Step 1: Hold _cmd_ and right click the app, from the context menu choose **Open**.
-      - Step 2: A warning window will pop up, click _Open_
-
-    - Option 2:
-      Execute this command in terminal:
-
-      ```shell
-      xattr -dr com.apple.quarantine /Applications/OrcaSlicer.app
-      ```
-
-    - Option 3:
-        - Step 1: open the app, a warning window will pop up  
-            ![mac_cant_open](./SoftFever_doc/mac_cant_open.png)
-        - Step 2: in `System Settings` -> `Privacy & Security`, click `Open Anyway`:  
-            ![mac_security_setting](./SoftFever_doc/mac_security_setting.png)
-    </details>
-
-### Homebrew Cask
-
-```shell
-brew install --cask orcaslicer
-```
-
-The [Homebrew cask](https://formulae.brew.sh/cask/orcaslicer) installs the official macOS DMG from [GitHub Releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
-
-## Linux
-
-### Flathub (Recommended)
-
-OrcaSlicer is available through FlatHub:
-
-<a href='https://flathub.org/apps/com.orcaslicer.OrcaSlicer'><img width='240' alt='Download on Flathub' src='https://dl.flathub.org/assets/badges/flathub-badge-en.png'/></a>
-
-Install from the command line:
-
-```shell
-flatpak install flathub com.orcaslicer.OrcaSlicer
-flatpak run com.orcaslicer.OrcaSlicer
-```
-
-It can also be installed through graphical software managers (KDE Discover, GNOME Software, etc.) when Flathub is enabled. Search for **OrcaSlicer** in your software center.
-
-### AppImage
-
-AppImages are published for both **x86_64** and **aarch64** (ARM64). Pick the file matching your CPU — the ARM64 build has `aarch64` in its name (e.g. `OrcaSlicer_Linux_AppImage_Ubuntu2404_aarch64_*.AppImage`).
-
- 1. Download App image from the [releases page](https://github.com/OrcaSlicer/OrcaSlicer/releases).
- 2. Double click the downloaded file to run it.
-
- 3. If you run into trouble executing it, try this command in the terminal:
-    `chmod +x /path_to_appimage/OrcaSlicer_Linux.AppImage`
-
-# How to Compile
-
-All updated build instructions for Windows, macOS, and Linux are now available on the official [OrcaSlicer Wiki - How to build](https://www.orcaslicer.com/wiki/how_to_build) page.
-
-Please refer to the wiki to ensure you're following the latest and most accurate steps for your platform.
-
-# Klipper Note
-
-If you're running Klipper, it's recommended to add the following configuration to your `printer.cfg` file.
-
-```gcode
-# Enable object exclusion
-[exclude_object]
-
-# Enable arcs support
-[gcode_arcs]
-resolution: 0.1
-```
-
-# Supports
-
-**OrcaSlicer** is an open-source project, and we're deeply grateful to all our sponsors and backers.  
-Their generous support helps fund filaments and other essential 3D printing materials for the project.  
-Thank you! :)
-
-## Sponsors
-
-<table>
-<tr>
-<td>
-<a href="https://qidi3d.com/" style="display:inline-block; border-radius:8px; background:#fff;">
-  <img src="SoftFever_doc\sponsor_logos\QIDI.png" alt="QIDI" width="100" height="100">
-</a>
-</td>
-<td>
-<a href="https://bigtree-tech.com/" style="display:inline-block; border-radius:8px; background:#222;">
-    <img src="SoftFever_doc\sponsor_logos\BigTreeTech.png" alt="BIGTREE TECH" width="100" height="100">
-</a>
-</td>
-</tr>
-</table>
-
-## Backers:
-
-**Ko-fi supporters** ☕: [Backers list](https://github.com/user-attachments/files/16147016/Supporters_638561417699952499.csv)
-
-## Support the project
-
-<a href="https://github.com/sponsors/SoftFever"><img src="https://img.shields.io/badge/GitHub%20Sponsors-30363D?style=flat&logo=GitHub-Sponsors&logoColor=EA4AAA" height="50"></a>  
-<a href="https://ko-fi.com/G2G5IP3CP"><img src="https://img.shields.io/badge/Support_me_on_Ko--fi-FF5E5B?style=flat&logo=ko-fi&logoColor=white" height="50"></a>  
-<a href="https://paypal.me/softfever3d"><img src="https://img.shields.io/badge/PayPal-003087?style=flat&logo=paypal&logoColor=fff" height="50"></a>
-
-## Some Background
-
-Open-source slicing has always been built on a tradition of collaboration and attribution. [Slic3r](https://github.com/Slic3r/Slic3r), created by Alessandro Ranellucci and the RepRap community, laid the foundation. [PrusaSlicer](https://github.com/prusa3d/PrusaSlicer) by Prusa Research built on Slic3r and acknowledged that heritage. [Bambu Studio](https://github.com/bambulab/BambuStudio) in turn forked from PrusaSlicer, and [SuperSlicer](https://github.com/supermerill/SuperSlicer) by @supermerill extended PrusaSlicer with community-driven enhancements. Each project carried the work of its predecessors forward, crediting those who came before.
-
-OrcaSlicer began in that same spirit, drawing from BambuStudio, PrusaSlicer, and ideas inspired by CuraSlicer and SuperSlicer. But it has since grown far beyond its origins. Through relentless innovation — introducing advanced calibration tools, precise wall and seam control, tree supports, adaptive slicing, and hundreds of other features — OrcaSlicer has become the most widely used and actively developed open-source slicer in the 3D printing community. Many of its innovations have been adopted by other slicers, making it a driving force for the entire industry.
-
-The OrcaSlicer logo was designed by community member [Justin Levine](https://github.com/jal-co).
+# Building from source
+See [OrcaSlicer — How to build](https://www.orcaslicer.com/wiki/how_to_build); it applies unchanged. Windows quick
+reference: `build_win.bat -d` once for dependencies, then `build_win.bat -s` (together about an hour on a recent
+PC). `build_forca_release.ps1 -Config Release` packages a portable zip; add `-Installer` for the installer (needs
+[NSIS](https://nsis.sourceforge.io/)). Maintenance notes (upstream merges, the blue retint) are in [`docs/forca/`](docs/forca/README.md).
 
 # License
-
-- **OrcaSlicer** is licensed under the GNU Affero General Public License, version 3.
-- The **GNU Affero General Public License**, version 3 ensures that if you use any part of this software in any way (even behind a web server), your software must be released under the same license.
-- OrcaSlicer includes a **pressure advance calibration pattern test** adapted from Andrew Ellis' generator, which is licensed under GNU General Public License, version 3. Ellis' generator is itself adapted from a generator developed by Sineos for Marlin, which is licensed under GNU General Public License, version 3.
-- The **Bambu networking plugin** is based on non-free libraries from BambuLab. It is optional to the OrcaSlicer and provides extended functionalities for Bambulab printer users.
+- Forca Slicer is licensed under the **GNU Affero General Public License v3.0**, the same as OrcaSlicer. The complete
+  source for every release is in this repository (and attached to each GitHub release).
+- Forca includes a pressure advance pattern test adapted from Andrew Ellis' generator (GPL-3.0), itself adapted from
+  Sineos' generator for Marlin (GPL-3.0).
+- The **Bambu network plugin** is proprietary software from Bambu Lab, downloaded separately and optional; it
+  provides Bambu printer features (device control, camera).
+- No warranty (see the license). You are responsible for what you print — check the preview and the first layers.

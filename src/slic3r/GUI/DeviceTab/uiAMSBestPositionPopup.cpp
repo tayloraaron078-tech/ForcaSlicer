@@ -109,7 +109,7 @@ UiStyledSwitchPanel::UiStyledSwitchPanel(wxWindow* parent,
                                     wxWindowID id = wxID_ANY,
                                     const wxPoint& pos = wxDefaultPosition,
                                     const wxSize& size = wxDefaultSize,
-                                    const wxColour& borderColor = wxColour("#EEEEEE"),
+                                    const wxColour& borderColor = wxColour("#D7E2F3"),
                                     const wxColour& bgColor = wxColour("#FFFFFF"),
                                     bool borderDashed = true,
                                     int borderWidth = 2,
@@ -268,7 +268,7 @@ void UiStyledSwitchPanel::OnPaint(wxPaintEvent& event)
     int selBaseY = height - FromDIP(56);
     dc.DrawRoundedRectangle(wxRect(selBaseX, selBaseY, selWidth, selHeight), FromDIP(4));
     // wxFont font(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    dc.SetTextForeground(wxColour("#262E30"));
+    dc.SetTextForeground(wxColour("#1A2C4C"));
     // dc.SetFont(font);
     int selTextPosX = selBaseX + (selWidth - selTextWidth) / 2;
     int selTextPosY = selBaseY + (selHeight - selTextHeight) / 2;
@@ -282,7 +282,7 @@ void UiStyledSwitchPanel::OnPaint(wxPaintEvent& event)
     int hGap = FromDIP(32);
     wxRect HL(hLBaseX, hLBaseY + FromDIP(1), hWidth, hHeight);
     wxRect HR(hLBaseX + hWidth + hGap, hLBaseY + FromDIP(1), hWidth, hHeight);
-    dc.SetBrush(wxBrush(wxColour("#D9D9D9")));
+    dc.SetBrush(wxBrush(wxColour("#CDDAEC")));
     dc.SetPen(wxPen(*wxTRANSPARENT_PEN));
     dc.DrawRectangle(HL);
     dc.DrawRectangle(HR);
@@ -523,8 +523,8 @@ void UiAMSSlot::OnPaint(wxPaintEvent&)
     dc.SetPen(wxPen(wxColour("#ffffff")));
     if (m_scaleFactor < 1.0)
     {
-        dc.SetBrush(wxBrush(wxColour("#F8F8F8")));
-        dc.SetPen(wxPen(wxColour("#F8F8F8")));
+        dc.SetBrush(wxBrush(wxColour("#E3EBF8")));
+        dc.SetPen(wxPen(wxColour("#E3EBF8")));
     }
     dc.DrawRectangle(wxRect(0, 0, cli.x, cli.y));
     DrawLine(dc, cli);
@@ -537,7 +537,7 @@ UiAMS::UiAMS( wxWindow* parent,
          wxWindowID id = wxID_ANY,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& minSize = wxDefaultSize)
-    : UiStyledAMSPanel(parent, id, pos, wxDefaultSize, wxColour("#dbdbdb"), wxColour("#ffffff"), false, amsInfo.front().amsName),
+    : UiStyledAMSPanel(parent, id, pos, wxDefaultSize, wxColour("#CFDBED"), wxColour("#ffffff"), false, amsInfo.front().amsName),
 
      m_amsInfo(amsInfo), m_minSize(minSize)
 {
@@ -613,7 +613,7 @@ ReselectMachineDialog::ReselectMachineDialog(wxWindow* parent)
     // summaryText->SetFont(wxGetApp().normal_font());
 
     filamentSwitch = new UiStyledSwitchPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, //wxSize(FromDIP(571), FromDIP(439)),
-                                                    wxColour("#EEEEEE"), wxColour("#ffffff"), true, FromDIP(1), FromDIP(5), true);
+                                                    wxColour("#D7E2F3"), wxColour("#ffffff"), true, FromDIP(1), FromDIP(5), true);
 
 
     filamentTips = new wxStaticText(this, wxID_ANY, _L("Filament Status:"));
@@ -621,7 +621,7 @@ ReselectMachineDialog::ReselectMachineDialog(wxWindow* parent)
 
     // statusBar = new UiStatusContainer(this);
     statusBar = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    statusBar->SetBackgroundColour(wxColour("#F8F8F8"));
+    statusBar->SetBackgroundColour(wxColour("#E3EBF8"));
     statusBar->SetMinSize(wxSize(FromDIP(570), -1));
     wxBoxSizer* statusBarSizer = new wxBoxSizer(wxHORIZONTAL);
     statusBar->SetSizer(statusBarSizer);

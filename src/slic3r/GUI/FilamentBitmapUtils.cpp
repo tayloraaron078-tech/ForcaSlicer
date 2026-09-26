@@ -165,7 +165,7 @@ std::vector<wxColour> mixed_gradient_ramp(const Slic3r::DynamicPrintConfig& cfg,
 
     auto component_colour = [&](unsigned int id) {
         wxColour c = (id >= 1 && id <= colour_opt->values.size()) ? wxColour(colour_opt->values[id - 1]) : wxColour();
-        return c.IsOk() ? c : wxColour("#D9D9D9");
+        return c.IsOk() ? c : wxColour("#CDDAEC");
     };
 
     // Both gradient_range and the curve express the *first* component's ratio over Z, so
@@ -231,7 +231,7 @@ static wxBitmap create_transparent_bitmap(const wxSize& size) {
     if (!bdc.dc.IsOk()) return wxNullBitmap;
 
     // Create checkerboard pattern
-    wxColour light_gray(217, 217, 217);  // #D9D9D9
+    wxColour light_gray(217, 217, 217);  // #CDDAEC
     wxColour white(255, 255, 255);
 
     bool is_dark_mode = wxGetApp().dark_mode();

@@ -22,6 +22,9 @@ add_executable(${_TEST_NAME}_tests
     test_preset_options.cpp
     test_elephant_foot_compensation.cpp
     test_fill_corner_smoothing.cpp
+    test_forca_ai_safe_path.cpp
+    test_forca_preset_merge.cpp
+    test_forca_version.cpp
     test_filament_mixer.cpp
     test_fill_plane_path.cpp
     test_geometry.cpp

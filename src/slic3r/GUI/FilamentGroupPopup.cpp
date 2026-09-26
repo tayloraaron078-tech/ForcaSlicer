@@ -8,7 +8,7 @@
 
 namespace Slic3r { namespace GUI {
 
-static const wxColour LabelEnableColor = wxColour("#262E30");
+static const wxColour LabelEnableColor = wxColour("#1A2C4C");
 static const wxColour LabelDisableColor = wxColour("#ACACAC");
 static const wxColour GreyColor = wxColour("#6B6B6B");
 static const wxColour BackGroundColor = wxColour("#FFFFFF");
@@ -417,13 +417,13 @@ void FilamentGroupPopup::MakeSmartFilamentSection(wxSizer *top_sizer, int horizo
     m_smart_filament_panel = new StaticBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0);
     m_smart_filament_panel->SetCornerRadius(FromDIP(4));
     m_smart_filament_panel->SetBorderWidth(FromDIP(1));
-    m_smart_filament_panel->SetBorderColor(wxColour("#CECECE"));
-    m_smart_filament_panel->SetBackgroundColor(StateColor(std::pair<wxColour, int>(wxColour("#F8F8F8"), StateColor::Normal)));
+    m_smart_filament_panel->SetBorderColor(wxColour("#C2CFE4"));
+    m_smart_filament_panel->SetBackgroundColor(StateColor(std::pair<wxColour, int>(wxColour("#E3EBF8"), StateColor::Normal)));
 
     auto *label = new Label(m_smart_filament_panel, _L("Enable smart filament assign: Assign one filament to multiple nozzles to maximize savings"));
     label->SetFont(Label::Body_12);
     label->SetForegroundColour(GreyColor);
-    label->SetBackgroundColour(wxColour("#F8F8F8"));
+    label->SetBackgroundColour(wxColour("#E3EBF8"));
     label->Wrap(FromDIP(240));
 
     m_smart_filament_switch = new SwitchButton(m_smart_filament_panel);

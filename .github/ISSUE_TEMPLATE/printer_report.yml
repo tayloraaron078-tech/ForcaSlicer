@@ -1,0 +1,41 @@
+name: "Printer report: Forca on my printer"
+description: Tell us how Forca worked on your printer — good results are useful too.
+labels: ["printer-report"]
+body:
+  - type: markdown
+    attributes:
+      value: Every printer we hear about goes into the "tested printers" list in the README.
+  - type: input
+    id: version
+    attributes:
+      label: Forca version
+    validations:
+      required: true
+  - type: input
+    id: printer
+    attributes:
+      label: Printer model, firmware and nozzle
+      placeholder: Prusa MK4S, 6.2.0, 0.4 mm
+    validations:
+      required: true
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: What did you try?
+      options:
+        - label: Everyday slicing and printing
+        - label: Regional support interfaces
+        - label: Calibration Wizard
+        - label: Forca AI
+  - type: dropdown
+    id: overall
+    attributes:
+      label: Overall
+      options: ["Worked well", "Worked with small problems", "Didn't work"]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes and photos
+      description: Filaments, what went well, what didn't (open a bug report for anything broken).

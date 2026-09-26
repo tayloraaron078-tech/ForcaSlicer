@@ -113,6 +113,8 @@ static constexpr const char* CUSTOM_SUPPORTS_ATTR = "slic3rpe:custom_supports";
 static constexpr const char* CUSTOM_SEAM_ATTR = "slic3rpe:custom_seam";
 static constexpr const char* MMU_SEGMENTATION_ATTR = "slic3rpe:mmu_segmentation";
 static constexpr const char* FUZZY_SKIN_ATTR = "slic3rpe:fuzzy_skin";
+// [regional-supports fork] per-facet support-interface region index (MMU-style)
+static constexpr const char* SUPPORT_IFACE_REGION_ATTR = "slic3rpe:support_interface_region";
 
 static constexpr const char* KEY_ATTR = "key";
 static constexpr const char* VALUE_ATTR = "value";
@@ -368,6 +370,13 @@ ModelVolumeType type_from_string(const std::string &s)
     if (s == "ParameterModifier") return ModelVolumeType::PARAMETER_MODIFIER;
     if (s == "SupportEnforcer") return ModelVolumeType::SUPPORT_ENFORCER;
     if (s == "SupportBlocker") return ModelVolumeType::SUPPORT_BLOCKER;
+    // [regional-supports fork] snake_case, not PascalCase: the generic-3mf writer emits this
+    // volume type via ModelVolume::type_to_string() (line ~3130), so the loader must match that
+    // exact serialized token to round-trip. Note the enforcer/blocker entries above are a stock
+    // OrcaSlicer quirk (written snake_case, read PascalCase) so they don't actually round-trip
+    // through the generic path; bbs_3mf (the Bambu path Aaron uses) round-trips via the same
+    // ModelVolume helpers and needs no change here.
+    if (s == "support_interface_modifier") return ModelVolumeType::SUPPORT_INTERFACE_MODIFIER;
     // Default value if invalud type string received.
     return ModelVolumeType::MODEL_PART;
 }
@@ -419,6 +428,7 @@ ModelVolumeType type_from_string(const std::string &s)
             std::vector<std::string> custom_seam;
             std::vector<std::string> mmu_segmentation;
             std::vector<std::string> fuzzy_skin;
+            std::vector<std::string> support_interface_region; // [regional-supports fork]
 
             bool empty() { return vertices.empty() || triangles.empty(); }
 
@@ -429,6 +439,7 @@ ModelVolumeType type_from_string(const std::string &s)
                 custom_seam.clear();
                 mmu_segmentation.clear();
                 fuzzy_skin.clear();
+                support_interface_region.clear(); // [regional-supports fork]
             }
         };
 
@@ -1744,6 +1755,8 @@ ModelVolumeType type_from_string(const std::string &s)
         m_curr_object.geometry.custom_seam.push_back(get_attribute_value_string(attributes, num_attributes, CUSTOM_SEAM_ATTR));
         m_curr_object.geometry.fuzzy_skin.push_back(get_attribute_value_string(attributes, num_attributes, FUZZY_SKIN_ATTR));
         m_curr_object.geometry.mmu_segmentation.push_back(get_attribute_value_string(attributes, num_attributes, MMU_SEGMENTATION_ATTR));
+        // [regional-supports fork]
+        m_curr_object.geometry.support_interface_region.push_back(get_attribute_value_string(attributes, num_attributes, SUPPORT_IFACE_REGION_ATTR));
         return true;
     }
 
@@ -2161,6 +2174,7 @@ ModelVolumeType type_from_string(const std::string &s)
             volume->seam_facets.reserve(triangles_count);
             volume->mmu_segmentation_facets.reserve(triangles_count);
             volume->fuzzy_skin_facets.reserve(triangles_count);
+            volume->support_interface_region_facets.reserve(triangles_count); // [regional-supports fork]
             for (size_t i=0; i<triangles_count; ++i) {
                 size_t index = volume_data.first_triangle_id + i;
                 assert(index < geometry.custom_supports.size());
@@ -2174,11 +2188,15 @@ ModelVolumeType type_from_string(const std::string &s)
                     volume->mmu_segmentation_facets.set_triangle_from_string(i, geometry.mmu_segmentation[index]);
                 if (! geometry.fuzzy_skin[index].empty())
                 	volume->fuzzy_skin_facets.set_triangle_from_string(i, geometry.fuzzy_skin[index]);
+                // [regional-supports fork]
+                if (index < geometry.support_interface_region.size() && ! geometry.support_interface_region[index].empty())
+                    volume->support_interface_region_facets.set_triangle_from_string(i, geometry.support_interface_region[index]);
             }
             volume->supported_facets.shrink_to_fit();
             volume->seam_facets.shrink_to_fit();
             volume->mmu_segmentation_facets.shrink_to_fit();
             volume->fuzzy_skin_facets.shrink_to_fit();
+            volume->support_interface_region_facets.shrink_to_fit(); // [regional-supports fork]
 
             // apply the remaining volume's metadata
             for (const Metadata& metadata : volume_data.metadata) {
@@ -2838,6 +2856,16 @@ ModelVolumeType type_from_string(const std::string &s)
                     output_buffer += FUZZY_SKIN_ATTR;
                     output_buffer += "=\"";
                     output_buffer += fuzzy_skin_data_string;
+                    output_buffer += "\"";
+                }
+
+                // [regional-supports fork]
+                std::string support_iface_region_data_string = volume->support_interface_region_facets.get_triangle_as_string(i);
+                if (! support_iface_region_data_string.empty()) {
+                    output_buffer += " ";
+                    output_buffer += SUPPORT_IFACE_REGION_ATTR;
+                    output_buffer += "=\"";
+                    output_buffer += support_iface_region_data_string;
                     output_buffer += "\"";
                 }
 

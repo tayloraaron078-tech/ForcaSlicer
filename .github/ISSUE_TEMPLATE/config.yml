@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Community Support (Discord channel)
-    url: https://discord.gg/P4VE9UY9gJ
-    about: Please ask and answer support "how do I?"questions here.
-  - name: Discussion Forum
-    url: https://github.com/OrcaSlicer/OrcaSlicer/discussions
-    about: Please raise ideas and feature suggestions here.
+  - name: Questions and help
+    url: https://github.com/tayloraaron078-tech/ForcaSlicer/discussions
+    about: How do I...? Ask in Discussions.
+  - name: Security problem
+    url: https://github.com/tayloraaron078-tech/ForcaSlicer/security/advisories/new
+    about: Please report privately, not as a public issue.
+  - name: A bug in stock OrcaSlicer (not using Forca)
+    url: https://github.com/OrcaSlicer/OrcaSlicer/issues
+    about: Only if you can reproduce it in OrcaSlicer itself. Forca problems belong here.

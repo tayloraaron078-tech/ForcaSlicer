@@ -1679,7 +1679,7 @@ ColorPickerPopup::ColorPickerPopup(wxWindow* parent)
     m_title_ams->SetBackgroundColour(wxColour(238, 238, 238));
     m_sizer_ams->Add(m_title_ams, 0, wxALL, 5);
     auto ams_line = new wxPanel(m_def_color_box, wxID_ANY, wxDefaultPosition, wxSize(-1, 1), wxTAB_TRAVERSAL);
-    ams_line->SetBackgroundColour(wxColour("#CECECE"));
+    ams_line->SetBackgroundColour(wxColour("#C2CFE4"));
     ams_line->SetMinSize(wxSize(-1, 1));
     ams_line->SetMaxSize(wxSize(-1, 1));
     m_sizer_ams->Add(ams_line, 1, wxALIGN_CENTER, 0);
@@ -1726,7 +1726,7 @@ ColorPickerPopup::ColorPickerPopup(wxWindow* parent)
     auto other_line = new wxPanel(m_def_color_box, wxID_ANY, wxDefaultPosition, wxSize(-1, 1), wxTAB_TRAVERSAL);
     other_line->SetMinSize(wxSize(-1, 1));
     other_line->SetMaxSize(wxSize(-1, 1));
-    other_line->SetBackgroundColour(wxColour("#CECECE"));
+    other_line->SetBackgroundColour(wxColour("#C2CFE4"));
     m_sizer_other->Add(other_line, 1, wxALIGN_CENTER, 0);
 
     //custom color
@@ -1735,7 +1735,7 @@ ColorPickerPopup::ColorPickerPopup(wxWindow* parent)
     m_title_custom->SetFont(::Label::Body_14);
     m_title_custom->SetBackgroundColour(wxColour(238, 238, 238));
     auto custom_line = new wxPanel(m_def_color_box, wxID_ANY, wxDefaultPosition, wxSize(-1, 1), wxTAB_TRAVERSAL);
-    custom_line->SetBackgroundColour(wxColour("#CECECE"));
+    custom_line->SetBackgroundColour(wxColour("#C2CFE4"));
     custom_line->SetMinSize(wxSize(-1, 1));
     custom_line->SetMaxSize(wxSize(-1, 1));
     m_sizer_custom->Add(m_title_custom, 0, wxALL, 5);

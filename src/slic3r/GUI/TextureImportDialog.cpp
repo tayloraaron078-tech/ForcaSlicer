@@ -55,7 +55,7 @@ static wxColour texture_import_text_colour()
 
 // StaticLine::SetLineColour stores the raw key and resolves it itself when it paints, so those
 // sinks take SEPARATOR_COLOUR_KEY directly; only raw wx sinks need the resolved form below.
-static constexpr const char* SEPARATOR_COLOUR_KEY = "#CECECE";
+static constexpr const char* SEPARATOR_COLOUR_KEY = "#C2CFE4";
 
 static wxColour texture_import_separator_colour()
 {
@@ -69,12 +69,12 @@ static wxColour texture_import_separator_colour()
 static void apply_accent_button_colours(Button* btn)
 {
     btn->SetBackgroundColor(StateColor(
-        std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Disabled),
+        std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Disabled),
         std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed),
         std::pair<wxColour, int>(wxColour(38, 166, 154), StateColor::Hovered),
         std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Normal)));
     btn->SetBorderColor(StateColor(
-        std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Disabled),
+        std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Disabled),
         std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Normal)));
     btn->SetTextColor(StateColor(
         std::pair<wxColour, int>(wxColour("#6B6B6A"), StateColor::Disabled),
@@ -85,8 +85,8 @@ static void apply_accent_button_colours(Button* btn)
 // "what you see is not what this button would apply".
 static void apply_muted_button_colours(Button* btn)
 {
-    btn->SetBackgroundColor(wxColour("#CECECE"));
-    btn->SetBorderColor(wxColour("#CECECE"));
+    btn->SetBackgroundColor(wxColour("#C2CFE4"));
+    btn->SetBorderColor(wxColour("#C2CFE4"));
     btn->SetTextColor(wxColour("#6B6B6A"));
 }
 
@@ -289,7 +289,7 @@ void AccentSlider::OnPaint(wxPaintEvent&)
     int pen_w = FromDIP(2);
 
     wxColour accent_clr = StateColor::darkModeColorFor(IsEnabled() ? wxColour("#009688") : wxColour("#ACACAC"));
-    wxColour track_clr  = StateColor::darkModeColorFor(IsEnabled() ? wxColour("#CECECE") : wxColour("#DFDFDF"));
+    wxColour track_clr  = StateColor::darkModeColorFor(IsEnabled() ? wxColour("#C2CFE4") : wxColour("#D3DEEF"));
 
     int tx = xFromValue();
 
@@ -691,7 +691,7 @@ private:
     wxPanel* create_item_row(size_t idx, int row_h)
     {
         wxColour row_bg    = StateColor::darkModeColorFor(*wxWHITE);
-        wxColour hover_bg  = StateColor::darkModeColorFor(wxColour("#F4F4F4"));
+        wxColour hover_bg  = StateColor::darkModeColorFor(wxColour("#DDE8F6"));
         wxColour name_fg   = texture_import_text_colour();
 
         wxPanel* row = new wxPanel(m_content, wxID_ANY, wxDefaultPosition, wxSize(-1, row_h));
@@ -786,7 +786,7 @@ private:
     wxPanel* create_mixed_item_row(const TextureFilamentEntry& entry, int row_h)
     {
         wxColour row_bg    = StateColor::darkModeColorFor(*wxWHITE);
-        wxColour hover_bg  = StateColor::darkModeColorFor(wxColour("#F4F4F4"));
+        wxColour hover_bg  = StateColor::darkModeColorFor(wxColour("#DDE8F6"));
         wxColour name_fg   = texture_import_text_colour();
         const int idx = entry.dialog_index;
 
@@ -824,7 +824,7 @@ private:
 
                 const unsigned int comp_id = entry.mixed_components[ci];
                 const int comp_dialog_idx = comp_id >= 1 ? (int)comp_id - 1 : -1;
-                wxColour comp_clr("#D9D9D9");
+                wxColour comp_clr("#CDDAEC");
                 if (comp_dialog_idx >= 0 && comp_dialog_idx < (int)m_colors_rgba.size()) {
                     const auto& c = m_colors_rgba[comp_dialog_idx];
                     comp_clr = wxColour((unsigned char)(c[0] * 255.f),
@@ -951,7 +951,7 @@ private:
     wxPanel* create_item_row(wxWindow* parent, TextureAutoMixMode mode, int row_h)
     {
         wxColour row_bg   = StateColor::darkModeColorFor(*wxWHITE);
-        wxColour hover_bg = StateColor::darkModeColorFor(wxColour("#F4F4F4"));
+        wxColour hover_bg = StateColor::darkModeColorFor(wxColour("#DDE8F6"));
         wxColour text_fg  = texture_import_text_colour();
         wxColour accent   = StateColor::darkModeColorFor(wxColour("#009688"));
 
@@ -1487,7 +1487,7 @@ void TexturePreviewCanvas::render()
     wxSize viewport_sz = gl_viewport_size(this, sz);
     glViewport(0, 0, viewport_sz.x, viewport_sz.y);
     // Same palette key as the preview container, so canvas and frame cannot drift apart.
-    const wxColour clear_clr = StateColor::darkModeColorFor(wxColour("#EEEEEE"));
+    const wxColour clear_clr = StateColor::darkModeColorFor(wxColour("#D7E2F3"));
     glClearColor(clear_clr.Red() / 255.f, clear_clr.Green() / 255.f, clear_clr.Blue() / 255.f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1898,7 +1898,7 @@ void TextureImportDialog::build_ui()
 {
     const wxColour dialog_bg = StateColor::darkModeColorFor(*wxWHITE);
     SetBackgroundColour(dialog_bg);
-    SetForegroundColour(StateColor::darkModeColorFor(wxColour("#323A3D")));
+    SetForegroundColour(StateColor::darkModeColorFor(wxColour("#24395A")));
 
     wxBoxSizer* root_sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -1946,7 +1946,7 @@ void TextureImportDialog::build_ui()
 
 void TextureImportDialog::build_preview_panel(wxWindow* parent, wxSizer* sizer)
 {
-    wxColour preview_bg = StateColor::darkModeColorFor(wxColour("#EEEEEE"));
+    wxColour preview_bg = StateColor::darkModeColorFor(wxColour("#D7E2F3"));
     wxColour preview_bd = texture_import_separator_colour();
 
     wxPanel* preview_container = new wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
@@ -2054,7 +2054,7 @@ void TextureImportDialog::build_preview_panel(wxWindow* parent, wxSizer* sizer)
 
 void TextureImportDialog::build_params_panel(wxWindow* parent, wxSizer* sizer)
 {
-    wxColour label_fg = StateColor::darkModeColorFor(wxColour("#323A3D"));
+    wxColour label_fg = StateColor::darkModeColorFor(wxColour("#24395A"));
 
     wxBoxSizer* color_header_sizer = new wxBoxSizer(wxHORIZONTAL);
     wxStaticText* lbl_colors = new wxStaticText(parent, wxID_ANY, _L("Color Count"));
@@ -2076,15 +2076,15 @@ void TextureImportDialog::build_params_panel(wxWindow* parent, wxSizer* sizer)
             std::pair<wxColour, int>(wxColour(0, 137, 123), StateColor::Pressed | StateColor::Checked),
             std::pair<wxColour, int>(wxColour(38, 166, 154), StateColor::Hovered | StateColor::Checked),
             std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Checked),
-            std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Pressed),
-            std::pair<wxColour, int>(wxColour("#EEEEEE"), StateColor::Hovered),
+            std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Pressed),
+            std::pair<wxColour, int>(wxColour("#D7E2F3"), StateColor::Hovered),
             std::pair<wxColour, int>(*wxWHITE, StateColor::Normal));
         StateColor preset_bd(
             std::pair<wxColour, int>(wxColour(0, 150, 136), StateColor::Checked),
-            std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Normal));
+            std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Normal));
         StateColor preset_text(
             std::pair<wxColour, int>(wxColour("#FFFFFE"), StateColor::Checked),
-            std::pair<wxColour, int>(wxColour("#323A3D"), StateColor::Normal));
+            std::pair<wxColour, int>(wxColour("#24395A"), StateColor::Normal));
 
         for (auto* btn : {m_btn_color_4, m_btn_color_8, m_btn_color_16}) {
             btn->SetCornerRadius(FromDIP(12));
@@ -2142,8 +2142,8 @@ void TextureImportDialog::build_params_panel(wxWindow* parent, wxSizer* sizer)
 
     {
         StateColor btn_bg_white(
-            std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Pressed),
-            std::pair<wxColour, int>(wxColour("#EEEEEE"), StateColor::Hovered),
+            std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Pressed),
+            std::pair<wxColour, int>(wxColour("#D7E2F3"), StateColor::Hovered),
             std::pair<wxColour, int>(*wxWHITE, StateColor::Normal));
         const wxColour btn_bd_accent = wxColour(0, 150, 136);
         const wxColour btn_text_accent = wxColour(0, 150, 136);
@@ -2214,8 +2214,8 @@ void TextureImportDialog::build_mapping_panel(wxWindow* parent, wxSizer* sizer)
     m_btn_mix_reset->SetPaddingSize(wxSize(FromDIP(2), FromDIP(2)));
     {
         StateColor reset_bg(
-            std::pair<wxColour, int>(wxColour("#F4F4F4"), StateColor::Pressed),
-            std::pair<wxColour, int>(wxColour("#F8F8F8"), StateColor::Hovered),
+            std::pair<wxColour, int>(wxColour("#DDE8F6"), StateColor::Pressed),
+            std::pair<wxColour, int>(wxColour("#E3EBF8"), StateColor::Hovered),
             std::pair<wxColour, int>(*wxWHITE, StateColor::Normal));
         m_btn_mix_reset->SetBackgroundColor(reset_bg);
         m_btn_mix_reset->SetBorderColor(StateColor());
@@ -2240,10 +2240,10 @@ void TextureImportDialog::build_mapping_panel(wxWindow* parent, wxSizer* sizer)
     m_btn_auto_mix->SetMinSize(wxSize(FromDIP(178), FromDIP(28)));
     {
         StateColor btn_bg(
-            std::pair<wxColour, int>(wxColour("#F4F4F4"), StateColor::Pressed),
-            std::pair<wxColour, int>(wxColour("#F8F8F8"), StateColor::Hovered),
+            std::pair<wxColour, int>(wxColour("#DDE8F6"), StateColor::Pressed),
+            std::pair<wxColour, int>(wxColour("#E3EBF8"), StateColor::Hovered),
             std::pair<wxColour, int>(*wxWHITE, StateColor::Normal));
-        const wxColour btn_bd = wxColour("#CECECE");
+        const wxColour btn_bd = wxColour("#C2CFE4");
         const wxColour btn_text = texture_import_gray9000();
         m_btn_auto_mix->SetBackgroundColor(btn_bg);
         m_btn_auto_mix->SetBorderColor(btn_bd);
@@ -2303,10 +2303,10 @@ void TextureImportDialog::build_bottom_buttons(wxSizer* sizer)
     m_btn_skip->SetMinSize(wxSize(FromDIP(136), FromDIP(40)));
     {
         StateColor skip_bg(
-            std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Pressed),
-            std::pair<wxColour, int>(wxColour("#EEEEEE"), StateColor::Hovered),
+            std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Pressed),
+            std::pair<wxColour, int>(wxColour("#D7E2F3"), StateColor::Hovered),
             std::pair<wxColour, int>(*wxWHITE, StateColor::Normal));
-        const wxColour skip_bd = wxColour("#CECECE");
+        const wxColour skip_bd = wxColour("#C2CFE4");
         const wxColour skip_text = wxColour("#6B6B6A");
         m_btn_skip->SetBackgroundColor(skip_bg);
         m_btn_skip->SetBorderColor(skip_bd);
@@ -3732,7 +3732,7 @@ void TextureImportDialog::rebuild_mapping_rows()
     const wxColour dash_clr   = StateColor::darkModeColorFor(wxColour("#ACACAC"));
     const wxColour hex_fg     = texture_import_text_colour();
     const wxColour card_bg    = StateColor::darkModeColorFor(wxColour("#E8E8E8"));
-    const wxColour card_bd    = StateColor::darkModeColorFor(wxColour("#DBDBDB"));
+    const wxColour card_bd    = StateColor::darkModeColorFor(wxColour("#CFDBED"));
     const wxColour name_fg    = texture_import_text_colour();
     const wxColour chev_clr   = StateColor::darkModeColorFor(wxColour("#6B6B6A"));
 
@@ -3893,7 +3893,7 @@ void TextureImportDialog::rebuild_mapping_rows()
 
                     const unsigned int comp_id = entry.mixed_components[mi];
                     const int comp_idx = comp_id >= 1 ? (int)comp_id - 1 : -1;
-                    wxColour comp_clr("#D9D9D9");
+                    wxColour comp_clr("#CDDAEC");
                     if (comp_idx >= 0 && comp_idx < (int)m_filament_colors_rgba.size()) {
                         const auto& c = m_filament_colors_rgba[comp_idx];
                         comp_clr = wxColour((unsigned char)(c[0] * 255.f),
@@ -4153,14 +4153,14 @@ void TextureImportDialog::highlight_view_button(int view_index)
 {
     Button* btns[] = { m_btn_view_original, m_btn_view_multicolor };
 
-    // The inactive pill lies on m_tab_panel, which is preview_bg (#EEEEEE -> #4C4C55), and has to
+    // The inactive pill lies on m_tab_panel, which is preview_bg (#D7E2F3 -> #4C4C55), and has to
     // read as raised above that strip in both themes — so its fill steps away from the strip in
     // opposite directions. gDarkColors pairs one light tone with one dark tone and cannot express
     // an inversion, so the two are picked here the way filament_swatch_border_colour() does.
     const bool dark_pill = is_dark();
     StateColor inactive_bg(
-        std::pair<wxColour, int>(dark_pill ? wxColour(0x5C, 0x5C, 0x64) : wxColour("#F4F4F4"), StateColor::Pressed),
-        std::pair<wxColour, int>(dark_pill ? wxColour(0x66, 0x66, 0x6E) : wxColour("#F8F8F8"), StateColor::Hovered),
+        std::pair<wxColour, int>(dark_pill ? wxColour(0x5C, 0x5C, 0x64) : wxColour("#DDE8F6"), StateColor::Pressed),
+        std::pair<wxColour, int>(dark_pill ? wxColour(0x66, 0x66, 0x6E) : wxColour("#E3EBF8"), StateColor::Hovered),
         std::pair<wxColour, int>(dark_pill ? wxColour(0x54, 0x54, 0x5B) : *wxWHITE,            StateColor::Normal));
     const wxColour inactive_bd = dark_pill ? wxColour(0x54, 0x54, 0x5B) : *wxWHITE;
     const wxColour inactive_text = wxColour("#6B6B6A");

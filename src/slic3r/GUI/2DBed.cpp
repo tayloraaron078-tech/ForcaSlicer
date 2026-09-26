@@ -227,7 +227,7 @@ void Bed_2D::repaint(const std::vector<Vec2d>& shape)
         std::min(m_pos(0),bb.min(0)),
         std::min(m_pos(1),bb.min(1))
     ),ch);
-    dc.SetTextForeground(wxColour(StateColor::darkModeColorFor("#262E30")));
+    dc.SetTextForeground(wxColour(StateColor::darkModeColorFor("#1A2C4C")));
     dc.SetFont(wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
     dc.DrawText(grid_label, draw_bb(0), draw_bb(1) + 5);
 

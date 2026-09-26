@@ -404,7 +404,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     /*filament area*/
     /*1 extruder*/
     m_filament_panel = new StaticBox(m_scroll_area);
-    m_filament_panel->SetBackgroundColour(wxColour("#F8F8F8"));
+    m_filament_panel->SetBackgroundColour(wxColour("#E3EBF8"));
     m_filament_panel->SetBorderWidth(0);
     m_filament_panel->SetMinSize(wxSize(FromDIP(637), -1));
     m_filament_panel->SetMaxSize(wxSize(FromDIP(637), -1));
@@ -420,7 +420,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     m_sizer_filament_2extruder = new wxBoxSizer(wxHORIZONTAL);
 
     m_filament_left_panel = new StaticBox(m_scroll_area);
-    m_filament_left_panel->SetBackgroundColour(wxColour("#F8F8F8"));
+    m_filament_left_panel->SetBackgroundColour(wxColour("#E3EBF8"));
     m_filament_left_panel->SetBorderWidth(0);
     m_filament_left_panel->SetMinSize(wxSize(FromDIP(315), -1));
     m_filament_left_panel->SetMaxSize(wxSize(FromDIP(315), -1));
@@ -429,7 +429,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     auto left_recommend_title_sizer = new wxBoxSizer(wxHORIZONTAL);
     auto left_recommend_title1 = new Label(m_filament_left_panel, _L("Left Nozzle"));
     left_recommend_title1->SetFont(::Label::Head_13);
-    left_recommend_title1->SetBackgroundColour(wxColour("#F8F8F8"));
+    left_recommend_title1->SetBackgroundColour(wxColour("#E3EBF8"));
     left_recommend_title_sizer->Add(left_recommend_title1, 0, wxALIGN_CENTER, 0);
 
     m_sizer_ams_mapping_left = new wxGridSizer(0, 5, FromDIP(7), FromDIP(7));
@@ -440,7 +440,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
 
     m_filament_right_panel = new StaticBox(m_scroll_area);
     m_filament_right_panel->SetBorderWidth(0);
-    m_filament_right_panel->SetBackgroundColour(wxColour("#F8F8F8"));
+    m_filament_right_panel->SetBackgroundColour(wxColour("#E3EBF8"));
     m_filament_right_panel->SetMinSize(wxSize(FromDIP(315), -1));
     m_filament_right_panel->SetMaxSize(wxSize(FromDIP(315), -1));
 
@@ -448,7 +448,7 @@ SelectMachineDialog::SelectMachineDialog(Plater *plater)
     auto right_recommend_title_sizer = new wxBoxSizer(wxHORIZONTAL);
     auto right_recommend_title1 = new Label(m_filament_right_panel, _L("Right Nozzle"));
     right_recommend_title1->SetFont(::Label::Head_13);
-    right_recommend_title1->SetBackgroundColour(wxColour("#F8F8F8"));
+    right_recommend_title1->SetBackgroundColour(wxColour("#E3EBF8"));
     right_recommend_title_sizer->Add(right_recommend_title1, 0, wxALIGN_CENTER, 0);
 
     m_sizer_ams_mapping_right = new wxGridSizer(0, 5, FromDIP(7), FromDIP(7));
@@ -3395,7 +3395,7 @@ void SelectMachineDialog::show_timelapse_storage_dialog(MachineObject* obj)
         create_scaled_bitmap("obj_warning", &dlg, 16), wxDefaultPosition, wxSize(FromDIP(16), FromDIP(16)));
     auto* msg_label = new Label(&dlg, body_text);
     msg_label->SetFont(Label::Body_14);
-    msg_label->SetForegroundColour(wxGetApp().dark_mode() ? wxColour("#EFEFF0") : wxColour(0x33, 0x33, 0x33));
+    msg_label->SetForegroundColour(wxGetApp().dark_mode() ? wxColour("#E4EBF8") : wxColour(0x33, 0x33, 0x33));
     msg_label->Wrap(FromDIP(340));
     msg_sizer->Add(warn_bmp, 0, wxALIGN_TOP | wxRIGHT, FromDIP(6));
     msg_sizer->Add(msg_label, 1, wxEXPAND);
@@ -6489,7 +6489,7 @@ void PrintOption::enable(bool en)
         m_printoption_item->enable(en);
 
         if (en) {
-            m_printoption_title->SetForegroundColour(StateColor::darkModeColorFor("#262E30"));
+            m_printoption_title->SetForegroundColour(StateColor::darkModeColorFor("#1A2C4C"));
         } else {
             m_printoption_title->SetForegroundColour(StateColor::darkModeColorFor(wxColour(144, 144, 144)));
         }
@@ -6728,7 +6728,7 @@ void PrintOptionItem::doRender(wxDC& dc)
         }
         else
         {
-            const wxColour& clr = m_enable ? StateColor::darkModeColorFor("#262E30") : StateColor::darkModeColorFor(wxColour(144, 144, 144));
+            const wxColour& clr = m_enable ? StateColor::darkModeColorFor("#1A2C4C") : StateColor::darkModeColorFor(wxColour(144, 144, 144));
             dc.SetPen(wxPen(clr));
             dc.SetTextForeground(clr);
 
@@ -7022,7 +7022,7 @@ void PrinterInfoBox::Create()
     auto printer_staticbox = new StaticBox(this);
     printer_staticbox->SetMinSize(wxSize(FromDIP(338), FromDIP(68)));
     printer_staticbox->SetMaxSize(wxSize(FromDIP(338), FromDIP(68)));
-    printer_staticbox->SetBorderColor(wxColour("#CECECE"));
+    printer_staticbox->SetBorderColor(wxColour("#C2CFE4"));
 
     m_comboBox_printer = new ComboBox(printer_staticbox, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_READONLY);
     m_comboBox_printer->SetBorderWidth(0);
@@ -7046,7 +7046,7 @@ void PrinterInfoBox::Create()
     auto bed_staticbox = new StaticBox(this);
     bed_staticbox->SetMinSize(wxSize(FromDIP(68), FromDIP(68)));
     bed_staticbox->SetMaxSize(wxSize(FromDIP(68), FromDIP(68)));
-    bed_staticbox->SetBorderColor(wxColour("#EEEEEE"));
+    bed_staticbox->SetBorderColor(wxColour("#D7E2F3"));
 
     m_bed_image = new wxStaticBitmap(bed_staticbox, wxID_ANY, create_scaled_bitmap("bed_cool", this, 40));
     m_bed_image->SetBackgroundColour(*wxWHITE);

@@ -365,12 +365,25 @@ public:
     void reload_print();
 
     // SoftFever
-    void calib_pa(const Calib_Params& params);
+    void calib_pa(const Calib_Params& params, bool skip_confirm = false);
     //ORCA: Add pattern parameter to calib_flowrate
-    void calib_flowrate(bool is_linear, int pass, InfillPattern pattern = ipArchimedeanChords);
-    void calib_temp(const Calib_Params& params);
-    void calib_max_vol_speed(const Calib_Params& params);
-    void calib_retraction(const Calib_Params& params);
+    void calib_flowrate(bool is_linear, int pass, InfillPattern pattern = ipArchimedeanChords, bool skip_confirm = false);
+    void calib_temp(const Calib_Params& params, bool skip_confirm = false);
+    void calib_max_vol_speed(const Calib_Params& params, bool skip_confirm = false);
+
+    // Forca calibration wizard helpers: run whatever the Print button does for the active printer, and
+    // register a one-shot callback fired (with success=true when the slice+gcode finished) the next time
+    // background processing completes -- used to chain "slice then send" from the wizard.
+    void print_current_plate();
+    void set_one_shot_slice_completed_callback(std::function<void(bool)> cb);
+    // Forca AI: a persistent observer of every slice completion (status 0 = finished, 1 = cancelled, 2 = error,
+    // with the error text). Unlike the one-shot hook it stays set; pass nullptr to clear.
+    void set_forca_ai_slice_listener(std::function<void(int, const std::string&)> cb);
+    // Forca Calibration Wizard tab: the panel hosting the 3D/Preview canvases (the tab wraps its sizer), and the
+    // mode that hides the sidebar while that tab is showing.
+    wxWindow* canvas_host_panel() const;
+    void      set_forca_calibration_mode(bool on);
+    void calib_retraction(const Calib_Params& params, bool skip_confirm = false);
     void calib_VFA(const Calib_Params& params);
     void calib_input_shaping_freq(const Calib_Params& params);
     void calib_input_shaping_damp(const Calib_Params& params);

@@ -45,7 +45,7 @@ void PluginPickerDialog::build_ui(const wxString& plugin_type_label)
     auto* info_text = new wxStaticText(this, wxID_ANY,
         wxString::Format(_L("Choose a %s plugin from the list below."), plugin_type_label));
     info_text->SetFont(Label::Body_14);
-    info_text->SetForegroundColour(wxColour("#363636"));
+    info_text->SetForegroundColour(wxColour("#26395A"));
     top_sizer->Add(info_text, 0, wxALL | wxEXPAND, FromDIP(10));
 
     top_sizer->AddSpacer(FromDIP(5));
@@ -75,7 +75,7 @@ void PluginPickerDialog::build_ui(const wxString& plugin_type_label)
 
     m_description = new wxStaticText(this, wxID_ANY, wxEmptyString);
     m_description->SetFont(Label::Body_14);
-    m_description->SetForegroundColour(wxColour("#363636"));
+    m_description->SetForegroundColour(wxColour("#26395A"));
     m_description->Wrap(400);
     top_sizer->Add(m_description, 0, wxALL | wxEXPAND, FromDIP(10));
 
@@ -108,7 +108,7 @@ void PluginPickerDialog::build_capability_ui(const wxString& plugin_type_label)
     auto* info_text = new wxStaticText(this, wxID_ANY,
         wxString::Format(_L("Choose a %s plugin from the list below."), plugin_type_label));
     info_text->SetFont(Label::Body_14);
-    info_text->SetForegroundColour(wxColour("#363636"));
+    info_text->SetForegroundColour(wxColour("#26395A"));
 
     top_sizer->Add(info_text, 0, wxALL | wxEXPAND, FromDIP(10));
 
@@ -135,7 +135,7 @@ void PluginPickerDialog::build_capability_ui(const wxString& plugin_type_label)
 
     m_description = new wxStaticText(this, wxID_ANY, wxEmptyString);
     m_description->SetFont(Label::Body_14);
-    m_description->SetForegroundColour(wxColour("#363636"));
+    m_description->SetForegroundColour(wxColour("#26395A"));
     m_description->Wrap(400);
     top_sizer->Add(m_description, 0, wxALL | wxEXPAND, FromDIP(10));
 

@@ -97,7 +97,7 @@ SysInfoDialog::SysInfoDialog()
 	main_sizer->Add(hsizer, 1, wxEXPAND | wxALL, 10);
 
     // logo
-    m_logo_bmp = ScalableBitmap(this, wxGetApp().logo_name(), 192);
+    m_logo_bmp = ScalableBitmap(this, "OrcaSlicer_192px.png", 192); // Forca logo (Orca: logo_name() -> OrcaSlicer.svg)
     m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bmp.bmp());
 	hsizer->Add(m_logo, 0, wxALIGN_CENTER_VERTICAL);
 

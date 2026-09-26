@@ -89,14 +89,14 @@ private:
         dc.DrawRectangle(0, 0, sz.GetWidth(), sz.GetHeight());
 
         if (m_hovered) {
-            dc.SetBrush(wxBrush(StateColor::darkModeColorFor(wxColour("#F8F8F8"))));
-            dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#CECECE")), 1));
+            dc.SetBrush(wxBrush(StateColor::darkModeColorFor(wxColour("#E3EBF8"))));
+            dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#C2CFE4")), 1));
             dc.DrawRoundedRectangle(0, 0, sz.GetWidth(), sz.GetHeight(), FromDIP(3));
         }
 
         dc.SetFont(GetFont());
         dc.SetTextForeground(m_hovered ? StateColor::darkModeColorFor(wxColour("#009688"))
-                                       : StateColor::darkModeColorFor(wxColour("#262E30")));
+                                       : StateColor::darkModeColorFor(wxColour("#1A2C4C")));
         wxSize ts = dc.GetTextExtent(m_text);
         int x = (sz.GetWidth()  - ts.GetWidth())  / 2;
         int y = (sz.GetHeight() - ts.GetHeight()) / 2;
@@ -189,7 +189,7 @@ wxColour MixedFilamentDialog::comp_colour(size_t i) const
     unsigned int c = comp(i);
     if (c >= 1 && c <= m_physical_colors.size())
         return wxColour(m_physical_colors[c - 1]);
-    return wxColour("#D9D9D9");
+    return wxColour("#CDDAEC");
 }
 
 static wxBitmap make_alpha_bitmap(int w, int h,
@@ -232,7 +232,7 @@ wxBitmap MixedFilamentDialog::make_swatch_bitmap(size_t idx)
     // Reuse the sidebar clr_picker swatch (get_extruder_color_icon) so the
     // checkerboard (transparent.svg tiling), border and label style match the
     // sidebar exactly, instead of a self-drawn rounded rect / programmatic grid.
-    std::string color_hex = "#D9D9D9";
+    std::string color_hex = "#CDDAEC";
     if (idx < m_physical_colors.size())
         color_hex = m_physical_colors[idx];
     std::string label = std::to_string(idx + 1);
@@ -454,8 +454,8 @@ void MixedFilamentDialog::start_ratio_editor(size_t idx, wxWindow* anchor, const
         commit_ratio_editor(true);
 
     if (!m_ratio_editor_panel) {
-        wxColour bg = StateColor::darkModeColorFor(wxColour("#F8F8F8"));
-        wxColour fg = StateColor::darkModeColorFor(wxColour("#262E30"));
+        wxColour bg = StateColor::darkModeColorFor(wxColour("#E3EBF8"));
+        wxColour fg = StateColor::darkModeColorFor(wxColour("#1A2C4C"));
 
         m_ratio_editor_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition,
                                            wxDefaultSize, wxBORDER_SIMPLE);
@@ -728,8 +728,8 @@ wxBoxSizer* MixedFilamentDialog::create_material_selection()
         wxBufferedPaintDC dc(m_summary_panel);
         wxSize sz = m_summary_panel->GetClientSize();
 
-        wxColour sum_bg   = StateColor::darkModeColorFor(wxColour("#F8F8F8"));
-        wxColour sum_text = StateColor::darkModeColorFor(wxColour("#262E30"));
+        wxColour sum_bg   = StateColor::darkModeColorFor(wxColour("#E3EBF8"));
+        wxColour sum_text = StateColor::darkModeColorFor(wxColour("#1A2C4C"));
         dc.SetBrush(wxBrush(sum_bg));
         dc.SetPen(*wxTRANSPARENT_PEN);
         dc.DrawRectangle(0, 0, sz.GetWidth(), sz.GetHeight());
@@ -742,7 +742,7 @@ wxBoxSizer* MixedFilamentDialog::create_material_selection()
 
         auto draw_summary_swatch = [&](size_t comp_idx) {
             unsigned int c = comp(comp_idx);
-            std::string color_hex = "#D9D9D9";
+            std::string color_hex = "#CDDAEC";
             if (c >= 1 && c <= m_physical_colors.size())
                 color_hex = m_physical_colors[c - 1];
             std::string label = std::to_string(c);
@@ -802,12 +802,12 @@ wxBoxSizer* MixedFilamentDialog::create_material_selection()
     auto* btn_sizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_btn_add_material = new Button(this, _L("+ Add Material"));
-    m_btn_add_material->SetBackgroundColor(wxColour("#F8F8F8"));
-    m_btn_add_material->SetBorderColor(wxColour("#EEEEEE"));
+    m_btn_add_material->SetBackgroundColor(wxColour("#E3EBF8"));
+    m_btn_add_material->SetBorderColor(wxColour("#D7E2F3"));
     // The disabled tone rides on the StateColor so Enable() alone repaints it, the way m_btn_ok does.
     m_btn_add_material->SetTextColor(StateColor(
         std::make_pair(wxColour("#ACACAC"), (int) StateColor::Disabled),
-        std::make_pair(wxColour("#262E30"), (int) StateColor::Normal)));
+        std::make_pair(wxColour("#1A2C4C"), (int) StateColor::Normal)));
     m_btn_add_material->SetMinSize(wxSize(-1, FromDIP(24)));
     m_btn_add_material->SetCursor(wxCursor(wxCURSOR_HAND));
     m_btn_add_material->EnableTooltipEvenDisabled();
@@ -815,9 +815,9 @@ wxBoxSizer* MixedFilamentDialog::create_material_selection()
     btn_sizer->Add(m_btn_add_material, 1, wxRIGHT, FromDIP(6));
 
     m_btn_remove_material = new Button(this, _L("- Delete Material"));
-    m_btn_remove_material->SetBackgroundColor(wxColour("#F8F8F8"));
-    m_btn_remove_material->SetBorderColor(wxColour("#EEEEEE"));
-    m_btn_remove_material->SetTextColor(wxColour("#262E30"));
+    m_btn_remove_material->SetBackgroundColor(wxColour("#E3EBF8"));
+    m_btn_remove_material->SetBorderColor(wxColour("#D7E2F3"));
+    m_btn_remove_material->SetTextColor(wxColour("#1A2C4C"));
     m_btn_remove_material->SetMinSize(wxSize(-1, FromDIP(24)));
     m_btn_remove_material->SetCursor(wxCursor(wxCURSOR_HAND));
     m_btn_remove_material->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { on_remove_material(); });
@@ -943,8 +943,8 @@ wxBoxSizer* MixedFilamentDialog::create_triangle_picker()
                                    {comp_colour(0), comp_colour(1), comp_colour(2)},
                                    {m_tri_wx, m_tri_wy, m_tri_wz},
                                    {StateColor::darkModeColorFor(*wxWHITE),
-                                    StateColor::darkModeColorFor(wxColour("#CECECE")),
-                                    StateColor::darkModeColorFor(wxColour("#262E30")),
+                                    StateColor::darkModeColorFor(wxColour("#C2CFE4")),
+                                    StateColor::darkModeColorFor(wxColour("#1A2C4C")),
                                     StateColor::darkModeColorFor(COLOR_LABEL_MUTED)});
 
         if (m_result.ratios.size() >= 3) {
@@ -1119,14 +1119,14 @@ wxBoxSizer* MixedFilamentDialog::create_recommendation_grid()
 
     auto* rec_line = new wxPanel(this, wxID_ANY);
     rec_line->SetMinSize(wxSize(-1, 1));
-    rec_line->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#EEEEEE")));
+    rec_line->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#D7E2F3")));
     title_sizer->Add(rec_line, 1, wxALIGN_CENTER_VERTICAL);
 
     outer->Add(title_sizer, 0, wxEXPAND | wxBOTTOM, FromDIP(4));
 
     m_recommendation_scroll = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxSize(-1, FromDIP(116)));
     m_recommendation_scroll->SetScrollRate(0, 5);
-    m_recommendation_scroll->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F8F8F8")));
+    m_recommendation_scroll->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#E3EBF8")));
 
     m_recommendation_grid = new wxWrapSizer(wxHORIZONTAL, wxREMOVE_LEADING_SPACES);
     auto* scroll_inner_sizer = new wxBoxSizer(wxVERTICAL);
@@ -1587,7 +1587,7 @@ void MixedFilamentDialog::paint_warning_panel(wxPaintEvent&)
     dc.SetPen(*wxTRANSPARENT_PEN);
     dc.DrawRectangle(0, 0, sz.GetWidth(), sz.GetHeight());
 
-    dc.SetBrush(wxBrush(StateColor::darkModeColorFor(wxColour("#F8F8F8"))));
+    dc.SetBrush(wxBrush(StateColor::darkModeColorFor(wxColour("#E3EBF8"))));
     dc.SetPen(wxPen(StateColor::darkModeColorFor(wxColour("#D01B1B")), 1));
     dc.DrawRoundedRectangle(0, 0, sz.GetWidth(), sz.GetHeight(), FromDIP(4));
 
@@ -1713,13 +1713,13 @@ void MixedFilamentDialog::update_gradient_direction_items()
         int bmp_w = swatch_sz + gap + arrow_w + gap + swatch_sz;
         int bmp_h = swatch_sz;
 
-        wxColour dir_text = StateColor::darkModeColorFor(wxColour("#262E30"));
+        wxColour dir_text = StateColor::darkModeColorFor(wxColour("#1A2C4C"));
 
         return make_alpha_bitmap(bmp_w, bmp_h, [&](wxDC& dc) {
             dc.SetFont(::Label::Body_13);
 
             auto draw_swatch = [&](int x, size_t idx) {
-                std::string color_hex = "#D9D9D9";
+                std::string color_hex = "#CDDAEC";
                 if (idx < m_physical_colors.size())
                     color_hex = m_physical_colors[idx];
                 std::string label = std::to_string(idx + 1);

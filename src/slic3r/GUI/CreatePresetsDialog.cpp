@@ -1,4 +1,5 @@
 #include "CreatePresetsDialog.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 #include <boost/log/trivial.hpp>
 #include <vector>
 #include <set>
@@ -31,9 +32,9 @@
 #define ORIGIN_TEXT_SIZE wxSize(FromDIP(10), FromDIP(24))
 #define PRINTER_PRESET_VENDOR_SIZE wxSize(FromDIP(150), FromDIP(24))
 #define PRINTER_PRESET_MODEL_SIZE wxSize(FromDIP(280), FromDIP(24))
-#define STATIC_TEXT_COLOUR wxColour("#363636")
-#define PRINTER_LIST_COLOUR wxColour("#EEEEEE")
-#define FILAMENT_OPTION_COLOUR wxColour("#D9D9D9")
+#define STATIC_TEXT_COLOUR wxColour("#26395A")
+#define PRINTER_LIST_COLOUR wxColour("#D7E2F3")
+#define FILAMENT_OPTION_COLOUR wxColour("#CDDAEC")
 #define SELECT_ALL_OPTION_COLOUR wxColour("#009688")
 #define DEFAULT_PROMPT_TEXT_COLOUR wxColour("#ACACAC")
 
@@ -3466,7 +3467,8 @@ CreatePresetSuccessfulDialog::CreatePresetSuccessfulDialog(wxWindow *parent, con
     wxBoxSizer *success_text_sizer = new wxBoxSizer(wxVERTICAL);
     wxStaticText *success_text = nullptr;
     wxStaticText *next_step_text = nullptr;
-    bool          sync_user_preset_need_enabled = wxGetApp().getAgent() && wxGetApp().app_config->get("sync_user_preset") == "false";
+    bool          sync_user_preset_need_enabled = FORCA_ORCA_CLOUD_ENABLED && // Forca: no Orca Cloud sync prompt (B9)
+                                                  wxGetApp().getAgent() && wxGetApp().app_config->get("sync_user_preset") == "false";
     switch (create_success_type) {
     case PRINTER:
         success_text = new wxStaticText(this, wxID_ANY, _L("Printer Created"));

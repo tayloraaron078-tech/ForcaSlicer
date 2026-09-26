@@ -144,6 +144,10 @@ set(lisbslic3r_sources
     Feature/Interlocking/VoxelUtils.cpp
     Feature/Interlocking/VoxelUtils.hpp
     FileParserError.hpp
+    ForcaAISafePath.cpp
+    ForcaAISafePath.hpp
+    ForcaPresetMerge.cpp
+    ForcaPresetMerge.hpp
     Fill/Fill3DHoneycomb.cpp
     Fill/Fill3DHoneycomb.hpp
     Fill/FillAdaptive.cpp

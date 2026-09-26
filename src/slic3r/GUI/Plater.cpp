@@ -494,7 +494,7 @@ public:
         SetBackgroundColour(extruder_group_chip_bg());
         auto sizer = new wxBoxSizer(wxHORIZONTAL);
 
-        auto label_color = StateColor::darkModeColorFor(wxColour("#363636"));
+        auto label_color = StateColor::darkModeColorFor(wxColour("#26395A"));
 
         m_label = new wxStaticText(this, wxID_ANY, label, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
         m_label->SetFont(Label::Body_12);
@@ -575,7 +575,7 @@ public:
     void sys_color_changed()
     {
         SetBackgroundColour(extruder_group_chip_bg());
-        auto label_color = StateColor::darkModeColorFor(wxColour("#363636"));
+        auto label_color = StateColor::darkModeColorFor(wxColour("#26395A"));
         m_label->SetForegroundColour(label_color);
         for (wxStaticText *t : {m_brace_left, m_count, m_brace_right})
             t->SetForegroundColour(label_color);
@@ -942,7 +942,7 @@ void Sidebar::priv::flush_printer_sync(bool restart)
         *counter_sync_printer = 6;
         timer_sync_printer->Start(500);
     }
-    //btn_sync_printer->SetBackgroundColorNormal((*counter_sync_printer & 1) ? "#F8F8F8" :"#009688");
+    //btn_sync_printer->SetBackgroundColorNormal((*counter_sync_printer & 1) ? "#E3EBF8" :"#009688");
     m_printer_bbl_sync->SetBitmap_((*counter_sync_printer & 1) ? "printer_sync_not" : "printer_sync_ok");
     if (--*counter_sync_printer <= 0)
         timer_sync_printer->Stop();
@@ -1212,7 +1212,7 @@ public:
         SetBackgroundColour(*wxWHITE);
         auto msg  = new wxStaticText(this, wxID_ANY, _L("Set the number of AMS installed on the nozzle."));
         msg->SetFont(Label::Body_14);
-        msg->SetForegroundColour("#262E30");
+        msg->SetForegroundColour("#1A2C4C");
         msg->Wrap(FromDIP(280));
         auto box = new StaticBox(this, wxID_ANY);
         box->SetBackgroundColor(0xF8F8F8);
@@ -1224,11 +1224,11 @@ public:
         auto txt4 = new wxStaticText(box, wxID_ANY, _L("AMS(4 slots)"));
         txt4->SetFont(Label::Body_14);
         txt4->SetBackgroundColour(0xF8F8F8);
-        txt4->SetForegroundColour("#262E30");
+        txt4->SetForegroundColour("#1A2C4C");
         auto txt1 = new wxStaticText(box, wxID_ANY, _L("AMS(1 slot)"));
         txt1->SetFont(Label::Body_14);
         txt1->SetBackgroundColour(0xF8F8F8);
-        txt1->SetForegroundColour("#262E30");
+        txt1->SetForegroundColour("#1A2C4C");
         int ams4 = 0, ams1 = 0;
         int oth4 = 0, oth1 = 0;
         GetAMSCount(index, ams4, ams1);
@@ -1322,8 +1322,8 @@ ExtruderGroup::ExtruderGroup(wxWindow * parent, int index, wxString const &title
     : StaticBox(parent)
 {
     SetFont(Label::Body_10);
-    SetForegroundColour(wxColour("#CECECE"));
-    SetBorderColor(wxColour("#EEEEEE"));
+    SetForegroundColour(wxColour("#C2CFE4"));
+    SetBorderColor(wxColour("#D7E2F3"));
     SetCornerRadius(FromDIP(PRINTER_PANEL_RADIUS)); // ORCA match radius with other boxes
     ShowBadge(true);
     SetTopMargin(FromDIP(7)); // ORCA
@@ -1362,7 +1362,7 @@ ExtruderGroup::ExtruderGroup(wxWindow * parent, int index, wxString const &title
 
     ams_label  = new wxStaticText(ams_panel, wxID_ANY, _L("AMS"));
     ams_label->SetFont(Label::Body_14);
-    ams_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+    ams_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
 
     // AMS not installed message
     ams_not_installed_msg = new wxStaticText(ams_panel, wxID_ANY, _L("Not installed"));
@@ -2394,7 +2394,7 @@ void Sidebar::priv::update_sync_status(const MachineObject *obj)
         }
     }
 
-    StateColor synced_colour(std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Normal));
+    StateColor synced_colour(std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Normal));
     bool all_extruder_synced = std::all_of(extruder_synced.begin(), extruder_synced.end(), [](bool value) { return value; });
     if (printer_synced && all_extruder_synced) {
     //    btn_sync_printer->SetBorderColor(synced_colour);
@@ -2561,7 +2561,7 @@ Sidebar::Sidebar(Plater *parent)
         struct PanelColors {
             wxColour bg_normal = "#FFFFFF";
             wxColour bg_focus  = "#E5F0EE";
-            wxColour bd_normal = "#DBDBDB";
+            wxColour bd_normal = "#CFDBED";
             wxColour bd_hover  = "#009688";
             wxColour bd_focus  = "#009688";
         };
@@ -2839,13 +2839,13 @@ Sidebar::Sidebar(Plater *parent)
         btn_sync->SetToolTip(_L("Synchronize nozzle information and the number of AMS"));
         btn_sync->SetCornerRadius(8);
         StateColor btn_sync_bg_col(
-                std::pair<wxColour, int>(wxColour("#CECECE"), StateColor::Pressed),
-                std::pair<wxColour, int>(wxColour("#F8F8F8"), StateColor::Hovered),
-                std::pair<wxColour, int>(wxColour("#F8F8F8"), StateColor::Normal));
+                std::pair<wxColour, int>(wxColour("#C2CFE4"), StateColor::Pressed),
+                std::pair<wxColour, int>(wxColour("#E3EBF8"), StateColor::Hovered),
+                std::pair<wxColour, int>(wxColour("#E3EBF8"), StateColor::Normal));
         StateColor btn_sync_bd_col(
                 std::pair<wxColour, int>(wxColour("#009688"), StateColor::Pressed),
                 std::pair<wxColour, int>(wxColour("#009688"), StateColor::Hovered),
-                std::pair<wxColour, int>(wxColour("#EEEEEE"), StateColor::Normal));
+                std::pair<wxColour, int>(wxColour("#D7E2F3"), StateColor::Normal));
         btn_sync->SetBackgroundColor(btn_sync_bg_col);
         btn_sync->SetBorderColor(btn_sync_bd_col);
         btn_sync->SetCanFocus(false);
@@ -3085,7 +3085,7 @@ Sidebar::Sidebar(Plater *parent)
     {
     // 1) "+ Add Mixed Filament" button, shown only while no mixed filament exists yet.
     p->m_btn_add_mixed_filament = new wxPanel(p->m_filament_area_wrapper, wxID_ANY);
-    p->m_btn_add_mixed_filament->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F8F8F8")));
+    p->m_btn_add_mixed_filament->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#E3EBF8")));
     p->m_btn_add_mixed_filament->SetMinSize(wxSize(-1, FromDIP(23)));
     {
         auto* btn_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -3211,7 +3211,7 @@ Sidebar::Sidebar(Plater *parent)
         scrolled_sizer->Add(spliter_1, 0, wxEXPAND);
         scrolled_sizer->Add(params_panel->get_top_panel(), 0, wxEXPAND);
         auto spliter_2 = new ::StaticLine(p->scrolled);
-        spliter_2->SetLineColour("#CECECE");
+        spliter_2->SetLineColour("#C2CFE4");
         scrolled_sizer->Add(spliter_2, 0, wxEXPAND);
     }
 
@@ -3221,14 +3221,14 @@ Sidebar::Sidebar(Plater *parent)
     // ORCA: Update search box to modern style
     p->m_search_bar = new StaticBox(p->scrolled);
     p->m_search_bar->SetCornerRadius(0);
-    p->m_search_bar->SetBorderColor(wxColour("#CECECE"));
+    p->m_search_bar->SetBorderColor(wxColour("#C2CFE4"));
 
     p->m_search_item = new TextInput(p->m_search_bar, wxEmptyString, wxEmptyString, "", wxDefaultPosition, wxDefaultSize, 0 | wxBORDER_NONE);
     p->m_search_item->SetIcon(*BitmapCache().load_svg("search", FromDIP(16), FromDIP(16))); // ORCA: Add search icon to search box
 
     wxTextCtrl* text_ctrl = p->m_search_item->GetTextCtrl();
     text_ctrl->SetHint(_L("Search plate, object and part."));
-    text_ctrl->SetForegroundColour(wxColour("#262E30"));
+    text_ctrl->SetForegroundColour(wxColour("#1A2C4C"));
     text_ctrl->SetFont(Label::Body_13);
     text_ctrl->SetSize(wxSize(-1, FromDIP(16))); // Centers text vertically
 
@@ -3261,7 +3261,7 @@ Sidebar::Sidebar(Plater *parent)
 #ifdef __WXGTK__
         this->p->m_search_item->Enable(true);
 #endif
-        this->p->m_search_bar->SetBorderColor(wxColour("#CECECE"));
+        this->p->m_search_bar->SetBorderColor(wxColour("#C2CFE4"));
         this->p->m_search_item->GetTextCtrl()->SetValue(""); // reset value when close
     });
 
@@ -3948,8 +3948,8 @@ void Sidebar::update_mixed_filament_list()
     wxWindowUpdateLocker noUpdates(this);
 
     const wxColour mc_bg     = StateColor::darkModeColorFor(*wxWHITE);
-    const wxColour mc_border = StateColor::darkModeColorFor(wxColour("#CECECE"));
-    const wxColour mc_text   = StateColor::darkModeColorFor(wxColour("#262E30"));
+    const wxColour mc_border = StateColor::darkModeColorFor(wxColour("#C2CFE4"));
+    const wxColour mc_text   = StateColor::darkModeColorFor(wxColour("#1A2C4C"));
     const wxColour mc_dim    = StateColor::darkModeColorFor(wxColour("#ACACAC"));
 
     auto& project_config = wxGetApp().preset_bundle->project_config;
@@ -4182,7 +4182,7 @@ void Sidebar::update_mixed_filament_list()
             for (size_t ci = 0; ci < comp_ids.size(); ++ci) {
                 bool valid = (comp_ids[ci] >= 1 && comp_ids[ci] <= physical_colors.size());
                 cp_valid.push_back(valid);
-                cp_colours.push_back(valid ? wxColour(physical_colors[comp_ids[ci] - 1]) : wxColour("#D9D9D9"));
+                cp_colours.push_back(valid ? wxColour(physical_colors[comp_ids[ci] - 1]) : wxColour("#CDDAEC"));
             }
 
             // Reorder for gradient display: from -> to
@@ -6767,6 +6767,7 @@ struct Plater::priv
         bool                  is_enabled{false};
         bool                  is_collapsed{false};
         bool                  show{false};
+        bool                  forca_calibration{false}; // Forca: Calibration Wizard tab owns the left side
     } sidebar_layout;
     Bed3D bed;
     Camera camera;
@@ -7282,6 +7283,8 @@ struct Plater::priv
     PrintPrepareData            m_print_job_data;
     bool                        inside_snapshot_capture() { return m_prevent_snapshots != 0; }
     int                         process_completed_with_error { -1 }; //-1 means no error
+    std::function<void(bool)>   m_forca_one_shot_completed;          // Forca: fired once on next process-complete
+    std::function<void(int, const std::string&)> m_forca_ai_slice_listener; // Forca AI: fired on every process-complete
 
     //BBS: project
     BBLProject                  project;
@@ -8178,7 +8181,8 @@ void Plater::priv::update_sidebar(bool force_update) {
     }
     bool  needs_update = force_update;
 
-    if (!sidebar_layout.is_enabled) {
+    // Forca: in the Calibration Wizard tab the wizard replaces the sidebar (the saved layout is untouched).
+    if (!sidebar_layout.is_enabled || sidebar_layout.forca_calibration) {
         if (sidebar.IsShown()) {
             sidebar.Hide();
             needs_update = true;
@@ -12997,6 +13001,18 @@ void Plater::priv::on_process_completed(SlicingProcessCompletedEvent &evt)
         schedule_auto_reslice_if_needed();
     }
 
+    // Forca AI: report every completion (the AI polls forca_slice_result).
+    if (m_forca_ai_slice_listener)
+        m_forca_ai_slice_listener(evt.success() ? 0 : (evt.cancelled() ? 1 : 2),
+                                  evt.error() ? evt.format_error_message().first : std::string());
+
+    // Forca calibration wizard: fire (and clear) the one-shot slice-completed hook, if set.
+    if (m_forca_one_shot_completed) {
+        auto cb = std::move(m_forca_one_shot_completed);
+        m_forca_one_shot_completed = nullptr;
+        cb(evt.success());
+    }
+
     BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << boost::format(", exit.");
 }
 
@@ -13734,7 +13750,7 @@ void Plater::priv::set_project_name(const wxString& project_name)
     if (!m_project_name.IsEmpty())
         wxGetApp().mainframe->update_title_colour_after_set_title();
 #else
-    wxGetApp().mainframe->SetTitle(m_project_name + " - OrcaSlicer");
+    wxGetApp().mainframe->SetTitle(m_project_name + " - " SLIC3R_APP_NAME); // Forca (Orca: " - OrcaSlicer")
     wxGetApp().mainframe->topbar()->SetTitle(m_project_name);
 #endif
 }
@@ -13754,7 +13770,7 @@ void Plater::priv::update_title_dirty_status()
     wxGetApp().mainframe->SetTitle(title);
     wxGetApp().mainframe->update_title_colour_after_set_title();
 #else
-    wxGetApp().mainframe->SetTitle(title + " - OrcaSlicer");
+    wxGetApp().mainframe->SetTitle(title + " - " SLIC3R_APP_NAME); // Forca (Orca: " - OrcaSlicer")
     wxGetApp().mainframe->topbar()->SetTitle(title);
 #endif    
 }
@@ -15997,10 +16013,10 @@ bool Plater::add_model(bool imperial_units, std::string fname)
     return loaded;
 }
 
-void Plater::calib_pa(const Calib_Params& params)
+void Plater::calib_pa(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_pa_name = wxString::Format(L"Pressure Advance Test");
-    new_project(false, false, calib_pa_name);
+    new_project(skip_confirm, false, calib_pa_name);
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     auto print_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
     auto printer_config = &wxGetApp().preset_bundle->printers.get_edited_preset().config;
@@ -16471,7 +16487,7 @@ void adjust_settings_for_flowrate_calib(ModelObjectPtrs& objects, bool linear, i
 }
 
 // ORCA: Add pattern parameter
-void Plater::calib_flowrate(bool is_linear, int pass, InfillPattern pattern) {
+void Plater::calib_flowrate(bool is_linear, int pass, InfillPattern pattern, bool skip_confirm) {
     if (pass != 1 && pass != 2)
         return;
     wxString calib_name;
@@ -16482,7 +16498,7 @@ void Plater::calib_flowrate(bool is_linear, int pass, InfillPattern pattern) {
     } else
         calib_name = wxString::Format(L"Flowrate Test - Pass%d", pass);
 
-    if (new_project(false, false, calib_name) == wxID_CANCEL)
+    if (new_project(skip_confirm, false, calib_name) == wxID_CANCEL)
         return;
 
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
@@ -16515,13 +16531,46 @@ void Plater::calib_flowrate(bool is_linear, int pass, InfillPattern pattern) {
 }
 
 
-void Plater::calib_temp(const Calib_Params& params) {
+void Plater::set_one_shot_slice_completed_callback(std::function<void(bool)> cb)
+{
+    p->m_forca_one_shot_completed = std::move(cb);
+}
+
+void Plater::set_forca_ai_slice_listener(std::function<void(int, const std::string&)> cb)
+{
+    p->m_forca_ai_slice_listener = std::move(cb);
+}
+
+wxWindow* Plater::canvas_host_panel() const
+{
+    return p->view3D->GetParent(); // panel_3d: parent of view3D / preview / assemble_view
+}
+
+void Plater::set_forca_calibration_mode(bool on)
+{
+    if (p->sidebar_layout.forca_calibration == on)
+        return;
+    p->sidebar_layout.forca_calibration = on;
+    p->update_sidebar(true);
+}
+
+void Plater::print_current_plate()
+{
+    // Mirror priv::on_action_print_plate: do exactly what the Print button does for the active printer.
+    PresetBundle& preset_bundle = *wxGetApp().preset_bundle;
+    if (preset_bundle.use_bbl_network() || wxGetApp().app_config->get_bool("use_printer_agents"))
+        p->open_machine_select_dialog(p->partplate_list.get_curr_plate_index());
+    else
+        send_gcode_legacy(PLATE_CURRENT_IDX, nullptr);
+}
+
+void Plater::calib_temp(const Calib_Params& params, bool skip_confirm) {
     constexpr double base_temp_tower_nozzle_diameter = 0.4;
     constexpr double base_temp_tower_block_height = 10.0;
     constexpr int base_temp_tower_temp_step = 5;
 
     const auto calib_temp_name = wxString::Format(L"Nozzle temperature test");
-    new_project(false, false, calib_temp_name);
+    new_project(skip_confirm, false, calib_temp_name);
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Temp_Tower) return;
     
@@ -16598,10 +16647,10 @@ void Plater::calib_temp(const Calib_Params& params) {
     p->background_process.fff_print()->set_calib_params(params);
 }
 
-void Plater::calib_max_vol_speed(const Calib_Params& params)
+void Plater::calib_max_vol_speed(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_vol_speed_name = wxString::Format(L"Max volumetric speed test");
-    new_project(false, false, calib_vol_speed_name);
+    new_project(skip_confirm, false, calib_vol_speed_name);
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Vol_speed_Tower)
         return;
@@ -16677,10 +16726,10 @@ void Plater::calib_max_vol_speed(const Calib_Params& params)
     p->background_process.fff_print()->set_calib_params(new_params);
 }
 
-void Plater::calib_retraction(const Calib_Params& params)
+void Plater::calib_retraction(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_retraction_name = wxString::Format(L"Retraction");
-    new_project(false, false, calib_retraction_name);
+    new_project(skip_confirm, false, calib_retraction_name);
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Retraction_tower)
         return;
@@ -17463,13 +17512,13 @@ ProjectDropDialog::ProjectDropDialog(const std::string &filename)
     // ORCA use file name on new line to create room for longer names
     m_fname_title = new wxStaticText(this, wxID_ANY, _L("Please select an action"), wxDefaultPosition, wxDefaultSize, 0);
     m_fname_title->SetFont(::Label::Body_14);
-    m_fname_title->SetForegroundColour(wxColour("#363636"));
+    m_fname_title->SetForegroundColour(wxColour("#26395A"));
 
     m_fname_f = new wxStaticText(this, wxID_ANY, filename);
     m_fname_f->SetFont(::Label::Head_14);
     m_fname_f->SetMaxSize(wxSize(FromDIP(300),-1));
     m_fname_f->Wrap(FromDIP(300));
-    m_fname_f->SetForegroundColour(wxColour("#363636"));
+    m_fname_f->SetForegroundColour(wxColour("#26395A"));
 
     m_sizer_main->Add(m_fname_title, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(20));
     m_sizer_main->AddSpacer(FromDIP(10));
@@ -20035,6 +20084,9 @@ void Plater::print_job_finished(wxCommandEvent &evt)
     if (!dev) return;
 
     dev->set_selected_machine(evt.GetString().ToStdString());
+    // Forca: a print sent from the Calibration Wizard tab stays there (the wizard moves on to the result page).
+    if (p->main_frame->is_forca_calib_tab_active())
+        return;
     p->main_frame->request_select_tab(TAB_ID_MONITOR);
     // Selects the status page on a built Device tab; one built by the switch starts there.
     MonitorPanel* curr_monitor = MonitorPanel::if_built();
@@ -20607,9 +20659,9 @@ std::vector<MixedGradientSlot> parse_mixed_gradient_slots(const Slic3r::DynamicP
         unsigned int to_id   = (direction == 0) ? comp_ids[1] : comp_ids[0];
         result[i].is_gradient = true;
         result[i].color_from = (from_id >= 1 && from_id <= fil_colour->values.size())
-            ? fil_colour->values[from_id - 1] : "#D9D9D9";
+            ? fil_colour->values[from_id - 1] : "#CDDAEC";
         result[i].color_to = (to_id >= 1 && to_id <= fil_colour->values.size())
-            ? fil_colour->values[to_id - 1] : "#D9D9D9";
+            ? fil_colour->values[to_id - 1] : "#CDDAEC";
     }
     return result;
 }

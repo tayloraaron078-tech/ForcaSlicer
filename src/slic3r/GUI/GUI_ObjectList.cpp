@@ -131,7 +131,7 @@ public:
     ) override
     {   // ORCA draw custom text to improve consistency between platforms
         //dc.SetFont(win->GetFont()); Without SetFont it pulls font from window
-        dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#262E30"))); // use same color for selected / non-selected
+        dc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#1A2C4C"))); // use same color for selected / non-selected
         dc.DrawText(text,wxPoint(rect.x, rect.y));
     }
 };
@@ -2496,6 +2496,14 @@ void ObjectList::load_generic_subobject(const std::string& type_name, const Mode
     if (new_volume->type() == ModelVolumeType::MODEL_PART && model_object.config.has("extruder"))
         extruder_id = model_object.config.opt_int("extruder");
     new_volume->config.set_key_value("extruder", new ConfigOptionInt(extruder_id));
+    // [regional-supports fork] SLICE 1: seed the one P1 control on a newly-created interface-modifier
+    // volume. 0 = Default (fall back to the object's support_interface_filament). This is the stored
+    // control the dedicated UI edits and the regional interface swap reads directly. It is an OBJECT
+    // key on a volume config, so the standard region-config apply ignores it — inert until the swap
+    // consumes it. Seeded only on GUI creation (NOT in add_volume, which also runs on 3mf load and
+    // would clobber a persisted value).
+    if (new_volume->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+        new_volume->config.set_key_value("support_interface_filament", new ConfigOptionInt(0));
     new_volume->source.is_from_builtin_objects = true;
 
     select_item([this, obj_idx, new_volume]() {
@@ -2920,7 +2928,11 @@ void ObjectList::split()
             volume->is_text(),
             volume->is_svg(),
 			get_warning_icon_name(volume->mesh().stats()),
-            volume->config.has("extruder") ? volume->config.extruder() : 0,
+            // [regional-supports fork] show the interface modifier's chosen support_interface_filament in the
+            // list column (its extruder is unused); other volumes keep showing their extruder.
+            volume->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER
+                ? (volume->config.has("support_interface_filament") ? volume->config.opt_int("support_interface_filament") : 0)
+                : (volume->config.has("extruder") ? volume->config.extruder() : 0),
             false);
         // add settings to the part, if it has those
         add_settings_item(vol_item, &volume->config.get());
@@ -4224,7 +4236,11 @@ wxDataViewItemArray ObjectList::add_volumes_to_object_in_list(size_t obj_idx, st
                 volume->is_text(),
                 volume->is_svg(),
                 get_warning_icon_name(volume->mesh().stats()),
-                volume->config.has("extruder") ? volume->config.extruder() : 0,
+                // [regional-supports fork] show the interface modifier's chosen support_interface_filament
+                // in the list column (its extruder is unused) so it survives save/reopen.
+                volume->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER
+                    ? (volume->config.has("support_interface_filament") ? volume->config.opt_int("support_interface_filament") : 0)
+                    : (volume->config.has("extruder") ? volume->config.extruder() : 0),
                 false);
             ui_and_3d_volume_map[obj_idx][ui_volume_idx] = volume_idx;
             ui_volume_idx++;
@@ -5794,12 +5810,15 @@ void ObjectList::set_volume_type(ModelVolumeType new_type)
     // in MenuFactory::append_menu_item_change_type, see #13120).
     // This block must never be reachable under a healthy UI; if it ever logs, the UI guard has
     // been bypassed (new entry point, refactor, plugin, etc.) and should be investigated.
-    if (new_type == ModelVolumeType::SUPPORT_BLOCKER || new_type == ModelVolumeType::SUPPORT_ENFORCER) {
+    // [regional-supports fork] SUPPORT_INTERFACE_MODIFIER shares the same stale-emboss risk as
+    // blocker/enforcer, so it gets the same guard.
+    if (new_type == ModelVolumeType::SUPPORT_BLOCKER || new_type == ModelVolumeType::SUPPORT_ENFORCER ||
+        new_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER) {
         const bool has_text_or_svg = std::any_of(volumes.begin(), volumes.end(),
             [](const VolumeSelection& sel) { return sel.volume->is_svg() || sel.volume->is_text(); });
         if (has_text_or_svg) {
             BOOST_LOG_TRIVIAL(error) << __FUNCTION__
-                << ": blocked attempt to set SUPPORT_BLOCKER/ENFORCER on SVG/text volume; "
+                << ": blocked attempt to set a support-control type on SVG/text volume; "
                 << "UI guard should have prevented this -- possible regression in the Change Type menu";
             return;
         }
@@ -6692,6 +6711,123 @@ void ObjectList::set_extruder_for_selected_items(const int extruder)
     wxGetApp().plater()->update();
 
     // BBS: update extruder/filament column
+    Refresh();
+}
+
+// [regional-supports fork] Dedicated control for the SUPPORT_INTERFACE_MODIFIER volume type:
+// stores the region's support-interface filament as an int on the volume config
+// (0 = Default / fall back to the object's support_interface_filament; 1..N = filament index).
+// The regional interface swap reads this value directly during slicing (it is an object-scoped
+// key on a volume config, so the standard region-config apply ignores it).
+void ObjectList::set_support_interface_filament_for_selected_items(const int filament_id)
+{
+    wxDataViewItemArray sels;
+    GetSelections(sels);
+    if (sels.empty())
+        return;
+
+    take_snapshot(_u8L("Change Support Interface Filament"));
+
+    bool changed_any = false;
+    for (const wxDataViewItem& item : sels) {
+        if (!(m_objects_model->GetItemType(item) & itVolume))
+            continue;
+        if (m_objects_model->GetVolumeType(item) != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+            continue;
+        changed_any = true;
+        ModelConfig& config = get_item_config(item);
+        if (config.has("support_interface_filament"))
+            config.set("support_interface_filament", filament_id);
+        else
+            config.set_key_value("support_interface_filament", new ConfigOptionInt(filament_id));
+        // [regional-supports fork] Zero-gap footgun fix (option 1): when a *dissimilar* interface
+        // filament is assigned, seed the region's Z gap to 0 so the displayed value matches reality.
+        // Without this the gap keys stay unset, the region silently inherits the OBJECT gap, yet the
+        // "Support Z Gap..." dialog shows 0.000 (a placeholder) -- a user could commit a large print
+        // believing it is zero-gap when it is not. Zero gap is also the intended default for the
+        // dissimilar-material ("glassy release") case. Only seed when no gap was set yet, so an
+        // explicit gap the user already entered is never clobbered; skip for filament_id 0 (Default),
+        // which removes the material override and should not imply a gap change. The seed lands in the
+        // same undo snapshot as the material change and is picked up by the existing gap-change re-slice
+        // trigger (PrintApply support_interface_modifier_config_changed).
+        if (filament_id > 0 && !config.has("support_top_z_distance") && !config.has("support_bottom_z_distance")) {
+            config.set_key_value("support_top_z_distance", new ConfigOptionFloat(0.0));
+            config.set_key_value("support_bottom_z_distance", new ConfigOptionFloat(0.0));
+        }
+        // [regional-supports fork] reflect the choice in the object-list filament column immediately
+        m_objects_model->SetExtruder(filament_id > 0 ? wxString::Format("%d", filament_id) : _L("default"), item);
+    }
+
+    wxGetApp().plater()->update();
+    Refresh();
+
+    // [regional-supports fork] When a dissimilar interface filament is assigned to a modifier, offer the
+    // GLOBAL companion settings that make a different-material ("glassy release") interface work best. The
+    // region's zero Z gap is handled per-region (seeded above); interface spacing / pattern / independent
+    // layer height are print-global and not regionalized, so we SUGGEST rather than force them. This mirrors
+    // the stock support-interface suggestion in Tab.cpp, which fires on the OBJECT support_interface_filament
+    // and so never triggers for our volume-level filament. Skipped for Default (id 0), when no modifier was
+    // actually changed, and (checked at fire time) when the settings are already optimal, so it never nags.
+    if (changed_any && filament_id > 0) {
+        wxGetApp().CallAfter([]() {
+            DynamicPrintConfig& cfg = wxGetApp().preset_bundle->prints.get_edited_preset().config;
+            const bool already_ok =
+                cfg.opt_float("support_interface_spacing") == 0 &&
+                cfg.opt_enum<SupportMaterialInterfacePattern>("support_interface_pattern") == SupportMaterialInterfacePattern::smipRectilinearInterlaced &&
+                !cfg.opt_bool("independent_support_layer_height");
+            if (already_ok)
+                return;
+            wxString msg_text = _L("A different-material support interface (a clean, flush release from a "
+                                   "dissimilar filament) works best with these global support settings:\n"
+                                   "0 interface spacing, interlaced rectilinear interface pattern, and "
+                                   "independent support layer height disabled.\n"
+                                   "The support Z gap for this region is already set to 0.");
+            msg_text += "\n\n" + _L("Change these settings automatically\?\nYes - Change these settings automatically.\nNo  - Do not change these settings for me.");
+            MessageDialog dialog(wxGetApp().plater(), msg_text, _L("Suggestion"), wxICON_WARNING | wxYES | wxNO);
+            if (dialog.ShowModal() == wxID_YES) {
+                cfg.set_key_value("support_interface_spacing", new ConfigOptionFloat(0));
+                cfg.set_key_value("support_interface_pattern", new ConfigOptionEnum<SupportMaterialInterfacePattern>(SupportMaterialInterfacePattern::smipRectilinearInterlaced));
+                cfg.set_key_value("independent_support_layer_height", new ConfigOptionBool(false));
+                if (Tab* print_tab = wxGetApp().get_tab(Preset::TYPE_PRINT)) {
+                    print_tab->update_dirty();
+                    print_tab->reload_config();
+                }
+                wxGetApp().plater()->update();
+            }
+        });
+    }
+}
+
+// [regional-supports fork] P2 slice 1: store the region's support-interface Z gap on the modifier volume.
+// Aaron's workflow keeps top and bottom equal, so one value is written to both support_top_z_distance and
+// support_bottom_z_distance (both coFloat PrintObjectConfig keys, so they round-trip through .3mf). The
+// regional contact-placement code (P2 slice 3) reads these directly; until then this is inert storage.
+void ObjectList::set_support_z_gap_for_selected_items(double gap)
+{
+    if (gap < 0)
+        return;
+    wxDataViewItemArray sels;
+    GetSelections(sels);
+    if (sels.empty())
+        return;
+
+    take_snapshot(_u8L("Change Support Z Gap"));
+
+    for (const wxDataViewItem& item : sels) {
+        if (!(m_objects_model->GetItemType(item) & itVolume))
+            continue;
+        if (m_objects_model->GetVolumeType(item) != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+            continue;
+        ModelConfig& config = get_item_config(item);
+        for (const char* key : { "support_top_z_distance", "support_bottom_z_distance" }) {
+            if (config.has(key))
+                config.set(key, gap);
+            else
+                config.set_key_value(key, new ConfigOptionFloat(gap));
+        }
+    }
+
+    wxGetApp().plater()->update();
     Refresh();
 }
 

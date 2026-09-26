@@ -1,4 +1,5 @@
 #include "MainFrame.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 
 #include <wx/panel.h>
 #include <wx/textentry.h>
@@ -38,6 +39,8 @@
 #include "I18N.hpp"
 #include "GLCanvas3D.hpp"
 #include "Plater.hpp"
+#include "ForcaCalibrationTab.hpp"
+#include "ForcaAIDialog.hpp"
 #ifdef SLIC3R_CAD
 #include "slic3r/GUI/CAD/DesignPanel.hpp"
 #include "slic3r/GUI/CAD/McpControl.hpp"
@@ -371,7 +374,7 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
     m_topbar         = new BBLTopbar(this);
 #else
     auto panel_topbar = new wxPanel(this, wxID_ANY);
-    panel_topbar->SetBackgroundColour(wxColour(38, 46, 48));
+    panel_topbar->SetBackgroundColour(wxColour(26, 44, 76)); // [regional-supports fork] Forca blue topbar (was #262E30 grey)
     auto sizer_tobar = new wxBoxSizer(wxVERTICAL);
     panel_topbar->SetSizer(sizer_tobar);
     panel_topbar->Layout();
@@ -415,7 +418,7 @@ DPIFrame(NULL, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, BORDERLESS_FRAME_
     default:
     case GUI_App::EAppMode::Editor:
         m_taskbar_icon = std::make_unique<OrcaSlicerTaskBarIcon>(wxTBI_DOCK);
-        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("OrcaSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), "OrcaSlicer");
+        m_taskbar_icon->SetIcon(wxIcon(Slic3r::var("OrcaSlicer-mac_256px.ico"), wxBITMAP_TYPE_ICO), SLIC3R_APP_NAME); // Forca
         break;
     case GUI_App::EAppMode::GCodeViewer:
         break;
@@ -751,7 +754,11 @@ bool MainFrame::handle_global_shortcut(const KeyChord& chord)
         if (m_slice_enable) {
             wxGetApp().plater()->update(true, true);
             wxPostEvent(m_plater, SimpleEvent(EVT_GLTOOLBAR_SLICE_PLATE));
-            m_tabpanel->SelectPageByName(TAB_ID_PREVIEW);
+            // Forca: slicing from the Calibration Wizard tab stays on that tab and shows Preview there
+            if (is_forca_calib_tab_active())
+                m_plater->select_view_3D("Preview", true);
+            else
+                m_tabpanel->SelectPageByName(TAB_ID_PREVIEW);
         }
         break;
     case Shortcut::PrintPlate:
@@ -1028,8 +1035,8 @@ void MainFrame::update_layout()
         };
 
         // On Linux m_plater needs to be removed from m_tabpanel before to reparent it
-        int plater_page_id = m_tabpanel->FindPage(m_plater);
-        if (plater_page_id != wxNOT_FOUND)
+        int plater_page_id = wxNOT_FOUND;
+        while ((plater_page_id = m_tabpanel->FindPage(m_plater)) != wxNOT_FOUND)
             m_tabpanel->RemovePage(plater_page_id);
 
         if (m_plater->GetParent() != this)
@@ -1098,6 +1105,9 @@ void MainFrame::update_layout()
 #endif
         m_tabpanel->InsertPage(prepare_pos, TAB_ID_PREPARE, m_plater, _L("Prepare"), "tab_3d_active");
         m_tabpanel->InsertPage(prepare_pos + 1, TAB_ID_PREVIEW, m_plater, _L("Preview"), "tab_preview_active");
+        // Forca: the Calibration Wizard tab, last of the built-in tabs (after Calibration/Project).
+        m_tabpanel->InsertPage(m_tabpanel->PositionAfter({TAB_ID_CALIBRATION, TAB_ID_PROJECT, TAB_ID_PREVIEW}),
+                               TAB_ID_FORCA_CALIB, m_plater, _L("Calibration Wizard"), "tab_calibration_active");
         m_main_sizer->Add(m_tabpanel, 1, wxEXPAND | wxTOP, 0);
 
         m_tabpanel->Bind(wxCUSTOMEVT_NOTEBOOK_SEL_CHANGED, [this](wxCommandEvent& evt)
@@ -1340,6 +1350,19 @@ void MainFrame::init_tabpanel() {
         wxWindow* panel = m_tabpanel->GetCurrentPage();
         //wxString page_text = m_tabpanel->GetPageText(sel);
         m_last_selected_tab = m_tabpanel->GetSelectedPageName();
+        // Forca: the Calibration Wizard tab shares m_plater; its layout is on only while that tab is selected.
+        // Only for the main tab bar's own events: page-changed events of book controls INSIDE a page (e.g. the
+        // wizard's page book) bubble up to this handler too.
+        const bool from_tab_bar = (e.GetEventObject() == m_tabpanel);
+        const bool forca_calib  = (panel == m_plater && m_last_selected_tab == TAB_ID_FORCA_CALIB);
+        if (from_tab_bar) {
+            if (m_plater)
+                m_plater->set_forca_calibration_mode(forca_calib);
+            if (forca_calib && !m_forca_calib_host)
+                m_forca_calib_host = new ForcaCalibrationHost(m_plater);
+            if (m_forca_calib_host)
+                m_forca_calib_host->set_active(forca_calib);
+        }
         if (panel == m_plater) {
             if (m_last_selected_tab == TAB_ID_PREPARE) {
                 wxPostEvent(m_plater, SimpleEvent(EVT_GLVIEWTOOLBAR_3D));
@@ -1351,6 +1374,10 @@ void MainFrame::init_tabpanel() {
                     return;
                 wxPostEvent(m_plater, SimpleEvent(EVT_GLVIEWTOOLBAR_PREVIEW));
                 m_param_panel->OnActivate();
+            }
+            else if (forca_calib && !m_plater->is_preview_shown()) {
+                // The plate area shows the 3D view until a test is sliced (then the Preview).
+                wxPostEvent(m_plater, SimpleEvent(EVT_GLVIEWTOOLBAR_3D));
             }
             fit_tab_labels(); // ORCA on switching prepare / preview
         }
@@ -1605,6 +1632,20 @@ bool MainFrame::is_prepare_or_preview_tab() const
 {
     const wxString tab = m_tabpanel->GetSelectedPageName();
     return tab == TAB_ID_PREPARE || tab == TAB_ID_PREVIEW;
+}
+
+void MainFrame::show_forca_ai()
+{
+    if (!m_forca_ai_dialog)
+        m_forca_ai_dialog = new ForcaAIDialog(this);
+    m_forca_ai_dialog->refresh();
+    m_forca_ai_dialog->Show();
+    m_forca_ai_dialog->Raise();
+}
+
+bool MainFrame::is_forca_calib_tab_active() const
+{
+    return m_tabpanel != nullptr && m_tabpanel->GetSelectedPageName() == TAB_ID_FORCA_CALIB;
 }
 
 void MainFrame::fit_tab_labels()
@@ -2004,8 +2045,8 @@ wxBoxSizer* MainFrame::create_side_tools()
 
     auto slice_panel = new wxPanel(this,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     auto print_panel = new wxPanel(this,wxID_ANY,wxDefaultPosition,wxDefaultSize);
-    slice_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#3B4446")));
-    print_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#3B4446")));
+    slice_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#2D4468")));
+    print_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#2D4468")));
 
     m_slice_btn = new SideButton(slice_panel, _L("Slice plate"), "");
     m_slice_option_btn = new SideButton(slice_panel, "", "sidebutton_dropdown", 0, 14);
@@ -2094,7 +2135,11 @@ wxBoxSizer* MainFrame::create_side_tools()
                     wxPostEvent(m_plater, SimpleEvent(EVT_GLTOOLBAR_SLICE_ALL));
                 else
                     wxPostEvent(m_plater, SimpleEvent(EVT_GLTOOLBAR_SLICE_PLATE));
-                this->m_tabpanel->SelectPageByName(TAB_ID_PREVIEW);
+                // Forca: slicing from the Calibration Wizard tab shows the Preview inside that tab.
+                if (is_forca_calib_tab_active())
+                    m_plater->select_view_3D("Preview", true);
+                else
+                    this->m_tabpanel->SelectPageByName(TAB_ID_PREVIEW);
             }
         });
 
@@ -2565,8 +2610,8 @@ void MainFrame::update_side_button_style()
     m_print_option_btn->SetIconOffset(FromDIP(2));
     m_print_option_btn->SetMinSize(wxSize(FromDIP(24), FromDIP(24)));
 
-    // Keep panel backgrounds in sync with SideButton's darkModeColorFor(#3B4446) bottom strip
-    auto bg = StateColor::darkModeColorFor(wxColour("#3B4446"));
+    // Keep panel backgrounds in sync with SideButton's darkModeColorFor(#2D4468) bottom strip
+    auto bg = StateColor::darkModeColorFor(wxColour("#2D4468"));
     m_slice_btn->GetParent()->SetBackgroundColour(bg);
     m_print_btn->GetParent()->SetBackgroundColour(bg);
 }
@@ -2713,6 +2758,8 @@ void MainFrame::on_sys_color_changed()
     wxGetApp().plater()->sys_color_changed();
     MonitorPanel::when_built([](MonitorPanel& monitor) { monitor.on_sys_color_changed(); });
     CalibrationPanel::when_built([](CalibrationPanel& calibration) { calibration.on_sys_color_changed(); });
+    if (m_forca_calib_host) // Forca: the Calibration Wizard tab
+        m_forca_calib_host->sys_color_changed();
     // update Tabs
     for (auto tab : wxGetApp().tabs_list)
         tab->sys_color_changed();
@@ -2793,6 +2840,9 @@ wxMenu* MainFrame::generate_help_menu()
     //    [](wxCommandEvent&) {
     //        //TODO
     //    });
+    // Forca (B4): Forca bugs go to Forca's own issue forms (bug / printer report / feature), never OrcaSlicer's.
+    append_menu_item(helpMenu, wxID_ANY, _L("Report a Bug or Request a Feature"), _L("Open Forca Slicer's issue forms on GitHub"),
+        [](wxCommandEvent&) { wxLaunchDefaultBrowser(std::string(FORCA_REPO_URL) + "/issues/new/choose"); });
     // Check New Version
     append_menu_item(helpMenu, wxID_ANY, _L("Check for Updates"), _L("Check for Updates"),
         [](wxCommandEvent&) {
@@ -3414,6 +3464,7 @@ void MainFrame::init_menubar_as_editor()
         },
         "", nullptr, []() { return true; }, this);
 
+    if (FORCA_ORCA_CLOUD_ENABLED) // Forca: Sync Presets is Orca Cloud only (B9)
     append_menu_item(
         top_menu, wxID_ANY, _L("Sync Presets"), _L("Pull and apply the latest presets from OrcaCloud"),
         [this](wxCommandEvent&) {
@@ -3450,6 +3501,12 @@ void MainFrame::init_menubar_as_editor()
     // SoftFever calibrations
 
     // Temperature
+    // Guided calibration wizard (Forca) -- the one on-ramp. Opens the Calibration Wizard tab.
+    append_menu_item(m_topbar->GetCalibMenu(), wxID_ANY, _L("Calibration Wizard"), _L("Guided filament calibration"),
+        [this](wxCommandEvent&) { select_tab(TAB_ID_FORCA_CALIB); }, "", nullptr,
+        [this]() { return m_plater != nullptr; }, this);
+    m_topbar->GetCalibMenu()->AppendSeparator();
+
     append_menu_item(m_topbar->GetCalibMenu(), wxID_ANY, _L("Temperature"), _L("Temperature Calibration"),
         [this](wxCommandEvent&) { run_calibration(CalibKind::Temperature); }, "", nullptr,
         [this]() {return m_plater->is_view3D_shown();; }, this);
@@ -3518,6 +3575,7 @@ void MainFrame::init_menubar_as_editor()
         },
         "", nullptr, []() { return true; }, this);
 
+    if (FORCA_ORCA_CLOUD_ENABLED) // Forca: Sync Presets is Orca Cloud only (B9)
     append_menu_item(
         fileMenu, wxID_ANY, _L("Sync Presets"), _L("Pull and apply the latest presets from OrcaCloud"),
         [this](wxCommandEvent&) {
@@ -3553,6 +3611,12 @@ void MainFrame::init_menubar_as_editor()
 
     // SoftFever calibrations
     auto calib_menu = new wxMenu();
+
+    // Guided calibration wizard (Forca) -- the one on-ramp. Opens the Calibration Wizard tab.
+    append_menu_item(calib_menu, wxID_ANY, _L("Calibration Wizard"), _L("Guided filament calibration"),
+        [this](wxCommandEvent&) { select_tab(TAB_ID_FORCA_CALIB); }, "", nullptr,
+        [this]() { return m_plater != nullptr; }, this);
+    calib_menu->AppendSeparator();
 
     // Temperature
     append_menu_item(calib_menu, wxID_ANY, _L("Temperature"), _L("Temperature"),
@@ -4050,6 +4114,13 @@ void MainFrame::select_tab(const wxString& id/* = wxString()*/)
 
     // Controls on page are created on active page of active tab now.
     // We should select/activate tab before its showing to avoid an UI-flickering
+    // Forca: while the Calibration Wizard tab is showing, requests for Prepare/Preview (e.g. every calib_*
+    // generator selects Prepare) switch the plate view inside that tab instead of leaving it.
+    if (is_forca_calib_tab_active() && (id == TAB_ID_PREPARE || id == TAB_ID_PREVIEW)) {
+        m_plater->select_view_3D(id == TAB_ID_PREVIEW ? "Preview" : "3D");
+        return;
+    }
+
     auto select = [this, id](bool was_hidden) {
         // when id is empty, it means we should show the last selected tab
         //BBS GUI refactor: remove unused layout new/dlg

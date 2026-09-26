@@ -89,7 +89,9 @@ ObjectDataViewModelNode::ObjectDataViewModelNode(ObjectDataViewModelNode*   pare
     m_is_text_volume(is_text_volume),
     m_is_svg_volume(is_svg_volume),
     m_idx(idx),
-    m_extruder(type == Slic3r::ModelVolumeType::MODEL_PART || type == Slic3r::ModelVolumeType::PARAMETER_MODIFIER ? extruder : "")
+    // [regional-supports fork] the interface modifier keeps its filament column value (its chosen
+    // support_interface_filament), so it survives a save/reopen build of the tree.
+    m_extruder(type == Slic3r::ModelVolumeType::MODEL_PART || type == Slic3r::ModelVolumeType::PARAMETER_MODIFIER || type == Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER ? extruder : "")
 {
     set_icons();
     init_container();
@@ -194,7 +196,8 @@ void ObjectDataViewModelNode::set_icons()
 void ObjectDataViewModelNode::set_extruder_icon()
 {
     if (m_type & (itInstance | itInstanceRoot | itLayerRoot) ||
-        ((m_type & itVolume) && m_volume_type != Slic3r::ModelVolumeType::MODEL_PART && m_volume_type != Slic3r::ModelVolumeType::PARAMETER_MODIFIER))
+        // [regional-supports fork] the interface modifier shows its interface filament, so allow its badge
+        ((m_type & itVolume) && m_volume_type != Slic3r::ModelVolumeType::MODEL_PART && m_volume_type != Slic3r::ModelVolumeType::PARAMETER_MODIFIER && m_volume_type != Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER))
         return; // don't set colored bitmap for Instance
 
     UpdateExtruderAndColorIcon();
@@ -394,7 +397,8 @@ void ObjectDataViewModelNode::SetPlateIdx(const int& idx)
 
 void ObjectDataViewModelNode::UpdateExtruderAndColorIcon(wxString extruder /*= ""*/)
 {
-    if (m_type == itVolume && m_volume_type != ModelVolumeType::MODEL_PART && m_volume_type != ModelVolumeType::PARAMETER_MODIFIER)
+    if (m_type == itVolume && m_volume_type != ModelVolumeType::MODEL_PART && m_volume_type != ModelVolumeType::PARAMETER_MODIFIER &&
+        m_volume_type != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)   // [regional-supports fork]
         return;
     if (extruder.empty())
         extruder = m_extruder;
@@ -409,7 +413,8 @@ void ObjectDataViewModelNode::UpdateExtruderAndColorIcon(wxString extruder /*= "
             extruder_idx = atoi(m_parent->GetExtruder().c_str());
         }
         // BBS
-        else if (m_type & itVolume && m_volume_type == ModelVolumeType::PARAMETER_MODIFIER) {
+        else if (m_type & itVolume && (m_volume_type == ModelVolumeType::PARAMETER_MODIFIER ||
+                                       m_volume_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)) { // [regional-supports fork]
             m_extruder_bmp = *get_default_extruder_color_icon();
             return;
         }
@@ -546,7 +551,10 @@ void ObjectDataViewModel::UpdateBitmapForNode(ObjectDataViewModelNode *node)
 {
     bool is_volume_node = node->GetType() & itVolume;
     int  vol_type       = static_cast<int>(node->GetVolumeType());
-    is_volume_node &= (vol_type >= int(ModelVolumeType::MODEL_PART) && vol_type <= int(ModelVolumeType::SUPPORT_ENFORCER));
+    // [regional-supports fork] upper bound raised to the new last enum value so the
+    // interface-modifier volume gets its real tree icon (m_volume_bmps is sized from
+    // ADD_VOLUME_MENU_ITEMS, which now has the matching 6th entry) instead of m_empty_bmp.
+    is_volume_node &= (vol_type >= int(ModelVolumeType::MODEL_PART) && vol_type <= int(ModelVolumeType::SUPPORT_INTERFACE_MODIFIER));
 
     if (!node->has_warning_icon() && !node->has_lock()) {
         node->SetBitmap(is_volume_node ? (
@@ -676,7 +684,10 @@ wxDataViewItem ObjectDataViewModel::AddVolumeChild( const wxDataViewItem &parent
     // BBS
     wxString extruder_str;
     if (extruder == 0) {
-        if (volume_type == ModelVolumeType::PARAMETER_MODIFIER)
+        // [regional-supports fork] the interface modifier shows its own filament column (its chosen
+        // support_interface_filament), defaulting to "default" like a parameter modifier.
+        if (volume_type == ModelVolumeType::PARAMETER_MODIFIER ||
+            volume_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
             extruder_str = _L("default");
         else
             extruder_str = root->m_extruder;
@@ -2249,7 +2260,9 @@ void ObjectDataViewModel::SetVolumeType(const wxDataViewItem &item, const Slic3r
     ObjectDataViewModelNode *node = static_cast<ObjectDataViewModelNode*>(item.GetID());
     node->SetVolumeType(volume_type);
     node->SetBitmap(m_volume_bmps[int(volume_type)]);
-    if (volume_type != Slic3r::ModelVolumeType::MODEL_PART && volume_type != Slic3r::ModelVolumeType::PARAMETER_MODIFIER)
+    // [regional-supports fork] the interface modifier keeps a visible filament column (its interface filament)
+    if (volume_type != Slic3r::ModelVolumeType::MODEL_PART && volume_type != Slic3r::ModelVolumeType::PARAMETER_MODIFIER &&
+        volume_type != Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
         node->SetExtruder("");          // hide extruder
     else if (node->GetExtruder().IsEmpty())
         node->SetExtruder("default");   // show extruder ans set it to default

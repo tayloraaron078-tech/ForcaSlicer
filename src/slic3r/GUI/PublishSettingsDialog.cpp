@@ -56,7 +56,7 @@ wxStaticText* add_checkbox_label(wxWindow* parent,
 
     auto* text = new wxStaticText(parent, wxID_ANY, label);
     text->SetFont(Label::Body_14);
-    text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+    text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
     if (label_width > 0) {
         text->SetMinSize(wxSize(label_width, -1));
         text->SetMaxSize(wxSize(label_width, -1));
@@ -205,9 +205,9 @@ wxColour mixed_filament_blend_color(const DynamicPrintConfig& full, size_t slot)
         }
     }
     while (colors.size() <= slot)
-        colors.push_back(wxColour("#D9D9D9"));
+        colors.push_back(wxColour("#CDDAEC"));
     recompute_mixed_slot_colors(colors, full);
-    return slot < colors.size() ? colors[slot] : wxColour("#D9D9D9");
+    return slot < colors.size() ? colors[slot] : wxColour("#CDDAEC");
 }
 
 // The slot's own chip as the main GUI renders it: a curve-sampled gradient swatch for a
@@ -230,7 +230,7 @@ wxBitmap mixed_filament_chip_bitmap(const DynamicPrintConfig& full, size_t slot,
             for (const unsigned int comp : mixed_slot_components(full, slot)) {
                 std::string hex = filament_color_hex(full, size_t(comp) - 1);
                 if (hex.empty())
-                    hex = "#D9D9D9";
+                    hex = "#CDDAEC";
                 hexes.push_back(std::move(hex));
             }
             if (hexes.size() >= 2)
@@ -309,7 +309,7 @@ wxBitmap mixed_filament_tab_bitmap(const DynamicPrintConfig& full, size_t slot, 
         if (pieces.empty())
             break;
         push_text(has_lead && pieces.size() == 1 ? lead_sep : comp_sep); // lead chip may have failed to render
-        std::string hex = "#D9D9D9";
+        std::string hex = "#CDDAEC";
         if (colours != nullptr && comps[ci] >= 1 && comps[ci] <= colours->size())
             hex = colours->values[comps[ci] - 1];
         const size_t before = pieces.size();
@@ -337,7 +337,7 @@ wxBitmap mixed_filament_tab_bitmap(const DynamicPrintConfig& full, size_t slot, 
     memdc.Clear();
     memdc.SetBackgroundMode(wxTRANSPARENT);
     memdc.SetFont(::Label::Body_12);
-    memdc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#262E30")));
+    memdc.SetTextForeground(StateColor::darkModeColorFor(wxColour("#1A2C4C")));
     int x = 0;
     for (const Piece& p : pieces) {
         if (p.kind == Piece::Swatch) {
@@ -540,7 +540,7 @@ public:
         for (const MixedDependencyIssue& issue : issues) {
             std::string hex = filament_color_hex(full, issue.component_slot);
             if (hex.empty())
-                hex = "#D9D9D9";
+                hex = "#CDDAEC";
             const wxBitmap* comp_bmp = get_extruder_color_icon(hex, std::to_string(issue.component_slot + 1), swatch, swatch);
 
             wxWindow* mix_chip  = make_chip(mixed_filament_chip_bitmap(full, issue.mixed_slot, swatch),
@@ -586,11 +586,11 @@ PublishSettingsDialog::MixedVisualSpec PublishSettingsDialog::make_mixed_visual_
 
     const auto* colours = full.opt<ConfigOptionStrings>("filament_colour");
     for (unsigned int cid : comps) {
-        std::string hex = "#D9D9D9";
+        std::string hex = "#CDDAEC";
         if (colours != nullptr && cid >= 1 && cid <= colours->size())
             hex = colours->values[cid - 1];
         const wxColour c(hex);
-        spec.component_colours.push_back(c.IsOk() ? c : wxColour("#D9D9D9"));
+        spec.component_colours.push_back(c.IsOk() ? c : wxColour("#CDDAEC"));
     }
 
     if (!spec.is_gradient) {
@@ -746,7 +746,7 @@ PublishSettingsDialog::PublishSettingsDialog(wxWindow* parent,
     footer->AddStretchSpacer();
     footer->Add(dlg_btns, 0, wxALIGN_CENTER_VERTICAL);
     auto* footer_line = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 1));
-    footer_line->SetBackgroundColour(wxColour("#CECECE"));
+    footer_line->SetBackgroundColour(wxColour("#C2CFE4"));
     footer_line->SetMinSize(wxSize(-1, 1));
     footer_line->SetMaxSize(wxSize(-1, 1));
     w_sizer->Add(footer_line, 0, wxRIGHT | wxLEFT | wxTOP | wxEXPAND, FromDIP(10));
@@ -1293,7 +1293,7 @@ size_t PublishSettingsDialog::subcategory_index_for(size_t category_index, const
     if (!title.IsEmpty()) {
         sub.header = new ::StaticLine(category.scroll, false, title, icon);
         sub.header->SetFont(Label::Head_14);
-        sub.header->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        sub.header->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         auto* wrap = new wxBoxSizer(wxVERTICAL);
         wrap->Add(sub.header, 0, wxEXPAND | wxTOP | wxBOTTOM, FromDIP(6));
         sub.item = category.list_sizer->Add(wrap, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(5));
@@ -1338,7 +1338,7 @@ void PublishSettingsDialog::add_row_ui(const std::string& key,
     // normalized type, not author-editable).
     current.value_label = new wxStaticText(category.scroll, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
     current.value_label->SetFont(Label::Body_14);
-    current.value_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#262E30")));
+    current.value_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#1A2C4C")));
     current.value_label->SetToolTip(unit.IsEmpty() ? value : value + " " + unit);
     if (kind == RowKind::Color && !value.IsEmpty()) {
         // The colour swatch carries this slot's 1-based number, like the main GUI swatches.
@@ -1432,8 +1432,8 @@ void PublishSettingsDialog::add_mixed_visual(size_t category_index, const MixedV
 
         if (spec.tri_weights.size() == 3 && n == 3 && !spec.is_gradient) {
             // Ternary mix: read-only miniature of the MixedFilamentDialog's triangle picker.
-            const MixedTriangleTheme tri_theme{StateColor::darkModeColorFor(*wxWHITE), StateColor::darkModeColorFor(wxColour("#CECECE")),
-                                               StateColor::darkModeColorFor(wxColour("#262E30")),
+            const MixedTriangleTheme tri_theme{StateColor::darkModeColorFor(*wxWHITE), StateColor::darkModeColorFor(wxColour("#C2CFE4")),
+                                               StateColor::darkModeColorFor(wxColour("#1A2C4C")),
                                                StateColor::darkModeColorFor(wxColour(107, 107, 107))};
             draw_mixed_triangle_picker(pdc, rc.GetSize(), {spec.component_colours[0], spec.component_colours[1], spec.component_colours[2]},
                                        {spec.tri_weights[0], spec.tri_weights[1], spec.tri_weights[2]}, tri_theme);
@@ -1477,7 +1477,7 @@ void PublishSettingsDialog::add_mixed_visual(size_t category_index, const MixedV
                     if (tsz.GetWidth() + FromDIP(4) <= w) {
                         const wxColour& c = spec.component_colours[i];
                         const double lum  = 0.299 * c.Red() + 0.587 * c.Green() + 0.114 * c.Blue();
-                        pdc.SetTextForeground(lum > 140 ? wxColour("#262E30") : *wxWHITE);
+                        pdc.SetTextForeground(lum > 140 ? wxColour("#1A2C4C") : *wxWHITE);
                         pdc.DrawText(text, x0 + (w - tsz.GetWidth()) / 2, rc.y + (rc.height - tsz.GetHeight()) / 2);
                     }
                     x0 = x1;

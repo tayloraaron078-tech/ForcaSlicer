@@ -15,6 +15,10 @@ namespace Slic3r {
 // static is not accepted by gcc if declared as a friend of ModelObject.
 /* static */ void model_volume_list_update_supports(ModelObject &model_object_dst, const ModelObject &model_object_new)
 {
+    // [regional-supports fork] the interface-modifier volume is synced through this support path too.
+    auto is_support_ctrl = [](const ModelVolume *mv) {
+        return mv->is_support_modifier() || mv->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER;
+    };
     typedef std::pair<const ModelVolume*, bool> ModelVolumeWithStatus;
     std::vector<ModelVolumeWithStatus> old_volumes;
     old_volumes.reserve(model_object_dst.volumes.size());
@@ -36,7 +40,7 @@ namespace Slic3r {
             // For support modifiers, the type may have been switched from blocker to enforcer and vice versa.
             assert((model_volume_dst->is_support_modifier() && model_volume_src->is_support_modifier()) || model_volume_dst->type() == model_volume_src->type());
             model_object_dst.volumes.emplace_back(model_volume_dst);
-            if (model_volume_dst->is_support_modifier()) {
+            if (is_support_ctrl(model_volume_dst)) {
                 // For support modifiers, the type may have been switched from blocker to enforcer and vice versa.
                 model_volume_dst->set_type(model_volume_src->type());
                 model_volume_dst->set_transformation(model_volume_src->get_transformation());
@@ -44,7 +48,7 @@ namespace Slic3r {
             assert(model_volume_dst->get_matrix().isApprox(model_volume_src->get_matrix()));
         } else {
             // The volume was not found in the old list. Create a new copy.
-            assert(model_volume_src->is_support_modifier());
+            assert(is_support_ctrl(model_volume_src));
             model_object_dst.volumes.emplace_back(new ModelVolume(*model_volume_src));
             model_object_dst.volumes.back()->set_model_object(&model_object_dst);
         }
@@ -81,11 +85,44 @@ static inline void model_volume_list_copy_configs(ModelObject &model_object_dst,
         mv_dst.mmu_segmentation_facets.assign(mv_src.mmu_segmentation_facets);
         assert(mv_dst.fuzzy_skin_facets.id() == mv_src.fuzzy_skin_facets.id());
         mv_dst.fuzzy_skin_facets.assign(mv_src.fuzzy_skin_facets);
+        // [regional-supports fork] sync painted support-interface regions on the light (support-only) path,
+        // so a paint edit does NOT need the heavy solid_or_modifier_differ assign_copy + invalidate_all_steps.
+        assert(mv_dst.support_interface_region_facets.id() == mv_src.support_interface_region_facets.id());
+        mv_dst.support_interface_region_facets.assign(mv_src.support_interface_region_facets);
         //FIXME what to do with the materials?
         // mv_dst.m_material_id = mv_src.m_material_id;
         ++ i_src;
         ++ i_dst;
     }
+}
+
+// [regional-supports fork] True if any slicing-relevant config value on a matched
+// SUPPORT_INTERFACE_MODIFIER volume changed between the two model objects: the chosen interface
+// filament (drives the regional material swap in G-code export) or the regional Top-Z gap
+// (support_top_z_distance / support_bottom_z_distance, which drive the regional contact placement in
+// support generation, P2). These are config-only changes -- no volume added/removed/moved -- that
+// still must regenerate supports + G-code.
+static bool support_interface_modifier_config_changed(const ModelObject &mo_old, const ModelObject &mo_new)
+{
+    auto old_volume = [&mo_old](ObjectID id) -> const ModelVolume* {
+        for (const ModelVolume *mv : mo_old.volumes)
+            if (mv->id() == id)
+                return mv;
+        return nullptr;
+    };
+    // Unset sentinels (0 / -1) match how the read-helpers treat an absent key, so an untouched
+    // modifier compares equal and never spuriously re-slices.
+    auto ival = [](const ModelVolume *mv, const char *k) { return mv && mv->config.has(k) ? mv->config.opt_int(k)   :  0; };
+    auto fval = [](const ModelVolume *mv, const char *k) { return mv && mv->config.has(k) ? mv->config.opt_float(k) : -1.; };
+    for (const ModelVolume *mv : mo_new.volumes)
+        if (mv->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER) {
+            const ModelVolume *old_mv = old_volume(mv->id());
+            if (ival(mv, "support_interface_filament") != ival(old_mv, "support_interface_filament") ||
+                fval(mv, "support_top_z_distance")     != fval(old_mv, "support_top_z_distance")     ||
+                fval(mv, "support_bottom_z_distance")  != fval(old_mv, "support_bottom_z_distance"))
+                return true;
+        }
+    return false;
 }
 
 static inline void layer_height_ranges_copy_configs(t_layer_config_ranges &lr_dst, const t_layer_config_ranges &lr_src)
@@ -1633,8 +1670,22 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
                                           model_mmu_segmentation_data_changed(model_object, model_object_new) ||
                                           (model_object_new.is_mm_painted() && num_extruders_changed) ||
                                           model_fuzzy_skin_data_changed(model_object, model_object_new);
+        // [regional-supports fork] NOTE: support-interface region painting is deliberately NOT in
+        // solid_or_modifier_differ. It only affects support generation onward, so it takes the light path below
+        // (invalidate posSupportMaterial + sync facets via model_volume_list_copy_configs) exactly like custom
+        // support painting -- NOT the heavy MMU path (assign_copy + invalidate_all_steps), which re-sliced the whole
+        // object (perimeters/infill/...) on every paint edit and froze the UI / made slices cumulatively slow.
         bool supports_differ            = model_volume_list_changed(model_object, model_object_new, ModelVolumeType::SUPPORT_BLOCKER) ||
-                                          model_volume_list_changed(model_object, model_object_new, ModelVolumeType::SUPPORT_ENFORCER);
+                                          model_volume_list_changed(model_object, model_object_new, ModelVolumeType::SUPPORT_ENFORCER) ||
+                                          // [regional-supports fork] treat the interface-modifier volume like a support
+                                          // control volume: adding/removing/moving it must sync it into the slicing model.
+                                          model_volume_list_changed(model_object, model_object_new, ModelVolumeType::SUPPORT_INTERFACE_MODIFIER) ||
+                                          // ...and so must changing its interface filament or its Top-Z gap
+                                          // (config-only changes), routed through the same full support-invalidation
+                                          // path so tool ordering and object labels regenerate consistently (a narrower
+                                          // G-code-only invalidation left the exclude-object labels inconsistent ->
+                                          // "Label object id error").
+                                          support_interface_modifier_config_changed(model_object, model_object_new);
         bool layer_height_ranges_differ = ! layer_height_ranges_equal(model_object.layer_config_ranges, model_object_new.layer_config_ranges, model_object_new.layer_height_profile.empty());
         bool model_origin_translation_differ = model_object.origin_translation != model_object_new.origin_translation;
         bool brim_points_differ = model_brim_points_data_changed(model_object, model_object_new);
@@ -1668,7 +1719,9 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
             model_object.assign_copy(model_object_new);
         } else {
             model_object_status.print_object_regions_status = ModelObjectStatus::PrintObjectRegionsStatus::Valid;
-            if (supports_differ || model_custom_supports_data_changed(model_object, model_object_new)) {
+            if (supports_differ || model_custom_supports_data_changed(model_object, model_object_new) ||
+                // [regional-supports fork] a support-interface paint edit regenerates supports + G-code only.
+                model_support_interface_region_data_changed(model_object, model_object_new)) {
                 // First stop background processing before shuffling or deleting the ModelVolumes in the ModelObject's list.
                 if (supports_differ) {
                     this->call_cancel_callback();
@@ -1708,6 +1761,9 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
             //FIXME What to do with m_material_id?
 			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, ModelVolumeType::MODEL_PART);
 			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, ModelVolumeType::PARAMETER_MODIFIER);
+			// [regional-supports fork] the interface-modifier volume carries support_interface_filament on
+			// its config; copy it into the slicing model too, or the regional swap can never read it.
+			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, ModelVolumeType::SUPPORT_INTERFACE_MODIFIER);
             layer_height_ranges_copy_configs(model_object.layer_config_ranges /* dst */, model_object_new.layer_config_ranges /* src */);
             // Copy the ModelObject name, input_file and instances. The instances will be compared against PrintObject instances in the next step.
             model_object.name       = model_object_new.name;

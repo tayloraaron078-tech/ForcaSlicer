@@ -444,6 +444,9 @@ protected:
 
 
     wxMediaCtrl3 *  m_media_ctrl;
+public:
+    wxMediaCtrl3 *  forca_media_ctrl() const { return m_media_ctrl; } // Forca AI: the Device tab's live view
+protected:
     MediaPlayCtrl * m_media_play_ctrl{nullptr};
 
     Label *         m_staticText_printing;

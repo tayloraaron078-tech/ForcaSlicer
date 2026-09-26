@@ -1,4 +1,5 @@
 #include "PresetUpdater.hpp"
+#include "ForcaFeatures.hpp"
 
 #include <algorithm>
 #include <boost/filesystem/directory.hpp>
@@ -681,6 +682,7 @@ void PresetUpdater::priv::sync_resources(std::string http_url, std::map<std::str
 void PresetUpdater::priv::sync_vendor_config(const std::string& vendor_id)
 {
     if (!enabled_config_update) return;
+    if (!FORCA_ORCA_PROFILE_UPDATES_ENABLED) return; // Forca (B2): no online profile updates from Orca's server
 
     BOOST_LOG_TRIVIAL(info) << "[Orca Updater] checking vendor update for " << vendor_id;
 

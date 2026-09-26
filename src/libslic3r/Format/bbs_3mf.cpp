@@ -298,6 +298,8 @@ static constexpr const char* CUSTOM_SUPPORTS_ATTR = "paint_supports";
 static constexpr const char* CUSTOM_FUZZY_SKIN_ATTR  = "paint_fuzzy_skin";
 static constexpr const char* CUSTOM_SEAM_ATTR = "paint_seam";
 static constexpr const char* MMU_SEGMENTATION_ATTR = "paint_color";
+// [regional-supports fork] per-facet support-interface region index (MMU-style)
+static constexpr const char* CUSTOM_SUPPORT_IFACE_REGION_ATTR = "paint_support_interface_region";
 // BBS
 static constexpr const char* FACE_PROPERTY_ATTR = "face_property";
 
@@ -781,6 +783,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             std::vector<std::string> custom_seam;
             std::vector<std::string> mmu_segmentation;
             std::vector<std::string> fuzzy_skin;
+            std::vector<std::string> support_interface_region; // [regional-supports fork]
             // BBS
             std::vector<std::string> face_properties;
 
@@ -801,6 +804,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 custom_seam.clear();
                 mmu_segmentation.clear();
                 fuzzy_skin.clear();
+                support_interface_region.clear(); // [regional-supports fork]
             }
         };
 
@@ -3877,6 +3881,8 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             m_curr_object->geometry.custom_seam.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_SEAM_ATTR));
             m_curr_object->geometry.mmu_segmentation.push_back(bbs_get_attribute_value_string(attributes, num_attributes, MMU_SEGMENTATION_ATTR));
             m_curr_object->geometry.fuzzy_skin.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_FUZZY_SKIN_ATTR));
+            // [regional-supports fork]
+            m_curr_object->geometry.support_interface_region.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_SUPPORT_IFACE_REGION_ATTR));
             // BBS
             m_curr_object->geometry.face_properties.push_back(bbs_get_attribute_value_string(attributes, num_attributes, FACE_PROPERTY_ATTR));
         }
@@ -5183,6 +5189,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 volume->seam_facets.reserve(triangles_count);
                 volume->mmu_segmentation_facets.reserve(triangles_count);
                 volume->fuzzy_skin_facets.reserve(triangles_count);
+                volume->support_interface_region_facets.reserve(triangles_count); // [regional-supports fork]
                 for (size_t i=0; i<triangles_count; ++i) {
                     assert(i < sub_object->geometry.custom_supports.size());
                     assert(i < sub_object->geometry.custom_seam.size());
@@ -5196,6 +5203,9 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                         volume->mmu_segmentation_facets.set_triangle_from_string(i, sub_object->geometry.mmu_segmentation[i]);
                     if (!sub_object->geometry.fuzzy_skin[i].empty())
                         volume->fuzzy_skin_facets.set_triangle_from_string(i, sub_object->geometry.fuzzy_skin[i]);
+                    // [regional-supports fork]
+                    if (i < sub_object->geometry.support_interface_region.size() && ! sub_object->geometry.support_interface_region[i].empty())
+                        volume->support_interface_region_facets.set_triangle_from_string(i, sub_object->geometry.support_interface_region[i]);
                 }
                 volume->supported_facets.shrink_to_fit();
                 volume->seam_facets.shrink_to_fit();
@@ -5203,6 +5213,9 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 volume->mmu_segmentation_facets.touch();
                 volume->fuzzy_skin_facets.shrink_to_fit();
                 volume->fuzzy_skin_facets.touch();
+                // [regional-supports fork]
+                volume->support_interface_region_facets.shrink_to_fit();
+                volume->support_interface_region_facets.touch();
             }
 
             volume->set_type(volume_data->part_type);
@@ -5344,6 +5357,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             volume->supported_facets.reserve(triangles_count);
             volume->seam_facets.reserve(triangles_count);
             volume->mmu_segmentation_facets.reserve(triangles_count);
+            volume->support_interface_region_facets.reserve(triangles_count); // [regional-supports fork]
             for (size_t i=0; i<triangles_count; ++i) {
                 size_t index = volume_data.first_triangle_id + i;
                 assert(index < geometry.custom_supports.size());
@@ -5355,10 +5369,14 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     volume->seam_facets.set_triangle_from_string(i, geometry.custom_seam[index]);
                 if (! geometry.mmu_segmentation[index].empty())
                     volume->mmu_segmentation_facets.set_triangle_from_string(i, geometry.mmu_segmentation[index]);
+                // [regional-supports fork]
+                if (index < geometry.support_interface_region.size() && ! geometry.support_interface_region[index].empty())
+                    volume->support_interface_region_facets.set_triangle_from_string(i, geometry.support_interface_region[index]);
             }
             volume->supported_facets.shrink_to_fit();
             volume->seam_facets.shrink_to_fit();
             volume->mmu_segmentation_facets.shrink_to_fit();
+            volume->support_interface_region_facets.shrink_to_fit(); // [regional-supports fork]
 
             volume->set_type(volume_data.part_type);
 
@@ -5662,6 +5680,8 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             current_object->geometry.custom_seam.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_SEAM_ATTR));
             current_object->geometry.mmu_segmentation.push_back(bbs_get_attribute_value_string(attributes, num_attributes, MMU_SEGMENTATION_ATTR));
             current_object->geometry.fuzzy_skin.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_FUZZY_SKIN_ATTR));
+            // [regional-supports fork]
+            current_object->geometry.support_interface_region.push_back(bbs_get_attribute_value_string(attributes, num_attributes, CUSTOM_SUPPORT_IFACE_REGION_ATTR));
             // BBS
             current_object->geometry.face_properties.push_back(bbs_get_attribute_value_string(attributes, num_attributes, FACE_PROPERTY_ATTR));
         }
@@ -7092,7 +7112,8 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                                 if ((shared_volume->supported_facets.equals(volume->supported_facets))
                                     && (shared_volume->seam_facets.equals(volume->seam_facets))
                                     && (shared_volume->mmu_segmentation_facets.equals(volume->mmu_segmentation_facets))
-                                    && (shared_volume->fuzzy_skin_facets.equals(volume->fuzzy_skin_facets)))
+                                    && (shared_volume->fuzzy_skin_facets.equals(volume->fuzzy_skin_facets))
+                                    && (shared_volume->support_interface_region_facets.equals(volume->support_interface_region_facets))) // [regional-supports fork]
                                 {
                                     auto data = iter->second.first;
                                     const_cast<_BBS_3MF_Exporter *>(this)->m_volume_paths.insert({volume, {data->sub_path, data->volumes_objectID.find(iter->second.second)->second}});
@@ -7505,6 +7526,16 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                     output_buffer += CUSTOM_FUZZY_SKIN_ATTR;
                     output_buffer += "=\"";
                     output_buffer += fuzzy_skin_painting_data_string;
+                    output_buffer += "\"";
+                }
+
+                // [regional-supports fork]
+                std::string support_iface_region_painting_data_string = volume->support_interface_region_facets.get_triangle_as_string(i);
+                if (! support_iface_region_painting_data_string.empty()) {
+                    output_buffer += " ";
+                    output_buffer += CUSTOM_SUPPORT_IFACE_REGION_ATTR;
+                    output_buffer += "=\"";
+                    output_buffer += support_iface_region_painting_data_string;
                     output_buffer += "\"";
                 }
 

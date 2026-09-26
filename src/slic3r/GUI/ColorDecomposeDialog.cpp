@@ -27,11 +27,11 @@ namespace Slic3r {
 namespace GUI {
 
 static const wxColour COLOR_BRAND("#009688");
-static const wxColour COLOR_BORDER_NORMAL("#EEEEEE");
-static const wxColour COLOR_BG_CARD("#F8F8F8");
+static const wxColour COLOR_BORDER_NORMAL("#D7E2F3");
+static const wxColour COLOR_BG_CARD("#E3EBF8");
 static const wxColour COLOR_LABEL_GREY("#ACACAC");
-static const wxColour COLOR_TEXT_DARK("#262E30");
-static const wxColour COLOR_DIVIDER("#EEEEEE");
+static const wxColour COLOR_TEXT_DARK("#1A2C4C");
+static const wxColour COLOR_DIVIDER("#D7E2F3");
 
 // Standard CMYW base colors
 static const wxColour CMYW_CYAN(0, 255, 255);

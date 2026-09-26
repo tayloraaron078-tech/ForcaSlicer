@@ -507,9 +507,9 @@ bool IMSlider::horizontal_slider(const char* str_id, int* value, int v_min, int 
     const ImU32 handle_clr = BRAND_COLOR;
     const ImU32 handle_border_clr = m_is_dark ? BACKGROUND_COLOR_DARK : BACKGROUND_COLOR_LIGHT;
     const wxColour label_bg = StateColor::darkModeColorFor(wxGetApp().get_window_default_clr());
-    const wxColour label_border = StateColor::darkModeColorFor(wxColour("#CECECE"));
-    const wxColour rail_inner_bg = m_is_dark ? StateColor::darkModeColorFor(wxColour("#CECECE")) : wxGetApp().get_highlight_default_clr();
-    const wxColour rail_border = m_is_dark ? StateColor::darkModeColorFor(wxColour("#F0F0F1")) : wxColour("#CECECE");
+    const wxColour label_border = StateColor::darkModeColorFor(wxColour("#C2CFE4"));
+    const wxColour rail_inner_bg = m_is_dark ? StateColor::darkModeColorFor(wxColour("#C2CFE4")) : wxGetApp().get_highlight_default_clr();
+    const wxColour rail_border = m_is_dark ? StateColor::darkModeColorFor(wxColour("#D9E4F5")) : wxColour("#C2CFE4");
     const ImU32 label_bg_clr = IM_COL32(label_bg.Red(), label_bg.Green(), label_bg.Blue(), 238);
     const ImU32 label_border_clr = IM_COL32(label_border.Red(), label_border.Green(), label_border.Blue(), 255);
     const ImU32 label_shadow_clr = m_is_dark ? IM_COL32(0, 0, 0, 84) : IM_COL32(0, 0, 0, 38);
@@ -903,9 +903,9 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
     const ImU32 handle_border_clr = m_is_dark ? BACKGROUND_COLOR_DARK : BACKGROUND_COLOR_LIGHT;
     const wxColour label_bg = StateColor::darkModeColorFor(wxGetApp().get_window_default_clr());
     const wxColour label_bg_active = StateColor::darkModeColorFor(wxColour("#E5F0EE"));
-    const wxColour label_border = StateColor::darkModeColorFor(wxColour("#CECECE"));
-    const wxColour rail_inner_bg = m_is_dark ? StateColor::darkModeColorFor(wxColour("#CECECE")) : wxGetApp().get_highlight_default_clr();
-    const wxColour rail_border = m_is_dark ? StateColor::darkModeColorFor(wxColour("#F0F0F1")) : wxColour("#CECECE");
+    const wxColour label_border = StateColor::darkModeColorFor(wxColour("#C2CFE4"));
+    const wxColour rail_inner_bg = m_is_dark ? StateColor::darkModeColorFor(wxColour("#C2CFE4")) : wxGetApp().get_highlight_default_clr();
+    const wxColour rail_border = m_is_dark ? StateColor::darkModeColorFor(wxColour("#D9E4F5")) : wxColour("#C2CFE4");
     const ImU32 label_bg_clr = IM_COL32(label_bg.Red(), label_bg.Green(), label_bg.Blue(), 238);
     const ImU32 label_bg_active_clr = IM_COL32(label_bg_active.Red(), label_bg_active.Green(), label_bg_active.Blue(), 246);
     const ImU32 label_border_clr = IM_COL32(label_border.Red(), label_border.Green(), label_border.Blue(), 255);

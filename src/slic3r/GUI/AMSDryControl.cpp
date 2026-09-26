@@ -87,7 +87,7 @@ FilamentItemPanel::FilamentItemPanel(wxWindow* parent, const wxString& text, con
     : wxPanel(parent, id)
     , m_icon_name(icon_name)
 {
-    SetBackgroundColour(wxColour("#F0F0F1")); // Orca: light-gray panel scheme (#F0F0F1 replaces REF #F7F7F7)
+    SetBackgroundColour(wxColour("#D9E4F5")); // Orca: light-gray panel scheme (#D9E4F5 replaces REF #E9EFFA)
     SetMinSize(wxSize(FromDIP(64), FromDIP(106))); // Width: 64, Height: 106
     SetSize(wxSize(FromDIP(64), FromDIP(106)));    // Fixed size
 
@@ -100,7 +100,7 @@ FilamentItemPanel::FilamentItemPanel(wxWindow* parent, const wxString& text, con
 
     m_text_label = new Label(this, text);
     m_text_label->SetForegroundColour(StateColor::darkModeColorFor(wxColour(*wxBLACK)));
-    m_text_label->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F0F0F1")));
+    m_text_label->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#D9E4F5")));
     m_text_label->SetFont(Label::Body_12);
     m_text_label->Wrap(FromDIP(40));
     top_sizer->Add(m_text_label, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -113,7 +113,7 @@ FilamentItemPanel::FilamentItemPanel(wxWindow* parent, const wxString& text, con
     bottom_sizer->AddStretchSpacer(1);
 
     m_icon_bitmap = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap);
-    m_icon_bitmap->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F0F0F1")));
+    m_icon_bitmap->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#D9E4F5")));
     m_icon_bitmap->SetMinSize(wxSize(FromDIP(24), FromDIP(24)));
     m_icon_bitmap->SetMaxSize(wxSize(FromDIP(24), FromDIP(24)));
     bottom_sizer->Add(m_icon_bitmap, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -171,8 +171,8 @@ void FilamentItemPanel::OnPaint(wxPaintEvent& event)
     wxSize size = GetSize();
 
     // bool is_dark_mode = wxGetApp().dark_mode();
-    wxColour backgroundColor = StateColor::darkModeColorFor(wxColour("#F0F0F1"));
-    wxColour borderColor = StateColor::darkModeColorFor(wxColour("#DBDBDB"));
+    wxColour backgroundColor = StateColor::darkModeColorFor(wxColour("#D9E4F5"));
+    wxColour borderColor = StateColor::darkModeColorFor(wxColour("#CFDBED"));
 
     // Draw white background rectangle with rounded corners inside the thick vertical lines
     dc.SetBrush(wxBrush(backgroundColor));
@@ -203,13 +203,13 @@ void FilamentItemPanel::OnSize(wxSizeEvent& event)
 AMSFilamentPanel::AMSFilamentPanel(wxWindow* parent, const wxString& ams_name, wxWindowID id)
     : wxPanel(parent, id)
 {
-    SetBackgroundColour(wxColour("#DBDBDB"));
+    SetBackgroundColour(wxColour("#CFDBED"));
 
     wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 
     // Filament items section
     m_filament_container = new wxPanel(this);
-    m_filament_container->SetBackgroundColour(wxColour("#F0F0F1"));
+    m_filament_container->SetBackgroundColour(wxColour("#D9E4F5"));
     m_filament_sizer = new wxBoxSizer(wxHORIZONTAL);
     m_filament_container->SetSizer(m_filament_sizer);
 
@@ -217,7 +217,7 @@ AMSFilamentPanel::AMSFilamentPanel(wxWindow* parent, const wxString& ams_name, w
     m_ams_name_label = new Label(this, ams_name);
     m_ams_name_label->SetForegroundColour(wxColour("#858585"));
     m_ams_name_label->SetFont(Label::Body_14);
-    m_ams_name_label->SetBackgroundColour(wxColour("#DBDBDB"));
+    m_ams_name_label->SetBackgroundColour(wxColour("#CFDBED"));
 
     main_sizer->Add(m_filament_container, 1, wxEXPAND | wxALL, 0);
     main_sizer->Add(m_ams_name_label, 0, wxALIGN_LEFT | wxALL, FromDIP(5));
@@ -738,7 +738,7 @@ wxBoxSizer* AMSDryCtrWin::create_guide_right_section(wxPanel* parent)
     m_back_button = create_button(
         parent,
         wxString::FromUTF8(_u8L_CONTEXT(L_CONTEXT("Back", "amsdrying"), "amsdrying")),
-        wxColour("#F8F8F8"),       // Background color - light gray
+        wxColour("#E3EBF8"),       // Background color - light gray
         wxColour("#D0D0D0"),       // Border color - gray
         *wxBLACK                   // Text color - black
     );

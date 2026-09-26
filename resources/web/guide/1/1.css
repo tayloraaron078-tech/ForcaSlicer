@@ -15,6 +15,13 @@ body
 
 }
 
+#SlicerIcon img
+{
+	/* Forca: the Forca logo is 465x435 (Orca's was 154x154); show it at Orca's size so the Get Started button fits */
+	height: 154px;
+	width: auto;
+}
+
 #Title
 {
 	height:20mm;

@@ -314,7 +314,7 @@ wxPanel *MachineInfoPanel::create_caption_panel(wxWindow *parent)
     m_caption_sizer->Add(m_upgrade_status_img, 0, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(5));
 
     m_caption_text = new wxStaticText(caption_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
-    m_caption_text->SetForegroundColour("#262E30");
+    m_caption_text->SetForegroundColour("#1A2C4C");
     m_caption_text->Wrap(-1);
     m_caption_sizer->Add(m_caption_text, 1, wxALIGN_CENTER_VERTICAL | wxALL, FromDIP(5));
 
@@ -1809,17 +1809,17 @@ bool UpgradePanel::Show(bool show)
      m_staticText_ams_model_id->SetFont(Label::Head_14);
 
      m_staticText_ams = new wxStaticText(this, wxID_ANY, "-", wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ams->SetForegroundColour("#262E30");
+     m_staticText_ams->SetForegroundColour("#1A2C4C");
      m_staticText_ams->SetFont(Label::Head_14);
      m_staticText_ams->Wrap(-1);
 
      auto m_staticText_ams_sn = new wxStaticText(this, wxID_ANY, _L("Serial:"), wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ams_sn->SetForegroundColour("#262E30");
+     m_staticText_ams_sn->SetForegroundColour("#1A2C4C");
      m_staticText_ams_sn->Wrap(-1);
      m_staticText_ams_sn->SetFont(Label::Head_14);
 
      m_staticText_ams_sn_val = new wxStaticText(this, wxID_ANY, "-", wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ams_sn_val->SetForegroundColour("#262E30");
+     m_staticText_ams_sn_val->SetForegroundColour("#1A2C4C");
      m_staticText_ams_sn_val->Wrap(-1);
 
      wxBoxSizer *m_ams_ver_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1834,11 +1834,11 @@ bool UpgradePanel::Show(bool show)
      auto m_staticText_ams_ver = new wxStaticText(this, wxID_ANY, _L("Version:"), wxDefaultPosition, wxDefaultSize, 0);
      m_staticText_ams_ver->Wrap(-1);
      m_staticText_ams_ver->SetFont(Label::Head_14);
-     m_staticText_ams_ver->SetForegroundColour("#262E30");
+     m_staticText_ams_ver->SetForegroundColour("#1A2C4C");
      m_ams_ver_sizer->Add(m_staticText_ams_ver, 0, wxALL, FromDIP(5));
 
      m_staticText_ams_ver_val = new wxStaticText(this, wxID_ANY, "-", wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ams_ver_val->SetForegroundColour("#262E30");
+     m_staticText_ams_ver_val->SetForegroundColour("#1A2C4C");
      m_staticText_ams_ver_val->Wrap(-1);
 
      m_staticText_beta_version = new wxStaticText(this, wxID_ANY, _L("Beta"), wxDefaultPosition, wxDefaultSize, 0);
@@ -1893,22 +1893,22 @@ bool UpgradePanel::Show(bool show)
 
 
      m_staticText_ext = new wxStaticText(this, wxID_ANY, _L("Model:"), wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ext->SetForegroundColour("#262E30");
+     m_staticText_ext->SetForegroundColour("#1A2C4C");
      m_staticText_ext->Wrap(-1);
      m_staticText_ext->SetFont(Label::Head_14);
 
      m_staticText_ext_val = new wxStaticText(this, wxID_ANY, _L("Extension Board"), wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ext_val->SetForegroundColour("#262E30");
+     m_staticText_ext_val->SetForegroundColour("#1A2C4C");
      m_staticText_ext_val->SetFont(Label::Head_14);
      m_staticText_ext_val->Wrap(-1);
 
      auto m_staticText_ext_sn = new wxStaticText(this, wxID_ANY, _L("Serial:"), wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ext_sn->SetForegroundColour("#262E30");
+     m_staticText_ext_sn->SetForegroundColour("#1A2C4C");
      m_staticText_ext_sn->Wrap(-1);
      m_staticText_ext_sn->SetFont(Label::Head_14);
 
      m_staticText_ext_sn_val = new wxStaticText(this, wxID_ANY, "-", wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ext_sn_val->SetForegroundColour("#262E30");
+     m_staticText_ext_sn_val->SetForegroundColour("#1A2C4C");
      m_staticText_ext_sn_val->Wrap(-1);
 
      wxBoxSizer* m_ext_ver_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1921,11 +1921,11 @@ bool UpgradePanel::Show(bool show)
      m_staticText_ext_ver = new wxStaticText(this, wxID_ANY, _L("Version:"), wxDefaultPosition, wxDefaultSize, 0);
      m_staticText_ext_ver->Wrap(-1);
      m_staticText_ext_ver->SetFont(Label::Head_14);
-     m_staticText_ext_ver->SetForegroundColour("#262E30");
+     m_staticText_ext_ver->SetForegroundColour("#1A2C4C");
      m_ext_ver_sizer->Add(m_staticText_ext_ver, 0, wxALL, FromDIP(5));
 
      m_staticText_ext_ver_val = new wxStaticText(this, wxID_ANY, "-", wxDefaultPosition, wxDefaultSize, 0);
-     m_staticText_ext_ver_val->SetForegroundColour("#262E30");
+     m_staticText_ext_ver_val->SetForegroundColour("#1A2C4C");
      m_staticText_ext_ver_val->Wrap(-1);
 
      ext_sizer->Add(m_staticText_ext, 0, wxALIGN_RIGHT | wxALL, FromDIP(5));

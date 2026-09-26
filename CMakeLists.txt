@@ -322,7 +322,7 @@ endif ()
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     message(STATUS "Automatically setting CMAKE_INSTALL_PREFIX")
-    set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_BINARY_DIR}/OrcaSlicer")
+    set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE "${CMAKE_BINARY_DIR}/ForcaSlicer") # Forca (Orca: /OrcaSlicer)
 endif()
 
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
@@ -1303,12 +1303,14 @@ endif ()
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE.txt DESTINATION ".")
 configure_file(${LIBDIR}/dev-utils/platform/unix/fhs.hpp.in ${LIBDIR_BIN}/dev-utils/platform/unix/fhs.hpp)
 
-set (CPACK_PACKAGE_NAME "OrcaSlicer")
-set (CPACK_PACKAGE_VENDOR "SoftFever")
-set (CPACK_PACKAGE_VERSION_MAJOR "${ORCA_VERSION_MAJOR}")
-set (CPACK_PACKAGE_VERSION_MINOR "${ORCA_VERSION_MINOR}")
-set (CPACK_PACKAGE_VERSION_PATCH "${ORCA_VERSION_PATCH}")
-set (CPACK_PACKAGE_FILE_NAME "OrcaSlicer_Windows_Installer_V${SoftFever_VERSION}")
+# Forca: the installer has its own name, install folder, registry key and upgrade GUID. With Orca's key and
+# CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL, installing Forca would silently uninstall a stock OrcaSlicer.
+set (CPACK_PACKAGE_NAME "Forca Slicer")
+set (CPACK_PACKAGE_VENDOR "A.T. Creations")
+set (CPACK_PACKAGE_VERSION_MAJOR "${FORCA_VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${FORCA_VERSION_MINOR}")
+set (CPACK_PACKAGE_VERSION_PATCH "${FORCA_VERSION_PATCH}")
+set (CPACK_PACKAGE_FILE_NAME "ForcaSlicer_Windows_Installer_V${FORCA_VERSION}")
 # Suffix the Windows installer with its target arch so the x64 and arm64 builds
 # produce distinct filenames (matches ARCH_SUFFIX in build_orca.yml). Same
 # CMAKE_SYSTEM_PROCESSOR mapping used by orcaslicer_copy_dlls() above.
@@ -1319,22 +1321,24 @@ if (WIN32)
         string (APPEND CPACK_PACKAGE_FILE_NAME "_x64")
     endif ()
 endif ()
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Orca Slicer is an open source slicer for FDM printers")
-set (CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/OrcaSlicer/OrcaSlicer")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "Forca Slicer is an open source slicer for FDM printers, based on OrcaSlicer")
+set (CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/tayloraaron078-tech/ForcaSlicer") # Forca (= FORCA_REPO_URL)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY ${CPACK_PACKAGE_NAME})
 set (CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/images\\\\OrcaSlicer.ico")
 set (CPACK_NSIS_MUI_ICON "${CPACK_PACKAGE_ICON}")
 set (CPACK_NSIS_MUI_UNIICON "${CPACK_PACKAGE_ICON}")
-set (CPACK_NSIS_INSTALLED_ICON_NAME  "$INSTDIR\\\\orca-slicer.exe")
+set (CPACK_NSIS_INSTALLED_ICON_NAME  "forca-slicer.exe") # Forca: CPack prefixes $INSTDIR itself (Orca's "$INSTDIR\\..." doubled it)
 set (CPACK_PACKAGE_CHECKSUM SHA256)
-set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "OrcaSlicer")
+set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "ForcaSlicer")
 set (CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 set (CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
-# set (CPACK_NSIS_MODIFY_PATH "ON")
-set(CPACK_PACKAGE_EXECUTABLES "orca-slicer;OrcaSlicer")
-set(CPACK_CREATE_DESKTOP_LINKS "orca-slicer")
+# Forca: ON so the installer shows its "Install Options" page, which carries the "Create Forca Slicer Desktop Icon"
+# checkbox (CPack only shows that page with MODIFY_PATH). Its PATH choice defaults to "do not add to PATH".
+set (CPACK_NSIS_MODIFY_PATH "ON")
+set(CPACK_PACKAGE_EXECUTABLES "forca-slicer;Forca Slicer")
+set(CPACK_CREATE_DESKTOP_LINKS "forca-slicer")
 set (CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt) # must also include in install command
 
-set(CPACK_WIX_UPGRADE_GUID "058245e8-20e0-4a95-9ab7-1acfe17ad511")
+set(CPACK_WIX_UPGRADE_GUID "6b1f3c2e-8d4a-4f7e-9c51-2a7e0d9b4f13")
 set(CPACK_GENERATOR NSIS)
 include(CPack)

@@ -62,7 +62,7 @@ public:
         main_sizer->AddSpacer(FromDIP(spacing));
 
         auto *separator = new wxPanel(this);
-        separator->SetBackgroundColour(wxColour("#EEEEEE"));
+        separator->SetBackgroundColour(wxColour("#D7E2F3"));
         main_sizer->Add(separator, 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(15));
 
         main_sizer->AddSpacer(FromDIP(spacing));

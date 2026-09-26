@@ -1,4 +1,5 @@
 #include "MsgDialog.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 
 #include <wx/settings.h>
 #include <wx/sizer.h>
@@ -104,7 +105,7 @@ void MsgDialog::show_dsa_button(wxString const &title)
     m_dsa_sizer->Add(m_text_dsa, 0, wxALL | wxALIGN_CENTER, FromDIP(2));
     m_dsa_sizer->AddSpacer(FromDIP(10)); // spacing after checkbox
     m_text_dsa->SetFont(::Label::Body_13);
-    m_text_dsa->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#323A3D")));
+    m_text_dsa->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#24395A")));
     btn_sizer->Layout();
     Fit();
 }
@@ -221,7 +222,7 @@ void MsgDialog::apply_style(long style)
     logo->SetBitmap( create_scaled_bitmap(style & wxAPPLY        ? "completed" :
                                           style & wxICON_WARNING        ? "exclamation" : // ORCA "exclamation" used for dialogs "obj_warning" used for 16x16 areas
                                           style & wxICON_INFORMATION    ? "info"        :
-                                          style & wxICON_QUESTION       ? "question"    : "OrcaSlicer", this, 64, style & wxICON_ERROR));
+                                          style & wxICON_QUESTION       ? "question"    : "OrcaSlicer_192px.png" /* Forca logo (Orca: OrcaSlicer.svg) */, this, 64, style & wxICON_ERROR));
 }
 
 void MsgDialog::finalize()
@@ -688,7 +689,7 @@ wxBoxSizer *Newer3mfVersionDialog::get_msg_sizer()
         text1 = new wxStaticText(this, wxID_ANY, _L("The 3MF file version is in Beta and it is newer than the current OrcaSlicer version."));
         wxStaticText *   text2       = new wxStaticText(this, wxID_ANY, _L("If you would like to try Orca Slicer Beta, you may click to"));
         // ORCA standardized HyperLink
-        HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), "https://github.com/SoftFever/OrcaSlicer/releases");
+        HyperLink *      github_link = new HyperLink(this, _L("Download Beta Version"), std::string(FORCA_REPO_URL) + "/releases"); // Forca (B4)
         horizontal_sizer->Add(text2, 0, wxEXPAND, 0);
         horizontal_sizer->Add(github_link, 0, wxEXPAND | wxLEFT, 5);
         

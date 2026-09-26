@@ -36,7 +36,7 @@ void RadioGroup::Create(
 
     m_text_color = StateColor(
         std::pair(wxColour("#6B6A6A"), (int)StateColor::Disabled),
-        std::pair(wxColour("#363636"), (int)StateColor::Enabled)
+        std::pair(wxColour("#26395A"), (int)StateColor::Enabled)
     );
 
     m_focus_color = StateColor(

@@ -566,7 +566,7 @@ void CaliPageStepGuide::set_steps_string(wxArrayString steps)
 CaliPagePicture::CaliPagePicture(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style) 
     : wxPanel(parent, id, pos, size, style)
 {
-    SetBackgroundColour(wxColour("#CECECE"));
+    SetBackgroundColour(wxColour("#C2CFE4"));
     auto top_sizer = new wxBoxSizer(wxHORIZONTAL);
     top_sizer->AddStretchSpacer();
     m_img = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap);

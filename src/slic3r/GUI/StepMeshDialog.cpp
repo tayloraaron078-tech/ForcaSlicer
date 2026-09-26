@@ -30,7 +30,7 @@ static int _ITEM_WIDTH() { return _scale(30); }
 #define SLIDER_SCALE_10(val)    ((val) / 0.01)
 #define SLIDER_UNSCALE_10(val)  ((val) * 0.01)
 #define LEFT_RIGHT_PADING       FromDIP(20)
-#define FONT_COLOR              wxColour("#363636") // label color
+#define FONT_COLOR              wxColour("#26395A") // label color
 
 wxDEFINE_EVENT(wxEVT_THREAD_DONE, wxCommandEvent);
 
@@ -115,18 +115,18 @@ StepMeshDialog::StepMeshDialog(wxWindow* parent, Slic3r::Step& file, double line
 
     // bSizer->Add(overlay_panel, 0, wxALIGN_CENTER | wxALL, 10);
 
-    auto tip_frame = new RoundedRectangle(this, StateColor::darkModeColorFor(wxColour("#F1F1F1")), wxDefaultPosition, wxSize(-1,-1), 6, 0);
+    auto tip_frame = new RoundedRectangle(this, StateColor::darkModeColorFor(wxColour("#DAE5F5")), wxDefaultPosition, wxSize(-1,-1), 6, 0);
 
     wxBoxSizer* tips_sizer = new wxBoxSizer(wxVERTICAL);
     wxStaticText* info = new wxStaticText(tip_frame, wxID_ANY, _L("Smaller linear and angular deflections result in higher-quality transformations but increase the processing time."));
-    info->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
-    info->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F1F1F1")));
+    info->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
+    info->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#DAE5F5")));
     info->SetFont(::Label::Body_14);
     info->Wrap(FromDIP(450));
 
     // ORCA standardized HyperLink
     HyperLink *tips = new HyperLink(tip_frame, _L("Wiki Guide"), "https://www.orcaslicer.com/wiki/import_export#step");
-    tips->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#F1F1F1")));
+    tips->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#DAE5F5")));
 
     tips_sizer->Add(info, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, FromDIP(10));
     tips_sizer->Add(tips, 0, wxALL, FromDIP(10));

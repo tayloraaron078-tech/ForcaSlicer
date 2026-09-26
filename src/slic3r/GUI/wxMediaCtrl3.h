@@ -49,6 +49,10 @@ public:
 
     wxSize GetVideoSize();
 
+    // Forca AI: a copy of the frame on screen now, if this control is playing printer `dev_id`'s camera (so the AI
+    // can look without opening a second camera connection, which a printer may refuse). GUI thread.
+    bool ForcaCurrentFrame(wxImage &out, std::string const &dev_id);
+
 protected:
     DECLARE_EVENT_TABLE()
 

@@ -43,7 +43,7 @@ SideButton::SideButton(wxWindow* parent, wxString text, wxString icon, long stly
     background_color.append(0x009688, StateColor::Normal);
     background_color.setTakeFocusedAsHovered(false);
 
-    SetBottomColour(wxColour("#3B4446"));
+    SetBottomColour(wxColour("#2D4468"));
 
     state_handler.attach({ &border_color, &text_color, &background_color });
     state_handler.update_binds();

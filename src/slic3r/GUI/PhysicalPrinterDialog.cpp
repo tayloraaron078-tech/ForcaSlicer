@@ -71,7 +71,7 @@ PhysicalPrinterDialog::PhysicalPrinterDialog(wxWindow* parent) :
     label_top->SetFont(::Label::Body_14);
     label_top->SetForegroundColour(wxColour(38,46,48));
 
-    m_input_area = new RoundedRectangle(this, StateColor::darkModeColorFor(wxColour("#DBDBDB")), wxDefaultPosition, wxSize(-1,-1), 3, 1);
+    m_input_area = new RoundedRectangle(this, StateColor::darkModeColorFor(wxColour("#CFDBED")), wxDefaultPosition, wxSize(-1,-1), 3, 1);
     m_input_area->SetMinSize(wxSize(FromDIP(360), FromDIP(32)));
 
     wxBoxSizer *input_sizer_h = new wxBoxSizer(wxHORIZONTAL);

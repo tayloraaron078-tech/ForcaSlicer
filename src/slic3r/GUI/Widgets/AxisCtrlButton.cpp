@@ -6,8 +6,8 @@
 #include <wx/dcgraph.h>
 
 StateColor blank_bg(StateColor(std::make_pair(wxColour("#FFFFFF"), (int)StateColor::Normal)));
-static const wxColour BUTTON_BG_COL = wxColour("#EEEEEE");
-static const wxColour BUTTON_IN_BG_COL = wxColour("#CECECE");
+static const wxColour BUTTON_BG_COL = wxColour("#D7E2F3");
+static const wxColour BUTTON_IN_BG_COL = wxColour("#C2CFE4");
 
 static const wxColour bd = wxColour(0, 150, 136);
 static const wxColour text_num_color   = wxColour("#898989");

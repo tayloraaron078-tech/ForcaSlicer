@@ -5,6 +5,8 @@
 #define SLIC3R_APP_KEY "@SLIC3R_APP_KEY@"
 #define SLIC3R_VERSION "@SLIC3R_VERSION@"
 #define SoftFever_VERSION "@SoftFever_VERSION@"
+// Forca's own version (shown to users, compared by the update check); see version.inc.
+#define FORCA_VERSION "@FORCA_VERSION@"
 #define SLIC3R_BUILD_ID "@SLIC3R_BUILD_ID@"
 //#define SLIC3R_RC_VERSION "@SLIC3R_VERSION@"
 #define BBL_INTERNAL_TESTING @BBL_INTERNAL_TESTING@

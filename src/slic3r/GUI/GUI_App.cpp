@@ -1,5 +1,7 @@
 #include "ExportPresetBundleDialog.hpp"
 #include "OrcaCloudServiceAgent.hpp"
+#include "ForcaFeatures.hpp"
+#include "libslic3r/ForcaPresetMerge.hpp"
 #include "libslic3r/Technologies.hpp"
 #include "libslic3r/Platform.hpp"
 #include "GUI_App.hpp"
@@ -98,6 +100,7 @@
 #include "3DScene.hpp"
 #include "MainFrame.hpp"
 #include "Plater.hpp"
+#include "ForcaAI.hpp"
 #include "GLCanvas3D.hpp"
 #include "EncodedFilament.hpp"
 #include "GeneratedConfig.hpp"
@@ -277,13 +280,60 @@ std::string VersionInfo::convert_short_version(std::string full_version)
     return full_version;
 }
 
+// Forca: Forca keeps its settings in its own folder (%APPDATA%\ForcaSlicer, ~/Library/Application Support/ForcaSlicer,
+// ~/.config/ForcaSlicer) so it never writes into a stock OrcaSlicer install's settings. SLIC3R_APP_KEY stays
+// "OrcaSlicer" (config file name, translation catalog, .3mf identity); only the folder differs.
+static constexpr const char* FORCA_DATA_DIR_NAME = "ForcaSlicer";
+// Forca: set by init_app_config() on Forca's first start in its default folder when an OrcaSlicer settings folder
+// sits next to it; on_init_inner() then offers once to copy it.
+static boost::filesystem::path s_forca_orca_data_dir;
+// Forca: Windows file-association ProgID. Orca uses " Orca.Slicer.1"; sharing it would re-point Orca's associations.
+#define FORCA_PROG_ID L"Forca.Slicer.1"
+
+// Forca: copy (never move) OrcaSlicer's settings folder into Forca's. Logs, caches, backups and login/machine ids are
+// skipped; files already in Forca's folder are overwritten (on first start it only holds fresh defaults).
+static void forca_copy_orca_data_dir(const boost::filesystem::path& from, const boost::filesystem::path& to)
+{
+    namespace fs = boost::filesystem;
+    for (const fs::directory_entry& entry : fs::directory_iterator(from)) {
+        const std::string name = entry.path().filename().string();
+        if (name == "log" || name == "cache" || name == "hms" || name == "ota" || boost::starts_with(name, "user_backup-") ||
+            name == "orca_refresh_token.sec" || name == ".orcaslicer_machine_id" || boost::ends_with(name, ".lock"))
+            continue;
+        if (fs::is_directory(entry.path()))
+            copy_directory_recursively(entry.path(), to / name, nullptr, true);
+        else {
+            std::string error;
+            if (copy_file(entry.path().string(), (to / name).string(), error, false) != CopyFileResult::SUCCESS)
+                throw Slic3r::CriticalException(error);
+        }
+    }
+}
+
+// Forca: with Orca Cloud off (ForcaFeatures.hpp) Forca is never signed in and loads user/default, so presets kept
+// under an Orca Cloud account folder are merged into it once (rules in libslic3r/ForcaPresetMerge.hpp).
+static void forca_merge_account_presets_into_default(AppConfig* app_config)
+{
+    if (FORCA_ORCA_CLOUD_ENABLED || app_config->get_bool("forca_account_presets_merged"))
+        return;
+    try {
+        const size_t copied = forca_merge_account_presets(boost::filesystem::path(data_dir()) / PRESET_USER_DIR,
+                                                          boost::filesystem::path(data_dir()) / "user_backup-forca-orca-cloud-off",
+                                                          DEFAULT_USER_FOLDER_NAME);
+        BOOST_LOG_TRIVIAL(info) << "Forca: merged " << copied << " Orca Cloud account preset file(s) into user/default";
+        app_config->set_bool("forca_account_presets_merged", true);
+    } catch (const std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "Forca: merging account presets into user/default failed (retried next start): " << e.what();
+    }
+}
+
 #ifdef _WIN32
 bool is_associate_files(std::wstring extend)
 {
     wchar_t app_path[MAX_PATH];
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
-    std::wstring prog_id             = L" Orca.Slicer.1";
+    std::wstring prog_id             = FORCA_PROG_ID;
     std::wstring reg_base            = L"Software\\Classes";
     std::wstring reg_extension       = reg_base + L"\\." + extend;
 
@@ -310,7 +360,8 @@ public:
         // is shown. The previous 1500 ms auto-timeout closed the splash long
         // before init finished, leaving the user staring at a frozen blank
         // screen during the slow load_presets / new MainFrame phases.
-        : wxSplashScreen(wxBitmap(FromDIP(wxSize(480,480),nullptr)), wxSPLASH_CENTRE_ON_SCREEN, 0, nullptr, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+        // [regional-supports fork] Forca Slicer splash is 3:2 (matches resources/images/forca_splash.png = Forca_Slicer.png, 1536x1024).
+        : wxSplashScreen(wxBitmap(FromDIP(wxSize(600,400),nullptr)), wxSPLASH_CENTRE_ON_SCREEN, 0, nullptr, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifdef __APPLE__
             wxBORDER_NONE | wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP
 #else
@@ -339,13 +390,18 @@ public:
 
         m_bg_color = StateColor::darkModeColorFor(wxColour("#FFFFFF"));
         m_fg_color = StateColor::darkModeColorFor(wxColour("#6B6A6A"));
-        m_progress_bg_color = StateColor::darkModeColorFor(wxColour("#DFDFDF"));
+        m_progress_bg_color = StateColor::darkModeColorFor(wxColour("#D3DEEF"));
         m_progress_fg_color = StateColor::darkModeColorFor(wxColour("#009688"));
         m_progress_h = FromDIP(6);
         bool dark_mode = m_fg_color != wxColour("#6B6A6A");
         wxSize sz  = m_window->GetClientSize();
         BitmapCache bmp_cache;
-        m_logo_bmp = *bmp_cache.load_svg(dark_mode ? "splash_logo_dark" : "splash_logo", sz.GetWidth(), sz.GetHeight());
+        // [regional-supports fork] Forca Slicer splash image; fall back to the stock logo if the PNG is missing.
+        wxBitmap *forca = bmp_cache.load_png("forca_splash", sz.GetWidth(), sz.GetHeight());
+        if (forca != nullptr && forca->IsOk())
+            m_logo_bmp = *forca;
+        else
+            m_logo_bmp = *bmp_cache.load_svg(dark_mode ? "splash_logo_dark" : "splash_logo", sz.GetWidth(), sz.GetHeight());
 
         m_window->Bind(wxEVT_PAINT, &SplashScreen::OnPaint, this);
         m_window->Refresh();
@@ -363,15 +419,17 @@ public:
             dc.DrawBitmap(m_logo_bmp, 0, 0, true);
 
         wxRect rc = wxRect(0, 0, c_sz.GetWidth(), 0);
-        dc.SetTextForeground(m_fg_color);
+        // [regional-supports fork] Forca splash art is dark -> white text, centered (version just above center,
+        // loading status just below center) so both are legible over the artwork.
+        dc.SetTextForeground(*wxWHITE);
 
         dc.SetFont(m_font_version);
-        rc.y      = c_sz.GetHeight() * 0.72;
+        rc.y      = c_sz.GetHeight() * 0.44;
         rc.height = dc.GetTextExtent(m_text_version).GetHeight();
         dc.DrawLabel(m_text_version, rc, wxALIGN_CENTER);
 
         dc.SetFont(m_font_action);
-        rc.y      = c_sz.GetHeight() * 0.85;
+        rc.y      = c_sz.GetHeight() * 0.54;
         rc.height = dc.GetTextExtent(m_text_action).GetHeight();
         dc.DrawLabel(m_text_action, rc, wxALIGN_CENTER);
 
@@ -604,7 +662,7 @@ wxString file_wildcards(FileType file_type, const std::string &custom_extension)
     return GUI::format_wxstr("%s (%s)|%s", translated_title, title, mask);
 }
 
-static std::string libslic3r_translate_callback(const char *s) { return wxGetTranslation(wxString(s, wxConvUTF8)).utf8_str().data(); }
+static std::string libslic3r_translate_callback(const char *s) { return _u8L(s); } // Forca: via forca_brand() (I18N.cpp)
 
 #ifdef WIN32
 static GUID GUID_DEVINTERFACE_HID = { 0x4D1E55B2, 0xF16F, 0x11CF, { 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30 } };
@@ -1000,7 +1058,8 @@ void GUI_App::post_init()
                 this->preset_updater->sync(http_url, language, network_ver, sys_preset ? preset_bundle : nullptr);
             }
 
-            this->check_new_version_sf();
+            if (!app_config->get_stealth_mode()) // Forca: Stealth mode means offline; Help > Check for Updates still works
+                this->check_new_version_sf();
             const auto cloud_provider = get_printer_cloud_provider();
             if (is_user_login(cloud_provider) && !app_config->get_stealth_mode()) {
               // this->check_privacy_version(0);
@@ -1011,7 +1070,7 @@ void GUI_App::post_init()
 
     // Orca: notify users upgrading from a pre-2.4.0 version that profile syncing
     // moved from Bambu Cloud to Orca Cloud.
-    if (is_editor() && m_last_config_version && m_last_config_version->valid()
+    if (FORCA_ORCA_CLOUD_ENABLED && is_editor() && m_last_config_version && m_last_config_version->valid() // Forca: B9
         && *m_last_config_version < Semver(2, 4, 0)) {
         CallAfter([] {
             const wxString wiki_url = "https://www.orcaslicer.com/wiki/user_profiles/user_profiles.html#profiles-missing-after-updating-from-bambu-cloud";
@@ -1153,6 +1212,7 @@ void GUI_App::shutdown()
 
     if (m_is_recreating_gui) return;
     stop_http_server();
+    ForcaAI::instance().shutdown(); // Forca AI server thread
     set_closing(true);
     Slic3r::PluginManager::instance().set_shutting_down();
 
@@ -2532,7 +2592,7 @@ void GUI_App::init_webview_runtime()
 void GUI_App::init_app_config()
 {
 	// Profiles for the alpha are stored into the PrusaSlicer-alpha directory to not mix with the current release.
-    SetAppName(SLIC3R_APP_KEY);
+    SetAppName(FORCA_DATA_DIR_NAME); // Forca: own settings folder (Orca: SLIC3R_APP_KEY)
 //	SetAppName(SLIC3R_APP_KEY "-alpha");
 //  SetAppName(SLIC3R_APP_KEY "-beta");
 //	SetAppDisplayName(SLIC3R_APP_NAME);
@@ -2575,6 +2635,11 @@ void GUI_App::init_app_config()
                 migrate_flatpak_legacy_datadir(data_dir_path);
                 set_data_dir(data_dir_path.string());
             #endif
+            // Forca: no Forca config yet but an OrcaSlicer settings folder next to it -> offer a copy in on_init_inner().
+            const boost::filesystem::path orca_data_dir = data_dir_path.parent_path() / SLIC3R_APP_KEY;
+            if (!boost::filesystem::exists(data_dir_path / (SLIC3R_APP_KEY ".conf")) &&
+                boost::filesystem::exists(orca_data_dir / (SLIC3R_APP_KEY ".conf")))
+                s_forca_orca_data_dir = orca_data_dir;
             if (!boost::filesystem::exists(data_dir_path)){
                 boost::filesystem::create_directory(data_dir_path);
             }
@@ -2605,7 +2670,7 @@ void GUI_App::init_app_config()
     set_log_path_and_level(log_filename, 3);
 #endif
 
-    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Current OrcaSlicer Version %1% build %2%") % SoftFever_VERSION % build_commit_label;
+    BOOST_LOG_TRIVIAL(info) << boost::format("gui mode, Forca Slicer %1% (OrcaSlicer base %2%) build %3%") % FORCA_VERSION % SoftFever_VERSION % build_commit_label;
 
     //BBS: remove GCodeViewer as seperate APP logic
 	if (!app_config)
@@ -3010,7 +3075,40 @@ bool GUI_App::on_init_inner()
     init_label_colours();
     init_fonts();
     wxGetApp().Update_dark_mode_flag();
-    
+
+    // Forca: first start in Forca's own settings folder -> offer ONCE to copy the user's OrcaSlicer settings. Copy only;
+    // OrcaSlicer's folder is never changed. Declining keeps fresh defaults (not asked again: Forca's config then exists).
+    if (!s_forca_orca_data_dir.empty() && is_editor()) {
+        MessageDialog dlg(nullptr,
+            wxString::Format(_L("Forca Slicer keeps its settings in its own folder, separate from OrcaSlicer.\n\n"
+                                "Copy your OrcaSlicer printers, filaments, process presets and preferences into Forca now? "
+                                "OrcaSlicer's own settings are not changed.\n\nFrom: %s\nTo: %s"),
+                             from_path(s_forca_orca_data_dir), from_u8(data_dir())),
+            _L("Copy OrcaSlicer settings"), wxYES_NO | wxYES_DEFAULT | wxICON_QUESTION);
+        if (dlg.ShowModal() == wxID_YES) {
+            try {
+                wxBusyCursor wait;
+                forca_copy_orca_data_dir(s_forca_orca_data_dir, boost::filesystem::path(data_dir()));
+                app_config->reset();
+                m_config_corrupted     = !app_config->load().empty();
+                m_app_conf_exists      = true;
+                m_last_config_version  = app_config->orig_version();
+                // File associations belong to one app: copied Orca choices must not make Forca claim them silently.
+                for (const char* key : {"associate_3mf", "associate_drc", "associate_stl", "associate_step", "associate_gcode"})
+                    app_config->set_bool(key, false);
+                app_config->save();
+                set_logging_level(Slic3r::level_string_to_boost(app_config->get("log_severity_level")));
+                BOOST_LOG_TRIVIAL(info) << "Forca: copied OrcaSlicer settings from " << s_forca_orca_data_dir.string();
+            } catch (const std::exception& e) {
+                BOOST_LOG_TRIVIAL(error) << "Forca: copying OrcaSlicer settings failed: " << e.what();
+                MessageDialog(nullptr, wxString::Format(_L("Copying the OrcaSlicer settings failed:\n%s\n\nForca will continue, but "
+                                                           "some settings may not have been copied. OrcaSlicer's settings are unchanged."), from_u8(e.what())),
+                              _L("Copy OrcaSlicer settings"), wxOK | wxICON_WARNING).ShowModal();
+            }
+        }
+        s_forca_orca_data_dir.clear();
+    }
+
 #if defined(__WINDOWS__)
     HMODULE hKernel32 = GetModuleHandleW(L"kernel32.dll");
     m_is_arm64 = false;
@@ -3053,7 +3151,7 @@ bool GUI_App::on_init_inner()
             RichMessageDialog
                 dlg(nullptr,
                     wxString::Format(_L("%s\nDo you want to continue?"), msg),
-                    "OrcaSlicer", wxICON_QUESTION | wxYES_NO);
+                    SLIC3R_APP_NAME, wxICON_QUESTION | wxYES_NO); // Forca
             dlg.ShowCheckBox(_L("Remember my choice"));
             if (dlg.ShowModal() != wxID_YES) return false;
 
@@ -3161,6 +3259,7 @@ bool GUI_App::on_init_inner()
     // just checking for existence of Slic3r::data_dir is not enough : it may be an empty directory
     // supplied as argument to --datadir; in that case we should still run the wizard
     preset_bundle->setup_directories();
+    forca_merge_account_presets_into_default(app_config); // Forca: Orca Cloud is off -> presets live in user/default
 
 
     if (m_init_app_config_from_older)
@@ -3176,7 +3275,7 @@ bool GUI_App::on_init_inner()
             associate_files(L"step");
             associate_files(L"stp");
         }
-        associate_url(L"orcaslicer");
+        // Forca: orcaslicer:// links belong to OrcaSlicer; Forca takes them only when ticked in Preferences.
 
         if (app_config->get("associate_gcode") == "true")
             associate_files(L"gcode");
@@ -3467,6 +3566,8 @@ bool GUI_App::on_init_inner()
     // Close the splash now that the main UI is visible.
     if (scrn) { scrn->SetText(_L("Showing main window") + dots, 100); scrn->Destroy(); scrn = nullptr; }
     BOOST_LOG_TRIVIAL(info) << "main frame firstly shown";
+    // Forca AI is opt-in: only listens if the user turned it on (remembered in the app config).
+    ForcaAI::instance().start_if_enabled();
 
 //#if BBL_HAS_FIRST_PAGE
     //BBS: set tp3DEditor firstly
@@ -4193,12 +4294,12 @@ void GUI_App::init_label_colours()
 {
     bool is_dark_mode = dark_mode();
     m_color_label_modified = is_dark_mode ? wxColour("#F1754E") : wxColour("#F1754E");
-    m_color_label_sys      = is_dark_mode ? wxColour("#B2B3B5") : wxColour("#363636");
+    m_color_label_sys      = is_dark_mode ? wxColour("#B2B3B5") : wxColour("#26395A");
 
 #if defined(_WIN32) || defined(__linux__) || defined(__APPLE__)
     m_color_label_default           = is_dark_mode ? wxColour(250, 250, 250) : m_color_label_sys; // wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
     m_color_highlight_label_default = is_dark_mode ? wxColour(230, 230, 230): wxSystemSettings::GetColour(/*wxSYS_COLOUR_HIGHLIGHTTEXT*/wxSYS_COLOUR_WINDOWTEXT);
-    m_color_highlight_default       = is_dark_mode ? wxColour("#36363B") : wxColour("#F1F1F1"); // ORCA row highlighting
+    m_color_highlight_default       = is_dark_mode ? wxColour("#36363B") : wxColour("#DAE5F5"); // ORCA row highlighting
     m_color_hovered_btn_label       = is_dark_mode ? wxColour(255, 255, 254) : wxColour(0,0,0);
     m_color_default_btn_label       = is_dark_mode ? wxColour(255, 255, 254): wxColour(0,0,0);
     m_color_selected_btn_bg         = is_dark_mode ? wxColour(84, 84, 91)   : wxColour(206, 206, 206);
@@ -6091,6 +6192,18 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
 {
     AppConfig* app_config = wxGetApp().app_config;
     bool       check_stable_only = app_config->get_bool("check_stable_update_only");
+
+    // Forca (B2): never ask Orca's update server; only Forca's own GitHub Releases, and without Orca's updater query
+    // (install id, OS details) or signature. No URL yet = no check (ForcaFeatures.hpp).
+    if (FORCA_RELEASES_API_URL[0] == '\0') {
+        if (by_user != 0)
+            MessageDialog(mainframe, _L("Forca Slicer does not check for updates yet. New versions will be announced on "
+                                        "Forca Slicer's GitHub page."),
+                          _L("Check for Updates"), wxOK | wxICON_INFORMATION).ShowModal();
+        return;
+    }
+    auto http = Http::get(FORCA_RELEASES_API_URL);
+#if 0 // Forca: Orca's update-server request, kept for reference / upstream merges
     auto version_check_url = app_config->version_check_url();
 
     UpdaterQuery query{
@@ -6113,6 +6226,7 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
 
     auto http = Http::get(version_check_url);
     maybe_attach_updater_signature(http, query_string, version_check_url);
+#endif
 
     http.header("accept", "application/vnd.github.v3+json")
         .timeout_connect(5)
@@ -6137,8 +6251,9 @@ void GUI_App::check_new_version_sf(bool show_tips, int by_user)
             std::stringstream           json_stream(body);
             boost::property_tree::read_json(json_stream, root);
 
-            std::regex matcher("[0-9]+\\.[0-9]+(\\.[0-9]+)*(-[A-Za-z0-9]+)?(\\+[A-Za-z0-9]+)?");
-            Semver    current_version = get_version(SoftFever_VERSION, matcher);
+            // Forca: compare Forca's release tags with Forca's own version; allow dotted pre-releases ("0.1.0-alpha.1").
+            std::regex matcher("[0-9]+\\.[0-9]+(\\.[0-9]+)*(-[A-Za-z0-9.]+)?(\\+[A-Za-z0-9.]+)?");
+            Semver    current_version = get_version(FORCA_VERSION, matcher);
             Semver    best_pre(0, 0, 0);
             Semver    best_release(0, 0, 0);
             bool      best_pre_valid = false;
@@ -6499,7 +6614,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = FORCA_VERSION; // Forca's own version (Orca: SoftFever_VERSION)
     return version_display;
 }
 
@@ -8562,7 +8677,7 @@ void GUI_App::open_preferences(PreferencesTab tab, const std::string& highlight_
                     associate_files(L"step");
                     associate_files(L"stp");
                 }
-                associate_url(L"orcaslicer");
+                // Forca: no automatic orcaslicer:// registration (see on_init_inner).
             }
             else {
                 if (app_config->get("associate_gcode") == "true")
@@ -9766,8 +9881,8 @@ void GUI_App::associate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Orca.Slicer.1";
-    std::wstring prog_desc = L"OrcaSlicer";
+    std::wstring prog_id = FORCA_PROG_ID;
+    std::wstring prog_desc = L"Forca Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";
     std::wstring reg_extension = reg_base + L"\\." + extend;
@@ -9793,8 +9908,8 @@ void GUI_App::disassociate_files(std::wstring extend)
     ::GetModuleFileNameW(nullptr, app_path, sizeof(app_path));
 
     std::wstring prog_path = L"\"" + std::wstring(app_path) + L"\"";
-    std::wstring prog_id = L" Orca.Slicer.1";
-    std::wstring prog_desc = L"OrcaSlicer";
+    std::wstring prog_id = FORCA_PROG_ID;
+    std::wstring prog_desc = L"Forca Slicer";
     std::wstring prog_command = prog_path + L" \"%1\"";
     std::wstring reg_base = L"Software\\Classes";
     std::wstring reg_extension = reg_base + L"\\." + extend;
@@ -9802,7 +9917,8 @@ void GUI_App::disassociate_files(std::wstring extend)
     std::wstring reg_prog_id_command = reg_prog_id + L"\\Shell\\Open\\Command";
 
     bool is_new = false;
-    is_new |= del_win_registry(HKEY_CURRENT_USER, reg_extension.c_str(), prog_id.c_str());
+    if (is_associate_files(extend)) // Forca: only release the extension if Forca owns it, never OrcaSlicer's
+        is_new |= del_win_registry(HKEY_CURRENT_USER, reg_extension.c_str(), prog_id.c_str());
 
     bool is_associate_3mf  = app_config->get("associate_3mf") == "true";
     bool is_associate_stl  = app_config->get("associate_stl") == "true";

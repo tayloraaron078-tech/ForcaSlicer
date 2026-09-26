@@ -61,7 +61,13 @@ void glAssertRecentCallImpl(const char* file_name, unsigned int line, const char
     default:                    sErr = "Unknown";           break;
     }
     BOOST_LOG_TRIVIAL(error) << "OpenGL error in " << file_name << ":" << line << ", function " << function_name << "() : " << (int)err << " - " << sErr;
-    assert(false);
+    // [regional-supports fork] glsafe() GL-error check downgraded from assert to log-only.
+    // Debug builds otherwise pop a modal C++ runtime assertion on every benign driver GL
+    // error (common at startup / on Intel iGPUs), making the app unusable for interactive
+    // work and filming. The error is still logged above for diagnosis. glsafe is guarded by
+    // HAS_GLSAFE and this whole path is compiled out in release (NDEBUG), so stock behavior
+    // is unchanged. Other Debug asserts (slicing/geometry) remain active.
+    // assert(false);
 }
 #endif // HAS_GLSAFE
 

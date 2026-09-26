@@ -1307,6 +1307,26 @@ static void generate_initial_areas(
     // Layers with their overhang regions.
     std::vector<std::pair<size_t, const Polygons*>>  raw_overhangs;
 
+    // [regional-supports fork] Organic-tree regional Top-Z gap — APPROACH B (additive flush roofs).
+    // The stock overhang enumeration and branch placement below are left UNTOUCHED (an earlier approach that
+    // reassigned overhangs across support layers corrupted the interface). The organic top gap is z_distance_delta
+    // layers: an overhang at absolute layer O gets its top contact at O - z_distance_delta, leaving z_distance_top
+    // _layers empty "gap" layers (O-1 .. O-z_distance_top_layers) below the object. To make ONLY the footprint
+    // region flush (0 gap), we ADD extra support-interface "roofs" in those gap layers, inside the footprint, so the
+    // interface fills up to touch the object. This is additive (uses the same InterfacePlacer::add_roof the solver
+    // uses), so it cannot corrupt the stock interface, and the interface material lands inside the footprint the
+    // GCode override already swaps to the region filament -> gap + material move together. Done in the per-overhang
+    // loop below. INERT when no region: regional_active false -> nothing added -> byte-identical stock organic.
+    const double     regional_gap        = print_object.support_interface_modifier_gap();
+    const Polygons   regional_footprint  = (regional_gap >= 0. && z_distance_delta > 1) ?
+        to_polygons(print_object.support_interface_modifier_footprint()) : Polygons{};
+    const bool       regional_active     = ! regional_footprint.empty();
+    // Number of top gap layers to fill with flush interface inside the region. The object leaves
+    // z_distance_top_layers empty; a region gap of G leaves round(G/layer_height) of them empty, so we fill the
+    // difference. Region gap 0 (the dissimilar-material flush case, and the norm) fills them all.
+    const int        region_kept_layers  = int(std::lround(double(scaled<coord_t>(std::max(regional_gap, 0.))) / double(config.layer_height)));
+    const size_t     regional_gap_layers = size_t(std::clamp(int(config.z_distance_top_layers) - region_kept_layers, 0, int(config.z_distance_top_layers)));
+
     {
         const size_t num_raft_layers     = config.raft_layers.size();
         const size_t first_support_layer = std::max(int(num_raft_layers) - int(z_distance_delta), 1);
@@ -1320,11 +1340,17 @@ static void generate_initial_areas(
     }
 
     RichInterfacePlacer rich_interface_placer{ interface_placer, volumes, force_tip_to_roof, num_support_layers, move_bounds };
+    // [regional-supports fork] REAL size of the top_contacts array (sized by generate_support_areas via
+    // precalculate(), which is based on the highest overhang and is usually SMALLER than the local
+    // num_support_layers formula above). Approach B must bound its added-roof layer index by THIS, not by the
+    // local num_support_layers, or it writes one past the end (crash).
+    const size_t contacts_size = interface_placer.top_contacts_mutable().size();
 
     tbb::parallel_for(tbb::blocked_range<size_t>(0, raw_overhangs.size()),
         [&volumes, &config, &raw_overhangs, &mesh_group_settings,
          min_xy_dist, roof_enabled, num_support_roof_layers, extra_outset, circle_length_to_half_linewidth_change, connect_length,
-         &rich_interface_placer, &throw_on_cancel](const tbb::blocked_range<size_t> &range) {
+         &rich_interface_placer, &throw_on_cancel,
+         &regional_footprint, regional_active, regional_gap_layers, contacts_size](const tbb::blocked_range<size_t> &range) {
         for (size_t raw_overhang_idx = range.begin(); raw_overhang_idx < range.end(); ++ raw_overhang_idx) {
             size_t           layer_idx    = raw_overhangs[raw_overhang_idx].first;
             const Polygons  &overhang_raw = *raw_overhangs[raw_overhang_idx].second;
@@ -1448,6 +1474,36 @@ static void generate_initial_areas(
                     false, layer_idx, num_support_roof_layers, connect_length,
                     mesh_group_settings, rich_interface_placer);
                 throw_on_cancel();
+            }
+
+            // [regional-supports fork] Approach B: regional flush 0-gap. Add support-interface roofs inside the
+            // footprint in the gap layers (layer_idx+1 .. layer_idx+regional_gap_layers == the overhang's O-1),
+            // clipped to the valid support column (relevant_forbidden at layer_idx), so the interface fills up to
+            // touch the object. Additive only — does NOT touch the stock branch/roof placement above, so the
+            // working interface is not disturbed. Every filled gap layer is added as a top contact (dtt 0).
+            // Inert when regional_active is false.
+            if (regional_active && regional_gap_layers > 0 && rich_interface_placer.support_parameters.has_top_contacts) {
+                // The overhang is (by construction) the area not supported from the layer below = empty space, so
+                // filling it flush places interface in free space, not into the object. We deliberately do NOT clip
+                // by relevant_forbidden here: that is the avoidance at the (much lower) support layer, grown upward
+                // to include the object, and a plain diff against it wrongly erased the whole flush area.
+                Polygons flush_area = intersection(overhang_raw, regional_footprint);
+                if (! flush_area.empty())
+                    for (size_t g = 1; g <= regional_gap_layers; ++ g) {
+                        const size_t fill_layer = layer_idx + g;                     // up to the overhang's O-1
+                        // Bound by the REAL top_contacts array size (contacts_size). The gap layers of the
+                        // topmost overhangs fall past the end (no support-layer slot there) -> skip them.
+                        // (generate_support_areas grows the arrays by z_distance_top_layers when a region is
+                        // present so this normally does not trigger.)
+                        if (fill_layer >= contacts_size)
+                            break;
+                        // dtt_roof = 0 -> route every flush layer to top_contacts (always allocated when
+                        // has_top_contacts). Filling the gap with contact-type interface is correct for a flush
+                        // release and avoids the interface_layers/base_interface_layers arrays (which may be
+                        // unallocated for large gaps).
+                        Polygons roof_copy = flush_area;                             // add_roof consumes it
+                        rich_interface_placer.add_roof(std::move(roof_copy), fill_layer, 0);
+                    }
             }
         }
     });
@@ -3490,6 +3546,28 @@ static void generate_support_areas(Print &print, TreeSupport* tree_support, cons
 
         if (num_support_layers == 0)
             continue;
+
+        // [regional-supports fork] Organic regional flush 0-gap needs support-interface roofs in the top gap
+        // layers, which precalculate() deliberately excludes (it returns max_support_layer_id -
+        // z_distance_top_layers). When any object in this group requests a regional support-interface gap,
+        // grow num_support_layers by z_distance_top_layers so those gap-layer slots exist for the flush
+        // contacts added in generate_initial_areas (Approach B). Capped at the object layer count. Harmless
+        // otherwise: the extra top layers stay empty and are stripped by remove_undefined_layers. Gated ->
+        // inert (no size change) when no object requests a regional gap.
+        if (has_support && config.z_distance_top_layers > 0) {
+            bool regional_flush = false;
+            for (size_t oid : processing.second) {
+                const PrintObject &po = *print.get_object(oid);
+                if (po.support_interface_modifier_gap() >= 0. && ! po.support_interface_modifier_footprint().empty()) {
+                    regional_flush = true;
+                    break;
+                }
+            }
+            if (regional_flush) {
+                const size_t cap = size_t(print.get_object(processing.second.front())->layer_count()) + config.raft_layers.size();
+                num_support_layers = std::min(num_support_layers + size_t(config.z_distance_top_layers), cap);
+            }
+        }
 
         SupportParameters            support_params(print_object);
         support_params.with_sheath = true;

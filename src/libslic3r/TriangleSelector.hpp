@@ -401,6 +401,8 @@ public:
         TriangleSplittingData seam;
         TriangleSplittingData mmu;
         TriangleSplittingData fuzzy;
+        // [regional-supports fork] support-interface region painting
+        TriangleSplittingData support_interface_region;
     };
 
     // Remap painting data from source mesh to target mesh using spatial mapping.

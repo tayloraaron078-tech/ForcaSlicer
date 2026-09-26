@@ -55,6 +55,8 @@
 #define TAB_ID_MULTI_DEVICE  "multi_device"
 #define TAB_ID_PROJECT       "project"
 #define TAB_ID_CALIBRATION   "calibration"
+// Forca Calibration Wizard tab: a third page on the shared m_plater window (like Prepare/Preview).
+#define TAB_ID_FORCA_CALIB   "forca_calibration"
 
 #define ENABEL_PRINT_ALL 0
 
@@ -76,6 +78,8 @@ class DesignPanel;
 class MainFrame;
 class WebViewPanel;
 class ParamsDialog;
+class ForcaCalibrationHost;
+class ForcaAIDialog;
 enum class Shortcut : uint8_t;
 struct KeyChord;
 #ifdef __WXGTK__
@@ -434,11 +438,16 @@ public:
     void fit_tab_labels(); // ORCA
     // True while either of the two tabs backed by m_plater is selected.
     bool is_prepare_or_preview_tab() const;
+    // True while the Forca Calibration Wizard tab is selected (tab jumps to Prepare/Preview/Device stay there).
+    bool is_forca_calib_tab_active() const;
     PluginPages& plugin_pages() { return m_plugin_pages; }
 
     PA_Calibration_Dlg* m_pa_calib_dlg{ nullptr };
     FlowRateCalibrationDialog* m_flow_rate_calib_dlg{ nullptr };
     Temp_Calibration_Dlg* m_temp_calib_dlg{ nullptr };
+    ForcaCalibrationHost* m_forca_calib_host{ nullptr }; // Calibration Wizard tab layout (created on first open)
+    ForcaAIDialog*        m_forca_ai_dialog{ nullptr };  // Forca AI window (persistent, created on first open)
+    void                  show_forca_ai();
     MaxVolumetricSpeed_Test_Dlg* m_vol_test_dlg { nullptr };
     VFA_Test_Dlg* m_vfa_test_dlg { nullptr };
     Retraction_Test_Dlg* m_retraction_calib_dlg{ nullptr };

@@ -405,7 +405,7 @@ void ExtruderSwithingStatus::updateBy(const DevExtderSystem* ext_system)
         if (state == DevExtderSwitchState::ES_SWITCHING)
         {
             m_switching_status_label->SetLabel(_L("Switching..."));
-            m_switching_status_label->SetForegroundColour(StateColor::darkModeColorFor("#262E30"));
+            m_switching_status_label->SetForegroundColour(StateColor::darkModeColorFor("#1A2C4C"));
             m_switching_status_label->Show(true);
         }
         else if (state == DevExtderSwitchState::ES_SWITCHING_FAILED)

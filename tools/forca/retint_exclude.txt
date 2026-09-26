@@ -1,0 +1,15 @@
+# Files apply_retint.{ps1,sh} must NOT touch — CANONICAL exclude list (by basename).
+# See docs/forca/retint.md and the .NOTES in apply_retint.ps1 for why.
+# Lines starting with # and blank lines are ignored.
+#
+# Functional recolor-table keys — retinting them breaks dark-mode icon recoloring:
+BitmapCache.cpp
+#
+# Hand-edited (decimal RGB / theme-aware / splash art) — re-apply their edits manually
+# after an upstream merge; the hex tokens they still contain are decimal comments only:
+GLCanvas3D.cpp
+Tab.cpp
+GUI_App.cpp
+BBLTopbar.cpp
+MainFrame.cpp
+Notebook.cpp

@@ -90,6 +90,7 @@ struct SupportNode
             }
             is_sharp_tail = parent->is_sharp_tail;
             skin_direction = parent->skin_direction;
+            region_zero_gap = parent->region_zero_gap; // [regional-supports fork] propagate down the column
         }
     }
 
@@ -124,6 +125,7 @@ struct SupportNode
     bool           need_extra_wall = false;
     bool           is_sharp_tail   = false;
     bool           valid = true;
+    bool           region_zero_gap = false; // [regional-supports fork] this contact/column carries a regional zero Top-Z gap; keep it flush through plan_layer_heights
     ExPolygon      overhang; // when type==ePolygon, set this value to get original overhang area
 
     /*!

@@ -631,7 +631,7 @@ void SendToPrinterDialog::update_storage_list(const std::vector<std::string> &st
         {
             storage_text->SetLabel(_L("External Storage"));
             radiobox->Disable();
-            storage_text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#CECECE")));
+            storage_text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#C2CFE4")));
         }
         else
         {

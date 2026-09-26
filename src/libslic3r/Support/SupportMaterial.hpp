@@ -78,7 +78,13 @@ private:
 	    SupportGeneratorLayersPtr         &support_layers,
 	    const coordf_t       gap_extra_above,
 	    const coordf_t       gap_extra_below,
-	    const coordf_t       gap_xy) const;
+	    const coordf_t       gap_xy,
+	    // [regional-supports fork, P2] Optional region-aware TOP trimming. Inside region_footprint the
+	    // support is trimmed with region_gap_extra_above instead of gap_extra_above, so a modifier region
+	    // with a smaller/zero Top-Z gap keeps its support base close to the object (no missing interface
+	    // layer). nullptr/empty footprint => original object-global behavior (every existing caller).
+	    const Polygons      *region_footprint       = nullptr,
+	    const coordf_t       region_gap_extra_above = 0.) const;
 
 /*
 	void generate_pillars_shape();

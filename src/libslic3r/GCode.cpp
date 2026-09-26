@@ -5532,6 +5532,86 @@ std::string GCode::generate_timelapse_gcode(const Print &print, coordf_t print_z
     return timelapse_gcode;
 }
 
+// [regional-supports fork] Assign support-interface extrusion to the override filament (`inside`) or the
+// object's interface filament (`outside`) by CLIPPING each interface path at the modifier footprint edge:
+// the in-footprint portion goes to the override, the rest stays on the object interface.
+//
+// This replaces the earlier whole-path point-classification (assign the whole entity by its first point).
+// That classification was non-deterministic: a support-interface fill layer is one long serpentine path
+// spanning the whole overhang, so its first point is essentially random with respect to the footprint —
+// a path whose geometry clearly intersected the footprint could still route entirely to the object filament
+// because its first point happened to fall outside, and the result flipped slice-to-slice. Clipping by
+// geometry is deterministic and puts the override exactly under the footprint every slice.
+//
+// intersection_pl/diff_pl are 2D, while ExtrusionPath::polyline is a Polyline3 (3D, since the pinned base
+// c0c2cc5068). We flatten with to_polyline(), clip in 2D, then re-lift each clipped fragment to the layer's
+// constant Z with Polyline3(pl, z). The ExtrusionPath(Polyline3, rhs) ctor copies width/height/role and the
+// per-length mm3_per_mm, so a shorter clipped fragment still extrudes at the correct volumetric rate.
+// [regional-supports fork] Phase A (N regions): each target pairs one region's footprint with the
+// collection for that region's filament. A path is clipped against the regions in order and the remainder
+// cascades on, so an earlier region wins any overlap; whatever falls outside every footprint goes to
+// `outside` (the object's own interface filament).
+struct RegionalIfaceClipTarget {
+    const Polygons            *footprint;
+    ExtrusionEntityCollection *dst;
+};
+
+static void split_support_interface_by_footprint(
+    const ExtrusionEntity                       *ee,
+    const std::vector<RegionalIfaceClipTarget>  &regions,
+    ExtrusionEntityCollection                   *outside)
+{
+    if (const auto *coll = dynamic_cast<const ExtrusionEntityCollection*>(ee)) {
+        for (const ExtrusionEntity *child : coll->entities)
+            split_support_interface_by_footprint(child, regions, outside);
+        return;
+    }
+    // Clip one ExtrusionPath across the region footprints, preserving flow attributes and the layer Z.
+    auto clip_path = [&regions, outside](const ExtrusionPath &path) {
+        if (path.polyline.size() < 2) {
+            // Degenerate path: nothing to clip, classify by its single point.
+            const Point p = path.first_point();
+            for (const RegionalIfaceClipTarget &t : regions)
+                if (contains(*t.footprint, p, false)) { t.dst->entities.emplace_back(path.clone()); return; }
+            outside->entities.emplace_back(path.clone());
+            return;
+        }
+        const coord_t z = path.polyline.points.front().z();   // support interface is planar per layer
+        Polylines     remaining;
+        remaining.emplace_back(path.polyline.to_polyline());
+        for (const RegionalIfaceClipTarget &t : regions) {
+            if (remaining.empty())
+                break;
+            Polylines carry;   // fragments still outside every region tried so far
+            for (const Polyline &pl : remaining) {
+                for (Polyline &in : intersection_pl(pl, *t.footprint))
+                    if (in.size() >= 2)
+                        t.dst->entities.emplace_back(new ExtrusionPath(Polyline3(in, z), path));
+                for (Polyline &out : diff_pl(pl, *t.footprint))
+                    if (out.size() >= 2)
+                        carry.emplace_back(std::move(out));
+            }
+            remaining = std::move(carry);
+        }
+        for (Polyline &pl : remaining)
+            if (pl.size() >= 2)
+                outside->entities.emplace_back(new ExtrusionPath(Polyline3(pl, z), path));
+    };
+    if (const auto *path = dynamic_cast<const ExtrusionPath*>(ee)) {
+        clip_path(*path);
+    } else if (const auto *multi = dynamic_cast<const ExtrusionMultiPath*>(ee)) {
+        for (const ExtrusionPath &p : multi->paths)
+            clip_path(p);
+    } else {
+        // Loops and any other entity types are not expected in support-interface fills; classify whole by
+        // first point so behavior degrades gracefully rather than dropping them.
+        const Point p = ee->first_point();
+        for (const RegionalIfaceClipTarget &t : regions)
+            if (contains(*t.footprint, p, false)) { t.dst->entities.emplace_back(ee->clone()); return; }
+        outside->entities.emplace_back(ee->clone());
+    }
+}
+
 // In sequential mode, process_layer is called once per each object and its copy,
 // therefore layers will contain a single entry and single_object_instance_idx will point to the copy of the object.
 // In non-sequential mode, process_layer is called per each print_z height with all object and support layers accumulated.
@@ -5930,6 +6010,26 @@ LayerResult GCode::process_layer(
     // existing support-extruder assignment; unused (and thus output-neutral) when the subsystem is off.
     std::map<std::pair<const SupportLayer *, ExtrusionRole>, unsigned int> support_filaments;
     std::vector<std::unique_ptr<ExtrusionEntityCollection>> split_perimeter_storage;
+    // [regional-supports fork] Regional support-interface material (Phase A: N regions). Per object, the
+    // list of {footprint, 1-based filament} — one entry per SUPPORT_INTERFACE_MODIFIER volume — computed
+    // lazily once. Owned partitioned interface collections live here for this gcode step. If no object uses
+    // the feature these stay empty and the support assignment below takes its original, byte-identical path.
+    std::map<const PrintObject*, std::vector<PrintObject::RegionalIfaceRegion>> regional_iface_regions;
+    std::vector<std::unique_ptr<ExtrusionEntityCollection>> support_partition_storage;
+    auto regional_iface_prepare = [&](const PrintObject &obj) -> const std::vector<PrintObject::RegionalIfaceRegion>& {
+        auto it = regional_iface_regions.find(&obj);
+        if (it == regional_iface_regions.end())
+            it = regional_iface_regions.emplace(&obj, obj.support_interface_modifier_regions()).first;
+        return it->second;
+    };
+    // [regional-supports fork] All regional-override filaments in the print (0-based). "Default"/dontcare
+    // support and interface must NOT reuse these — they are dedicated regional materials, the same way
+    // stock code refuses to reuse soluble/support filaments. This is what makes the feature work with a
+    // regular filament (e.g. PETG), not just a flagged support filament. Empty => no behavior change.
+    std::set<unsigned int> regional_override_exts;
+    for (const PrintObject *po : print.objects())
+        for (unsigned int f : po->support_interface_modifier_filaments())
+            regional_override_exts.insert(f - 1);
     bool is_anything_overridden = const_cast<LayerTools&>(layer_tools).wiping_extrusions().is_anything_overridden();
     for (const LayerToPrint &layer_to_print : layers) {
         if (layer_to_print.support_layer != nullptr) {
@@ -5952,7 +6052,11 @@ LayerResult GCode::process_layer(
                 WipingExtrusions& wiping_extrusions = const_cast<LayerTools&>(layer_tools).wiping_extrusions();
                 if (support_dontcare) {
                     int extruder_override = wiping_extrusions.get_support_extruder_overrides(&object);
-                    if (extruder_override >= 0) {
+                    // [regional-supports fork] Symmetric to the interface guard below: never let the wiping system
+                    // reuse a regional-override filament for the object's don't-care support BASE, or the base would
+                    // print in the modifier's material (a stray "orange base"). Gated: with no modifier
+                    // (regional_override_exts empty) this is byte-identical to stock behavior.
+                    if (extruder_override >= 0 && ! regional_override_exts.count((unsigned int) extruder_override)) {
                         support_extruder = extruder_override;
                         support_dontcare = false;
                     }
@@ -5960,7 +6064,15 @@ LayerResult GCode::process_layer(
 
                 if (interface_dontcare) {
                     int extruder_override = wiping_extrusions.get_support_interface_extruder_overrides(&object);
-                    if (extruder_override >= 0) {
+                    // [regional-supports fork] Never let the wiping system reuse a regional-override filament
+                    // for the object's don't-care interface. Doing so sets interface_extruder == regional_override,
+                    // which disables the footprint split (regional_active becomes false at the check below) and
+                    // prints the WHOLE interface layer in the modifier's material instead of only the footprint
+                    // (observed as an all-override interface layer just under the region). Ignoring such an override
+                    // leaves the interface don't-care, so the resolution below picks a proper non-override filament
+                    // and the footprint split runs. Gated: with no modifier (regional_override_exts empty) this is
+                    // byte-identical to stock behavior.
+                    if (extruder_override >= 0 && ! regional_override_exts.count((unsigned int) extruder_override)) {
                         interface_extruder = extruder_override;
                         interface_dontcare = false;
                     }
@@ -5975,6 +6087,10 @@ LayerResult GCode::process_layer(
 
                         //BBS: now we don't consider interface filament used in other object
                         if (extruder_id == interface_extruder)
+                            continue;
+
+                        // [regional-supports fork] never fall back onto a regional-override filament
+                        if (regional_override_exts.count(extruder_id))
                             continue;
 
                         dontcare_extruder = extruder_id;
@@ -6014,6 +6130,19 @@ LayerResult GCode::process_layer(
                                 break;
                             }
                     }
+                    // [regional-supports fork] if the reused filament is a regional override, pick a
+                    // non-override, non-soluble, non-support filament instead so Default support/interface
+                    // never inherits a modifier's material (this is the fix that makes PETG behave like a
+                    // flagged support filament did).
+                    if (! regional_override_exts.empty() && regional_override_exts.count(dontcare_extruder)) {
+                        for (unsigned int extruder_id : layer_tools.extruders)
+                            if (! regional_override_exts.count(extruder_id) &&
+                                ! print.config().filament_soluble.get_at(extruder_id) &&
+                                ! print.config().filament_is_support.get_at(extruder_id)) {
+                                dontcare_extruder = extruder_id;
+                                break;
+                            }
+                    }
                     if (support_dontcare)
                         support_extruder = dontcare_extruder;
                     if (interface_dontcare)
@@ -6032,6 +6161,64 @@ LayerResult GCode::process_layer(
                     support_filaments[{ &support_layer, erSupportMaterialInterface }] =
                         single_extruder ? (has_support ? support_extruder : interface_extruder) : interface_extruder;
                 }
+                // [regional-supports fork] If this object has SUPPORT_INTERFACE_MODIFIER volumes whose
+                // filament differs from the object's interface filament, split the interface toolpaths inside
+                // each region's footprint onto that region's filament (N regions). Otherwise (the common case)
+                // run the original assignment unchanged, so output is byte-identical when the feature is unused.
+                const std::vector<PrintObject::RegionalIfaceRegion> *regions =
+                    has_interface ? &regional_iface_prepare(object) : nullptr;
+                bool regional_active = false;
+                if (regions)
+                    for (const PrintObject::RegionalIfaceRegion &r : *regions)
+                        if (r.filament >= 1 && r.filament - 1 != interface_extruder) { regional_active = true; break; }
+                if (regional_active) {
+                    const size_t       obj_idx  = &layer_to_print - layers.data();
+                    const unsigned int base_ext = has_support ? support_extruder : interface_extruder;
+                    // Group cloned entities by target extruder. Cloning avoids aliasing the shared
+                    // support_fills (no double-free); each partitioned collection holds exactly the
+                    // entities for one extruder, so it is emitted with erMixed.
+                    std::map<unsigned int, ExtrusionEntityCollection*> coll_by_ext;
+                    auto coll_for = [&](unsigned int ext) -> ExtrusionEntityCollection* {
+                        auto found = coll_by_ext.find(ext);
+                        if (found != coll_by_ext.end())
+                            return found->second;
+                        support_partition_storage.emplace_back(std::make_unique<ExtrusionEntityCollection>());
+                        ExtrusionEntityCollection *c = support_partition_storage.back().get();
+                        c->no_sort = support_layer.support_fills.no_sort;
+                        coll_by_ext.emplace(ext, c);
+                        return c;
+                    };
+                    // One clip target per region {footprint polys, destination collection}; anything outside
+                    // every footprint stays on the object's interface filament. region_polys owns the Polygons
+                    // the targets point at, so reserve() keeps those pointers stable across the build loop.
+                    std::vector<Polygons>                region_polys;
+                    std::vector<RegionalIfaceClipTarget> clip_targets;
+                    region_polys.reserve(regions->size());
+                    clip_targets.reserve(regions->size());
+                    for (const PrintObject::RegionalIfaceRegion &r : *regions) {
+                        region_polys.emplace_back(to_polygons(r.footprint));
+                        clip_targets.push_back({ &region_polys.back(), coll_for(r.filament - 1) });
+                    }
+                    ExtrusionEntityCollection *outside_coll = coll_for(interface_extruder);
+                    for (const ExtrusionEntity *ee : support_layer.support_fills.entities) {
+                        if (ee->role() == erSupportMaterialInterface) {
+                            // Clip the interface path across the region footprints: each region's part goes to
+                            // its filament, the rest stays on the object's interface filament.
+                            split_support_interface_by_footprint(ee, clip_targets, outside_coll);
+                        } else {
+                            coll_for(base_ext)->entities.emplace_back(ee->clone());
+                        }
+                    }
+                    for (const auto &kv : coll_by_ext) {
+                        // Clipping can leave an extruder with no entities on this layer (footprint missed
+                        // all its interface paths). Skip it so we never schedule a tool change for nothing.
+                        if (kv.second->entities.empty())
+                            continue;
+                        ObjectByExtruder &obj = object_by_extruder(by_extruder, kv.first, obj_idx, layers.size());
+                        obj.support = kv.second;
+                        obj.support_extrusion_role = erMixed;
+                    }
+                } else {
                 // Assign an extruder to the base.
                 ObjectByExtruder &obj = object_by_extruder(by_extruder, has_support ? support_extruder : interface_extruder, &layer_to_print - layers.data(), layers.size());
                 obj.support = &support_layer.support_fills;
@@ -6040,6 +6227,7 @@ LayerResult GCode::process_layer(
                     ObjectByExtruder &obj_interface = object_by_extruder(by_extruder, interface_extruder, &layer_to_print - layers.data(), layers.size());
                     obj_interface.support = &support_layer.support_fills;
                     obj_interface.support_extrusion_role = erSupportMaterialInterface;
+                }
                 }
             }
         }

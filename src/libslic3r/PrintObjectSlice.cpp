@@ -1,4 +1,5 @@
 #include <boost/log/trivial.hpp>
+#include <mutex>  // [regional-supports fork] cache guard
 
 #include <tbb/parallel_for.h>
 
@@ -1600,6 +1601,202 @@ std::vector<Polygons> PrintObject::slice_support_volumes(const ModelVolumeType m
         }
     }
     return slices;
+}
+
+// [regional-supports fork] B3: painted support-interface regions. A model-part volume's
+// support_interface_region_facets stores a per-facet filament index (state, MMU-style). For each painted
+// filament we build a Z-flattened XY footprint by projecting EVERY painted facet to XY and unioning — NOT via
+// project_mesh/slice_mesh_slabs, which classifies facets as up/down-facing and drops steeply angled ones (that
+// lost most of a curved/sloped overhang). Shared by the material, filament, footprint and (via presence) gap
+// accessors so paint and box modifiers feed one consistent {filament, footprint} model.
+static std::vector<PrintObject::RegionalIfaceRegion> painted_support_interface_regions(
+    const ModelObject *mo, const Transform3d &object_trafo)
+{
+    std::vector<PrintObject::RegionalIfaceRegion> out;
+    if (mo == nullptr)
+        return out;
+    for (const ModelVolume *mv : mo->volumes) {
+        if (mv == nullptr || ! mv->is_model_part() || ! mv->is_support_interface_region_painted())
+            continue;
+        std::vector<indexed_triangle_set> facets_per_state;
+        mv->support_interface_region_facets.get_facets(*mv, facets_per_state);
+        const Transform3d trafo = object_trafo * mv->get_matrix();
+        for (size_t s = 1; s < facets_per_state.size(); ++s) {          // state s (>=1) == 1-based filament
+            const indexed_triangle_set &its = facets_per_state[s];
+            if (its.indices.empty())
+                continue;
+            Polygons tris;
+            tris.reserve(its.indices.size());
+            for (const stl_triangle_vertex_indices &idx : its.indices) {
+                Polygon p;
+                p.points.reserve(3);
+                for (int k = 0; k < 3; ++k) {
+                    const Vec3d v = trafo * its.vertices[idx[k]].cast<double>();
+                    p.points.emplace_back(Point::new_scale(v.x(), v.y()));
+                }
+                const double a = p.area();
+                // Skip edge-on / degenerate triangles (project to a near-zero-area sliver) — they add nothing
+                // but feed Clipper garbage.
+                if (std::abs(a) < scale_(0.001) * scale_(0.001))
+                    continue;
+                if (a < 0)
+                    p.reverse();
+                tris.emplace_back(std::move(p));
+            }
+            if (tris.empty())
+                continue;
+            // Merge the per-triangle shadows into a solid region. Order matters for performance: a brush LINE
+            // splits the mesh into thousands of thin sliver triangles, and running Clipper OFFSET (closing) on that
+            // raw soup exploded to ~59s (measured). So union FIRST (a fast Clipper merge that collapses the soup to
+            // a few polygons), THEN close the merged result to fill small gaps/holes (e.g. embossed-letter counters)
+            // -- cheap, because it now operates on a handful of polygons -- then simplify and drop specks.
+            ExPolygons fp = union_ex(tris);
+            if (! fp.empty()) {
+                fp = closing_ex(fp, float(scale_(0.6)));
+                fp = expolygons_simplify(fp, scale_(0.05));
+                fp.erase(std::remove_if(fp.begin(), fp.end(),
+                         [](const ExPolygon &e) { return std::abs(e.area()) < scale_(0.4) * scale_(0.4); }),
+                         fp.end());
+            }
+            if (! fp.empty())
+                out.push_back({ (unsigned int) s, std::move(fp) });
+        }
+    }
+    return out;
+}
+
+// [regional-supports fork] Cache the painted-region projection. It is called from several slicing stages AND from
+// PARALLEL per-layer loops (tool ordering, G-code export), so without a cache the (expensive) projection was
+// recomputed on every layer on every worker thread -> the whole slice froze. Single-entry cache keyed by the object
+// pointer + a cheap hash of the painted-facet timestamps; recomputed only when the paint actually changes. The first
+// caller computes under the lock; concurrent callers block once and then read the shared result.
+static std::mutex                                        s_painted_cache_mutex;
+static const void                                       *s_painted_cache_obj = nullptr;
+static uint64_t                                          s_painted_cache_key = 0;
+static std::vector<PrintObject::RegionalIfaceRegion>     s_painted_cache;
+
+static std::vector<PrintObject::RegionalIfaceRegion> painted_support_interface_regions_cached(
+    const ModelObject *mo, const Transform3d &object_trafo)
+{
+    uint64_t key = 0;
+    if (mo != nullptr)
+        for (const ModelVolume *mv : mo->volumes)
+            if (mv != nullptr && mv->is_model_part() && mv->is_support_interface_region_painted())
+                key ^= (uint64_t(mv->id().id) * 1099511628211ull) ^ uint64_t(mv->support_interface_region_facets.timestamp());
+
+    std::lock_guard<std::mutex> lock(s_painted_cache_mutex);
+    if (s_painted_cache_obj == mo && s_painted_cache_key == key)
+        return s_painted_cache;
+    s_painted_cache     = painted_support_interface_regions(mo, object_trafo);
+    s_painted_cache_obj = mo;
+    s_painted_cache_key = key;
+    return s_painted_cache;
+}
+
+// [regional-supports fork] 1-based filament indices (>0) selected on this object's
+// SUPPORT_INTERFACE_MODIFIER volumes. Empty when the regional support-interface material feature is
+// unused, which keeps every consumer on its original (byte-identical) code path.
+std::vector<unsigned int> PrintObject::support_interface_modifier_filaments() const
+{
+    std::vector<unsigned int> out;
+    const ModelObject *mo = this->model_object();
+    if (mo == nullptr)
+        return out;
+    for (const ModelVolume *mv : mo->volumes)
+        if (mv != nullptr && mv->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER &&
+            mv->config.has("support_interface_filament")) {
+            const int f = mv->config.opt_int("support_interface_filament");
+            if (f > 0 && std::find(out.begin(), out.end(), (unsigned int) f) == out.end())
+                out.push_back((unsigned int) f);
+        }
+
+    // [regional-supports fork] B3: also the filaments painted onto model parts (state == 1-based filament).
+    // Keeps tool ordering + the don't-care support guards aware of painted overrides. Gated so an unpainted
+    // model adds nothing (inert path).
+    for (const RegionalIfaceRegion &r : painted_support_interface_regions_cached(mo, this->trafo_centered()))
+        if (std::find(out.begin(), out.end(), r.filament) == out.end())
+            out.push_back(r.filament);
+    return out;
+}
+
+// [regional-supports fork] 2D footprint (object slicing frame) of the SUPPORT_INTERFACE_MODIFIER
+// volumes: the union of their per-layer cross sections. A support-interface toolpath whose
+// representative point falls inside this footprint prints with the override filament. Empty when the
+// feature is unused.
+ExPolygons PrintObject::support_interface_modifier_footprint() const
+{
+    Polygons all;
+    for (const Polygons &pl : this->slice_support_volumes(ModelVolumeType::SUPPORT_INTERFACE_MODIFIER))
+        append(all, pl);
+    // [regional-supports fork] B3b: include painted regions so the shared regional gap applies under them too.
+    for (const RegionalIfaceRegion &r : painted_support_interface_regions_cached(this->model_object(), this->trafo_centered()))
+        append(all, to_polygons(r.footprint));
+    return union_ex(all);
+}
+
+// [regional-supports fork] the region's support-interface Z gap (mm), stored on a SUPPORT_INTERFACE_MODIFIER
+// volume as support_top_z_distance. Returns < 0 when no modifier sets it (then the region keeps the object's
+// gap; only its material differs). Companion to support_interface_modifier_filaments(), consumed by the
+// regional contact-placement in support generation (P2 slice 3).
+double PrintObject::support_interface_modifier_gap() const
+{
+    const ModelObject *mo = this->model_object();
+    if (mo == nullptr)
+        return -1.;
+    for (const ModelVolume *mv : mo->volumes)
+        if (mv != nullptr && mv->type() == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER &&
+            mv->config.has("support_top_z_distance"))
+            return mv->config.opt_float("support_top_z_distance");
+    // [regional-supports fork] B3b: a painted region implies a flush (0) release gap — the paint UX is for the
+    // dissimilar-material case, which by decision always uses gap 0. (Box modifiers still carry their own gap above.)
+    for (const ModelVolume *mv : mo->volumes)
+        if (mv != nullptr && mv->is_model_part() && mv->is_support_interface_region_painted())
+            return 0.;
+    return -1.;
+}
+
+// [regional-supports fork] Phase A (N-region material): one region per SUPPORT_INTERFACE_MODIFIER volume,
+// each with its OWN Z-flattened footprint + 1-based filament, so different regions can print different
+// interface materials. Mirrors support_interface_modifier_footprint() but slices each volume SEPARATELY
+// instead of unioning them (slice_support_volumes merges all volumes of a type, losing per-volume identity).
+// The union footprint / single gap accessors above are unchanged and still drive the shared regional gap.
+// Empty when the feature is unused -> every consumer stays on its original byte-identical path.
+std::vector<PrintObject::RegionalIfaceRegion> PrintObject::support_interface_modifier_regions() const
+{
+    std::vector<RegionalIfaceRegion> regions;
+    const ModelObject *mo = this->model_object();
+    if (mo == nullptr)
+        return regions;
+
+    std::vector<float>  zs;          // sliced Z heights, computed lazily on the first real volume
+    MeshSlicingParamsEx params;
+    const Print        *print = this->print();
+    auto                throw_on_cancel = std::function<void()>([print](){ print->throw_if_canceled(); });
+
+    for (const ModelVolume *mv : mo->volumes) {
+        if (mv == nullptr || mv->type() != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER ||
+            ! mv->config.has("support_interface_filament"))
+            continue;
+        const int f = mv->config.opt_int("support_interface_filament");
+        if (f <= 0)
+            continue;
+        if (zs.empty()) {
+            zs = zs_from_layers(this->layers());
+            params.trafo = this->trafo_centered();
+        }
+        Polygons all;
+        for (ExPolygons &src : slice_volume(*mv, zs, params, throw_on_cancel))
+            append(all, to_polygons(std::move(src)));
+        ExPolygons fp = union_ex(all);
+        if (! fp.empty())
+            regions.push_back({ (unsigned int) f, std::move(fp) });
+    }
+
+    // [regional-supports fork] B3: append PAINTED regions (per painted filament) alongside the box modifiers.
+    // Same material-only model as boxes; footprint via the shared helper (orientation-independent XY shadow).
+    for (RegionalIfaceRegion &r : painted_support_interface_regions_cached(mo, this->trafo_centered()))
+        regions.push_back(std::move(r));
+    return regions;
 }
 
 } // namespace Slic3r

@@ -14,6 +14,7 @@
 #include "MainFrame.hpp"
 #include "WebViewDialog.hpp"
 #include "PartPlate.hpp"
+#include "ForcaAI.hpp"
 
 #include <boost/log/trivial.hpp>
 
@@ -36,6 +37,7 @@ enum CUSTOM_ID
     ID_MODEL_STORE,
     ID_PUBLISH,
     ID_CALIB,
+    ID_FORCA_AI, // Forca AI window
     ID_TOOL_BAR = 3200,
     ID_AMS_NOTEBOOK,
 };
@@ -47,7 +49,7 @@ CenteredTitle::CenteredTitle(wxWindow* parent)
     Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
     Bind(wxEVT_PAINT, [this](wxPaintEvent&) {
         wxBufferedPaintDC dc(this);
-        dc.SetBackground(wxBrush(wxColour(38, 46, 48)));
+        dc.SetBackground(wxBrush(wxColour(26, 44, 76))); // [regional-supports fork] Forca blue titlebar (was #262E30 grey)
         dc.Clear();
 
         dc.SetTextForeground(*wxWHITE);
@@ -103,7 +105,7 @@ public:
 
 void BBLTopbarArt::DrawBackground(wxDC& dc, wxWindow* wnd, const wxRect& rect)
 {
-    dc.SetBrush(wxBrush(wxColour(38, 46, 48)));
+    dc.SetBrush(wxBrush(wxColour(26, 44, 76))); // [regional-supports fork] Forca blue topbar (was #262E30 grey)
     wxRect clipRect = rect;
     clipRect.y -= 8;
     clipRect.height += 8;
@@ -316,6 +318,11 @@ void BBLTopbar::Init(wxFrame* parent)
     m_calib_item                   = this->AddTool(ID_CALIB, _L("Calibration"), calib_bitmap);
     m_calib_item->SetDisabledBitmap(calib_bitmap_inactive);
 
+    // Forca: the Forca AI button -- its label and icon show whether an AI can connect / is connected.
+    this->AddSpacer(FromDIP(10));
+    m_forca_ai_item = this->AddTool(ID_FORCA_AI, _L("Forca AI"), create_scaled_bitmap("forca_ai_inactive", nullptr, TOPBAR_ICON_SIZE));
+    ForcaAI::instance().add_listener([this]() { UpdateForcaAIItem(); });
+
     this->AddSpacer(FromDIP(25));
     //this->AddStretchSpacer(1);
 
@@ -376,6 +383,7 @@ void BBLTopbar::Init(wxFrame* parent)
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnFileToolItem, this, ID_TOP_FILE_MENU);
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnDropdownToolItem, this, ID_TOP_DROPDOWN_MENU);
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnCalibToolItem, this, ID_CALIB);
+    this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnForcaAIToolItem, this, ID_FORCA_AI);
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnIconize, this, wxID_ICONIZE_FRAME);
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnFullScreen, this, wxID_MAXIMIZE_FRAME);
     this->Bind(wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &BBLTopbar::OnCloseFrame, this, wxID_CLOSE_FRAME);
@@ -680,6 +688,30 @@ void BBLTopbar::OnDropdownToolItem(wxAuiToolBarEvent& evt)
 
     // make sure the button is "un-stuck"
     tb->SetToolSticky(evt.GetId(), false);
+}
+
+void BBLTopbar::OnForcaAIToolItem(wxAuiToolBarEvent& /*evt*/)
+{
+    if (MainFrame* mf = wxGetApp().mainframe)
+        mf->show_forca_ai();
+}
+
+void BBLTopbar::UpdateForcaAIItem()
+{
+    if (!m_forca_ai_item)
+        return;
+    const ForcaAI::State state = ForcaAI::instance().state();
+    wxString label = _L("Forca AI");
+    if (state == ForcaAI::State::Listening)
+        label += " - " + _L("On");
+    else if (state == ForcaAI::State::Connected)
+        label += " - " + _L("Connected");
+    else if (state == ForcaAI::State::Error)
+        label += " - " + _L("Error");
+    m_forca_ai_item->SetLabel(label);
+    m_forca_ai_item->SetBitmap(create_scaled_bitmap(state == ForcaAI::State::Off ? "forca_ai_inactive" : "forca_ai", this, TOPBAR_ICON_SIZE));
+    Realize();
+    Refresh();
 }
 
 void BBLTopbar::OnCalibToolItem(wxAuiToolBarEvent &evt)

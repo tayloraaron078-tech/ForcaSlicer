@@ -578,7 +578,7 @@ void ImageGrid::render(wxDC& dc)
         auto date1 = wxDateTime((time_t) file1.time).Format(_L(TIME_FORMATS[m_file_sys->GetGroupMode()]));
         auto date2 = wxDateTime((time_t) file2.time).Format(_L(TIME_FORMATS[m_file_sys->GetGroupMode()]));
         dc.SetFont(Label::Head_16);
-        dc.SetTextForeground(StateColor::darkModeColorFor("#262E30"));
+        dc.SetTextForeground(StateColor::darkModeColorFor("#1A2C4C"));
         dc.DrawText(date1 + " - " + date2, wxPoint{off.x, 2});
     }
     // Draw bottom background
@@ -689,7 +689,7 @@ void Slic3r::GUI::ImageGrid::renderContent2(wxDC &dc, wxPoint const &pt, int ind
     dc.SetPen(pn);
     // Draw infos
     dc.SetFont(Label::Head_16);
-    dc.SetTextForeground(StateColor::darkModeColorFor("#323A3D"));
+    dc.SetTextForeground(StateColor::darkModeColorFor("#24395A"));
     auto em = em_unit(this);
     wxRect rect{pt.x, pt.y + m_content_rect.GetHeight() - h, m_content_rect.GetWidth(), h / 2};
     rect.Deflate(em, 0);

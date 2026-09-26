@@ -874,7 +874,7 @@ wxBoxSizer* SendMultiMachinePage::create_item_input(wxString str_before, wxStrin
     input_title->Wrap(-1);
 
     auto input = new ::TextInput(parent, wxEmptyString, wxEmptyString, wxEmptyString, wxDefaultPosition, SEND_DESIGN_INPUT_SIZE, wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     input->SetBackgroundColor(input_bg);
     input->GetTextCtrl()->SetValue(app_config->get(param));
     wxTextValidator validator(wxFILTER_DIGITS);
@@ -954,7 +954,7 @@ void SendMultiMachinePage::OnSelectRadio(wxMouseEvent& event)
                 while (iter != m_material_list.end()) {
                     Material *    item = iter->second;
                     MaterialItem *m    = item->item;
-                    if (item->id == m_current_filament_id) { m->set_ams_info(wxColour("#CECECE"), "Ext", 0, std::vector<wxColour>()); }
+                    if (item->id == m_current_filament_id) { m->set_ams_info(wxColour("#C2CFE4"), "Ext", 0, std::vector<wxColour>()); }
                     iter++;
                 }
             } else if (rs->m_param_name == "use_ams") {
@@ -1465,8 +1465,8 @@ void SendMultiMachinePage::sync_ams_list()
         if (extruder >= materials.size() || extruder < 0 || extruder >= display_materials.size()) continue;
 
         MaterialItem* item = new MaterialItem(m_main_page, colour_rgb, _L(display_materials[extruder]));
-        //item->set_ams_info(wxColour("#CECECE"), "A1", 0, std::vector<wxColour>());
-        item->set_ams_info(wxColour("#CECECE"), "Ext", 0, std::vector<wxColour>());
+        //item->set_ams_info(wxColour("#C2CFE4"), "A1", 0, std::vector<wxColour>());
+        item->set_ams_info(wxColour("#C2CFE4"), "Ext", 0, std::vector<wxColour>());
         m_ams_list_sizer->Add(item, 0, wxALL, FromDIP(4));
 
         item->Bind(wxEVT_LEFT_UP, [materials](wxMouseEvent& e) {});
@@ -1515,7 +1515,7 @@ void SendMultiMachinePage::sync_ams_list()
             info.brand = brands[extruder];
             info.filament_id = m_filaments_id[extruder];
             //info.color = wxString::Format("#%02X%02X%02X%02X", colour_rgb.Red(), colour_rgb.Green(), colour_rgb.Blue(), colour_rgb.Alpha()).ToStdString();
-            info.color = "#CECECEFF";
+            info.color = "#C2CFE4FF";
             m_filaments.push_back(info);
             m_ams_mapping_result.push_back(info);
         }

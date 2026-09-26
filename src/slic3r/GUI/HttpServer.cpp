@@ -231,11 +231,11 @@ std::shared_ptr<HttpServer::Response> HttpServer::auth_handle_request(const std:
 
         const std::string title = login_ok ? "Authentication complete" : "Authentication failed";
         const std::string message = login_ok
-            ? "You can return to OrcaSlicer. This window will close automatically."
-            : "Something went wrong. Please return to OrcaSlicer and try again.";
+            ? "You can return to Forca Slicer. This window will close automatically." // Forca
+            : "Something went wrong. Please return to Forca Slicer and try again."; // Forca
         const std::string html =
             "<html><head><meta charset=\"utf-8\">"
-            "<style>body{font-family:Arial,sans-serif;background:#f7f7f7;color:#222;margin:32px;}"
+            "<style>body{font-family:Arial,sans-serif;background:#E9EFFA;color:#222;margin:32px;}"
             "a.button{display:inline-block;padding:10px 16px;margin-top:12px;background:#0f8bff;color:#fff;text-decoration:none;border-radius:6px;}"
             "</style></head><body><div class=\"container\">"
             "<h2>" + title + "</h2>"
@@ -412,11 +412,11 @@ void HttpServer::ResponseRedirect::write_response(std::stringstream& ssOut)
     const std::string sHTML =
         "<html><head><meta charset=\"utf-8\">"
         "<meta http-equiv=\"refresh\" content=\"0;url=" + location_str + "\">"
-        "<style>body{font-family:Arial,sans-serif;background:#f7f7f7;color:#222;margin:32px;}"
+        "<style>body{font-family:Arial,sans-serif;background:#E9EFFA;color:#222;margin:32px;}"
         "a.button{display:inline-block;padding:10px 16px;margin-top:12px;background:#0f8bff;color:#fff;text-decoration:none;border-radius:6px;}"
         "</style></head><body><div class=\"container\">"
         "<h2>Authentication complete</h2>"
-        "<p>You can return to OrcaSlicer. If your browser does not redirect automatically, use the button below.</p>"
+        "<p>You can return to Forca Slicer. If your browser does not redirect automatically, use the button below.</p>"
         "<a class=\"button\" href=\"" + location_str + "\">Continue</a>"
         "<script>setTimeout(function(){try{window.close();}catch(e){}},1500);</script>"
         "</div></body></html>";

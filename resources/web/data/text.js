@@ -109,7 +109,7 @@ var LangText = {
     orca1: "Edit Project Info",
     orca2: "No model information",
     orca3: "Stealth Mode",
-    orca4: "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.",
+    orca4: "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option.", // Forca (B9): no Orca Cloud
     orca5: "Enable Stealth Mode.",
     orca6: "Bambu Cloud",
     orca7: "Orca Cloud Account",
@@ -1746,6 +1746,16 @@ var LangText = {
     orca11: "Prisijungta",
   },
 };
+
+// Forca: show the product name as "Forca Slicer" in every language, like forca_brand() in src/slic3r/GUI/I18N.cpp
+// (same rules: Orca Cloud, the Orca calibration models and file/URL names keep "Orca"; text already naming Forca is left alone).
+function ForcaBrand(s) {
+  if (typeof s !== "string" || s.indexOf("Orca") < 0 || s.indexOf("Forca") >= 0) return s;
+  return s.replace(/(^|[^A-Za-z0-9\/._])(OrcaSlicer|Orca Slicer|Orca)(?![A-Za-z0-9\/_])(?!( Cloud| Cube| Badge| Tolerance| String| YOLO| Arena| Preset Bundle| Button))/g,
+    function (m, pre, name) { return pre + (name === "Orca" ? "Forca" : "Forca Slicer"); });
+}
+for (var forcaLang in LangText)
+  for (var forcaKey in LangText[forcaLang]) LangText[forcaLang][forcaKey] = ForcaBrand(LangText[forcaLang][forcaKey]);
 
 var LANG_COOKIE_NAME = "BambuWebLang";
 var LANG_COOKIE_EXPIRESECOND = 365 * 86400;

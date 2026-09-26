@@ -33,7 +33,7 @@ ImageDPIFrame::ImageDPIFrame()
     // ORCA add border
     Bind(wxEVT_PAINT, [this](wxPaintEvent& evt) {
         wxPaintDC dc(this);
-        dc.SetPen(StateColor::darkModeColorFor(wxColour("#DBDBDB")));
+        dc.SetPen(StateColor::darkModeColorFor(wxColour("#CFDBED")));
         dc.SetBrush(*wxTRANSPARENT_BRUSH);
         dc.DrawRoundedRectangle(0, 0, GetSize().x, GetSize().y, 0);
     });
@@ -42,7 +42,7 @@ ImageDPIFrame::ImageDPIFrame()
 
     m_title = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
     m_title->SetFont(Label::Head_14);
-    m_title->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#262E30")));
+    m_title->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#1A2C4C")));
     m_title->SetMaxSize(wxSize(FromDIP(width), -1));
 
     auto image_sizer  = new wxBoxSizer(wxVERTICAL);

@@ -1,5 +1,6 @@
 #include "TroubleshootDialog.hpp"
 #include "I18N.hpp"
+#include "slic3r/Utils/ForcaFeatures.hpp"
 
 #include "BuildCommit.hpp"
 #include "GUI.hpp"
@@ -58,7 +59,7 @@ wxFlexGridSizer* TroubleshootDialog::create_item_loaded_profiles()
 {
     auto create_label = [this](wxString title, wxFont font = Label::Body_14) {
         auto label = new Label(this, font, title);
-        label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         return label;
     };
 
@@ -134,15 +135,15 @@ TroubleshootDialog::TroubleshootDialog()
     m_header_logo     = new wxStaticBitmap(this, wxID_ANY, m_logo.bmp());
     auto logo_line    = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1, FromDIP(2)));
     logo_line->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#009687")));
-    auto version      = new Label(this, wxString(SoftFever_VERSION), wxALIGN_CENTRE_HORIZONTAL);
+    auto version      = new Label(this, wxString(FORCA_VERSION), wxALIGN_CENTRE_HORIZONTAL); // Forca's own version
     wxFont version_font = GetFont();
     version_font = version_font.Scaled(1.65f); // SetPointSize(18) not works on macOS because it uses a 72 PPI reference
     version->SetFont(version_font);
-    version->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+    version->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
 
     auto build = new Button(this, wxString(build_commit_label));
     build->SetStyle(ButtonStyle::Regular, ButtonType::Window);
-    auto hash_url = "https://github.com/OrcaSlicer/OrcaSlicer/commit/" + wxString(build_commit_hash);
+    auto hash_url = wxString(FORCA_REPO_URL) + "/commit/" + wxString(build_commit_hash); // Forca (B4)
     build->SetToolTip(hash_url);
     build->Bind(wxEVT_BUTTON, [hash_url](wxCommandEvent &e) {
          wxLaunchDefaultBrowser(hash_url);
@@ -164,7 +165,7 @@ TroubleshootDialog::TroubleshootDialog()
 
     auto* sys_panel = new CenteredMultiLinePanel(this, sys_info_lines(true));
     sys_panel->SetBackgroundColour(*wxWHITE);
-    sys_panel->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+    sys_panel->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
 
     auto sys_less_btn = new Button(this, _L("Hide"));
     sys_less_btn->SetStyle(ButtonStyle::Regular, ButtonType::Window);
@@ -196,14 +197,14 @@ TroubleshootDialog::TroubleshootDialog()
     auto create_title = [this](wxString title) {
         auto line = new StaticLine(this, false, title);
         line->SetFont(Label::Head_16);
-        line->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        line->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         return line;
     };
 
     auto create_label = [this](wxString title, wxString tooltip, Label** label_out = nullptr) {
         wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
         auto label = new Label(this, title, LB_AUTO_WRAP, wxSize(FromDIP(275),-1)); // 400 - 120 - 5
-        label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        label->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         label->SetToolTip(tooltip);
         sizer->Add(label, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(15));
 
@@ -222,7 +223,7 @@ TroubleshootDialog::TroubleshootDialog()
     // INFORMATION
     auto create_info_line = [this](wxString title) {
         auto info = new Label(this, title);
-        info->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#363636")));
+        info->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#26395A")));
         info->SetMaxSize(wxSize(FromDIP(400),-1));
         info->Wrap(FromDIP(400));
         return info;
@@ -251,12 +252,10 @@ TroubleshootDialog::TroubleshootDialog()
             return out;
         };
 
-        wxString url = "https://github.com/OrcaSlicer/OrcaSlicer/issues/new?template=bug_report.yml";
-        wxString os = GetOStype();
-        if(!os.IsEmpty())
-            url += "&os_type=%22" + os +"%22";
-        url += "&version="     + encodeStr(wxString(SoftFever_VERSION));
-        url += "&os_version="  + encodeStr(GetOSinfo());
+        // Forca (B4): Forca's own issue form, never OrcaSlicer's tracker; pre-fills its "version" and "os" fields.
+        wxString url = wxString(FORCA_REPO_URL) + "/issues/new?template=bug_report.yml";
+        url += "&version=" + encodeStr(wxString(FORCA_VERSION));
+        url += "&os="      + encodeStr(GetOStype() + " " + GetOSinfo());
         wxLaunchDefaultBrowser(url);
     });
 
@@ -299,7 +298,7 @@ TroubleshootDialog::TroubleshootDialog()
     auto log_pack_btn = create_btn(_L("Pack") + "...", "");
     log_pack_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent &e) {
         auto data_dir   = boost::filesystem::path(Slic3r::data_dir());
-        ExportAsZip({wxString((data_dir / "log").string())}, "OrcaSlicer_Logs_" + GetTimestamp());
+        ExportAsZip({wxString((data_dir / "log").string())}, "ForcaSlicer_Logs_" + GetTimestamp() /* Forca */);
     });
     log_pack_szr->Add(log_pack_btn, 0, wxALIGN_CENTER_VERTICAL);
 
@@ -373,7 +372,7 @@ wxString TroubleshootDialog::GetTimestamp()
 wxString TroubleshootDialog::GetSysInfoAll()
 {
     wxString info;
-    info += "Version   :  " + wxString(SoftFever_VERSION) + "\n"
+    info += "Version   :  Forca Slicer " + wxString(FORCA_VERSION) + " (OrcaSlicer base " + wxString(SoftFever_VERSION) + ")\n"
           + "Build     :  " + wxString(build_commit_label) + "\n"
           + "Package   :  " + GetPackageType() + "\n"
           + "Platform  :  " + GetOSinfo()      + "\n"
@@ -949,7 +948,7 @@ void TroubleshootDialog::PackAll()
         ).ShowModal();
     }
 
-    ExportAsZip(include_zip, "OrcaSlicer_PackedDebugInfo_" + GetTimestamp());
+    ExportAsZip(include_zip, "ForcaSlicer_PackedDebugInfo_" + GetTimestamp() /* Forca */);
 }
 
 void TroubleshootDialog::RebuildSystemProfiles()

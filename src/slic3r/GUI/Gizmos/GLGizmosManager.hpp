@@ -90,6 +90,8 @@ public:
         Assembly,
         Simplify,
         BrimEars,
+        // [regional-supports fork] always registered, so it sits before the optional CAD gizmos (which must stay last)
+        SupportInterfaceRegions,
 #ifdef SLIC3R_CAD
         // Both need the CAD kernel (GeometryEngine); keep them last so that with
         // SLIC3R_CAD off the enum matches upstream's numbering exactly.

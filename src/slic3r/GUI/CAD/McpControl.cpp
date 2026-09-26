@@ -113,7 +113,7 @@ json describe_tools()
     // Hand-written descriptor. The bridge turns this into MCP tool schemas; later
     // slices grow this list (ideally from the kernel directly).
     return json{
-        {"app", "Orca CAD"},
+        {"app", "Forca CAD"}, // Forca
         {"protocol", "jsonrpc-2.0"},
         {"slice", 5},
         // Read this before using any face or edge id.

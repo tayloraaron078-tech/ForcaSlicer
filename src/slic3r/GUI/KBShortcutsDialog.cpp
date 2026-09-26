@@ -105,7 +105,7 @@ KBShortcutsDialog::KBShortcutsDialog(wxWindow* parent, ShortcutContext page)
         m_tabs->AppendItem(page.title);
         m_simplebook->AddPage(create_page(m_simplebook, page), page.title);
     }
-    const StateColor tab_colour(std::make_pair(wxColour("#6B6B6C"), (int) StateColor::NotChecked), std::make_pair(wxColour("#363636"), (int) StateColor::Normal));
+    const StateColor tab_colour(std::make_pair(wxColour("#6B6B6C"), (int) StateColor::NotChecked), std::make_pair(wxColour("#26395A"), (int) StateColor::Normal));
     for (size_t i = 0; i < m_tabs->GetCount(); ++i)
         m_tabs->SetItemTextColour(i, tab_colour);
     m_tabs->Bind(wxEVT_TAB_SEL_CHANGED, [this](wxCommandEvent& e) {
@@ -221,7 +221,7 @@ wxPanel* KBShortcutsDialog::create_page(wxWindow* parent, const Page& page)
 
     wxBoxSizer* scrollable_panel_sizer = new wxBoxSizer(wxVERTICAL);
 
-    const wxColour note_colour = StateColor::darkModeColorFor(wxColour("#F8F8F8"));
+    const wxColour note_colour = StateColor::darkModeColorFor(wxColour("#E3EBF8"));
     const wxColour note_text   = StateColor::darkModeColorFor(wxColour("#6B6B6A"));
     StaticBox* note = new StaticBox(scrollable_panel);
     note->SetCornerRadius(FromDIP(4));

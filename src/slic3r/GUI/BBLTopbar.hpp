@@ -42,6 +42,8 @@ public:
     void OnFileToolItem(wxAuiToolBarEvent& evt);
     void OnDropdownToolItem(wxAuiToolBarEvent& evt);
     void OnCalibToolItem(wxAuiToolBarEvent &evt);
+    void OnForcaAIToolItem(wxAuiToolBarEvent &evt); // Forca: opens the Forca AI window
+    void UpdateForcaAIItem();                       // Forca: label/icon follow the AI state
     void OnMouseLeftDClock(wxMouseEvent& mouse);
     void OnMouseLeftDown(wxMouseEvent& event);
     void OnMouseLeftUp(wxMouseEvent& event);
@@ -98,6 +100,7 @@ private:
     wxAuiToolBarItem* m_undo_item;
     wxAuiToolBarItem* m_redo_item;
     wxAuiToolBarItem* m_calib_item;
+    wxAuiToolBarItem* m_forca_ai_item { nullptr }; // Forca AI button (state in its label)
     wxAuiToolBarItem* maximize_btn;
 
     wxBitmap m_publish_bitmap;

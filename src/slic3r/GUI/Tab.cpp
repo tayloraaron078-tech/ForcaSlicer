@@ -159,7 +159,9 @@ Tab::Tab(ParamsPanel* parent, const wxString& title, Preset::Type type) :
     this->SetFont(Slic3r::GUI::wxGetApp().normal_font());
 
     wxGetApp().UpdateDarkUI(this);
-    SetBackgroundColour(*wxWHITE);
+    // [regional-supports fork] Forca blue-tinted settings panel (was plain white) — light-blue in light mode,
+    // navy in dark mode, so the big settings panel isn't a grey/white slab.
+    SetBackgroundColour(wxGetApp().dark_mode() ? wxColour("#1A2C4C") : wxColour("#EAF1FB"));
 
     m_compatible_printers.type			= Preset::TYPE_PRINTER;
     m_compatible_printers.key_list		= "compatible_printers";
@@ -271,7 +273,7 @@ void Tab::create_preset_tab()
 
     m_top_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     // BBS: open this tab by select first
-    m_top_panel->SetBackgroundColour(*wxWHITE);
+    m_top_panel->SetBackgroundColour(wxGetApp().dark_mode() ? wxColour("#1A2C4C") : wxColour("#EAF1FB")); // [regional-supports fork] blue-tinted panel
     m_top_panel->Bind(wxEVT_LEFT_UP, [this](auto & e) {
         restore_last_select_item();
     });
@@ -7768,7 +7770,7 @@ wxSizer* Tab::compatible_widget_create(wxWindow* parent, PresetDependencies &dep
 
     deps.checkbox_title = new wxStaticText(parent, wxID_ANY, _L("All"));
     deps.checkbox_title->SetFont(Label::Body_14);
-    deps.checkbox_title->SetForegroundColour(wxColour("#363636"));
+    deps.checkbox_title->SetForegroundColour(wxColour("#26395A"));
     wxGetApp().UpdateDarkUI(deps.checkbox_title, false, true);
 
     // ORCA modernize button style

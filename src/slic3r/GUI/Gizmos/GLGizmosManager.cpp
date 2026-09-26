@@ -16,6 +16,7 @@
 #include "slic3r/GUI/Gizmos/GLGizmoFlatten.hpp"
 //#include "slic3r/GUI/Gizmos/GLGizmoSlaSupports.hpp"
 #include "slic3r/GUI/Gizmos/GLGizmoFdmSupports.hpp"
+#include "slic3r/GUI/Gizmos/GLGizmoSupportInterfaceRegions.hpp"
 #include "slic3r/GUI/Gizmos/GLGizmoFuzzySkin.hpp"
 #include "slic3r/GUI/Gizmos/GLGizmoBrimEars.hpp"
 #include "slic3r/GUI/Gizmos/GLGizmoCut.hpp"
@@ -234,6 +235,8 @@ bool GLGizmosManager::init()
     m_gizmos.emplace_back(new GLGizmoAssembly(m_parent, m_is_dark ? "toolbar_assembly_dark.svg" : "toolbar_assembly.svg", EType::Assembly));
     m_gizmos.emplace_back(new GLGizmoSimplify(m_parent, "reduce_triangles.svg", EType::Simplify));
     m_gizmos.emplace_back(new GLGizmoBrimEars(m_parent, m_is_dark ? "toolbar_brimears_dark.svg" : "toolbar_brimears.svg", EType::BrimEars));
+    // [regional-supports fork] always registered, before the optional CAD gizmos below; reuses the support-paint icon for B2a.
+    m_gizmos.emplace_back(new GLGizmoSupportInterfaceRegions(m_parent, m_is_dark ? "toolbar_support_dark.svg" : "toolbar_support.svg", EType::SupportInterfaceRegions));
 #ifdef SLIC3R_CAD
     // Registered last: Primitive and Sketch are the final entries before Undefined, so
     // omitting them leaves every preceding m_gizmos index (indexed by EType) untouched.
@@ -554,6 +557,8 @@ bool GLGizmosManager::gizmo_event(SLAGizmoEventType action, const Vec2d& mouse_p
         return dynamic_cast<GLGizmoMeshBoolean*>(m_gizmos[MeshBoolean].get())->gizmo_event(action, mouse_position, shift_down, alt_down, control_down);
     else if (m_current == BrimEars)
         return dynamic_cast<GLGizmoBrimEars*>(m_gizmos[BrimEars].get())->gizmo_event(action, mouse_position, shift_down, alt_down, control_down);
+    else if (m_current == SupportInterfaceRegions)
+        return dynamic_cast<GLGizmoSupportInterfaceRegions*>(m_gizmos[SupportInterfaceRegions].get())->gizmo_event(action, mouse_position, shift_down, alt_down, control_down);
     else
         return false;
 }

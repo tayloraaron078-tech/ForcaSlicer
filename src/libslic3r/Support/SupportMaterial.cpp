@@ -441,7 +441,26 @@ void PrintObjectSupportMaterial::generate(PrintObject &object)
     SupportGeneratorLayersPtr intermediate_layers = this->raft_and_intermediate_support_layers(
         object, bottom_contacts, top_contacts, layer_storage);
 
-    this->trim_support_layers_by_object(object, top_contacts, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    // [regional-supports fork, P2] The object-global top gap trims every top contact by the same
+    // clearance, which clips a region contact whose gap is SMALLER than the object's (e.g. a zero-gap
+    // dissimilar-material region) back to the object gap. Split the trim by the regional tag: stock
+    // layers keep the object gap; region layers use min(object gap, region gap) for the top clearance,
+    // so a smaller region gap survives while a larger one (or no modifier) is byte-identical to before.
+    {
+        const double regional_gap = object.support_interface_modifier_gap();
+        SupportGeneratorLayersPtr regional_tc, normal_tc;
+        if (regional_gap >= 0.)
+            for (SupportGeneratorLayer *l : top_contacts)
+                (l->regional ? regional_tc : normal_tc).push_back(l);
+        if (regional_gap < 0. || regional_tc.empty()) {
+            // No regional top contacts -> original single trim (byte-identical when unused).
+            this->trim_support_layers_by_object(object, top_contacts, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+        } else {
+            this->trim_support_layers_by_object(object, normal_tc, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+            const double region_top_gap = std::min(m_slicing_params.gap_support_object, std::max(regional_gap, 0.));
+            this->trim_support_layers_by_object(object, regional_tc, region_top_gap, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+        }
+    }
 
 #ifdef SLIC3R_DEBUG
     for (const SupportGeneratorLayer *layer : top_contacts)
@@ -2313,6 +2332,32 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
     if (object.print()->canceled())
         return SupportGeneratorLayersPtr();
 
+    // [regional-supports fork, P2 slice 3] Regional top-Z gap: the support interface under a
+    // SUPPORT_INTERFACE_MODIFIER footprint is placed at the region's own gap, while the rest of
+    // the object keeps its global gap. This block runs for EVERY print, so the gate below is the
+    // inertness guarantee: when the gap is unset (< 0) or the footprint is empty, regional_active
+    // stays false, the rest_* pointers alias the originals (no extra polygon ops or copies), and
+    // the emitted contact layers are byte-identical to stock. The region contact also carries the
+    // region's interface material for free: its interface toolpaths land inside the same footprint
+    // that GCode.cpp already swaps to the override filament (P1), so gap and material move together.
+    const double     regional_gap           = object.support_interface_modifier_gap();
+    const ExPolygons regional_footprint      = regional_gap < 0. ? ExPolygons() : object.support_interface_modifier_footprint();
+    const bool       regional_active         = regional_gap >= 0. && ! regional_footprint.empty();
+    const Polygons   regional_footprint_poly = regional_active ? to_polygons(regional_footprint) : Polygons();
+    // A copy with only the gap overridden. A region gap of ~0 must go through Orca's proper zero-gap
+    // sync path (else the contact lands at layer.bottom_z() outside that path and trim_support_layers_by_object
+    // snaps it back to the object gap -- observed: gap 0 rendered as the object's gap). We set
+    // zero_gap_interface_top on THIS LOCAL COPY only, so the object's global flag -- and its bottom/raft
+    // coupling (CODEMAP landmine) -- stay untouched. Setting it explicitly both ways also lets a >0 region
+    // gap work even when the object itself is zero-gap.
+    SlicingParameters region_slicing_params  = m_slicing_params;
+    if (regional_active) {
+        region_slicing_params.gap_support_object     = std::max(regional_gap, 0.);
+        region_slicing_params.zero_gap_interface_top = (regional_gap <= EPSILON);
+    }
+    // Region contact layers, appended to contact_out after the loop (empty when inactive).
+    SupportGeneratorLayersPtr regional_contact_out;
+
     for (size_t layer_id = layer_id_start; layer_id < num_layers; layer_id++) {
         const Layer& layer = *object.layers()[layer_id];
         Polygons            overhang_polygons = to_polygons(overhangs_per_layers[layer_id]);
@@ -2328,32 +2373,91 @@ SupportGeneratorLayersPtr PrintObjectSupportMaterial::top_contact_layers(
 
         // Now apply the contact areas to the layer where they need to be made.
         if (!contact_polygons.empty() || !overhang_polygons.empty()) {
-            // Allocate the two empty layers.
-            auto [new_layer, bridging_layer] = new_contact_layer(*m_print_config, *m_object_config, m_slicing_params, m_support_params.support_layer_height_min, layer, layer_storage);
-            if (new_layer) {
-                // Fill the non-bridging layer with polygons.
-                fill_contact_layer(*new_layer, layer_id, m_slicing_params,
-                    *m_object_config, slices_margin, overhang_polygons, contact_polygons, enforcer_polygons, lower_layer_polygons,
-                    m_support_params.support_material_flow, no_interface_offset
+            // [regional-supports fork] Split this layer's contact/overhang/enforcer polygons by the
+            // modifier footprint. When inactive (or the footprint misses this layer), the rest_*
+            // pointers keep aliasing the originals, so the object path below is untouched.
+            const Polygons *rest_contact  = &contact_polygons;
+            const Polygons *rest_overhang = &overhang_polygons;
+            const Polygons *rest_enforcer = &enforcer_polygons;
+            Polygons rest_contact_s, rest_overhang_s, rest_enforcer_s;
+            Polygons region_contact, region_overhang, region_enforcer;
+            bool emit_region = false;
+            if (regional_active) {
+                region_contact = intersection(contact_polygons, regional_footprint_poly);
+                if (! region_contact.empty()) {
+                    emit_region     = true;
+                    rest_contact_s  = diff(contact_polygons,  regional_footprint_poly);
+                    rest_overhang_s = diff(overhang_polygons, regional_footprint_poly);
+                    rest_enforcer_s = diff(enforcer_polygons, regional_footprint_poly);
+                    region_overhang = intersection(overhang_polygons, regional_footprint_poly);
+                    region_enforcer = intersection(enforcer_polygons, regional_footprint_poly);
+                    rest_contact  = &rest_contact_s;
+                    rest_overhang = &rest_overhang_s;
+                    rest_enforcer = &rest_enforcer_s;
+                }
+            }
+
+            // Object path, at the object's global gap (the original path when inactive).
+            if (! rest_contact->empty() || ! rest_overhang->empty()) {
+                // Allocate the two empty layers.
+                auto [new_layer, bridging_layer] = new_contact_layer(*m_print_config, *m_object_config, m_slicing_params, m_support_params.support_layer_height_min, layer, layer_storage);
+                if (new_layer) {
+                    // Fill the non-bridging layer with polygons.
+                    fill_contact_layer(*new_layer, layer_id, m_slicing_params,
+                        *m_object_config, slices_margin, *rest_overhang, *rest_contact, *rest_enforcer, lower_layer_polygons,
+                        m_support_params.support_material_flow, no_interface_offset
 #ifdef SLIC3R_DEBUG
-                    , iRun, layer
+                        , iRun, layer
 #endif // SLIC3R_DEBUG
-                );
-                // Insert new layer even if there is no interface generated: Likely the support angle is not steep enough to require dense interface,
-                // however generating a sparse support will be useful for the object stability.
-                // if (! new_layer->polygons.empty())
-                contact_out[layer_id * 2] = new_layer;
-                if (bridging_layer != nullptr) {
-                    bridging_layer->polygons = new_layer->polygons;
-                    bridging_layer->contact_polygons = std::make_unique<Polygons>(*new_layer->contact_polygons);
-                    bridging_layer->overhang_polygons = std::make_unique<Polygons>(*new_layer->overhang_polygons);
-                    if (new_layer->enforcer_polygons)
-                        bridging_layer->enforcer_polygons = std::make_unique<Polygons>(*new_layer->enforcer_polygons);
-                    contact_out[layer_id * 2 + 1] = bridging_layer;
+                    );
+                    // Insert new layer even if there is no interface generated: Likely the support angle is not steep enough to require dense interface,
+                    // however generating a sparse support will be useful for the object stability.
+                    // if (! new_layer->polygons.empty())
+                    contact_out[layer_id * 2] = new_layer;
+                    if (bridging_layer != nullptr) {
+                        bridging_layer->polygons = new_layer->polygons;
+                        bridging_layer->contact_polygons = std::make_unique<Polygons>(*new_layer->contact_polygons);
+                        bridging_layer->overhang_polygons = std::make_unique<Polygons>(*new_layer->overhang_polygons);
+                        if (new_layer->enforcer_polygons)
+                            bridging_layer->enforcer_polygons = std::make_unique<Polygons>(*new_layer->enforcer_polygons);
+                        contact_out[layer_id * 2 + 1] = bridging_layer;
+                    }
+                }
+            }
+
+            // [regional-supports fork] Region path, at the region's own gap. Mirrors the object path
+            // but uses region_slicing_params and stores into the side vector appended after the loop.
+            if (emit_region) {
+                auto [region_layer, region_bridging] = new_contact_layer(*m_print_config, *m_object_config, region_slicing_params, m_support_params.support_layer_height_min, layer, layer_storage);
+                if (region_layer) {
+                    fill_contact_layer(*region_layer, layer_id, region_slicing_params,
+                        *m_object_config, slices_margin, region_overhang, region_contact, region_enforcer, lower_layer_polygons,
+                        m_support_params.support_material_flow, no_interface_offset
+#ifdef SLIC3R_DEBUG
+                        , iRun, layer
+#endif // SLIC3R_DEBUG
+                    );
+                    region_layer->regional = true;
+                    regional_contact_out.emplace_back(region_layer);
+                    if (region_bridging != nullptr) {
+                        region_bridging->regional = true;
+                        region_bridging->polygons = region_layer->polygons;
+                        region_bridging->contact_polygons = std::make_unique<Polygons>(*region_layer->contact_polygons);
+                        region_bridging->overhang_polygons = std::make_unique<Polygons>(*region_layer->overhang_polygons);
+                        if (region_layer->enforcer_polygons)
+                            region_bridging->enforcer_polygons = std::make_unique<Polygons>(*region_layer->enforcer_polygons);
+                        regional_contact_out.emplace_back(region_bridging);
+                    }
                 }
             }
         }
     }
+
+    // [regional-supports fork] Fold the region contact layers into the output. They are ordinary
+    // TopContact layers at the region's gap; remove_nulls/merge_contact_layers/sort downstream treat
+    // them exactly like the per-layer bridging layers (which also share a layer_id at a different z).
+    if (! regional_contact_out.empty())
+        contact_out.insert(contact_out.end(), regional_contact_out.begin(), regional_contact_out.end());
 
     // Compress contact_out, remove the nullptr items.
     remove_nulls(contact_out);
@@ -3099,7 +3203,19 @@ void PrintObjectSupportMaterial::generate_base_layers(
     ++ iRun;
 #endif /* SLIC3R_DEBUG */
 
-    this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
+    // [regional-supports fork, P2] When a modifier region uses a smaller Top-Z gap than the object,
+    // trim its support base with the region gap so the base reaches up under the region contact (no
+    // missing interface layer). Footprint sliced once here; empty/unset or region gap >= object gap =>
+    // the region-aware branch is skipped inside trim, so this is inert for every other print.
+    const double regional_gap = object.support_interface_modifier_gap();
+    Polygons     regional_footprint_poly;
+    if (regional_gap >= 0. && regional_gap < m_slicing_params.gap_support_object)
+        regional_footprint_poly = to_polygons(object.support_interface_modifier_footprint());
+    if (! regional_footprint_poly.empty())
+        this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy,
+                                            &regional_footprint_poly, std::max(regional_gap, 0.));
+    else
+        this->trim_support_layers_by_object(object, intermediate_layers, m_slicing_params.gap_support_object, m_slicing_params.gap_object_support, m_support_params.gap_xy);
 }
 
 void PrintObjectSupportMaterial::trim_support_layers_by_object(
@@ -3107,9 +3223,15 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
     SupportGeneratorLayersPtr         &support_layers,
     const coordf_t       gap_extra_above,
     const coordf_t       gap_extra_below,
-    const coordf_t       gap_xy) const
+    const coordf_t       gap_xy,
+    const Polygons      *region_footprint,
+    const coordf_t       region_gap_extra_above) const
 {
     const float gap_xy_scaled = float(scale_(gap_xy));
+    // [regional-supports fork, P2] Region-aware trimming is active only when a footprint is supplied
+    // and its gap is actually smaller than the object's (otherwise it would change nothing).
+    const bool region_aware = region_footprint != nullptr && ! region_footprint->empty() &&
+                              region_gap_extra_above < gap_extra_above - EPSILON;
 
     // Collect non-empty layers to be processed in parallel.
     // This is a good idea as pulling a thread from a thread pool for an empty task is expensive.
@@ -3126,7 +3248,7 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::trim_support_layers_by_object() in parallel - start";
     tbb::parallel_for(
         tbb::blocked_range<size_t>(0, nonempty_layers.size()),
-        [this, &object, &nonempty_layers, gap_extra_above, gap_extra_below, gap_xy_scaled](const tbb::blocked_range<size_t>& range) {
+        [this, &object, &nonempty_layers, gap_extra_above, gap_extra_below, gap_xy_scaled, region_aware, region_footprint, region_gap_extra_above](const tbb::blocked_range<size_t>& range) {
             size_t idx_object_layer_overlapping = size_t(-1);
 
             auto is_layers_overlap = [](const SupportGeneratorLayer& support_layer, const Layer& object_layer, coordf_t bridging_height = 0.f) -> bool {
@@ -3153,6 +3275,10 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
                     [z_threshold](const Layer *layer){ return layer->print_z >= z_threshold; });
                 // Collect all the object layers intersecting with this layer.
                 Polygons polygons_trimming;
+                // [regional-supports fork, P2] Trimming set for the region footprint: the SAME object
+                // slices, but only those within region_gap_extra_above (a smaller reach than the object
+                // gap), so the region support base survives closer to the object.
+                Polygons polygons_trimming_region;
                 size_t i = idx_object_layer_overlapping;
                 for (; i < object.layers().size(); ++ i) {
                     const Layer &object_layer = *object.layers()[i];
@@ -3160,13 +3286,18 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
                         break;
 
                     bool is_overlap = is_layers_overlap(support_layer, object_layer);
+                    const bool within_region = region_aware &&
+                        object_layer.bottom_z() <= support_layer.print_z + region_gap_extra_above - EPSILON;
                     for (const ExPolygon& expoly : object_layer.lslices) {
                         // BBS
                         bool is_sharptail = !intersection_ex({ expoly }, object_layer.sharp_tails).empty();
                         coordf_t trimming_offset = is_sharptail ? scale_(sharp_tail_xy_gap) :
                                                    is_overlap ? gap_xy_scaled :
                                                    scale_(no_overlap_xy_gap);
-                        polygons_append(polygons_trimming, offset({ expoly }, trimming_offset, SUPPORT_SURFACES_OFFSET_PARAMETERS));
+                        Polygons off = offset({ expoly }, trimming_offset, SUPPORT_SURFACES_OFFSET_PARAMETERS);
+                        if (within_region)
+                            polygons_append(polygons_trimming_region, off);
+                        polygons_append(polygons_trimming, std::move(off));
                     }
                 }
                 if (!m_slicing_params.zero_gap_interface_top && m_object_config->thick_bridges) {
@@ -3197,7 +3328,18 @@ void PrintObjectSupportMaterial::trim_support_layers_by_object(
                 // perimeter's width. $support contains the full shape of support
                 // material, thus including the width of its foremost extrusion.
                 // We leave a gap equal to a full extrusion width.
-                support_layer.polygons = diff(support_layer.polygons, polygons_trimming);
+                if (region_aware) {
+                    // [regional-supports fork, P2] Inside the modifier footprint trim with the region's
+                    // (smaller) gap so its support base reaches closer to the object; outside, keep the
+                    // object gap. Union the two so a partial modifier gets both behaviors on one layer.
+                    Polygons region_part = intersection(support_layer.polygons, *region_footprint);
+                    Polygons rest_part   = diff(support_layer.polygons, *region_footprint);
+                    region_part = diff(region_part, polygons_trimming_region);
+                    rest_part   = diff(rest_part,   polygons_trimming);
+                    support_layer.polygons = union_(region_part, rest_part);
+                } else {
+                    support_layer.polygons = diff(support_layer.polygons, polygons_trimming);
+                }
             }
         });
     BOOST_LOG_TRIVIAL(debug) << "PrintObjectSupportMaterial::trim_support_layers_by_object() in parallel - end";

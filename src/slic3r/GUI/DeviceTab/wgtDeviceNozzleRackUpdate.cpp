@@ -88,7 +88,7 @@ void wgtDeviceNozzleRackUprade::CreateGui()
 
     // "Nozzles"
     m_extruder_nozzle_item = new wgtDeviceNozzleRackHotendUpdate(this, "R");
-    m_extruder_nozzle_item->UpdateColourStyle(wxColour("#F8F8F8"));
+    m_extruder_nozzle_item->UpdateColourStyle(wxColour("#E3EBF8"));
     m_extruder_nozzle_item->SetExtruderNozzleId(MAIN_EXTRUDER_ID);
 
     main_sizer->Add(m_extruder_nozzle_item, 0, wxEXPAND | wxALL, FromDIP(12));

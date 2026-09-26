@@ -25,6 +25,7 @@
 #include "ParamsPanel.hpp"
 #include "MsgDialog.hpp"
 #include "wx/utils.h"
+#include <wx/textdlg.h>   // [regional-supports fork] wxTextEntryDialog for the Support Z Gap input
 
 namespace Slic3r
 {
@@ -336,13 +337,16 @@ wxBitmap SettingsFactory::get_category_bitmap(const std::string& category_name, 
 //-------------------------------------
 
 // Note: id accords to type of the sub-object (adding volume), so sequence of the menu items is important
-static const constexpr std::array<std::pair<const char *, const char *>, 5> ADD_VOLUME_MENU_ITEMS = {{
+static const constexpr std::array<std::pair<const char *, const char *>, 6> ADD_VOLUME_MENU_ITEMS = {{
     //       menu_item Name              menu_item bitmap name
         {L("Add Part"),              "menu_add_part" },           // ~ModelVolumeType::MODEL_PART
         {L("Add Negative Part"),     "menu_add_negative" },       // ~ModelVolumeType::NEGATIVE_VOLUME
         {L("Add Modifier"),          "menu_add_modifier"},         // ~ModelVolumeType::PARAMETER_MODIFIER
         {L("Add Support Blocker"),   "menu_support_blocker"},     // ~ModelVolumeType::SUPPORT_BLOCKER
         {L("Add Support Enforcer"),  "menu_support_enforcer"},     // ~ModelVolumeType::SUPPORT_ENFORCER
+        // [regional-supports fork] Index MUST stay aligned with the enum int value
+        // (int(SUPPORT_INTERFACE_MODIFIER) == 5): this array is indexed by ModelVolumeType.
+        {L("Add Support Interface Modifier"), "menu_support_interface_modifier"}, // ~ModelVolumeType::SUPPORT_INTERFACE_MODIFIER
 }};
 
 // Note: id accords to type of the sub-object (adding volume), so sequence of the menu items is important
@@ -847,7 +851,9 @@ wxMenuItem* MenuFactory::append_menu_item_change_type(wxMenu* menu)
         { ModelVolumeType::NEGATIVE_VOLUME,    _L("Negative Part") },
         { ModelVolumeType::PARAMETER_MODIFIER, _L("Modifier") },
         { ModelVolumeType::SUPPORT_BLOCKER,    _L("Support Blocker") },
-        { ModelVolumeType::SUPPORT_ENFORCER,   _L("Support Enforcer") }
+        { ModelVolumeType::SUPPORT_ENFORCER,   _L("Support Enforcer") },
+        // [regional-supports fork]
+        { ModelVolumeType::SUPPORT_INTERFACE_MODIFIER, _L("Support Interface Modifier") }
     };
 
     for (const auto& info : types) {
@@ -880,8 +886,8 @@ wxMenuItem* MenuFactory::append_menu_item_change_type(wxMenu* menu)
 
                     auto vol = (*objs)[obj_idx]->volumes[vol_idx];
 
-                    // disable Support Enforcer/Blocker if selection contains svg or text
-                    if (vol != nullptr && (vol->is_svg() || vol->is_text()) && (type == ModelVolumeType::SUPPORT_BLOCKER || type == ModelVolumeType::SUPPORT_ENFORCER)){
+                    // disable Support Enforcer/Blocker/Interface-Modifier if selection contains svg or text
+                    if (vol != nullptr && (vol->is_svg() || vol->is_text()) && (type == ModelVolumeType::SUPPORT_BLOCKER || type == ModelVolumeType::SUPPORT_ENFORCER || type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)){
                         evt.Enable(false);
                         break;
                     }
@@ -1875,6 +1881,9 @@ wxMenu* MenuFactory::part_menu()
 {
     append_menu_items_convert_unit(&m_part_menu);
     append_menu_item_change_filament(&m_part_menu);
+    // [regional-supports fork] self-gate to a single SUPPORT_INTERFACE_MODIFIER volume
+    append_menu_item_support_interface_filament(&m_part_menu);
+    append_menu_item_support_z_gap(&m_part_menu);
     append_menu_item_per_object_settings(&m_part_menu);
     return &m_part_menu;
 }
@@ -2284,6 +2293,100 @@ void MenuFactory::append_menu_item_change_filament(wxMenu* menu)
             [is_active_extruder]() { return !is_active_extruder; }, m_parent);
     }
     menu->Append(wxID_ANY, name, extruder_selection_menu, _L("Change Filament"));
+}
+
+// [regional-supports fork] Dedicated control for the P1 material feature: a filament chooser shown
+// ONLY for a single SUPPORT_INTERFACE_MODIFIER volume. It writes the choice to the volume config key
+// support_interface_filament (0 = Default). Modeled on append_menu_item_change_filament, but it is a
+// separate control (does not reuse the volume's extruder) so the semantics stay explicit.
+void MenuFactory::append_menu_item_support_interface_filament(wxMenu* menu)
+{
+    const wxString name = _L("Support Interface Filament");
+    const int old_id = menu->FindItem(name);
+    if (old_id != wxNOT_FOUND)
+        menu->Destroy(old_id);
+
+    // Self-gate: only for a single selected interface-modifier volume.
+    wxDataViewItemArray sels;
+    obj_list()->GetSelections(sels);
+    if (sels.Count() != 1)
+        return;
+    const auto sel_vol = obj_list()->get_selected_model_volume();
+    if (!sel_vol || sel_vol->type() != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+        return;
+
+    int filaments_cnt = filaments_count();
+    if (filaments_cnt <= 1)
+        return; // nothing to swap to on a single-filament setup
+
+    std::vector<wxBitmap*> icons = get_extruder_color_icons(true);
+    if (icons.size() < size_t(filaments_cnt)) {
+        if (icons.size() <= 1)
+            return;
+        filaments_cnt = icons.size();
+    }
+
+    // Current stored value (0 = Default).
+    const ModelConfig& config = obj_list()->get_item_config(sels[0]);
+    const int current = config.has("support_interface_filament") ? config.opt_int("support_interface_filament") : 0;
+
+    wxMenu* filament_menu = new wxMenu();
+    for (int i = 0; i <= filaments_cnt; i++) {
+        wxString item_name = _L("Default");
+        if (i > 0) {
+            auto preset = wxGetApp().preset_bundle->filaments.find_preset(wxGetApp().preset_bundle->filament_presets[i - 1]);
+            item_name = (preset == nullptr) ? wxString::Format(_L("Filament %d"), i) : from_u8(preset->label(false));
+        }
+        const bool is_current = (i == current);
+        if (is_current)
+            item_name << " (" + _L("current") + ")";
+
+        append_menu_item(filament_menu, wxID_ANY, item_name, "",
+            [i](wxCommandEvent&) { obj_list()->set_support_interface_filament_for_selected_items(i); },
+            i == 0 ? wxNullBitmap : *icons[i - 1], menu,
+            [is_current]() { return !is_current; }, m_parent);
+    }
+    menu->Append(wxID_ANY, name, filament_menu, _L("Filament used for the support interface in this volume's region"));
+}
+
+// [regional-supports fork] P2 slice 1: numeric control for the region's support Z gap (top and bottom),
+// shown only for a single SUPPORT_INTERFACE_MODIFIER volume. Value is printer-specific (e.g. 0 for a
+// dissimilar interface material, ~0.27 for same material on the H2S), so it's a free-form mm entry.
+void MenuFactory::append_menu_item_support_z_gap(wxMenu* menu)
+{
+    const wxString name = _L("Support Z Gap...");
+    const int old_id = menu->FindItem(name);
+    if (old_id != wxNOT_FOUND)
+        menu->Destroy(old_id);
+
+    wxDataViewItemArray sels;
+    obj_list()->GetSelections(sels);
+    if (sels.Count() != 1)
+        return;
+    const auto sel_vol = obj_list()->get_selected_model_volume();
+    if (!sel_vol || sel_vol->type() != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+        return;
+
+    append_menu_item(menu, wxID_ANY, name, _L("Set the support interface Z gap (top and bottom) for this region"),
+        [](wxCommandEvent&) {
+            const auto vol = obj_list()->get_selected_model_volume();
+            if (!vol)
+                return;
+            const double current = vol->config.has("support_top_z_distance") ? vol->config.opt_float("support_top_z_distance") : 0.0;
+            wxWindow* parent = wxGetApp().plater();
+            wxTextEntryDialog dlg(parent, _L("Support interface Z gap (mm), applied to top and bottom:"),
+                                  _L("Support Z Gap"), wxString::Format("%.3f", current));
+            if (dlg.ShowModal() != wxID_OK)
+                return;
+            double val = 0.0;
+            wxString str = dlg.GetValue();
+            str.Replace(",", ".");   // accept comma decimal separator
+            if (!str.ToDouble(&val) || val < 0) {
+                MessageDialog(parent, _L("Please enter a non-negative number (mm)."), _L("Support Z Gap"), wxOK | wxICON_WARNING).ShowModal();
+                return;
+            }
+            obj_list()->set_support_z_gap_for_selected_items(val);
+        }, "", menu, []() { return true; }, m_parent);
 }
 
 void MenuFactory::append_menu_item_set_printable(wxMenu* menu)

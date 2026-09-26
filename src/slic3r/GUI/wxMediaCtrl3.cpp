@@ -99,6 +99,20 @@ int wxMediaCtrl3::GetLastError()
     return m_error;
 }
 
+bool wxMediaCtrl3::ForcaCurrentFrame(wxImage &out, std::string const &dev_id)
+{
+    std::unique_lock<std::mutex> lk(m_mutex);
+    if (m_state != wxMEDIASTATE_PLAYING || !m_url || !m_frame.IsOk() || m_video_size == wxDefaultSize ||
+        !m_url->BuildURI().Contains(wxString::FromUTF8(("device=" + dev_id).c_str())))
+        return false;
+#ifdef _WIN32
+    out = m_frame.ConvertToImage();
+#else
+    out = m_frame.Copy();
+#endif
+    return out.IsOk();
+}
+
 wxSize wxMediaCtrl3::GetVideoSize()
 {
     std::unique_lock<std::mutex> lk(m_mutex);

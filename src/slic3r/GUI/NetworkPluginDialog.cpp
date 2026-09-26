@@ -87,7 +87,7 @@ void NetworkPluginDownloadDialog::create_missing_plugin_ui()
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxNO_BORDER);
 
             details_text->SetFont(wxGetApp().code_font());
-            details_text->SetBackgroundColour(wxColour("#F1F1F1"));
+            details_text->SetBackgroundColour(wxColour("#DAE5F5"));
             details_text->SetMaxSize(wxSize(TEXT_WRAP, -1));
             main_sizer->Add(details_text, 0, wxLEFT | wxRIGHT | wxEXPAND, BORDER_W);
 

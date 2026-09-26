@@ -52,4 +52,9 @@ internal_docs/
 __pycache__/
 *.pyc
 *.opc
+/.test/
+# Forca local release packager output (build_forca_release.ps1/.bat)
+/dist/
+# Runtime log from the Bambu network plugin's IOTC (camera / device) SDK, dropped in the run dir
+/log_iotc.txt
 docs/superpowers/

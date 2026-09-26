@@ -83,7 +83,7 @@ SavePresetDialog::Item::Item(Preset::Type type, const std::string &suffix, wxBox
 
 
     m_input_ctrl = new ::TextInput(parent, from_u8(preset_name), wxEmptyString, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-    StateColor input_bg(std::pair<wxColour, int>(wxColour("#F0F0F1"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
+    StateColor input_bg(std::pair<wxColour, int>(wxColour("#D9E4F5"), StateColor::Disabled), std::pair<wxColour, int>(*wxWHITE, StateColor::Enabled));
     m_input_ctrl->SetBackgroundColor(input_bg);
     m_input_ctrl->Bind(wxEVT_TEXT, [this](wxCommandEvent &) { update(); });
     m_input_ctrl->SetMinSize(wxSize(SAVE_PRESET_DIALOG_INPUT_SIZE));
@@ -125,7 +125,7 @@ SavePresetDialog::Item::Item(Preset::Type type, const std::string &suffix, wxBox
 
         auto detach_label    = new wxStaticText(parent, wxID_ANY, has_parent ? _L("Detach from parent") : _L("Save without parent"));
         detach_label->SetFont(::Label::Body_14);
-        detach_label->SetForegroundColour(wxColour("#363636"));
+        detach_label->SetForegroundColour(wxColour("#26395A"));
         detach_label->SetToolTip(detach_tooltip);
 
         detach_sizer->Add(detach_checkbox, 0, wxALIGN_LEFT | wxLEFT, BORDER_W);
