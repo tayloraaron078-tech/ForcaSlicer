@@ -14,7 +14,7 @@
 
 </div>
 
-> **This is an alpha.** Everything below works on the author's printers (Bambu Lab, mainly an H2S), but it has not been
+> **This is an alpha.** Everything below works on the author's printers, but it has not been
 > tested on yours yet — that's what this release is for. Keep your normal slicer installed, check the first layers
 > of anything important, and please report what you find. Forca keeps its settings in its own folder, so it won't
 > change your OrcaSlicer setup.
