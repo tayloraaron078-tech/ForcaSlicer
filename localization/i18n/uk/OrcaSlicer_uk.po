@@ -9805,6 +9805,10 @@ msgstr ""
 "Це вимикає всі хмарні функції, зокрема синхронізацію профілів Orca Cloud. Користувачі, які надають перевагу повністю автономній роботі, можуть увімкнути цю опцію.\n"
 "Примітка: коли увімкнено прихований режим, ваші профілі користувача не резервуватимуться в Orca Cloud."
 
+# AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Це вимикає всі хмарні функції, як-от Bambu Cloud. Користувачі, які надають перевагу повністю автономній роботі, можуть увімкнути цю опцію."
+
 msgid "Hide login side panel"
 msgstr "Сховати логін на бічній панелі"
 
@@ -9826,6 +9830,10 @@ msgstr "Дозволити Bambu Cloud"
 # AI Translated
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Дозволити вхід у Bambu Cloud поряд з Orca Cloud. Якщо увімкнено, на головній сторінці зʼявляється розділ входу Bambu."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Дозволити вхід у Bambu Cloud. Якщо увімкнено, на головній сторінці зʼявляється розділ входу Bambu."
 
 msgid "Update & sync"
 msgstr "Оновити і синхронізувати"
@@ -23217,8 +23225,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Результат"
 
 msgid "Flip direction"
 msgstr ""
@@ -25313,6 +25322,1386 @@ msgstr ""
 "Уникнення деформації\n"
 "Чи знаєте ви, що при друку матеріалами, схильними до деформації, такими як ABS, відповідне підвищення температури столу може зменшити ймовірність деформації?"
 
+# AI Translated
+msgid "Retraction length"
+msgstr "Довжина втягування"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "Усадка XY"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Усадка Z"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Майстер калібрування Forca Slicer"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Закрити"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Активна конфігурація"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Принтер:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Сопло:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Філамент для калібрування:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Калібрування:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Потік"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Усадка"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Фінальний контрольний друк (необов’язково)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Макс. потік"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Фінальна перевірка"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Температурна вежа друкує одну й ту саму форму за спадних температур сопла. Після друку виберіть смугу з найчистішою поверхнею, найменшою кількістю павутиння та найміцнішим зчепленням шарів."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Початкова темп. (гаряча):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Кінцева темп. (холодна):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Вежу вже надруковано - ввести результат"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Друкується вежа з однією стінкою, швидкість якої зростає з висотою. Стежте, де поверхня стає шорсткою або стінкам починає бракувати матеріалу. Виміряйте висоту (мм) останньої ділянки, яка ще виглядала добре, -- сторінка результату перерахує цю висоту у ваш максимальний потік."
+
+# AI Translated
+msgid "Start:"
+msgstr "Початок:"
+
+# AI Translated
+msgid "End:"
+msgstr "Кінець:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Крок (мм3/с):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Метод:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Класичний (грубий + точний прохід)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Рекомендований + Перфекціоніст)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Цей прохід уже надруковано - ввести результат"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Друкується вежа втягування Orca; довжина втягування зростає на один крок на кожному кільці. Знайдіть найнижчу ділянку, де павутиння зникає, порахуйте кільця під нею та введіть це число на сторінці результату, щоб отримати довжину втягування. Використовуйте найкоротшу довжину без павутиння."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Крок (мм):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Direct Drive: стандартний діапазон 0-2 мм підходить більшості філаментів. Боуден: збільште Кінець (наприклад, до 6)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Друкується квадратна відкрита рамка зі стороною %g мм зі стовпчиком заввишки %g мм в одному куті. Дайте їй повністю охолонути (краще кілька годин), потім виміряйте штангенциркулем: зовнішню ширину вздовж X, зовнішню ширину вздовж Y (вимірюйте вище перших шарів, щоб оминути «слонову стопу») і висоту стовпчика. Сторінка результату перерахує це в компенсацію усадки філаменту по XY і Z."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Рамку вже надруковано - ввести виміри"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Необов’язкова контрольна перевірка: друкує Autodesk FDM Test (модель, що постачається з Orca) з вашим відкаліброваним пресетом філаменту. Він перевіряє нависання, мости, павутиння, дрібні деталі та розміри за один друк. З нього нічого не зберігається -- якщо щось виглядає не так, повторіть відповідне калібрування через список вище. Ваш відкалібрований пресет уже збережено та вибрано."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Калібрувати інший філамент"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Почати калібрування"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Виберіть філамент, який калібруєте, у полі \"Філамент для калібрування\" вище -- або наявний схожий профіль як відправну точку -- і натисніть Почати. Кроки йдуть у такому порядку: Температура, Максимальна об’ємна швидкість, Потік, Pressure Advance, Втягування та Усадка."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Почати калібрування"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Нарізати && надіслати на принтер"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Лише створити (надрукую сам)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Нарізати & надіслати розміщує тест на пластині, нарізає його та відкриває вікно надсилання вашого принтера; коли воно закриється, введіть тут результат. Лише створити розміщує тест на пластині (видно праворуч), щоб ви могли самі нарізати/експортувати його; потім поверніться сюди, щоб ввести результат."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Пропустити цей крок"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Залишити поточне значення цього параметра і перейти до наступного калібрування."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Калібрувати щось інше"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Калібрувати принтер або інший філамент. Прогрес цього філаменту зберігається."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "Вежа PA (рекомендовано)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Екструдер:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Direct Drive"
+
+# AI Translated
+msgid "Step:"
+msgstr "Крок:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Прискорення (необов’язково):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Швидкості (необов’язково):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Цей тест уже надруковано - ввести результат"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Ввести результат"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Виміряна висота (мм):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Результат:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Виміряна ширина по X (%g мм):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Виміряна ширина по Y (%g мм):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Виміряна висота стовпчика (%g мм):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Зберегти як пресет:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Назвіть пресет як завгодно -- наприклад, за філаментом, який ви насправді калібруєте, навіть якщо почали з іншого профілю. Результат записується в цей пресет, і його буде вибрано; якщо така назва вже є, пресет оновлюється. Ваш початковий пресет не змінюється."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Застосувати та зберегти в пресет"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Фінальний контрольний друк"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "коефіцієнт потоку %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "втягування %.2f мм"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "усадка XY %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "Тест %s очікує друку (створено %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Фінальний контрольний друк створено (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Останній результат %s: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s пропущено (%s); поточне значення зберігається."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Найкраща температура (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Макс. потік (мм3/с):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Номер найкращого блока:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "Найкраще значення PA:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Довжина втягування (мм):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Кілець під цією ділянкою:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Штангенциркуль не потрібен: кожне кільце на вежі позначає один крок втягування. Знайдіть найнижчу ділянку без павутиння і порахуйте кільця під нею (нижня ділянка, 0 кілець, це Початок):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nдовжина = початок + кільця x крок = %g + кільця x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Введіть тут кількість кілець, і довжина заповниться сама, або введіть довжину вручну."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Виміряйте висоту (мм), на якій кути виглядають найчіткішими, потім:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = початок + крок x висота = %g + %g x висота.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Введіть тут цю висоту, і значення PA заповниться саме, або введіть значення вручну."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Уперше? Запишіть висоту (мм) останньої ділянки, що виглядала добре, потім:\nмакс. потік = початок + висота x крок = %g + висота x %g.\nВведіть тут цю висоту, і макс. потік заповниться сам, або введіть потік вручну."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Введіть значення, надруковане поруч із лінією найрівномірнішої ширини."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Введіть значення, надруковане над шаблоном із найчіткішими та найчистішими кутами."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Введіть те, що ви виміряли. Залиште Z порожнім, щоб зберегти поточне значення Z. Поточна компенсація: XY %.2f%%, Z %.2f%% (уже застосована до цього друку, тож врахована)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "Друкується набір ліній зі зростаючими значеннями PA, кожна підписана своїм значенням. Виберіть лінію найрівномірнішої ширини -- без потовщення там, де змінюється швидкість (PA замалий), і без потоншення (завеликий) -- і введіть значення цієї лінії."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "Друкуються вкладені кутові шаблони зі зростаючими значеннями PA, кожен підписаний своїм значенням. Виберіть той, що має найчіткіші та найчистіші кути -- без потовщення (PA замалий) і без заокруглення чи пропусків (завеликий) -- і введіть його значення."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "Друкується порожниста вежа, PA якої зростає на один крок на кожен мм висоти. Знайдіть висоту, на якій кути виглядають найчіткішими -- без потовщення (PA замалий) і без пропусків чи заокруглення (завеликий), -- виміряйте її штангенциркулем і введіть на сторінці результату, щоб отримати значення PA."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Введіть допустимий діапазон температур для цього філаменту:\nВід %d до %d C, причому Початок щонайменше на 5 C вищий за Кінець."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Введіть допустимі значення:\nПочаток > 0, Крок > 0, Кінець > Початок + Крок."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Введіть допустимі значення втягування:\nПочаток >= 0, Крок > 0, Кінець > Початок + Крок, Кінець <= %g мм."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Введіть допустимі значення PA:\nПочаток >= 0, Крок >= 0.001, Кінець > Початок + Крок."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "Прискорення та швидкості мають бути додатними числами через кому або залишатися порожніми."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "Нарізку не завершено, тому нічого не надіслано. Виправте помилку і спробуйте ще раз."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Тест усадки"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Рамка усадки Forca"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Це необов’язкова повторна перевірка після Pressure Advance."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Це прохід 1 з 2; далі буде точний прохід."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Це прохід 2 з 2; це останній прохід."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Введіть номер під блоком із найгладкішим і найрівнішим верхом. Від’ємний = менше потоку, додатний = більше потоку. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Новий потік: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Новий потік: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Новий потік: %.3f + номер."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Новий потік: %.3f x (1 + номер/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "Перевірка після PA (прохід Перфекціоніст)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "Перевірка після PA (точний прохід)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "Прохід 1 з 2 (Рекомендований)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "Прохід 2 з 2 (Перфекціоніст)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "Прохід 1 з 2 (грубий)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "Прохід 2 з 2 (точний)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Тест YOLO в Orca друкує ряд блоків, кожен підписаний невеликою поправкою потоку, наприклад -0.02 або +0.01. Виберіть блок із найгладкішим і найрівнішим верхом -- не опуклим (забагато потоку) і без пропусків (замало) -- і введіть його номер точно так, як надруковано. Зазвичай достатньо проходу Рекомендований; прохід Перфекціоніст уточнює його меншими кроками."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Друкується ряд блоків, кожен з трохи іншим коефіцієнтом потоку та підписаний номером. Огляньте верхні поверхні та виберіть блок із найгладкішим і найрівнішим верхом -- не опуклим (забагато потоку) і без пропусків (замало). Ви введете номер цього блока. Потік калібрується у два проходи: спочатку грубий, потім точний навколо вашого першого результату."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Введіть температуру від %d до %d C для цього філаменту."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Введіть максимальну об’ємну швидкість від %.1f до %.1f мм3/с."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Введіть номер найкращого блока, від -%g до %g."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Цей номер блока встановив би коефіцієнт потоку %.3f, поза безпечним діапазоном %.2f-%.2f. Перевірте номер ще раз."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Введіть значення Pressure Advance від %.2f до %.2f."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Введіть довжину втягування від 0 до %g мм."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Введіть виміряні ширини по X і Y (близько %g мм) і, за бажанням, висоту стовпчика (близько %g мм)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Ці виміри дають XY %.2f%% / Z %.2f%%, поза правдоподібним діапазоном %g-%g%%. Перевірте їх ще раз."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Введіть назву пресета."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Не вдалося зберегти пресет."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Далі: Максимальна об’ємна швидкість."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Далі: Потік."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Перевірку потоку збережено. Далі: Втягування."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "Прохід 1 збережено. Далі: Потік, прохід 2."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Потік завершено. Далі: Pressure Advance."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Далі: Усадка."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "На цьому калібрування завершено. За бажанням надрукуйте фінальну перевірку, щоб підтвердити весь профіль."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s збережено в пресет філаменту:\n%s\n\nТепер його вибрано."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Необов’язково: налаштування Pressure Advance може змінити вигляд потоку. Виконати зараз один точний прохід Потоку для перевірки?\n\nТак = перевірити потік, потім Втягування.\nНі = одразу перейти до Втягування."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Немає доступного набору пресетів."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "Пресет філаменту '%s' не знайдено."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "Назва не може збігатися з назвою системного пресета."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Пресет із такою назвою вже існує."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Не вдалося створити новий пресет."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(Калібрування цього принтера завершено.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(Калібрування цього принтера триває: %d з %d кроків.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Що ви калібруєте?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Мій принтер -- Input Shaping, Повороти та VFA для вибраного принтера, один раз для кожного принтера й сопла. Зробіть це першим: це впливає на те, як друкуються тести філаменту."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Філамент -- Температура, Максимальна об’ємна швидкість, Потік, Pressure Advance, Втягування та Усадка, усе зберігається в ОДИН пресет філаменту, якому ви даєте назву на першому кроці."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Кожен тест з’являється на пластині праворуч, а індикатор прогресу й таблиця «до/після» над нею заповнюються в міру роботи. Нарізати & надіслати на принтер нарізає тест і відкриває звичайне вікно надсилання вашого принтера; Лише створити розміщує його на пластині, щоб ви могли самі нарізати чи експортувати його (наприклад, на SD-карту). В обох випадках поверніться сюди, щоб ввести результат. Ви можете будь-коли перемкнутися на інші вкладки; ця вкладка продовжить з того місця, де ви зупинилися."
+
+# AI Translated
+msgid "My printer"
+msgstr "Мій принтер"
+
+# AI Translated
+msgid "A filament"
+msgstr "Філамент"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Цей філамент уже має завершене калібрування -- його результати показано праворуч. Виберіть вище інший філамент, щоб відкалібрувати новий, або натисніть Почати, щоб відкалібрувати цей повторно."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Для цього філаменту триває калібрування (виконано %d%%). Почати продовжить з того місця, де воно зупинилося."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "Пропустити %s? Поточне значення зберігається, і ви можете будь-коли повернутися до нього, клацнувши в індикаторі прогресу або вибравши вище."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "Принтер або сопло змінилися на %s (%s мм) відтоді, як ця серія почалася на %s (%s мм). Нові результати почнуть окрему серію для цього принтера."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Активний філамент змінився на %s в іншій вкладці, але ця серія калібрує %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Повернутися до %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Pressure adv."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Перевірка потоку"
+
+# AI Translated
+msgid "printer default"
+msgstr "стандарт принтера"
+
+# AI Translated
+msgid "skipped"
+msgstr "пропущено"
+
+# AI Translated
+msgid "testing..."
+msgstr "тестується..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Зберегти зображення підсумку"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Зберегти цей підсумок «до/після» як зображення PNG."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Калібрувати філамент"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Калібрування принтера завершено"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Калібрування принтера"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Калібрування завершено"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Пропущено"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "Прохід 1 з 2 виконано"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Тест друкується"
+
+# AI Translated
+msgid "Not started"
+msgstr "Не розпочато"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "клацніть, щоб відкрити цей крок"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Необов’язково:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Параметр"
+
+# AI Translated
+msgid "Before"
+msgstr "До"
+
+# AI Translated
+msgid "After"
+msgstr "Після"
+
+# AI Translated
+msgid "Change"
+msgstr "Зміна"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Пропущено %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Тест створено %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Виміряно %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Майстер калібрування Forca Slicer - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Зберегти підсумок калібрування"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Не вдалося зберегти зображення."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Калібрування принтера"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Ці калібрування налаштовують сам принтер, один раз для кожного принтера й сопла. Виконайте їх до калібрування філаментів: вони впливають на те, як друкуються тести філаменту. Порядок: Input Shaping (частота, потім демпфування), Повороти, VFA. Кроки, які ваш принтер не підтримує, пропускаються."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Частота шейпера"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Демпфування шейпера"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Відновити резервну копію цього принтера"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Повернути налаштування, які мав цей пресет принтера до того, як майстер уперше його змінив."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Уже надруковано - ввести результат"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Залишити поточне налаштування принтера і перейти до наступного калібрування."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Input Shaping - частота"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Вежа резонансу (Ringing Tower) в Orca підвищує частоту шейпера з висотою (для X і Y можна задати власні діапазони). Після друку знайдіть на грані X і на грані Y висоту, де ringing -- відлуння після кутів і літер -- найслабший. Сторінка результату перерахує кожну висоту в частоту."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Тестова модель:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Шейпер:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X початок (Гц):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X кінець:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y початок (Гц):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y кінець:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Демпфування під час тесту:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Input Shaping - демпфування"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Із заданими частотами ця вежа збільшує коефіцієнт демпфування з висотою. Знайдіть висоту, де ringing найслабший; сторінка результату перерахує її в коефіцієнт демпфування. Частоти нижче взято з кроку частоти."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "Частота X (Гц):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Демпфування початок:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Ця вежа підвищує швидкість на кутах (jerk, junction deviation або square corner velocity у Klipper) з висотою. Чим вище, тим швидше, але кути заокруглюються і тремтять. Знайдіть найвищу точку, де кути ще чіткі й чисті; сторінка результату перерахує цю висоту в значення."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (дрібні вертикальні артефакти)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Ця вежа підвищує швидкість зовнішньої стінки від блока до блока. На певних швидкостях з’являються дрібні вертикальні смуги (VFA) через резонанс моторів і пасів. Запишіть блоки, де ви їх бачите (рахуючи знизу, перший блок - 1); сторінка результату підкаже, від яких швидкостей тримати стінки подалі. Тримайте Кінець у межах того, що здатен видавити ваш філамент."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Початок (мм/с):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Найкраща висота, грань X (мм):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Найкраща висота, грань Y (мм):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Частота Y (Гц):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Найкраща висота (мм):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Значення:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Блоки зі смугами (напр. 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Дозволити Forca задавати input shaping на початку кожного друку"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Записує налаштування шейпера в G-код (\"Виводити input shaping\" в Orca), замінюючи те, що збережено у прошивці принтера. Залиште вимкненим, якщо зберігаєте їх у прошивці (наприклад, у printer.cfg Klipper)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper зберігає ці значення в printer.cfg. Додайте або оновіть там ці рядки, потім перезапустіть Klipper:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Оновити цей пресет принтера (старі значення зберігаються в резервній копії)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Зберегти як новий пресет принтера:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Принтери Bambu Lab самі налаштовують компенсацію вібрацій (input shaping), тож тут нічого калібрувати."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca не задає input shaping для типу G-коду цього принтера."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Принтери Bambu Lab керують поворотами (jerk) у власній прошивці."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Менші значення дають чіткіші кути, але повільніший друк."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Junction deviation Marlin (мм), бо в цьому пресеті принтера його задано."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: перевіряється як square corner velocity (мм/с)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: jerk у мм/с (Orca перераховує його за потреби)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Класичний jerk (мм/с)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Цей крок не стосується вибраного принтера: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Крок: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: тест створено %s - надрукуйте його, потім введіть результат."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s пропущено (%s); налаштування принтера зберігається."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: останній результат збережено %s."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Введіть числа для діапазону частот і демпфування."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Введіть допустимі частоти: 0 <= початок < кінець <= 500 Гц."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Введіть коефіцієнт демпфування від 0 до 1 (не включаючи 1)."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Введіть числа для частот і діапазону демпфування."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Введіть допустимі частоти: 0 < частота <= 500 Гц."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Введіть допустимий діапазон демпфування: 0 <= початок < кінець <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Введіть числа для початку й кінця."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Введіть допустимий діапазон: 0 <= початок < кінець <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Високі значення (понад %s) можуть спричинити зсув шарів. Продовжити?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Введіть числа для початку, кінця й кроку."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Введіть допустимі швидкості: початок понад 10, крок понад 0, кінець щонайменше початок + крок."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Ввести результат: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Вимірюйте від столу до місця, де ringing на кожній грані найслабший (грань X: грань, ringing на якій спричинений рухами по X)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\nчастота = початок + висота / %.1f мм x (кінець - початок)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Коефіцієнт демпфування:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Junction deviation (мм):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (мм/с):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Jerk (мм/с):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Вимірюйте від столу до місця, де ringing найслабший."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Вимірюйте від столу до найвищої точки, де кути ще чіткі й чисті."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\nзначення = %s + висота / %.1f мм x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Введіть номери блоків, на яких видно дрібні вертикальні смуги (нижній блок - 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\nшвидкість = %s + (блок - 1) x %s мм/с."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Висота вежі вашого тесту тут невідома, тому введіть саме значення.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Це системний пресет принтера, його не можна змінити; результат буде записано в новий пресет."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Цей пресет уже є відкаліброваною копією, створеною майстром."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Копію буде додано до кожного мережевого принтера, який використовує цей пресет."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Швидкості зі смугами: %s мм/с"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "Пресет принтера не знайдено."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Введіть назву нового пресета принтера."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Системний пресет принтера не можна змінити; збережіть результат як новий пресет."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Не вдалося зберегти пресет принтера."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Введіть частоти (понад 0, до 500 Гц)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Шейпер %s, X %.1f Гц, Y %.1f Гц"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Введіть коефіцієнт демпфування (від 0 до 1, не включаючи 1)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Коефіцієнт демпфування %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Введіть значення понад 0, не більше %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Junction deviation %.3f мм"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f мм/с"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Jerk %.1f мм/с"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Смуг не видно - уникати швидкостей не потрібно."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Введіть номери блоків (1 = нижній блок), напр. 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "Тримайте швидкість зовнішньої стінки (та інших видимих стінок) щонайменше на один крок від цих значень у пресеті процесу."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Не вдалося зберегти пресет принтера."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Збережено: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Записано в пресет принтера:\n%s\n\nТепер його вибрано."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "Пресет принтера не змінено (цим налаштуванням керує прошивка)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: не забудьте додати в printer.cfg рядки для printer.cfg, показані на сторінці результату."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "На цьому калібрування принтера завершено. Далі: відкалібруйте свої філаменти (відповідайте \"Філамент\", коли майстер спитає, що ви калібруєте)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Далі: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "Пропустити %s? Принтер збереже поточне налаштування, і ви можете будь-коли повернутися до нього через індикатор прогресу."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "Повернути налаштування принтера, які мав \"%s\" до того, як майстер уперше його змінив (%s)? Результати майстра для цього принтера буде видалено."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Відновити резервну копію"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Не вдалося відновити пресет принтера."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "Пресет принтера знову має попередні налаштування."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Калібрування принтера - сопло %s мм"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Частота шейп."
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Тип шейпера"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Частота шейпера X (Гц)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Частота шейпера Y (Гц)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Коефіцієнт демпфування"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Junction deviation (мм)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (мм/с)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Швидкості VFA, яких слід уникати (мм/с)"
+
+# AI Translated
+msgid "none"
+msgstr "немає"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Майстер калібрування"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Покрокове калібрування принтера та філаменту"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Повідомити про помилку або запропонувати функцію"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Відкрити форми звернень Forca Slicer на GitHub"
+
+# AI Translated
+msgid "Connected"
+msgstr "Підключено"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Павутиння"
+
+# AI Translated
+msgid "Warping"
+msgstr "Викривлення"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Зсув шару"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Спагеті"
+
+# AI Translated
+msgid "Supports"
+msgstr "Підтримки"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Недоекструзія"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Переекструзія"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Розшарування"
+
+# AI Translated
+msgid "Partial"
+msgstr "Частково"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Журнал друку"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "Журнал друку вимкнено, тож Forca не записує надіслані друки. Увімкніть його, щоб вести запис кожного друку в папці Forca Academy (його можна знову вимкнути в налаштуваннях)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Увімкнути"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Відкрити папку"
+
+# AI Translated
+msgid "Date"
+msgstr "Дата"
+
+# AI Translated
+msgid "Print"
+msgstr "Друк"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Не записано"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Що пішло не так (необов’язково)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Додати фото"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Скопіювати фото або відео цього друку в його папку. Їх також можна перетягнути на це вікно."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Відкрити папку друку"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Фото та відео"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Додати друк"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Записати пластину в поточному вигляді як друк -- для друків, які Forca не надсилала, наприклад запущених із SD-карти."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Папка:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Ще немає записаних друків"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "Філамент %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Орієнтовний час: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Фото: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Спочатку виберіть друк у списку, потім додайте його фото."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Вести журнал друку"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Записує кожен друк, який надсилає Forca, -- принтер, пресети, філаменти, змінені налаштування, оцінки та зображення пластини -- у папку Forca Academy, щоб ви та будь-який ШІ могли переглянути, що спрацювало. Друки з SD-карти можна додати вручну. Нічого не вивантажується."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Папка Forca Academy"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Де зберігається журнал друку: звичайні файли Markdown і JSON. ШІ починає з AGENTS.md."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Вибрати папку Forca Academy"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Відкрити папку Forca Academy (за потреби створити її з початковими файлами)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Ваші записані друки: додайте результат, нотатки та фото"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Робити знімок камерою після завершення друку"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Для принтерів Bambu з камерою, доступною Forca в локальній мережі: коли записаний друк завершується або зазнає невдачі, знімок результату зберігається в папку camera цього друку."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Знімки камерою під час друку"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Як часто (у хвилинах) Forca зберігає знімок камери поточного записаного друку, щоб можна було простежити збій (0 = вимк.). Лише принтери Bambu. Їхня камера допускає одного глядача, тож знімок може бути пропущено, поки дивиться інша програма."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "Принтер повідомив: завершено"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "Принтер повідомив: помилка"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "Принтер повідомив: зупинено"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "Принтер повідомив: завершено (не відстежено)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(%d хв після надсилання)"
+
 #~ msgid "Tab"
 #~ msgstr "Табуляції"
 
@@ -25587,9 +26976,6 @@ msgstr ""
 #~ msgctxt "Sync_Nozzle_AMS"
 #~ msgid "Cancel"
 #~ msgstr "Скасувати"
-
-#~ msgid "Print"
-#~ msgstr "Друк"
 
 #~ msgid "in"
 #~ msgstr "в"
@@ -26019,9 +27405,6 @@ msgstr ""
 #~ "Хвильовий: Подібний до шуму Перліна, але більш складний.\n"
 #~ "Гребеневий мультифрактал: Гребеневий шум із різкими, нерівними рисами. Створює мармурові текстури.\n"
 #~ "Вороного: Ділить поверхню на комірки Вороного та зміщує кожну з них на випадкову відстань. Створює клаптеву текстуру."
-
-#~ msgid "Flow Rate"
-#~ msgstr "Потік"
 
 #~ msgid ""
 #~ "Zero first layer height is invalid.\n"

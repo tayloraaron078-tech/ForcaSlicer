@@ -30,6 +30,10 @@ public:
         int         pass  = 0;       // multi-pass calibrations (flow): passes completed; 0 = not tracked (older files)
         std::string derived_preset;  // preset the result was written to
         std::string updated_at;      // ISO date (YYYY-MM-DD)
+        // Printer calibrations (optional in the file): named numbers (e.g. "x", "y", "height") and a text note
+        // (e.g. the input shaper type, or the VFA speeds to avoid).
+        std::map<std::string, double> values;
+        std::string                   note;
     };
 
     // One calibration run = one target ("calibrated") filament preset on a printer + nozzle. `before` holds the
@@ -42,6 +46,10 @@ public:
         std::string                   base;        // the preset the run started from
         std::string                   started_at;  // ISO date
         std::map<std::string, double> before;      // config key -> value (absent = not set / nil)
+        // Printer calibration runs (kind "printer"): target / base are PRINTER presets, and before_text holds each
+        // setting the run may write in Orca's serialized form -- the backup a "Restore" writes back.
+        std::string                        kind;   // "" = filament run, "printer" = printer run
+        std::map<std::string, std::string> before_text;
     };
 
     ForcaCalibrationStore();         // loads from the datadir
@@ -58,6 +66,12 @@ public:
     // Runs. start_run() only records the first time for a given printer/nozzle/target (a run's "before" is fixed).
     bool get_run(const std::string& printer, const std::string& nozzle, const std::string& target, Run& out) const;
     void start_run(const Run& run);
+
+    // Printer calibration: write a whole record (status, values, note, ...) with today's date, and the printer run
+    // whose target is the given printer preset (start_run() records it once; forget drops it after a restore).
+    void set_record(const Key& key, const Record& rec);
+    bool get_printer_run(const std::string& printer_preset, Run& out) const;
+    void forget_printer_run(const std::string& printer_preset);
 
     // True if `filament` is a profile a prior calibration wrote its result into (on this printer/nozzle),
     // i.e. it is an existing calibration target that further steps should accumulate into rather than

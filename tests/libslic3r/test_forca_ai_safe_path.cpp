@@ -135,3 +135,51 @@ TEST_CASE("Ledger keys ignore how the path is spelled", "[ForcaAISafePath]")
     const fs::path b = dir.path() / "file.3mf";
     CHECK(ForcaAI::Ledger::key_for(a) == ForcaAI::Ledger::key_for(b));
 }
+
+namespace {
+std::string read_file(const fs::path& p)
+{
+    fs::ifstream in(p, std::ios::binary);
+    return std::string(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>());
+}
+} // namespace
+
+TEST_CASE("A backup copy keeps the original's bytes in a dated folder", "[ForcaAISafePath]")
+{
+    ScopedTemporaryDir dir("forca-ai");
+    const fs::path user = dir.path() / "Benchy.3mf";
+    write_file(user, "the user's project");
+
+    std::string    err;
+    const fs::path copy = ForcaAI::backup_copy(user, dir.path() / "Backups", DATE, err);
+    REQUIRE(err.empty());
+    CHECK(copy == dir.path() / "Backups" / DATE / "Benchy.3mf");
+    CHECK(read_file(copy) == "the user's project");
+    CHECK(read_file(user) == "the user's project"); // the original is untouched
+}
+
+TEST_CASE("A second backup of the same name never replaces the first", "[ForcaAISafePath]")
+{
+    ScopedTemporaryDir dir("forca-ai");
+    const fs::path user = dir.path() / "Benchy.3mf";
+    std::string    err;
+    write_file(user, "version 1");
+    const fs::path first = ForcaAI::backup_copy(user, dir.path() / "Backups", DATE, err);
+    write_file(user, "version 2");
+    const fs::path second = ForcaAI::backup_copy(user, dir.path() / "Backups", DATE, err);
+    REQUIRE(err.empty());
+    CHECK(second.filename() == fs::path("Benchy 2.3mf"));
+    CHECK(read_file(first) == "version 1");
+    CHECK(read_file(second) == "version 2");
+}
+
+TEST_CASE("A backup refuses what is not a file, so nothing gets overwritten", "[ForcaAISafePath]")
+{
+    ScopedTemporaryDir dir("forca-ai");
+    std::string        err;
+    CHECK(ForcaAI::backup_copy(dir.path() / "missing.3mf", dir.path() / "Backups", DATE, err).empty());
+    CHECK_FALSE(err.empty());
+    err.clear();
+    CHECK(ForcaAI::backup_copy(dir.path(), dir.path() / "Backups", DATE, err).empty()); // a folder
+    CHECK_FALSE(err.empty());
+}

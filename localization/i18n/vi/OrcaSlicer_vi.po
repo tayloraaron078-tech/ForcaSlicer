@@ -10287,6 +10287,10 @@ msgstr ""
 "Lưu ý: Khi Chế độ ẩn danh được bật, hồ sơ người dùng của bạn sẽ không được sao lưu lên Orca Cloud."
 
 # AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Tùy chọn này tắt toàn bộ tính năng cloud, chẳng hạn như Bambu Cloud. Người dùng muốn làm việc hoàn toàn ngoại tuyến có thể bật tùy chọn này."
+
+# AI Translated
 msgid "Hide login side panel"
 msgstr "Ẩn bảng đăng nhập bên cạnh"
 
@@ -10312,6 +10316,10 @@ msgstr "Bật Bambu Cloud"
 # AI Translated
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Cho phép đăng nhập Bambu Cloud song song với Orca Cloud. Khi bật, một mục đăng nhập Bambu sẽ xuất hiện trên trang chủ."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Cho phép đăng nhập Bambu Cloud. Khi bật, một mục đăng nhập Bambu sẽ xuất hiện trên trang chủ."
 
 # AI Translated
 msgid "Update & sync"
@@ -23934,8 +23942,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Kết quả"
 
 msgid "Flip direction"
 msgstr ""
@@ -26028,6 +26037,1386 @@ msgstr ""
 "Bạn có biết rằng khi in vật liệu dễ cong vênh như ABS, tăng nhiệt độ bàn nóng một cách thích hợp có thể giảm xác suất cong vênh không?"
 
 # AI Translated
+msgid "Retraction length"
+msgstr "Chiều dài rút"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "Co ngót XY"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Co ngót Z"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Trình hướng dẫn hiệu chỉnh Forca Slicer"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Đóng"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Cấu hình đang dùng"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Máy in:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Đầu phun:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Filament cần hiệu chỉnh:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Hiệu chỉnh:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Lưu lượng"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Co ngót"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Bản in kiểm tra cuối (tùy chọn)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Lưu lượng tối đa"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Kiểm tra cuối"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Tháp nhiệt độ in cùng một hình ở các nhiệt độ đầu phun giảm dần. Sau khi in xong, hãy chọn dải có bề mặt sạch nhất, ít sợi kéo nhất và liên kết lớp chắc nhất."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Nhiệt độ bắt đầu (nóng):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Nhiệt độ kết thúc (nguội):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Tôi đã in tháp rồi - nhập kết quả"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Bước này in một tháp một vách có tốc độ tăng theo chiều cao. Quan sát chỗ bề mặt bắt đầu sần hoặc vách bắt đầu thiếu nhựa. Đo chiều cao (mm) của đoạn cuối cùng còn trông tốt -- trang kết quả sẽ đổi chiều cao đó thành lưu lượng tối đa cho bạn."
+
+# AI Translated
+msgid "Start:"
+msgstr "Bắt đầu:"
+
+# AI Translated
+msgid "End:"
+msgstr "Kết thúc:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Bước (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Phương pháp:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Cổ điển (lượt thô + lượt tinh)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Khuyến nghị + Cầu toàn)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Tôi đã in lượt này rồi - nhập kết quả"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Bước này in tháp rút của Orca; chiều dài rút tăng một bước ở mỗi vòng. Tìm đoạn thấp nhất mà sợi kéo biến mất, đếm số vòng bên dưới và nhập số đó ở trang kết quả để có chiều dài rút. Hãy dùng chiều dài ngắn nhất không có sợi kéo."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Bước (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Direct Drive: khoảng mặc định 0-2 mm phù hợp với hầu hết filament. Bowden: tăng Kết thúc (ví dụ lên 6)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Bước này in một khung vuông hở rộng %g mm với một cột cao %g mm ở một góc. Để nguội hoàn toàn (tốt nhất là vài giờ), rồi đo bằng thước kẹp: chiều rộng ngoài theo X, chiều rộng ngoài theo Y (đo phía trên vài lớp đầu để tránh hiện tượng chân voi) và chiều cao cột. Trang kết quả sẽ đổi các số đo đó thành bù co ngót XY và Z của filament."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Tôi đã in khung rồi - nhập số đo"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Một bước kiểm tra tùy chọn: in Autodesk FDM Test (mô hình đi kèm Orca) với cài đặt sẵn filament đã hiệu chỉnh của bạn. Nó kiểm tra phần nhô, cầu, sợi kéo, chi tiết nhỏ và kích thước trong một lần in. Không có gì được lưu từ bản in này -- nếu có gì không ổn, hãy chạy lại bước hiệu chỉnh đó từ danh sách phía trên. Cài đặt sẵn đã hiệu chỉnh của bạn đã được lưu và chọn."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Hiệu chỉnh filament khác"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Bắt đầu hiệu chỉnh"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Chọn filament bạn đang hiệu chỉnh ở mục \"Filament cần hiệu chỉnh\" phía trên -- hoặc một hồ sơ gần giống có sẵn để làm điểm xuất phát -- rồi nhấn Bắt đầu. Các bước chạy theo thứ tự: Nhiệt độ, Tốc độ thể tích tối đa, Lưu lượng, Pressure Advance, Rút và Co ngót."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Bắt đầu hiệu chỉnh"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Slice && gửi tới máy in"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Chỉ tạo (tôi tự in)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Slice & gửi đặt bài kiểm tra lên plate, slice và mở hộp thoại gửi của máy in; khi hộp thoại đóng, bạn nhập kết quả ở đây. Chỉ tạo đặt bài kiểm tra lên plate (hiển thị bên phải) để bạn tự slice/xuất; sau đó quay lại đây để nhập kết quả."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Bỏ qua bước này"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Giữ giá trị hiện tại của thiết lập này và chuyển sang bước hiệu chỉnh tiếp theo."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Hiệu chỉnh thứ khác"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Hiệu chỉnh máy in hoặc một filament khác. Tiến độ của filament này được giữ lại."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "Tháp PA (khuyến nghị)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Bộ đùn:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Direct Drive"
+
+# AI Translated
+msgid "Step:"
+msgstr "Bước:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Gia tốc (tùy chọn):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Tốc độ (tùy chọn):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Tôi đã in bài kiểm tra này rồi - nhập kết quả"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Nhập kết quả"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Chiều cao đo được (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Kết quả:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Chiều rộng X đo được (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Chiều rộng Y đo được (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Chiều cao cột đo được (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Lưu thành cài đặt sẵn:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Đặt tên cài đặt sẵn tùy ý -- ví dụ theo filament bạn thực sự đang hiệu chỉnh, kể cả khi bạn bắt đầu từ một hồ sơ khác. Kết quả được ghi vào cài đặt sẵn đó và nó được chọn; nếu tên đã tồn tại, nó sẽ được cập nhật. Cài đặt sẵn ban đầu của bạn không thay đổi."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Áp dụng và lưu vào cài đặt sẵn"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Bản in kiểm tra cuối"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "tỷ lệ lưu lượng %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "rút %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "co ngót XY %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "Bài kiểm tra %s đang chờ (tạo lúc %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Đã tạo bản in kiểm tra cuối (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Kết quả %s gần nhất: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s đã bị bỏ qua (%s); giá trị hiện tại của bạn được giữ."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Nhiệt độ tốt nhất (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Lưu lượng tối đa (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Số khối tốt nhất:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "Giá trị PA tốt nhất:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Chiều dài rút (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Số vòng bên dưới đoạn đó:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Không cần thước kẹp: mỗi vòng trên tháp đánh dấu một bước rút. Tìm đoạn thấp nhất không có sợi kéo và đếm số vòng bên dưới (đoạn dưới cùng, 0 vòng, là Bắt đầu):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nchiều dài = bắt đầu + số vòng x bước = %g + số vòng x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Nhập số vòng vào đây và chiều dài sẽ được điền sẵn cho bạn, hoặc tự gõ chiều dài."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Đo chiều cao (mm) nơi các góc sắc nét nhất, rồi:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = bắt đầu + bước x chiều cao = %g + %g x chiều cao.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Nhập chiều cao đó vào đây và giá trị PA sẽ được điền sẵn cho bạn, hoặc tự gõ giá trị."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Mới làm lần đầu? Ghi lại chiều cao (mm) của đoạn cuối cùng còn trông tốt, rồi:\nlưu lượng tối đa = bắt đầu + chiều cao x bước = %g + chiều cao x %g.\nNhập chiều cao đó vào đây và lưu lượng tối đa sẽ được điền sẵn cho bạn, hoặc tự gõ lưu lượng."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Nhập giá trị được in cạnh đường có độ rộng đều nhất."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Nhập giá trị được in phía trên mẫu có góc sắc nét và sạch nhất."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Nhập số đo của bạn. Để trống Z để giữ giá trị Z hiện tại. Bù hiện tại: XY %.2f%%, Z %.2f%% (đã áp dụng cho bản in này nên đã được tính đến)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "In một loạt đường với giá trị PA tăng dần, mỗi đường ghi giá trị của nó. Chọn đường có độ rộng đều nhất -- không phình ở chỗ tốc độ thay đổi (PA quá thấp) và không bị mảnh (quá cao) -- rồi nhập giá trị của đường đó."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "In các mẫu góc lồng nhau với giá trị PA tăng dần, mỗi mẫu ghi giá trị của nó. Chọn mẫu có góc sắc nét và sạch nhất -- không phình (PA quá thấp) và không bo tròn hay hở (quá cao) -- rồi nhập giá trị của nó."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "In một tháp rỗng có PA tăng một bước mỗi mm chiều cao. Tìm chiều cao nơi các góc sắc nét nhất -- không phình (PA quá thấp) và không hở hay bo tròn (quá cao) --, đo bằng thước kẹp rồi nhập ở trang kết quả để có giá trị PA."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Vui lòng nhập khoảng nhiệt độ hợp lệ cho filament này:\nTừ %d đến %d C, với Bắt đầu cao hơn Kết thúc ít nhất 5 C."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Vui lòng nhập giá trị hợp lệ:\nBắt đầu > 0, Bước > 0, Kết thúc > Bắt đầu + Bước."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Vui lòng nhập giá trị rút hợp lệ:\nBắt đầu >= 0, Bước > 0, Kết thúc > Bắt đầu + Bước, Kết thúc <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Vui lòng nhập giá trị PA hợp lệ:\nBắt đầu >= 0, Bước >= 0.001, Kết thúc > Bắt đầu + Bước."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "Gia tốc và tốc độ phải là các số dương cách nhau bằng dấu phẩy, hoặc để trống."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "Quá trình slice chưa hoàn tất nên chưa có gì được gửi. Hãy sửa lỗi rồi thử lại."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Bài kiểm tra co ngót"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Khung co ngót Forca"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Đây là bước kiểm tra lại tùy chọn sau Pressure Advance."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Đây là lượt 1/2; tiếp theo là một lượt tinh."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Đây là lượt 2/2; đây là lượt cuối."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Nhập số bên dưới khối có mặt trên mịn và phẳng nhất. Âm = ít lưu lượng hơn, dương = nhiều lưu lượng hơn. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Lưu lượng mới: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Lưu lượng mới: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Lưu lượng mới: %.3f + số."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Lưu lượng mới: %.3f x (1 + số/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "Kiểm tra lại sau PA (lượt Cầu toàn)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "Kiểm tra lại sau PA (lượt tinh)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "Lượt 1/2 (Khuyến nghị)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "Lượt 2/2 (Cầu toàn)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "Lượt 1/2 (thô)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "Lượt 2/2 (tinh)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Bài kiểm tra YOLO của Orca in một hàng khối, mỗi khối ghi một độ lệch lưu lượng nhỏ như -0.02 hoặc +0.01. Chọn khối có mặt trên mịn và phẳng nhất -- không phồng (quá nhiều lưu lượng) và không hở (quá ít) -- rồi nhập đúng số như được in. Lượt Khuyến nghị thường là đủ; lượt Cầu toàn tinh chỉnh thêm với bước nhỏ hơn."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Bước này in một hàng khối, mỗi khối có tỷ lệ lưu lượng hơi khác nhau và được ghi một số. Nhìn các mặt trên và chọn khối có mặt trên mịn và phẳng nhất -- không phồng (quá nhiều lưu lượng) và không hở (quá ít). Bạn sẽ nhập số của khối đó. Lưu lượng được chạy hai lượt: một lượt thô, rồi một lượt tinh quanh kết quả đầu tiên của bạn."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Vui lòng nhập nhiệt độ từ %d đến %d C cho filament này."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Vui lòng nhập tốc độ thể tích tối đa từ %.1f đến %.1f mm3/s."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Vui lòng nhập số của khối tốt nhất, từ -%g đến %g."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Số khối đó sẽ đặt tỷ lệ lưu lượng thành %.3f, nằm ngoài khoảng an toàn %.2f-%.2f. Vui lòng kiểm tra lại số."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Vui lòng nhập giá trị Pressure Advance từ %.2f đến %.2f."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Vui lòng nhập chiều dài rút từ 0 đến %g mm."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Vui lòng nhập chiều rộng X và Y đo được (khoảng %g mm) và, nếu muốn, chiều cao cột (khoảng %g mm)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Các số đo đó cho XY %.2f%% / Z %.2f%%, nằm ngoài khoảng hợp lý %g-%g%%. Vui lòng kiểm tra lại."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Vui lòng nhập tên cho cài đặt sẵn."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Không thể lưu cài đặt sẵn."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Tiếp theo: Tốc độ thể tích tối đa."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Tiếp theo: Lưu lượng."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Đã lưu kiểm tra lại lưu lượng. Tiếp theo: Rút."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "Đã lưu lượt 1. Tiếp theo: Lưu lượng lượt 2."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Đã xong Lưu lượng. Tiếp theo: Pressure Advance."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Tiếp theo: Co ngót."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Như vậy là xong các bước hiệu chỉnh. Nếu muốn, hãy in bản kiểm tra cuối để xác nhận toàn bộ hồ sơ."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "Đã lưu %s vào cài đặt sẵn filament:\n%s\n\nNó hiện đang được chọn."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Tùy chọn: việc tinh chỉnh Pressure Advance có thể thay đổi cách lưu lượng hiển thị. Chạy ngay một lượt Lưu lượng tinh để kiểm tra lại?\n\nCó = kiểm tra lại lưu lượng, rồi đến Rút.\nKhông = chuyển thẳng đến Rút."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Không có gói cài đặt sẵn nào."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "Không tìm thấy cài đặt sẵn filament '%s'."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "Tên không được trùng với tên của một cài đặt sẵn hệ thống."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Đã có cài đặt sẵn với tên này."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Không tạo được cài đặt sẵn mới."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(Đã hiệu chỉnh xong máy in này.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(Đang hiệu chỉnh máy in này: %d/%d bước.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Bạn đang hiệu chỉnh gì?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Máy in của tôi -- Input Shaping, Vào góc và VFA cho máy in đã chọn, một lần cho mỗi máy in và đầu phun. Hãy làm việc này trước: nó thay đổi cách các bài kiểm tra filament được in."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Một filament -- Nhiệt độ, Tốc độ thể tích tối đa, Lưu lượng, Pressure Advance, Rút và Co ngót, tất cả được lưu vào MỘT cài đặt sẵn filament mà bạn đặt tên ở bước đầu tiên."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Mỗi bài kiểm tra xuất hiện trên plate bên phải, còn thanh tiến độ và bảng trước/sau phía trên sẽ được điền dần. Slice & gửi tới máy in sẽ slice bài kiểm tra và mở hộp thoại gửi thông thường của máy in; Chỉ tạo đặt nó lên plate để bạn tự slice hoặc xuất (ví dụ ra thẻ SD). Dù cách nào, hãy quay lại đây để nhập kết quả. Bạn có thể chuyển sang tab khác bất cứ lúc nào; tab này sẽ tiếp tục từ chỗ bạn dừng lại."
+
+# AI Translated
+msgid "My printer"
+msgstr "Máy in của tôi"
+
+# AI Translated
+msgid "A filament"
+msgstr "Một filament"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Filament này đã có một lần hiệu chỉnh hoàn tất -- kết quả hiển thị bên phải. Chọn filament khác phía trên để hiệu chỉnh cái mới, hoặc nhấn Bắt đầu để hiệu chỉnh lại filament này."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Filament này đang có một lần hiệu chỉnh dở dang (đã xong %d%%). Bắt đầu sẽ tiếp tục từ chỗ đã dừng."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "Bỏ qua %s? Giá trị hiện tại của bạn được giữ, và bạn có thể quay lại bất cứ lúc nào bằng cách nhấp vào nó trên thanh tiến độ hoặc chọn nó ở trên."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "Máy in hoặc đầu phun đã đổi thành %s (%s mm) kể từ khi lượt này bắt đầu trên %s (%s mm). Kết quả mới sẽ bắt đầu một lượt riêng cho máy in này."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Filament đang dùng đã đổi thành %s ở một tab khác, nhưng lượt này đang hiệu chỉnh %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Chuyển lại về %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Pressure adv."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "KT lại lưu lượng"
+
+# AI Translated
+msgid "printer default"
+msgstr "mặc định máy in"
+
+# AI Translated
+msgid "skipped"
+msgstr "đã bỏ qua"
+
+# AI Translated
+msgid "testing..."
+msgstr "đang kiểm tra..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Lưu ảnh tóm tắt"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Lưu bản tóm tắt trước/sau này thành ảnh PNG."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Hiệu chỉnh một filament"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Đã hiệu chỉnh xong máy in"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Đang hiệu chỉnh máy in"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Đã hiệu chỉnh xong"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Đã bỏ qua"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "Xong lượt 1/2"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Đang in bài kiểm tra"
+
+# AI Translated
+msgid "Not started"
+msgstr "Chưa bắt đầu"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "nhấp để mở bước này"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Tùy chọn:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Thiết lập"
+
+# AI Translated
+msgid "Before"
+msgstr "Trước"
+
+# AI Translated
+msgid "After"
+msgstr "Sau"
+
+# AI Translated
+msgid "Change"
+msgstr "Thay đổi"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Bỏ qua lúc %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Tạo bài kiểm tra lúc %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Đo lúc %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Trình hướng dẫn hiệu chỉnh Forca Slicer - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Lưu tóm tắt hiệu chỉnh"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Không thể lưu ảnh."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Hiệu chỉnh máy in"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Các bước hiệu chỉnh này tinh chỉnh chính máy in, một lần cho mỗi máy in và đầu phun. Hãy làm trước khi hiệu chỉnh filament: chúng thay đổi cách các bài kiểm tra filament được in. Thứ tự: Input Shaping (tần số, rồi giảm chấn), Vào góc, VFA. Các bước máy in của bạn không dùng được sẽ bị bỏ qua."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Tần số shaper"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Giảm chấn shaper"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Khôi phục bản sao lưu của máy in này"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Đưa lại các thiết lập máy in mà cài đặt sẵn máy in này có trước khi trình hướng dẫn cập nhật nó lần đầu."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Tôi đã in rồi - nhập kết quả"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Giữ thiết lập hiện tại của máy in và chuyển sang bước hiệu chỉnh tiếp theo."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Input Shaping - tần số"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Tháp rung của Orca tăng tần số input shaper theo chiều cao (X và Y có thể dùng khoảng riêng). Sau khi in, tìm trên mặt X và mặt Y chiều cao nơi ringing -- vệt dội sau các góc và chữ -- yếu nhất. Trang kết quả sẽ đổi mỗi chiều cao thành một tần số."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Mô hình kiểm tra:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X bắt đầu (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X kết thúc:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y bắt đầu (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y kết thúc:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Giảm chấn trong khi kiểm tra:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Input Shaping - giảm chấn"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Với tần số đã đặt, tháp này tăng tỷ số giảm chấn theo chiều cao. Tìm chiều cao nơi ringing yếu nhất; trang kết quả sẽ đổi nó thành tỷ số giảm chấn. Các tần số bên dưới lấy từ bước tần số."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "Tần số X (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Giảm chấn bắt đầu:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Tháp này tăng tốc độ vào góc (jerk, junction deviation hoặc square corner velocity của Klipper) theo chiều cao. Cao hơn thì nhanh hơn nhưng góc bị bo tròn và rung. Tìm điểm cao nhất mà các góc vẫn còn sắc và sạch; trang kết quả sẽ đổi chiều cao đó thành giá trị."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (lỗi dọc mảnh)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Tháp này tăng tốc độ vách ngoài theo từng khối. Các vân dọc mảnh (VFA) xuất hiện ở một số tốc độ nhất định, do cộng hưởng của động cơ và dây đai. Ghi lại các khối bạn thấy chúng (đếm từ dưới lên, khối đầu tiên là 1); trang kết quả sẽ cho bạn biết cần tránh những tốc độ nào cho vách. Giữ Kết thúc trong mức filament của bạn có thể đùn được."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Bắt đầu (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Chiều cao tốt nhất, mặt X (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Chiều cao tốt nhất, mặt Y (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Tần số Y (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Chiều cao tốt nhất (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Giá trị:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Các khối có vân (ví dụ 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Để Forca đặt input shaping ở đầu mỗi lần in"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Ghi thiết lập shaper vào G-code (tùy chọn \"Xuất input shaping\" của Orca), ghi đè những gì firmware máy in đang lưu. Để tắt nếu bạn lưu chúng trong firmware (ví dụ trong printer.cfg của Klipper)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper lưu các giá trị này trong printer.cfg. Hãy thêm hoặc cập nhật các dòng này ở đó, rồi khởi động lại Klipper:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Cập nhật cài đặt sẵn máy in này (các giá trị cũ được sao lưu)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Lưu thành cài đặt sẵn máy in mới:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Máy in Bambu Lab tự tinh chỉnh bù rung (input shaping), nên ở đây không có gì để hiệu chỉnh."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca không đặt input shaping cho loại G-code của máy in này."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Máy in Bambu Lab quản lý vào góc (jerk) trong firmware riêng."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Giá trị thấp hơn cho góc sắc hơn nhưng in chậm hơn."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Junction deviation của Marlin (mm), vì cài đặt sẵn máy in này có đặt giá trị đó."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: kiểm tra dưới dạng square corner velocity (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: jerk tính bằng mm/s (Orca chuyển đổi khi cần)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Jerk cổ điển (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Bước này không áp dụng cho máy in đã chọn: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Bước: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: đã tạo bài kiểm tra lúc %s - hãy in nó, rồi nhập kết quả."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s đã bị bỏ qua (%s); thiết lập của máy in được giữ."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: kết quả gần nhất đã lưu lúc %s."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Vui lòng nhập số cho khoảng tần số và giảm chấn."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Vui lòng nhập tần số hợp lệ: 0 <= bắt đầu < kết thúc <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Vui lòng nhập tỷ số giảm chấn từ 0 đến dưới 1."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Vui lòng nhập số cho các tần số và khoảng giảm chấn."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Vui lòng nhập tần số hợp lệ: 0 < tần số <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Vui lòng nhập khoảng giảm chấn hợp lệ: 0 <= bắt đầu < kết thúc <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Vui lòng nhập số cho bắt đầu và kết thúc."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Vui lòng nhập khoảng hợp lệ: 0 <= bắt đầu < kết thúc <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Giá trị cao (trên %s) có thể gây lệch lớp. Tiếp tục?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Vui lòng nhập số cho bắt đầu, kết thúc và bước."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Vui lòng nhập tốc độ hợp lệ: bắt đầu trên 10, bước trên 0, kết thúc ít nhất bằng bắt đầu + bước."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Nhập kết quả: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Đo từ bàn in đến chỗ ringing yếu nhất trên mỗi mặt (mặt X: mặt có ringing do chuyển động theo X)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\ntần số = bắt đầu + chiều cao / %.1f mm x (kết thúc - bắt đầu)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Tỷ số giảm chấn:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Junction deviation (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Jerk (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Đo từ bàn in đến chỗ ringing yếu nhất."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Đo từ bàn in đến điểm cao nhất mà các góc vẫn còn sắc và sạch."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\ngiá trị = %s + chiều cao / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Nhập số của các khối mà bạn thấy vân dọc mảnh (khối dưới cùng là 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\ntốc độ = %s + (khối - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Chiều cao tháp của bài kiểm tra chưa biết ở đây, nên hãy gõ trực tiếp giá trị.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Đây là cài đặt sẵn máy in hệ thống, không thể thay đổi; kết quả sẽ được lưu vào một cài đặt sẵn mới."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Cài đặt sẵn này đã là bản sao đã hiệu chỉnh do trình hướng dẫn tạo."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Một bản sao được thêm vào mọi máy in mạng đang dùng cài đặt sẵn này."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Tốc độ có vân: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "Không tìm thấy cài đặt sẵn máy in."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Vui lòng nhập tên cho cài đặt sẵn máy in mới."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Không thể thay đổi cài đặt sẵn máy in hệ thống; hãy lưu kết quả thành cài đặt sẵn mới."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Không lưu được cài đặt sẵn máy in."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Vui lòng nhập các tần số (trên 0, tối đa 500 Hz)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Vui lòng nhập tỷ số giảm chấn (từ 0 đến dưới 1)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Tỷ số giảm chấn %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Vui lòng nhập giá trị trên 0, tối đa %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Junction deviation %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Jerk %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Không thấy vân - không có tốc độ nào cần tránh."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Vui lòng nhập số khối (1 = khối dưới cùng), ví dụ 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "Trong cài đặt sẵn process, hãy giữ tốc độ vách ngoài (và các vách nhìn thấy khác) cách những giá trị này ít nhất một bước."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Không thể lưu cài đặt sẵn máy in."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Đã lưu: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Đã ghi vào cài đặt sẵn máy in:\n%s\n\nNó hiện đang được chọn."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "Cài đặt sẵn máy in không thay đổi (firmware giữ thiết lập này)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: nhớ đưa các dòng printer.cfg hiển thị ở trang kết quả vào printer.cfg."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Như vậy là xong hiệu chỉnh máy in. Tiếp theo: hiệu chỉnh các filament của bạn (chọn \"Một filament\" khi trình hướng dẫn hỏi bạn đang hiệu chỉnh gì)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Tiếp theo: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "Bỏ qua %s? Máy in giữ thiết lập hiện tại, và bạn có thể quay lại bất cứ lúc nào từ thanh tiến độ."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "Đưa lại các thiết lập máy in mà \"%s\" có trước khi trình hướng dẫn cập nhật nó lần đầu (%s)? Kết quả máy in của trình hướng dẫn cho nó sẽ bị xóa."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Khôi phục bản sao lưu"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Không thể khôi phục cài đặt sẵn máy in."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "Cài đặt sẵn máy in đã trở lại các thiết lập trước đây."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Hiệu chỉnh máy in - đầu phun %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Tần số shaper"
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Loại shaper"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Tần số shaper X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Tần số shaper Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Tỷ số giảm chấn"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Junction deviation (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Tốc độ VFA cần tránh (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "không có"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Trình hướng dẫn hiệu chỉnh"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Hiệu chỉnh máy in và filament có hướng dẫn"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Báo lỗi hoặc đề xuất tính năng"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Mở biểu mẫu báo cáo của Forca Slicer trên GitHub"
+
+# AI Translated
+msgid "Connected"
+msgstr "Đã kết nối"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Kéo sợi"
+
+# AI Translated
+msgid "Warping"
+msgstr "Cong vênh"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Lệch lớp"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Rối sợi (spaghetti)"
+
+# AI Translated
+msgid "Supports"
+msgstr "Support"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Thiếu đùn"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Thừa đùn"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Tách lớp"
+
+# AI Translated
+msgid "Partial"
+msgstr "Một phần"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Nhật ký in"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "Nhật ký in đang tắt, nên Forca không ghi lại các bản in đã gửi. Hãy bật để lưu bản ghi cho mỗi lần in trong thư mục Forca Academy (bạn có thể tắt lại trong Tùy chọn)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Bật"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Mở thư mục"
+
+# AI Translated
+msgid "Date"
+msgstr "Ngày"
+
+# AI Translated
+msgid "Print"
+msgstr "Bản in"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Chưa ghi"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Vấn đề gặp phải (tùy chọn)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Thêm ảnh"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Sao chép ảnh hoặc video của bản in này vào thư mục của nó. Bạn cũng có thể kéo thả chúng vào cửa sổ này."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Mở thư mục bản in"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Ảnh và video"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Thêm bản in"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Ghi lại plate như hiện tại thành một bản in -- cho các bản in mà Forca không gửi, ví dụ in từ thẻ SD."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Thư mục:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Chưa có bản in nào được ghi"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "Filament %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Thời gian ước tính: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Ảnh: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Hãy chọn một bản in trong danh sách trước, rồi thêm ảnh của nó."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Ghi nhật ký in"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Ghi lại mỗi bản in mà Forca gửi -- máy in, cài đặt sẵn, filament, thiết lập đã đổi, ước tính và ảnh của plate -- vào thư mục Forca Academy, để bạn và bất kỳ AI nào có thể xem lại điều gì hiệu quả. Bản in từ thẻ SD có thể thêm thủ công. Không có gì được tải lên."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Thư mục Forca Academy"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Nơi lưu nhật ký in: các tệp Markdown và JSON thuần. AI bắt đầu bằng AGENTS.md."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Chọn thư mục Forca Academy"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Mở thư mục Forca Academy (tạo nó cùng các tệp khởi đầu nếu cần)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Các bản in đã ghi của bạn: thêm kết quả, ghi chú và ảnh"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Chụp ảnh camera khi bản in kết thúc"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Với máy in Bambu có camera mà Forca truy cập được qua mạng cục bộ: khi một bản in đã ghi hoàn tất hoặc thất bại, một ảnh kết quả được lưu vào thư mục camera của bản in."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Ảnh camera trong khi in"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Cứ bao nhiêu phút Forca lưu một ảnh camera của bản in đã ghi đang chạy, để có thể truy lại khi in hỏng (0 = tắt). Chỉ máy in Bambu. Camera của chúng chỉ cho một người xem cùng lúc, nên có thể bỏ qua một ảnh khi ứng dụng khác đang xem."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "Máy in báo: hoàn tất"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "Máy in báo: thất bại"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "Máy in báo: đã dừng"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "Máy in báo: đã kết thúc (không theo dõi được)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(%d phút sau khi gửi)"
+
+# AI Translated
 #~ msgid "Tab"
 #~ msgstr "Tab"
 
@@ -26281,9 +27670,6 @@ msgstr ""
 
 #~ msgid "Align infill direction to model"
 #~ msgstr "Căn chỉnh hướng infill với model"
-
-#~ msgid "Print"
-#~ msgstr "In"
 
 #~ msgid "in"
 #~ msgstr "in"
@@ -26783,9 +28169,6 @@ msgstr ""
 #~ "Billow: Tương tự như nhiễu perlin, nhưng vón cục hơn.\n"
 #~ "Ridged Multifractal: Nhiễu có gờ với các đặc điểm sắc nét, răng cưa. Tạo kết cấu giống đá cẩm thạch.\n"
 #~ "Voronoi: Chia bề mặt thành các ô voronoi, và dịch chuyển từng cái một lượng ngẫu nhiên. Tạo kết cấu như vá lẽ."
-
-#~ msgid "Flow Rate"
-#~ msgstr "Tốc độ lưu lượng"
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "Không thể in nhiều filament có chênh lệch nhiệt độ lớn cùng nhau. Nếu không, extruder và đầu phun có thể bị tắc hoặc hư hỏng trong khi in"

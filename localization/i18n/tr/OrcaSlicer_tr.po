@@ -9792,6 +9792,10 @@ msgstr ""
 "Not: Gizli Mod etkinken kullanıcı profilleriniz Orca Cloud'a yedeklenmez."
 
 # AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Bu, Bambu Cloud gibi tüm bulut özelliklerini devre dışı bırakır. Tamamen çevrimdışı çalışmayı tercih eden kullanıcılar bu seçeneği etkinleştirebilir."
+
+# AI Translated
 msgid "Hide login side panel"
 msgstr "Giriş yan panelini gizle"
 
@@ -9817,6 +9821,10 @@ msgstr "Bambu Cloud'u etkinleştir"
 # AI Translated
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Orca Cloud'un yanı sıra Bambu Cloud'a giriş yapılmasına izin verir. Etkinleştirildiğinde ana sayfada bir Bambu giriş bölümü görünür."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Bambu Cloud'a giriş yapılmasına izin verir. Etkinleştirildiğinde ana sayfada bir Bambu giriş bölümü görünür."
 
 msgid "Update & sync"
 msgstr "Güncelle ve Senkronize Et"
@@ -23056,8 +23064,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Sonuç"
 
 msgid "Flip direction"
 msgstr ""
@@ -25150,6 +25159,1386 @@ msgstr ""
 "ABS gibi bükülmeye yatkın malzemelere baskı yaparken, ısıtma yatağı sıcaklığının uygun şekilde arttırılmasının bükülme olasılığını azaltabileceğini biliyor muydunuz?"
 
 # AI Translated
+msgid "Retraction length"
+msgstr "Geri çekme uzunluğu"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "XY büzülme"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Z büzülme"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer Kalibrasyon Sihirbazı"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Kapat"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Etkin yapılandırma"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Yazıcı:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Nozul:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Kalibre edilecek filament:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Kalibrasyon:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Akış hızı"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Büzülme"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Son kontrol baskısı (isteğe bağlı)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Maks. akış"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Son kontrol"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Sıcaklık kulesi aynı şekli azalan nozul sıcaklıklarında basar. Baskıdan sonra en temiz yüzeye, en az ipliklenmeye ve en güçlü katman bağına sahip bandı seçin."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Başlangıç sıc. (sıcak):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Bitiş sıc. (soğuk):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Kuleyi zaten bastım - sonucu gir"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Bu, hızı yükseklikle artan tek duvarlı bir kule basar. Yüzeyin nerede pürüzlendiğine veya duvarların nerede eksik ekstrüzyona başladığına bakın. Hâlâ iyi görünen son bölümün yüksekliğini (mm) ölçün -- sonuç sayfası bu yüksekliği sizin için maksimum akışa çevirir."
+
+# AI Translated
+msgid "Start:"
+msgstr "Başlangıç:"
+
+# AI Translated
+msgid "End:"
+msgstr "Bitiş:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Adım (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Yöntem:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Klasik (kaba + ince geçiş)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Önerilen + Mükemmeliyetçi)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Bu geçişi zaten bastım - sonucu gir"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Bu, Orca'nın geri çekme kulesini basar; geri çekme uzunluğu her halkada bir adım artar. İpliklenmenin durduğu en alt bölümü bulun, altındaki halkaları sayın ve geri çekme uzunluğunu almak için bu sayıyı sonuç sayfasına girin. İpliklenmesiz en kısa uzunluğu kullanın."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Adım (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Doğrudan tahrik: varsayılan 0-2 mm aralığı çoğu filamente uyar. Bowden: Bitişi artırın (örneğin 6'ya)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Bu, bir köşesinde %g mm genişliğinde kare açık bir çerçeve ile %g mm yüksekliğinde bir direk basar. Tamamen soğumasını bekleyin (ideal olarak birkaç saat), ardından kumpasla ölçün: X boyunca dış genişlik, Y boyunca dış genişlik (fil ayağını atlamak için ilk katmanların üstünden ölçün) ve direk yüksekliği. Sonuç sayfası bunları filamentin XY ve Z büzülme telafisine çevirir."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Çerçeveyi zaten bastım - ölçümleri gir"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "İsteğe bağlı bir güven kontrolü: Autodesk FDM Test'i (Orca ile gelen model) kalibre edilmiş filament ön ayarınızla basar. Çıkıntıları, köprüleri, ipliklenmeyi, küçük ayrıntıları ve ölçüleri tek baskıda dener. Bundan hiçbir şey kaydedilmez -- bir şey yanlış görünüyorsa o kalibrasyonu yukarıdaki seçiciden yeniden çalıştırın. Kalibre edilmiş ön ayarınız zaten kaydedildi ve seçili."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Başka bir filamenti kalibre et"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Bir kalibrasyon başlat"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Kalibre ettiğiniz filamenti yukarıdaki \"Kalibre edilecek filament\" alanından seçin -- ya da başlangıç için ona yakın mevcut bir profili -- ve Başlat'a basın. Adımlar şu sırayla ilerler: Sıcaklık, Maksimum Hacimsel Hız, Akış hızı, Basınç İlerlemesi, Geri çekme ve Büzülme."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Kalibrasyonu başlat"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Dilimle && yazıcıya gönder"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Yalnızca oluştur (kendim basacağım)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Dilimle & gönder testi plakaya koyar, dilimler ve yazıcınızın gönderme penceresini açar; pencere kapandığında sonucunuzu buraya girersiniz. Yalnızca oluştur testi plakaya koyar (sağda görünür), böylece kendiniz dilimleyip dışa aktarabilirsiniz; ardından sonucunuzu girmek için buraya dönün."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Bu adımı atla"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Bu ayarın mevcut değerini koru ve sonraki kalibrasyona geç."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Başka bir şeyi kalibre et"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Yazıcınızı veya başka bir filamenti kalibre edin. Bu filamentin ilerlemesi korunur."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA kulesi (önerilen)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Ekstruder:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Doğrudan tahrik"
+
+# AI Translated
+msgid "Step:"
+msgstr "Adım:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "İvmeler (isteğe bağlı):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Hızlar (isteğe bağlı):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Bu testi zaten bastım - sonucu gir"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Sonucu gir"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Ölçülen yükseklik (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Sonuç:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Ölçülen X genişliği (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Ölçülen Y genişliği (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Ölçülen direk yüksekliği (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Ön ayar olarak kaydet:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Ön ayara istediğiniz adı verin -- örneğin gerçekten kalibre ettiğiniz filamentin adını, başka bir profilden başlamış olsanız bile. Sonuç bu ön ayara yazılır ve o seçilir; ad zaten varsa güncellenir. Başlangıç ön ayarınız değişmez."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Uygula ve ön ayara kaydet"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Son kontrol baskısı"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "akış oranı %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "geri çekme %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY büzülme %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s testi bekliyor (oluşturuldu: %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Son kontrol baskısı oluşturuldu (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Son %s sonucu: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s atlandı (%s); mevcut değeriniz korunuyor."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "En iyi sıcaklık (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Maks. akış (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "En iyi blok numarası:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "En iyi PA değeri:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Geri çekme uzunluğu (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "O bölümün altındaki halkalar:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Kumpas gerekmez: kuledeki her halka bir geri çekme adımını gösterir. İpliklenmesiz en alt bölümü bulun ve altındaki halkaları sayın (en alt bölüm, 0 halka, Başlangıç'tır):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nuzunluk = başlangıç + halkalar x adım = %g + halkalar x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Halka sayısını buraya girin, uzunluk sizin için doldurulur; ya da uzunluğu kendiniz yazın."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Köşelerin en keskin göründüğü yüksekliği (mm) ölçün, ardından:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = başlangıç + adım x yükseklik = %g + %g x yükseklik.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Bu yüksekliği buraya girin, PA değeri sizin için doldurulur; ya da değeri kendiniz yazın."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Yeni misiniz? İyi görünen son bölümün yüksekliğini (mm) not edin, ardından:\nmaks. akış = başlangıç + yükseklik x adım = %g + yükseklik x %g.\nBu yüksekliği buraya girin, maks. akış sizin için doldurulur; ya da akışı kendiniz yazın."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Genişliği en düzgün olan çizginin yanına basılmış değeri girin."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Köşeleri en keskin ve en temiz olan desenin üstüne basılmış değeri girin."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Ölçtüğünüz değerleri girin. Mevcut Z değerini korumak için Z'yi boş bırakın. Mevcut telafi: XY %.2f%%, Z %.2f%% (bu baskıya zaten uygulandı, yani hesaba katıldı)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "Artan PA değerlerinde bir dizi çizgi basar, her biri kendi değeriyle etiketlenir. Genişliği en düzgün çizgiyi seçin -- hızın değiştiği yerde şişkinlik (PA çok düşük) ve incelme (çok yüksek) olmasın -- ve o çizginin değerini girin."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "Artan PA değerlerinde iç içe köşe desenleri basar, her biri kendi değeriyle etiketlenir. Köşeleri en keskin ve en temiz olanı seçin -- şişkinlik (PA çok düşük) ve yuvarlanma veya boşluk (çok yüksek) olmasın -- ve değerini girin."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "PA değeri her mm yükseklikte bir adım artan içi boş bir kule basar. Köşelerin en keskin göründüğü yüksekliği bulun -- şişkinlik (PA çok düşük) ve boşluk veya yuvarlanma (çok yüksek) olmasın --, kumpasla ölçün ve PA değerini almak için sonuç sayfasına girin."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Lütfen bu filament için geçerli bir sıcaklık aralığı girin:\n%d ile %d C arasında, Başlangıç Bitiş'ten en az 5 C yüksek olacak şekilde."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Lütfen geçerli değerler girin:\nBaşlangıç > 0, Adım > 0, Bitiş > Başlangıç + Adım."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Lütfen geçerli geri çekme değerleri girin:\nBaşlangıç >= 0, Adım > 0, Bitiş > Başlangıç + Adım, Bitiş <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Lütfen geçerli PA değerleri girin:\nBaşlangıç >= 0, Adım >= 0.001, Bitiş > Başlangıç + Adım."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "İvmeler ve hızlar virgülle ayrılmış pozitif sayılar olmalı veya boş bırakılmalıdır."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "Dilimleme tamamlanmadı, bu yüzden hiçbir şey gönderilmedi. Hatayı düzeltip tekrar deneyin."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Büzülme testi"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca büzülme çerçevesi"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Bu, Basınç İlerlemesi sonrasındaki isteğe bağlı yeniden kontroldür."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Bu, 2 geçişin 1.'sidir; ardından ince bir geçiş gelir."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Bu, 2 geçişin 2.'sidir; son geçiştir."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Üstü en pürüzsüz ve en düz olan bloğun altındaki numarayı girin. Negatif = daha az akış, pozitif = daha fazla akış. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Yeni akış: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Yeni akış: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Yeni akış: %.3f + numara."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Yeni akış: %.3f x (1 + numara/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "PA sonrası kontrol (Mükemmeliyetçi geçiş)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "PA sonrası kontrol (ince geçiş)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "2 geçişin 1.'si (Önerilen)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "2 geçişin 2.'si (Mükemmeliyetçi)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "2 geçişin 1.'si (kaba)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "2 geçişin 2.'si (ince)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Orca'nın YOLO testi bir sıra blok basar, her biri -0.02 veya +0.01 gibi küçük bir akış farkıyla etiketlenir. Üstü en pürüzsüz ve en düz bloğu seçin -- ne kabarık (çok fazla akış) ne de boşluklu (çok az) -- ve numarasını basıldığı gibi girin. Genellikle Önerilen geçiş yeterlidir; Mükemmeliyetçi geçiş onu daha küçük adımlarla iyileştirir."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Bu, her biri biraz farklı akış oranına sahip ve bir numarayla etiketlenmiş bir sıra blok basar. Üst yüzeylere bakın ve üstü en pürüzsüz ve en düz bloğu seçin -- ne kabarık (çok fazla akış) ne de boşluklu (çok az). O bloğun numarasını gireceksiniz. Akış iki geçişte yapılır: önce kaba, ardından ilk sonucunuzun çevresinde ince."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Lütfen bu filament için %d ile %d C arasında bir sıcaklık girin."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Lütfen %.1f ile %.1f mm3/s arasında bir maksimum hacimsel hız girin."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Lütfen en iyi bloğun numarasını girin, -%g ile %g arasında."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Bu blok numarası akış oranını %.3f yapar; bu, %.2f-%.2f güvenli aralığının dışında. Lütfen numarayı tekrar kontrol edin."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Lütfen %.2f ile %.2f arasında bir basınç ilerlemesi değeri girin."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Lütfen 0 ile %g mm arasında bir geri çekme uzunluğu girin."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Lütfen ölçülen X ve Y genişliklerini (yaklaşık %g mm) ve isteğe bağlı olarak direk yüksekliğini (yaklaşık %g mm) girin."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Bu ölçümler XY %.2f%% / Z %.2f%% verir; bu, %g-%g%% makul aralığının dışında. Lütfen tekrar kontrol edin."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Lütfen ön ayar için bir ad girin."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Ön ayar kaydedilemedi."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Sıradaki: Maksimum Hacimsel Hız."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Sıradaki: Akış hızı."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Akış kontrolü kaydedildi. Sıradaki: Geri çekme."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "1. geçiş kaydedildi. Sıradaki: Akış hızı 2. geçiş."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Akış hızı tamamlandı. Sıradaki: Basınç İlerlemesi."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Sıradaki: Büzülme."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Kalibrasyonlar tamamlandı. İsterseniz tüm profili doğrulamak için son kontrolü basın."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s, filament ön ayarına kaydedildi:\n%s\n\nŞimdi seçili."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "İsteğe bağlı: basınç ilerlemesini ayarlamak akışın görünümünü değiştirebilir. Kontrol için şimdi bir ince Akış hızı geçişi yapılsın mı?\n\nEvet = akışı kontrol et, ardından Geri çekme.\nHayır = doğrudan Geri çekmeye geç."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Kullanılabilir ön ayar paketi yok."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "'%s' filament ön ayarı bulunamadı."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "Ad, bir sistem ön ayarının adıyla aynı olamaz."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Bu adla bir ön ayar zaten var."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Yeni ön ayar oluşturulamadı."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(Bu yazıcının kalibrasyonu tamamlandı.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(Bu yazıcının kalibrasyonu sürüyor: %d / %d adım.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Neyi kalibre ediyorsunuz?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Yazıcım -- seçili yazıcı için Input shaping, Köşe dönüşü ve VFA; her yazıcı ve nozul için bir kez. Önce bunu yapın: filament testlerinin nasıl basıldığını değiştirir."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Bir filament -- Sıcaklık, Maksimum Hacimsel Hız, Akış hızı, Basınç İlerlemesi, Geri çekme ve Büzülme; hepsi ilk adımda adını verdiğiniz TEK bir filament ön ayarına kaydedilir."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Her test sağdaki plakada görünür; üstündeki ilerleme çubuğu ve önce/sonra tablosu ilerledikçe dolar. Dilimle & yazıcıya gönder testi dilimler ve yazıcınızın normal gönderme penceresini açar; Yalnızca oluştur onu plakaya koyar, böylece kendiniz dilimleyebilir veya dışa aktarabilirsiniz (örneğin bir SD karta). Her iki durumda da sonucunuzu girmek için buraya dönün. İstediğiniz zaman başka sekmelere geçebilirsiniz; bu sekme kaldığınız yerden devam eder."
+
+# AI Translated
+msgid "My printer"
+msgstr "Yazıcım"
+
+# AI Translated
+msgid "A filament"
+msgstr "Bir filament"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Bu filamentin tamamlanmış bir kalibrasyonu zaten var -- sonuçları sağda gösteriliyor. Yeni birini kalibre etmek için yukarıdan başka bir filament seçin veya bunu yeniden kalibre etmek için Başlat'a basın."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Bu filamentin süren bir kalibrasyonu var (%d%% tamamlandı). Başlat kaldığı yerden devam eder."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "%s atlansın mı? Mevcut değeriniz korunur ve ilerleme çubuğunda tıklayarak veya yukarıdan seçerek istediğiniz zaman ona dönebilirsiniz."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "Yazıcı veya nozul şuna değişti: %s (%s mm); bu çalışma şununla başlamıştı: %s (%s mm). Yeni sonuçlar bu yazıcı için ayrı bir çalışma başlatır."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Etkin filament başka bir sekmede şuna değişti: %s, ancak bu çalışma şunu kalibre ediyor: %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Geri dön: %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Basınç ilr."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Akış kontrolü"
+
+# AI Translated
+msgid "printer default"
+msgstr "yazıcı varsayılanı"
+
+# AI Translated
+msgid "skipped"
+msgstr "atlandı"
+
+# AI Translated
+msgid "testing..."
+msgstr "test ediliyor..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Özet görüntüsünü kaydet"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Bu önce/sonra özetini PNG görüntüsü olarak kaydet."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Bir filamenti kalibre et"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Yazıcı kalibrasyonu tamamlandı"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Yazıcı kalibre ediliyor"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Kalibrasyon tamamlandı"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Atlandı"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "2 geçişin 1.'si tamam"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Test basılıyor"
+
+# AI Translated
+msgid "Not started"
+msgstr "Başlanmadı"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "bu adımı açmak için tıklayın"
+
+# AI Translated
+msgid "Optional:"
+msgstr "İsteğe bağlı:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Ayar"
+
+# AI Translated
+msgid "Before"
+msgstr "Önce"
+
+# AI Translated
+msgid "After"
+msgstr "Sonra"
+
+# AI Translated
+msgid "Change"
+msgstr "Değişim"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Atlandı: %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Test oluşturuldu: %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Ölçüldü: %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer Kalibrasyon Sihirbazı - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Kalibrasyon özetini kaydet"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Görüntü kaydedilemedi."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Yazıcı kalibrasyonu"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Bu kalibrasyonlar yazıcının kendisini ayarlar; her yazıcı ve nozul için bir kez. Bunları filamentleri kalibre etmeden önce yapın: filament testlerinin nasıl basıldığını değiştirirler. Sıra: Input shaping (frekans, ardından sönümleme), Köşe dönüşü, VFA. Yazıcınızın kullanamayacağı adımlar atlanır."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Shaper frekansı"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Shaper sönümlemesi"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Bu yazıcının yedeğini geri yükle"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Bu yazıcı ön ayarının, sihirbaz onu ilk kez güncellemeden önceki yazıcı ayarlarını geri getir."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Zaten bastım - sonucu gir"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Yazıcının mevcut ayarını koru ve sonraki kalibrasyona geç."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Input shaping - frekans"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Orca'nın titreşim test kulesi input shaper frekansını yükseklikle artırır (X ve Y kendi aralıklarını kullanabilir). Baskıdan sonra X yüzünde ve Y yüzünde ringing'in -- köşelerden ve harflerden sonraki yankının -- en zayıf olduğu yüksekliği bulun. Sonuç sayfası her yüksekliği bir frekansa çevirir."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Test modeli:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X başlangıç (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X bitiş:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y başlangıç (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y bitiş:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Test sırasında sönümleme:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Input shaping - sönümleme"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Frekanslarınız ayarlıyken bu kule sönümleme oranını yükseklikle artırır. Ringing'in en zayıf olduğu yüksekliği bulun; sonuç sayfası onu sönümleme oranına çevirir. Aşağıdaki frekanslar frekans adımından gelir."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "Frekans X (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Sönümleme başlangıcı:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Bu kule köşe hızını (sarsıntı, köşe sapması veya Klipper'ın square corner velocity değeri) yükseklikle artırır. Daha yüksek daha hızlıdır ama köşeleri yuvarlar ve titretir. Köşelerin hâlâ keskin ve temiz olduğu en yüksek noktayı bulun; sonuç sayfası bu yüksekliği değere çevirir."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (ince dikey kusurlar)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Bu kule dış duvar hızını blok blok artırır. Belirli hızlarda motor ve kayış rezonansından dolayı ince dikey şeritler (VFA) görülür. Bunları gördüğünüz blokları not edin (alttan sayarak, ilk blok 1'dir); sonuç sayfası duvarlarınızı hangi hızlardan uzak tutmanız gerektiğini söyler. Bitişi filamentinizin ekstrüde edebileceği sınırlar içinde tutun."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Başlangıç (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "En iyi yükseklik, X yüzü (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "En iyi yükseklik, Y yüzü (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Frekans Y (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "En iyi yükseklik (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Değer:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Şeritli bloklar (örn. 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Forca her baskının başında input shaping'i ayarlasın"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Shaper ayarlarını G-code'a yazar (Orca'nın \"Input shaping yaz\" seçeneği) ve yazıcının donanım yazılımında kayıtlı olanı geçersiz kılar. Bunları donanım yazılımında tutuyorsanız (örneğin Klipper'ın printer.cfg dosyasında) kapalı bırakın."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper bunları printer.cfg dosyasında tutar. Bu satırları oraya ekleyin veya güncelleyin, ardından Klipper'ı yeniden başlatın:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Bu yazıcı ön ayarını güncelle (eski değerler yedeklenir)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Yeni yazıcı ön ayarı olarak kaydet:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Bambu Lab yazıcılar titreşim telafilerini (input shaping) kendileri ayarlar, bu yüzden burada kalibre edilecek bir şey yok."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca bu yazıcının G-code türü için input shaping ayarlamaz."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Bambu Lab yazıcılar köşe dönüşünü (sarsıntı) kendi donanım yazılımlarında yönetir."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Daha düşük değerler daha keskin köşeler ama daha yavaş baskı verir."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Marlin köşe sapması (mm), çünkü bu yazıcı ön ayarında bir değer ayarlı."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: square corner velocity olarak test edilir (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: mm/s cinsinden sarsıntı (Orca gerektiğinde dönüştürür)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Klasik sarsıntı (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Bu adım seçili yazıcı için geçerli değil: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Adım: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: test %s tarihinde oluşturuldu - basın, ardından sonucu girin."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s atlandı (%s); yazıcının ayarı korunuyor."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: son sonuç %s tarihinde kaydedildi."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Lütfen frekans aralığı ve sönümleme için sayı girin."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Lütfen geçerli frekanslar girin: 0 <= başlangıç < bitiş <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Lütfen 0'dan 1'e kadar (1 hariç) bir sönümleme oranı girin."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Lütfen frekanslar ve sönümleme aralığı için sayı girin."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Lütfen geçerli frekanslar girin: 0 < frekans <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Lütfen geçerli bir sönümleme aralığı girin: 0 <= başlangıç < bitiş <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Lütfen başlangıç ve bitiş için sayı girin."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Lütfen geçerli bir aralık girin: 0 <= başlangıç < bitiş <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Yüksek değerler (%s üzeri) katman kaymasına neden olabilir. Devam edilsin mi?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Lütfen başlangıç, bitiş ve adım için sayı girin."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Lütfen geçerli hızlar girin: başlangıç 10'un üzerinde, adım 0'ın üzerinde, bitiş en az başlangıç + adım."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Sonucu gir: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Tabladan her yüzde ringing'in en zayıf olduğu yere kadar ölçün (X yüzü: ringing'i X hareketlerinden gelen yüz)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\nfrekans = başlangıç + yükseklik / %.1f mm x (bitiş - başlangıç)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Sönümleme oranı:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Köşe sapması (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Sarsıntı (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Tabladan ringing'in en zayıf olduğu yere kadar ölçün."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Tabladan köşelerin hâlâ keskin ve temiz olduğu en yüksek noktaya kadar ölçün."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\ndeğer = %s + yükseklik / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "İnce dikey şeritler gördüğünüz blokların numaralarını girin (en alttaki blok 1'dir)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\nhız = %s + (blok - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Testinizin kule yüksekliği burada bilinmiyor, bu yüzden değerin kendisini yazın.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Bu, değiştirilemeyen bir sistem yazıcı ön ayarıdır; sonuç yeni bir ön ayara gider."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Bu ön ayar zaten sihirbazın oluşturduğu kalibre edilmiş bir kopya."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Bu ön ayarı kullanan her ağ yazıcısına bir kopya eklenir."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Şeritli hızlar: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "Yazıcı ön ayarı bulunamadı."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Lütfen yeni yazıcı ön ayarı için bir ad girin."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Bir sistem yazıcı ön ayarı değiştirilemez; sonucu yeni bir ön ayar olarak kaydedin."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Yazıcı ön ayarı kaydedilemedi."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Lütfen frekansları girin (0'ın üzerinde, 500 Hz'e kadar)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Lütfen sönümleme oranını girin (0'dan 1'e kadar, 1 hariç)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Sönümleme oranı %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Lütfen 0'ın üzerinde, en fazla %s olan bir değer girin."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Köşe sapması %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Sarsıntı %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Şerit görülmedi - kaçınılacak hız yok."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Lütfen blok numaralarını girin (1 = en alttaki blok), örn. 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "İşlem ön ayarında dış duvar hızınızı (ve diğer görünür duvar hızlarını) bunlardan en az bir adım uzak tutun."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Yazıcı ön ayarı kaydedilemedi."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Kaydedildi: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Yazıcı ön ayarına yazıldı:\n%s\n\nŞimdi seçili."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "Yazıcı ön ayarı değiştirilmedi (bu ayarı donanım yazılımı tutuyor)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: sonuç sayfasında gösterilen printer.cfg satırlarını printer.cfg dosyasına eklemeyi unutmayın."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Yazıcı kalibrasyonu tamamlandı. Sıradaki: filamentlerinizi kalibre edin (sihirbaz neyi kalibre ettiğinizi sorduğunda \"Bir filament\" yanıtını verin)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Sıradaki: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "%s atlansın mı? Yazıcı mevcut ayarını korur ve ilerleme çubuğundan istediğiniz zaman ona dönebilirsiniz."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "\"%s\" ön ayarının, sihirbaz onu ilk kez güncellemeden önceki yazıcı ayarları geri getirilsin mi (%s)? Sihirbazın bu yazıcıya ait sonuçları silinir."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Yedeği geri yükle"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Yazıcı ön ayarı geri yüklenemedi."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "Yazıcı ön ayarı yeniden önceki ayarlarına sahip."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Yazıcı kalibrasyonu - nozul %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Shaper frek."
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Shaper türü"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Shaper frekansı X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Shaper frekansı Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Sönümleme oranı"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Köşe sapması (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Kaçınılacak VFA hızları (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "yok"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Kalibrasyon Sihirbazı"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Rehberli yazıcı ve filament kalibrasyonu"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Hata bildir veya özellik iste"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Forca Slicer'ın bildirim formlarını GitHub'da aç"
+
+# AI Translated
+msgid "Connected"
+msgstr "Bağlı"
+
+# AI Translated
+msgid "Stringing"
+msgstr "İplenme"
+
+# AI Translated
+msgid "Warping"
+msgstr "Çarpılma"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Katman kayması"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Spagetti"
+
+# AI Translated
+msgid "Supports"
+msgstr "Destekler"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Eksik ekstrüzyon"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Aşırı ekstrüzyon"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Katman ayrılması"
+
+# AI Translated
+msgid "Partial"
+msgstr "Kısmi"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Baskı Günlüğü"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "Baskı günlüğü kapalı, bu yüzden Forca gönderdiği baskıları kaydetmiyor. Her baskının kaydını Forca Academy klasöründe tutmak için açın (Tercihler'den yeniden kapatabilirsiniz)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Aç"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Klasörü aç"
+
+# AI Translated
+msgid "Date"
+msgstr "Tarih"
+
+# AI Translated
+msgid "Print"
+msgstr "Baskı"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Kaydedilmedi"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Ne ters gitti (isteğe bağlı)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Fotoğraf ekle"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Bu baskının fotoğraflarını veya videolarını klasörüne kopyalayın. Bunları bu pencereye de sürükleyebilirsiniz."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Baskı klasörünü aç"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Fotoğraflar ve videolar"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Baskı ekle"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Plakayı şu anki haliyle bir baskı olarak kaydet -- Forca'nın göndermediği baskılar için, örneğin SD karttan başlatılan bir baskı."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Klasör:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Henüz kaydedilmiş baskı yok"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "Filament %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Tahmini süre: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Fotoğraflar: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Önce listeden bir baskı seçin, ardından fotoğraflarını ekleyin."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Baskı günlüğü tut"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Forca'nın gönderdiği her baskıyı -- yazıcı, ön ayarlar, filamentler, değiştirilen ayarlar, tahminler ve plakanın bir resmi -- Forca Academy klasörüne kaydeder; böylece siz ve herhangi bir yapay zekâ neyin işe yaradığına bakabilirsiniz. SD karttan yapılan baskılar elle eklenebilir. Hiçbir şey yüklenmez."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy klasörü"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Baskı günlüğünün tutulduğu yer: sade Markdown ve JSON dosyaları. Bir yapay zekâ AGENTS.md ile başlar."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Forca Academy klasörünü seçin"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Forca Academy klasörünü açın (gerekirse başlangıç dosyalarıyla birlikte oluşturur)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Kaydedilen baskılarınız: sonucu, notları ve fotoğrafları ekleyin"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Baskı bittiğinde kamera fotoğrafı çek"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Forca'nın yerel ağda erişebildiği kameraya sahip Bambu yazıcılar için: kaydedilen bir baskı bittiğinde veya başarısız olduğunda sonucun bir fotoğrafı baskının camera klasörüne kaydedilir."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Baskı sırasında kamera fotoğrafları"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Forca'nın, süren kayıtlı bir baskının kamera fotoğrafını kaç dakikada bir saklayacağı; böylece bir hata geriye doğru izlenebilir (0 = kapalı). Yalnızca Bambu yazıcılar. Kameraları aynı anda tek izleyiciye izin verir, bu yüzden başka bir uygulama izlerken bir fotoğraf atlanabilir."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "Yazıcı bildirdi: tamamlandı"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "Yazıcı bildirdi: başarısız"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "Yazıcı bildirdi: durduruldu"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "Yazıcı bildirdi: bitti (izlenmedi)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(gönderdikten %d dk sonra)"
+
+# AI Translated
 #~ msgid "Tab"
 #~ msgstr "Sekme"
 
@@ -25435,9 +26824,6 @@ msgstr ""
 
 #~ msgid "Align infill direction to model"
 #~ msgstr "Dolgu yönünü modele hizalayın"
-
-#~ msgid "Print"
-#~ msgstr "Yazdır"
 
 #~ msgid "in"
 #~ msgstr "in"
@@ -25959,9 +27345,6 @@ msgstr ""
 #~ "Billow: Perlin gürültüsüne benzer, ancak daha topaklanır.\n"
 #~ "Ridged multifractal: Keskin, pürüzlü özelliklere sahip çıkıntılı gürültü. Mermer benzeri dokular oluşturur.\n"
 #~ "Voronoi: Yüzeyi voronoi hücrelerine böler ve her birini rastgele miktarda yer değiştirir. Patchwork dokusu oluşturur."
-
-#~ msgid "Flow Rate"
-#~ msgstr "Akış hızı"
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "Sıcaklık farkı çok büyük olan birden fazla filament aynı anda basılamaz. Aksi takdirde ekstruder ve nozul baskı sırasında tıkanabilir veya zarar görebilir"

@@ -152,6 +152,14 @@ ForcaAIResult tool_status(const json&)
     j["plates"]           = { { "count", plates.get_plate_count() }, { "current", plates.get_curr_plate_index() + 1 } };
     j["objects"]          = plater->model().objects.size();
     j["ai_phase"]         = "3 (see + edit + print requests + printer status, camera and safety pause for printers the user shared; printing needs the user's click on an approval card in Forca)";
+    const bool advanced   = ForcaAI::instance().level() == ForcaAI::Level::Advanced;
+    j["control_level"]    = { { "level", ForcaAI::level_name(ForcaAI::instance().level()) },
+                              { "files", advanced ? "you may overwrite the user's files and edit their presets ('path' / 'update'); Forca backs each file up first"
+                                                  : "new '(Claude <date>)' files and presets only; you may update only your own unchanged ones" },
+                              { "printing", advanced ? "forca_request_print opens Forca's print dialog directly; the user presses Send"
+                                                     : "forca_request_print shows the user an approval card; only their click opens the print dialog" },
+                              { "changed_by", "the user only, in Forca's Forca AI window" } };
+    j["print_grant"]      = forca_ai_grant_json();
     return ForcaAIResult::json(j);
 }
 
@@ -435,6 +443,8 @@ void register_forca_ai_tools(ForcaAI& ai)
     register_forca_ai_hand_tools(ai);
     register_forca_ai_print_tools(ai);
     register_forca_ai_printer_tools(ai);
+    register_forca_ai_autonomy_tools(ai);
+    register_forca_ai_academy_tools(ai);
 }
 
 }} // namespace Slic3r::GUI

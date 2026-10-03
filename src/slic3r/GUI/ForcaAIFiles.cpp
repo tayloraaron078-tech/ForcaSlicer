@@ -1,6 +1,7 @@
 // Forca AI rule R1 in the GUI: today's date, the data-folder ledger and the default save folder around the tested
 // libslic3r implementation (libslic3r/ForcaAISafePath). See ForcaAIFiles.hpp.
 #include "ForcaAIFiles.hpp"
+#include "ForcaAI.hpp"
 
 #include "GUI.hpp"                // from_u8 / into_path (UTF-8 <-> native paths)
 #include "libslic3r/ForcaAISafePath.hpp"
@@ -48,6 +49,24 @@ fs::path forca_ai_new_path(const fs::path& dir, const std::string& stem, const s
 bool forca_ai_may_write(const fs::path& path) { return ledger().may_write(path); }
 bool forca_ai_created(const fs::path& path) { return ledger().created(path); }
 void forca_ai_record_write(const fs::path& path) { ledger().record_write(path, today()); }
+
+bool forca_ai_claim_write(const fs::path& path, fs::path& backup, std::string& err)
+{
+    backup.clear();
+    err.clear();
+    if (forca_ai_may_write(path))
+        return true;
+    if (ForcaAI::instance().level() != ForcaAI::Level::Advanced)
+        return false;
+    backup = Slic3r::ForcaAI::backup_copy(path, forca_ai_backup_dir(), today(), err);
+    if (backup.empty())
+        return false;
+    ForcaAI::instance().log("backup", "Before overwriting " + into_u8(from_path(path)) + " (Advanced level), Forca saved a "
+                                      "copy as " + into_u8(from_path(backup)), true);
+    return true;
+}
+
+fs::path forca_ai_backup_dir() { return forca_ai_default_dir() / "Backups"; }
 
 fs::path forca_ai_default_dir()
 {

@@ -11,6 +11,7 @@
 #include "MainFrame.hpp"
 #include "PartPlate.hpp"
 #include "Plater.hpp"
+#include "PostProcessor.hpp"
 #include "Selection.hpp"
 #include "Tab.hpp"
 #include "Jobs/Worker.hpp"
@@ -199,9 +200,9 @@ fs::path folder_arg(const json& args, std::string& err)
     return dir;
 }
 
-// The output path for an AI save: an explicit `path` the AI may write (its own unchanged file), else a new
-// "(Claude <date>)" name in `folder`.
-fs::path output_path(const json& args, const std::string& default_stem, const std::string& ext, std::string& err)
+// The output path for an AI save: an explicit `path` the AI may write (its own unchanged file; at the Advanced
+// control level any file, backed up first into `backup`), else a new "(Claude <date>)" name in `folder`.
+fs::path output_path(const json& args, const std::string& default_stem, const std::string& ext, fs::path& backup, std::string& err)
 {
     const std::string explicit_path = args.value("path", std::string());
     if (!explicit_path.empty()) {
@@ -210,9 +211,10 @@ fs::path output_path(const json& args, const std::string& default_stem, const st
             err = "path must end with " + ext;
             return {};
         }
-        if (!forca_ai_may_write(p)) {
-            err = "Forca does not let the AI write '" + explicit_path + "': it is the user's file, or the user changed "
-                  "it since the AI saved it. Leave out 'path' to save under a new name.";
+        if (!forca_ai_claim_write(p, backup, err)) {
+            if (err.empty())
+                err = "Forca does not let the AI write '" + explicit_path + "': it is the user's file, or the user changed "
+                      "it since the AI saved it. Leave out 'path' to save under a new name.";
             return {};
         }
         return p;
@@ -572,7 +574,8 @@ ForcaAIResult tool_select_preset(const json& args)
 }
 
 // Creates a new "(Claude <date>)" user preset (or updates one the AI created and the user has not changed since),
-// from a base preset plus changed settings, and selects it. The user's own presets are never edited (R1).
+// from a base preset plus changed settings, and selects it. The user's own presets are edited only at the Advanced
+// control level, after Forca backs up the preset file (R1).
 ForcaAIResult tool_create_preset(const json& args)
 {
     std::string err;
@@ -604,14 +607,17 @@ ForcaAIResult tool_create_preset(const json& args)
     // The name: updating one of the AI's own presets, or a new "(Claude <date>)" name.
     std::string target = args.value("update", std::string());
     const bool  update = !target.empty();
+    fs::path    backup; // the user's preset file, copied before an Advanced-level update
     if (update) {
         const Preset* own = c->find_preset(target);
         if (!own || own->name != target || own->is_system || own->is_default)
             return ForcaAIResult::error("No user preset named '" + target + "' to update.");
-        if (!forca_ai_may_write(into_path(from_u8(own->file))) || !forca_ai_created(into_path(from_u8(own->file))))
-            return ForcaAIResult::error("'" + target + "' is not a preset the AI created, or the user changed it since. "
-                                        "Leave out 'update' to create a new preset instead.");
-        base = own; // an update starts from the AI preset itself
+        const fs::path file = into_path(from_u8(own->file));
+        if (!(forca_ai_created(file) && forca_ai_may_write(file)) && !forca_ai_claim_write(file, backup, err))
+            return ForcaAIResult::error(!err.empty() ? err
+                                                     : "'" + target + "' is not a preset the AI created, or the user changed it "
+                                                       "since. Leave out 'update' to create a new preset instead.");
+        base = own; // an update starts from the preset itself
     } else {
         const std::string stem = forca_ai_strip_suffix(args.value("name", base->name)) + forca_ai_suffix();
         target = stem;
@@ -644,7 +650,8 @@ ForcaAIResult tool_create_preset(const json& args)
     if (!update && wxGetApp().is_user_login())
         saved->user_id = wxGetApp().getAgent()->get_user_id();
     saved->save_info();
-    forca_ai_record_write(into_path(from_u8(saved->file)));
+    if (backup.empty()) // a user preset the AI changed at the Advanced level stays the user's
+        forca_ai_record_write(into_path(from_u8(saved->file)));
     b->update_compatible(PresetSelectCompatibleType::Never);
 
     // Put it in use.
@@ -664,6 +671,8 @@ ForcaAIResult tool_create_preset(const json& args)
     }
 
     json j = { { "preset", target }, { "type", type }, { "based_on", base_name }, { "updated", update }, { "changed", applied } };
+    if (!backup.empty())
+        j["backup_of_previous"] = into_u8(from_path(backup));
     if (type == "filament")
         j["filaments"] = filament_slots();
     return ForcaAIResult::json(j);
@@ -1060,45 +1069,101 @@ ForcaAIResult tool_save_project(const json& args)
     Plater*     p = plater_ready(err);
     if (!p)
         return ForcaAIResult::error(err);
-    const fs::path path = output_path(args, project_stem(p), ".3mf", err);
+    fs::path       backup;
+    const fs::path path = output_path(args, project_stem(p), ".3mf", backup, err);
     if (path.empty())
         return ForcaAIResult::error(err);
     // Silence: saves a copy -- the user's open project keeps its own file name, so their next Ctrl+S is unaffected.
     if (p->export_3mf(path, SaveStrategy::Silence) < 0)
         return ForcaAIResult::error("Forca could not save the project copy.");
-    forca_ai_record_write(path);
-    return ForcaAIResult::json({ { "saved", into_u8(from_path(path)) },
-                                 { "note", "A copy of the current project; the project open in Forca keeps its own file." } });
+    if (backup.empty()) // a file the AI overwrote at the Advanced level stays the user's
+        forca_ai_record_write(path);
+    json j = { { "saved", into_u8(from_path(path)) },
+               { "note", "A copy of the current project; the project open in Forca keeps its own file." } };
+    if (!backup.empty())
+        j["backup_of_previous"] = into_u8(from_path(backup));
+    return ForcaAIResult::json(j);
 }
 
+// Runs off the GUI thread (like Orca's own export in BackgroundSlicingProcess::finalize_gcode): the plate is read on
+// the GUI thread, then the user's post-processing scripts run on a copy of the sliced G-code, so the exported file is
+// what File > Export G-code would write. Bambu printers already had their scripts run when the plate was sliced.
 ForcaAIResult tool_export_gcode(const json& args)
 {
-    std::string err;
-    Plater*     p = plater_ready(err);
-    if (!p)
-        return ForcaAIResult::error(err);
-    PartPlateList& plates = p->get_partplate_list();
-    const int      idx    = args.value("plate", plates.get_curr_plate_index() + 1) - 1;
-    if (idx < 0 || idx >= plates.get_plate_count())
-        return ForcaAIResult::error("plate must be between 1 and " + std::to_string(plates.get_plate_count()) + ".");
-    PartPlate* plate = plates.get_plate(idx);
-    if (!plate->is_slice_result_valid())
-        return ForcaAIResult::error("Plate " + std::to_string(idx + 1) + " is not sliced (or changed since). Call forca_slice first.");
-    const fs::path src = into_path(from_u8(plate->get_tmp_gcode_path()));
+    std::string        err, src_u8;
+    fs::path           dst, backup;
+    int                plate_no = 0;
+    bool               scripts_ran_at_slice = false;
+    DynamicPrintConfig config;
+    const bool on_time = ForcaAI::instance().on_gui([&]() {
+        Plater* p = plater_ready(err);
+        if (!p)
+            return;
+        PartPlateList& plates = p->get_partplate_list();
+        const int      idx    = args.value("plate", plates.get_curr_plate_index() + 1) - 1;
+        if (idx < 0 || idx >= plates.get_plate_count()) {
+            err = "plate must be between 1 and " + std::to_string(plates.get_plate_count()) + ".";
+            return;
+        }
+        PartPlate* plate = plates.get_plate(idx);
+        Print*     print = plate->fff_print();
+        if (!plate->is_slice_result_valid() || !print) {
+            err = "Plate " + std::to_string(idx + 1) + " is not sliced (or changed since). Call forca_slice first.";
+            return;
+        }
+        src_u8               = plate->get_tmp_gcode_path();
+        config               = print->full_print_config();
+        scripts_ran_at_slice = print->is_BBL_printer();
+        plate_no             = idx + 1;
+        const std::string stem = project_stem(p) + (plates.get_plate_count() > 1 ? " plate " + std::to_string(plate_no) : std::string());
+        dst = output_path(args, stem, ".gcode", backup, err);
+    }, 10000);
+    if (!on_time)
+        return ForcaAIResult::error("Forca did not respond in time (it may be showing a dialog that needs the user).");
+    if (!err.empty() || dst.empty())
+        return ForcaAIResult::error(err.empty() ? std::string("Could not choose a file name.") : err);
     boost::system::error_code ec;
-    if (!fs::is_regular_file(src, ec))
+    if (!fs::is_regular_file(into_path(from_u8(src_u8)), ec))
         return ForcaAIResult::error("Forca's sliced G-code for that plate is missing. Slice again.");
 
-    const std::string stem = project_stem(p) + (plates.get_plate_count() > 1 ? " plate " + std::to_string(idx + 1) : std::string());
-    const fs::path    dst  = output_path(args, stem, ".gcode", err);
-    if (dst.empty())
-        return ForcaAIResult::error(err);
-    fs::copy_file(src, dst, fs::copy_options::overwrite_existing, ec); // dst is new, or the AI's own unchanged file
+    std::string work_u8 = src_u8;                    // becomes a ".pp" copy if a script runs
+    std::string out_u8  = into_u8(from_path(dst));   // a script may rename the output (Orca GH #6042)
+    bool        post_processed = false;
+    if (!scripts_ran_at_slice) {
+        try {
+            post_processed = run_post_process_scripts(work_u8, true, "File", out_u8, config);
+        } catch (const std::exception& e) {
+            if (work_u8 != src_u8)
+                fs::remove(into_path(from_u8(work_u8)), ec);
+            return ForcaAIResult::error(std::string("A post-processing script failed, so nothing was exported: ") + e.what());
+        }
+    }
+    auto drop_copy = [&]() {
+        if (post_processed)
+            fs::remove(into_path(from_u8(work_u8)), ec);
+    };
+    const fs::path out = into_path(from_u8(out_u8));
+    if (out != dst && !forca_ai_claim_write(out, backup, err)) { // the renamed target follows the same rule
+        drop_copy();
+        return ForcaAIResult::error(!err.empty() ? err
+                                                 : "The post-processing script renamed the output to '" + out_u8 +
+                                                       "', which is the user's file; Forca does not let the AI overwrite it.");
+    }
+    fs::copy_file(into_path(from_u8(work_u8)), out, fs::copy_options::overwrite_existing, ec); // new, or the AI's own file
+    drop_copy();
     if (ec)
         return ForcaAIResult::error("Could not write the G-code: " + ec.message());
-    forca_ai_record_write(dst);
-    return ForcaAIResult::json({ { "saved", into_u8(from_path(dst)) }, { "plate", idx + 1 },
-                                 { "note", "Saved to disk only; nothing was sent to a printer." } });
+    if (backup.empty()) // a file the AI overwrote at the Advanced level stays the user's
+        forca_ai_record_write(out);
+    const bool has_scripts = config.has("post_process") && !config.option<ConfigOptionStrings>("post_process")->values.empty();
+    json j = { { "saved", out_u8 }, { "plate", plate_no },
+               { "post_processing", !has_scripts           ? "none configured"
+                                    : scripts_ran_at_slice ? "applied when Forca sliced the plate"
+                                                           : "applied" },
+               { "note", "Saved to disk only; nothing was sent to a printer." } };
+    if (!backup.empty())
+        j["backup_of_previous"] = into_u8(from_path(backup));
+    return ForcaAIResult::json(j);
 }
 
 // ---- undo -------------------------------------------------------------------------------------
@@ -1130,7 +1195,8 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
     const json save_args   = {
         { "name", prop("string", "File name without extension (default: the project name). Forca adds ' (Claude <date>)'.") },
         { "folder", prop("string", "An existing folder (default: Documents\\Forca AI).") },
-        { "path", prop("string", "Overwrite this exact file -- only allowed for a file the AI saved earlier that the user has not changed.") } };
+        { "path", prop("string", "Overwrite this exact file -- a file the AI saved earlier that the user has not changed; at the "
+                                 "Advanced control level any file (Forca backs it up first).") } };
 
     ai.register_tool({ "forca_import_models", "Import models",
         "Load model files (STL, 3MF, OBJ, STEP, AMF, DRC, SVG) onto a plate. Geometry only: a 3MF's settings are not "
@@ -1183,14 +1249,16 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
 
     ai.register_tool({ "forca_create_preset", "Create a preset",
         "Create a new user preset named '<name> (Claude <date>)' from a base preset plus changed settings, save it and "
-        "put it in use (for filaments: in filament_slot). The AI never edits the user's presets; 'update' changes a "
-        "preset the AI created earlier, if the user has not edited it since. Values use Forca's text format "
+        "put it in use (for filaments: in filament_slot). 'update' changes a preset the AI created earlier, if the user "
+        "has not edited it since; at the Advanced control level it may change any user preset (Forca backs up its "
+        "file first). System presets are never changed. Values use Forca's text format "
         "(see forca_get_settings); one value for a per-extruder setting is applied to every extruder variant.",
         object_schema({ { "type", preset_type },
                         { "settings", settings },
                         { "base", prop("string", "Preset to start from (default: the one in use / in the slot).") },
                         { "name", prop("string", "Name for the new preset (default: the base's name).") },
-                        { "update", prop("string", "Name of an AI-created preset to change instead of creating a new one.") },
+                        { "update", prop("string", "Name of a preset to change instead of creating a new one: an AI-created one "
+                                                   "(any user preset at the Advanced level).") },
                         { "filament_slot", { { "type", "integer" }, { "minimum", 1 }, { "description", "Filament only: project slot (default 1)." } } } },
                       { "type", "settings" }),
         tool_create_preset });
@@ -1237,15 +1305,17 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
         tool_view });
 
     ai.register_tool({ "forca_save_project", "Save a project copy",
-        "Save the current project (plates, objects, settings) as a new .3mf file named '<name> (Claude <date>).3mf'. "
-        "Never overwrites the user's files; the project open in Forca keeps its own file name.",
+        "Save the current project (plates, objects, settings) as a new .3mf file named '<name> (Claude <date>).3mf', "
+        "or into 'path' (see its description). The project open in Forca keeps its own file name.",
         object_schema(save_args), tool_save_project });
 
-    ai.register_tool({ "forca_export_gcode", "Export G-code",
-        "Save a sliced plate's G-code as a new file named '<name> (Claude <date>).gcode'. Disk only -- this never sends "
-        "anything to a printer.",
+    ForcaAITool export_gcode{ "forca_export_gcode", "Export G-code",
+        "Save a sliced plate's G-code as a new file named '<name> (Claude <date>).gcode', exactly as File > Export G-code "
+        "would (the user's post-processing scripts are applied). Disk only -- this never sends anything to a printer.",
         [&] { json a = save_args; a["plate"] = { { "type", "integer" }, { "minimum", 1 } }; return object_schema(a); }(),
-        tool_export_gcode });
+        tool_export_gcode };
+    export_gcode.off_gui = true; // post-processing scripts run on this thread, like Orca's own export
+    ai.register_tool(export_gcode);
 
     ai.register_tool({ "forca_undo", "Undo the AI's last step",
         "Undo the most recent change if the AI made it (its undo steps are named 'AI: ...'). Never undoes the user's work.",

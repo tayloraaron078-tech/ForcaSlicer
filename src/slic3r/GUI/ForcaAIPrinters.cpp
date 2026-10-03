@@ -6,6 +6,7 @@
 // and addresses are never returned.
 #define BAMBU_DYNAMIC // the camera tunnel is loaded from the network plugin at runtime (as wxMediaCtrl3 does)
 #include "ForcaAI.hpp"
+#include "ForcaAcademy.hpp"
 
 #include "AVVideoDecoder.hpp"
 #include "GUI_App.hpp"
@@ -13,6 +14,7 @@
 #include "DeviceCore/DevBed.h"
 #include "DeviceCore/DevChamber.h"
 #include "DeviceCore/DevExtruderSystem.h"
+#include "DeviceCore/DevFilaSystem.h"
 #include "DeviceCore/DevHMS.h"
 #include "DeviceCore/DevManager.h"
 #include "GUI.hpp"
@@ -276,6 +278,29 @@ ForcaAIResult tool_printer_status(const json& args)
     if (!hms.empty())
         j["health_messages"] = hms;
     j["has_camera"] = obj->has_ipcam;
+
+    // What is loaded where, by the slot names forca_request_print's 'trays' takes ("A4", "Ext").
+    json sources = json::array();
+    auto add     = [&sources](const std::string& slot, DevAmsTray& t) {
+        json s = { { "slot", slot }, { "type", t.get_filament_type() }, { "name", t.get_display_filament_type() }, { "color", t.color } };
+        if (!t.sub_brands.empty())
+            s["brand"] = t.sub_brands;
+        sources.push_back(s);
+    };
+    if (auto fila = obj->GetFilaSystem())
+        for (const auto& [ams_id, ams] : fila->GetAmsList())
+            for (const auto& [tray_id, tray] : ams->GetTrays())
+                if (tray && tray->is_exists && !tray->get_filament_type().empty())
+                    try {
+                        add(forca_academy_tray_label(std::stoi(ams_id), std::stoi(tray_id)), *tray);
+                    } catch (...) {}
+    for (DevAmsTray& t : obj->vt_slot)
+        if (!t.get_filament_type().empty())
+            try {
+                add(forca_academy_tray_label(std::stoi(t.id), 0), t);
+            } catch (...) {}
+    j["filament_sources"] = sources;
+
     if (auto it = s_ai_pauses.find(obj->get_dev_id()); it != s_ai_pauses.end())
         j["ai_pause"] = { { "reason", it->second.reason }, { "confirmed", it->second.confirmed },
                           { "note", "This pause is the AI's own; forca_resume_print may resume it while it stays paused." } };
@@ -420,14 +445,14 @@ struct Frame
     bool        from_live_view = false;
 };
 
-// A camera frame of a shared printer, from the server thread: the Device tab's live frame when it shows this printer,
-// else a short own connection on a worker thread (25 s limit, one at a time).
-Frame capture_frame(const std::string& which, int max_width)
+// A camera frame of the printer `find` picks (on the GUI thread), from a non-GUI thread: the Device tab's live frame
+// when it shows this printer, else a short own connection on a worker thread (25 s limit, one at a time).
+Frame capture_frame_of(std::function<MachineObject*(std::string& err)> find, int max_width)
 {
     Frame f;
     auto  target = std::make_shared<CameraTarget>(); // shared: on_gui may time out and run later
-    if (!ForcaAI::instance().on_gui([target, which, max_width]() {
-            MachineObject* obj = shared_printer(which, target->error);
+    if (!ForcaAI::instance().on_gui([target, find, max_width]() {
+            MachineObject* obj = find(target->error);
             if (!obj)
                 return;
             target->name = obj->get_dev_name();
@@ -487,13 +512,32 @@ Frame capture_frame(const std::string& which, int max_width)
     return f;
 }
 
+// A camera frame of a printer shared with the AI (the AI tools' gate).
+Frame capture_frame(const std::string& which, int max_width)
+{
+    return capture_frame_of([which](std::string& err) { return shared_printer(which, err); }, max_width);
+}
+
 ForcaAIResult tool_camera_snapshot(const json& args) // runs on the server thread
 {
     const Frame f = capture_frame(args.value("printer", std::string()), std::clamp(args.value("max_width", 1280), 320, 1920));
     if (f.jpeg.empty())
         return ForcaAIResult::error(f.error);
-    ForcaAIResult r = ForcaAIResult::text("Camera of " + f.name + (f.from_live_view ? " (the frame Forca's Device tab live view is showing now)."
-                                                                                     : " (one frame, just now)."));
+    std::string text = "Camera of " + f.name + (f.from_live_view ? " (the frame Forca's Device tab live view is showing now)."
+                                                                  : " (one frame, just now).");
+    // Forca Academy: keep the frame with a recorded print (GUI thread: the Academy settings live there).
+    if (const std::string print = args.value("save_to_print", std::string()); !print.empty()) {
+        struct Saved { std::string file, err; };
+        auto saved = std::make_shared<Saved>(); // shared: on_gui may time out and run later
+        if (!ForcaAI::instance().on_gui([saved, print, jpeg = f.jpeg, name = f.name]() {
+                const boost::filesystem::path p = forca_academy_save_camera_frame(print, jpeg, name, saved->err);
+                if (!p.empty())
+                    saved->file = forca_academy_relative(forca_academy_dir(), p);
+            }))
+            saved->err = "Forca did not respond (it may be showing a dialog).";
+        text += saved->file.empty() ? " Not saved to Forca Academy: " + saved->err : " Saved to Forca Academy as " + saved->file + ".";
+    }
+    ForcaAIResult r = ForcaAIResult::text(text);
     r.add_image(f.jpeg, "image/jpeg");
     return r;
 }
@@ -731,7 +775,8 @@ void register_forca_ai_printer_tools(ForcaAI& ai)
 
     ai.register_tool({ "forca_printer_status", "Printer status",
         "Live status of a shared printer: state, job, progress, remaining time, layer, nozzle/bed/chamber temperatures, "
-        "print errors and health (HMS) messages, and whether it has a camera. Read-only -- this never sends anything "
+        "print errors and health (HMS) messages, the filament in each slot (filament_sources: AMS slots and the "
+        "external spool), and whether it has a camera. Read-only -- this never sends anything "
         "to the printer. 'live' is false when Forca has no current data (Forca receives live data from the printer "
         "selected in its Device tab).",
         { { "type", "object" },
@@ -741,10 +786,12 @@ void register_forca_ai_printer_tools(ForcaAI& ai)
     ForcaAITool camera{ "forca_camera_snapshot", "Printer camera",
         "One picture from a shared printer's camera over the local network (Bambu printers), to check a print. "
         "Opens a short camera connection, so it can take a few seconds; the printer may refuse while another viewer "
-        "holds its camera. Read-only.",
+        "holds its camera. Read-only, except that save_to_print keeps the picture with a recorded print in Forca "
+        "Academy (its camera/ folder).",
         { { "type", "object" },
           { "properties", { { "printer", { { "type", "string" }, { "description", "Printer id or exact name (default: the only shared printer)." } } },
-                            { "max_width", { { "type", "integer" }, { "minimum", 320 }, { "maximum", 1920 } } } } } },
+                            { "max_width", { { "type", "integer" }, { "minimum", 320 }, { "maximum", 1920 } } },
+                            { "save_to_print", { { "type", "string" }, { "description", "A print path from forca_academy_list_prints: also save the frame in that print's camera/ folder." } } } } } },
         tool_camera_snapshot };
     camera.off_gui = true;
     ai.register_tool(std::move(camera));
@@ -769,6 +816,23 @@ void register_forca_ai_printer_tools(ForcaAI& ai)
                             { "reason", { { "type", "string" } } } } },
           { "required", { "reason" } } },
         tool_resume_print });
+}
+
+// Forca Academy's pictures of its own recorded prints (not gated by AI sharing: the user turned the journal on).
+bool forca_printer_camera_jpeg(const std::string& dev_id, int max_width, std::string& jpeg, std::string& err)
+{
+    const Frame f = capture_frame_of(
+        [dev_id](std::string& e) -> MachineObject* {
+            DeviceManager* dev = wxGetApp().getDeviceManager();
+            MachineObject* obj = dev ? dev->get_my_machine(dev_id) : nullptr;
+            if (!obj)
+                e = "Forca does not know this printer right now.";
+            return obj;
+        },
+        max_width);
+    jpeg = f.jpeg;
+    err  = f.error;
+    return !jpeg.empty();
 }
 
 }} // namespace Slic3r::GUI

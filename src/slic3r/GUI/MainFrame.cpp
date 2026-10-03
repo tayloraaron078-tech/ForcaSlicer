@@ -40,6 +40,7 @@
 #include "GLCanvas3D.hpp"
 #include "Plater.hpp"
 #include "ForcaCalibrationTab.hpp"
+#include "ForcaPrintJournal.hpp"
 #include "ForcaAIDialog.hpp"
 #ifdef SLIC3R_CAD
 #include "slic3r/GUI/CAD/DesignPanel.hpp"
@@ -3070,6 +3071,11 @@ void MainFrame::init_menubar_as_editor()
 
         append_submenu(fileMenu, export_menu, wxID_ANY, _L("Export"), "");
 
+        // Forca Academy: the print journal (recorded prints, outcomes, photos).
+        append_menu_item(fileMenu, wxID_ANY, _L("Print Journal") + dots, _L("Your recorded prints: add the result, notes and photos"),
+            [this](wxCommandEvent&) { ForcaPrintJournalDialog dlg(this); dlg.ShowModal(); }, "", nullptr,
+            []() { return true; }, this);
+
         fileMenu->AppendSeparator();
 
 #ifndef __APPLE__
@@ -3502,7 +3508,7 @@ void MainFrame::init_menubar_as_editor()
 
     // Temperature
     // Guided calibration wizard (Forca) -- the one on-ramp. Opens the Calibration Wizard tab.
-    append_menu_item(m_topbar->GetCalibMenu(), wxID_ANY, _L("Calibration Wizard"), _L("Guided filament calibration"),
+    append_menu_item(m_topbar->GetCalibMenu(), wxID_ANY, _L("Calibration Wizard"), _L("Guided printer and filament calibration"),
         [this](wxCommandEvent&) { select_tab(TAB_ID_FORCA_CALIB); }, "", nullptr,
         [this]() { return m_plater != nullptr; }, this);
     m_topbar->GetCalibMenu()->AppendSeparator();
@@ -3613,7 +3619,7 @@ void MainFrame::init_menubar_as_editor()
     auto calib_menu = new wxMenu();
 
     // Guided calibration wizard (Forca) -- the one on-ramp. Opens the Calibration Wizard tab.
-    append_menu_item(calib_menu, wxID_ANY, _L("Calibration Wizard"), _L("Guided filament calibration"),
+    append_menu_item(calib_menu, wxID_ANY, _L("Calibration Wizard"), _L("Guided printer and filament calibration"),
         [this](wxCommandEvent&) { select_tab(TAB_ID_FORCA_CALIB); }, "", nullptr,
         [this]() { return m_plater != nullptr; }, this);
     calib_menu->AppendSeparator();

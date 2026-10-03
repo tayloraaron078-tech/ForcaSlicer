@@ -102,6 +102,31 @@ fs::path new_path(const fs::path& dir, const std::string& stem, const std::strin
     return {};
 }
 
+fs::path backup_copy(const fs::path& file, const fs::path& backup_root, const std::string& date, std::string& err, int max_tries)
+{
+    boost::system::error_code ec;
+    if (!fs::is_regular_file(file, ec)) {
+        err = "'" + utf8_from_path(file) + "' is not a file Forca can back up";
+        return {};
+    }
+    const fs::path dir = backup_root / path_from_utf8(date);
+    fs::create_directories(dir, ec);
+    const std::string stem = utf8_from_path(file.stem()), ext = utf8_from_path(file.extension());
+    for (int n = 1; n <= max_tries; ++n) {
+        const fs::path p = dir / path_from_utf8(stem + (n == 1 ? std::string() : " " + std::to_string(n)) + ext);
+        if (!path_is_free(p))
+            continue;
+        fs::copy_file(file, p, ec); // never over an existing backup
+        if (ec) {
+            err = "Forca could not back up '" + utf8_from_path(file) + "': " + ec.message();
+            return {};
+        }
+        return p;
+    }
+    err = "no free backup name in '" + utf8_from_path(dir) + "'";
+    return {};
+}
+
 std::string Ledger::key_for(const fs::path& path)
 {
     std::string k = utf8_from_path(fs::absolute(path).lexically_normal());

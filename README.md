@@ -66,6 +66,13 @@ Built-in rules the AI cannot switch off:
 - It **never prints on its own** — it can only ask; you approve on a card in Forca, then send as usual.
 - It only sees the printers you tick, runs only on your computer, and needs a key you give it.
 
+Only you can relax the first two, by choosing the **Advanced** level in the Forca AI window: then the AI may save over
+your files and presets (Forca keeps a backup copy of each in `Documents\Forca AI\Backups`), and a print request opens
+the print dialog without a card. You still press Send yourself — unless you also give the AI a **print grant**: up to
+a number of prints, on printers you tick, for a few hours. Within it Forca sends the AI's print itself, only to an idle
+printer whose bed you marked clear, after a 10-second countdown you can cancel. A grant can name the files to print
+(with copies and a note), so the AI does the whole job and prints nothing else.
+
 See [SECURITY.md](SECURITY.md) for how it's protected.
 
 # Install (Windows)

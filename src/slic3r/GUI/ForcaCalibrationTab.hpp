@@ -63,7 +63,7 @@ private:
     // Draws everything into `dc` over `size`; records hit areas when `record_hits` (the on-screen paint).
     void draw(wxDC& dc, const wxSize& size, bool record_hits);
 
-    struct Hit { wxRect rect; ForcaCalibrationWizard::Cal cal; bool recheck = false; };
+    struct Hit { wxRect rect; ForcaCalibrationWizard::Cal cal; bool recheck = false; int printer_step = -1; };
     struct Tip { wxRect rect; wxString text; };
 
     ForcaCalibrationWizard*               m_wizard { nullptr };

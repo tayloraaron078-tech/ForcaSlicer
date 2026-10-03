@@ -1,5 +1,6 @@
 #include "Preferences.hpp"
 #include "slic3r/Utils/ForcaFeatures.hpp"
+#include "ForcaAcademy.hpp"
 #include "OptionsGroup.hpp"
 #include "GUI_App.hpp"
 #include "MainFrame.hpp"
@@ -1774,6 +1775,70 @@ void PreferencesDialog::create_items()
         "auto_close_sketch_loops");
     g_sizer->Add(item_auto_close_sketch_loops);
 #endif
+
+    //// GENERAL > Forca Academy (HQ PLAN_forca_academy.md): off by default; the folder is Documents/Forca Academy
+    // unless the user picks another one.
+    g_sizer->Add(create_item_title(_L("Forca Academy")), 1, wxEXPAND);
+    auto item_academy = create_item_checkbox(_L("Keep a print journal"),
+        _L("Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture "
+           "of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from "
+           "an SD card can be added by hand. Nothing is uploaded."),
+        "forca_academy_enabled");
+    g_sizer->Add(item_academy);
+    if (app_config->get("forca_academy_end_photo").empty())
+        app_config->set_bool("forca_academy_end_photo", true);
+    if (app_config->get("forca_academy_photo_minutes").empty())
+        app_config->set("forca_academy_photo_minutes", "0");
+    auto item_academy_end_photo = create_item_checkbox(_L("Take a camera picture when a print ends"),
+        _L("For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or "
+           "fails, one picture of the result goes into the print's camera folder."),
+        "forca_academy_end_photo");
+    g_sizer->Add(item_academy_end_photo);
+    auto item_academy_photos = create_item_spinctrl(_L("Camera pictures during a print"), "", _L("min"),
+        _L("Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be "
+           "traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may "
+           "be skipped while another app is watching."),
+        "forca_academy_photo_minutes", 0, 120);
+    g_sizer->Add(item_academy_photos);
+    {
+        wxBoxSizer*    row  = create_item_label(_L("Forca Academy folder"),
+            _L("Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."));
+        const wxString dir     = from_path(forca_academy_dir());
+        const wxSize   path_sz(FromDIP(380), -1);
+        auto*          path    = new wxStaticText(m_parent, wxID_ANY, dir, wxDefaultPosition, path_sz, wxST_ELLIPSIZE_MIDDLE);
+        path->SetMinSize(path_sz); // a long path is shortened in the middle (full path in the tooltip), never widening
+        path->SetMaxSize(path_sz); // the dialog
+        path->SetForegroundColour(DESIGN_GRAY600_COLOR);
+        path->SetFont(::Label::Body_14);
+        path->SetToolTip(dir);
+        auto* browse = new Button(m_parent, _L("Browse") + dots);
+        browse->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        browse->Bind(wxEVT_BUTTON, [this, path](wxCommandEvent&) {
+            wxDirDialog dlg(this, _L("Choose the Forca Academy folder"), from_path(forca_academy_dir()), wxDD_NEW_DIR_BUTTON);
+            if (dlg.ShowModal() != wxID_OK)
+                return;
+            app_config->set("forca_academy_dir", into_u8(dlg.GetPath()));
+            path->SetLabelText(dlg.GetPath());
+            path->SetToolTip(dlg.GetPath());
+        });
+        auto* open = new Button(m_parent, _L("Open"));
+        open->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        open->SetToolTip(_L("Open the Forca Academy folder (creating it and its starter files if needed)."));
+        open->Bind(wxEVT_BUTTON, [](wxCommandEvent&) {
+            std::string err;
+            if (forca_academy_ensure_skeleton(forca_academy_dir(), err))
+                desktop_open_any_folder(forca_academy_dir().string());
+            else
+                show_error(nullptr, from_u8(err));
+        });
+        row->Add(browse, 0, wxALIGN_CENTER_VERTICAL);
+        row->Add(open, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(6));
+        g_sizer->Add(row);
+        auto* path_row = new wxBoxSizer(wxHORIZONTAL); // under the buttons, aligned with them
+        path_row->AddSpacer(FromDIP(DESIGN_LEFT_MARGIN) + DESIGN_TITLE_SIZE.GetWidth() + FromDIP(5));
+        path_row->Add(path, 0, wxALIGN_CENTER_VERTICAL | wxBOTTOM, FromDIP(3));
+        g_sizer->Add(path_row);
+    }
 
 #if 0
     g_sizer->Add(create_item_title(_L("Filament Grouping")), 1, wxEXPAND);

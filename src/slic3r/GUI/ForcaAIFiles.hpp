@@ -33,8 +33,19 @@ bool forca_ai_may_write(const boost::filesystem::path& path);
 // True when the ledger lists `path` as the AI's (whether or not it was changed since).
 bool forca_ai_created(const boost::filesystem::path& path);
 
-// Records that the AI just wrote `path` (call after every successful AI write).
+// Records that the AI just wrote `path` (call after every successful AI write to a file that is the AI's own).
 void forca_ai_record_write(const boost::filesystem::path& path);
+
+// R1 with the control level (ForcaAI::level()): true when the AI may write `path` now. A new file, or the AI's own
+// unchanged file: at every level. Any other file: only at the Advanced level, and only once Forca has copied it into
+// forca_ai_backup_dir() -- `backup` is that copy (logged in the activity feed); the file stays the user's, so the
+// caller must NOT record it with forca_ai_record_write. Otherwise false: `err` is empty when the level forbids it, or
+// says why the backup failed.
+bool forca_ai_claim_write(const boost::filesystem::path& path, boost::filesystem::path& backup, std::string& err);
+
+// <Documents>/Forca AI/Backups: copies of the user's files the AI overwrote at the Advanced level, in dated folders.
+// Forca never deletes them.
+boost::filesystem::path forca_ai_backup_dir();
 
 // Where AI saves go when the AI does not name a folder: <Documents>/Forca AI (created on demand).
 boost::filesystem::path forca_ai_default_dir();

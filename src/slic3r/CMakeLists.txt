@@ -69,12 +69,19 @@ set(SLIC3R_GUI_SOURCES
     GUI/calib_dlg.hpp
     GUI/ForcaCalibrationWizard.cpp
     GUI/ForcaCalibrationWizard.hpp
+    GUI/ForcaPrinterCalibration.cpp
+    GUI/ForcaPrinterCalibration.hpp
     GUI/ForcaCalibrationTab.cpp
     GUI/ForcaCalibrationTab.hpp
     GUI/ForcaCalibrationStore.cpp
     GUI/ForcaCalibrationStore.hpp
     GUI/ForcaAI.cpp
     GUI/ForcaAI.hpp
+    GUI/ForcaAcademy.cpp
+    GUI/ForcaAIAcademy.cpp
+    GUI/ForcaAcademy.hpp
+    GUI/ForcaPrintJournal.cpp
+    GUI/ForcaPrintJournal.hpp
     GUI/ForcaAITools.cpp
     GUI/ForcaAIDialog.cpp
     GUI/ForcaAIDialog.hpp
@@ -82,6 +89,7 @@ set(SLIC3R_GUI_SOURCES
     GUI/ForcaAIFiles.hpp
     GUI/ForcaAIHands.cpp
     GUI/ForcaAIPrint.cpp
+    GUI/ForcaAIAutonomy.cpp
     GUI/ForcaAIPrinters.cpp
     GUI/Calibration.cpp
     GUI/Calibration.hpp

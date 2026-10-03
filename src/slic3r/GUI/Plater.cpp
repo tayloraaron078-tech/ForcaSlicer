@@ -1,4 +1,7 @@
 #include "Plater.hpp"
+#include "ForcaAcademy.hpp" // Forca: print records
+#include "ForcaAI.hpp"      // Forca: forca_ai_printer_label
+#include "libslic3r/ForcaCalibModel.hpp" // Forca: thin-walled Max Volumetric Speed test
 #include "../Utils/NetworkAgent.hpp"
 #include "libslic3r/Config.hpp"
 #include "libslic3r_version.h"
@@ -13139,11 +13142,16 @@ void Plater::priv::on_action_print_plate(SimpleEvent&)
 void Plater::priv::open_machine_select_dialog(int plate_idx, PrintFromType print_type)
 {
     // BBS
+    // Forca: each step logged, so a crash while the dialog is built or prepared shows which step it was.
+    BOOST_LOG_TRIVIAL(info) << "open_machine_select_dialog: plate " << plate_idx << ", dialog exists " << (m_select_machine_dlg != nullptr);
     if (!m_select_machine_dlg)
         m_select_machine_dlg = new SelectMachineDialog(q);
+    BOOST_LOG_TRIVIAL(info) << "open_machine_select_dialog: constructed";
     m_select_machine_dlg->set_print_type(print_type);
     m_select_machine_dlg->prepare(plate_idx);
+    BOOST_LOG_TRIVIAL(info) << "open_machine_select_dialog: prepared, showing";
     m_select_machine_dlg->ShowModal();
+    BOOST_LOG_TRIVIAL(info) << "open_machine_select_dialog: closed";
 }
 
 void Plater::priv::on_action_send_to_multi_machine(SimpleEvent&)
@@ -16689,7 +16697,10 @@ void Plater::calib_max_vol_speed(const Calib_Params& params, bool skip_confirm)
     obj_cfg.set_key_value("wall_loops", new ConfigOptionInt(1));
     obj_cfg.set_key_value("alternate_extra_wall", new ConfigOptionBool(false));
     obj_cfg.set_key_value("top_shell_layers", new ConfigOptionInt(0));
-    obj_cfg.set_key_value("bottom_shell_layers", new ConfigOptionInt(0));
+    // Forca: one bottom layer, as Bambu Studio's test has. Vase mode slices every layer above the bottom ones as a single
+    // solid contour; the bottom layer keeps the thin-walled outline's inside edge (added below), which the inner brim
+    // needs. On the thin wall it is just that one line, not a solid floor.
+    obj_cfg.set_key_value("bottom_shell_layers", new ConfigOptionInt(1));
     obj_cfg.set_key_value("sparse_infill_density", new ConfigOptionPercent(0));
     obj_cfg.set_key_value("outer_wall_line_width", new ConfigOptionFloatOrPercent(line_width, false));
     obj_cfg.set_key_value("layer_height", new ConfigOptionFloat(layer_height));
@@ -16715,6 +16726,17 @@ void Plater::calib_max_vol_speed(const Calib_Params& params, bool skip_confirm)
     auto height = (params.end - params.start + 1) / params.step;
     if (height < obj_bb.size().z()) {
         cut_horizontal(0, 0, height, ModelObjectCutAttribute::KeepLower);
+    }
+
+    // Forca: give the test a thin-walled first layer like Bambu Studio's model, so the brim goes on BOTH sides of the
+    // wall (the inner brim only fills holes, and Orca's model is solid). Only the first layer is hollowed; above it vase
+    // mode prints its one wall as before. The ring follows this nozzle's line width (widened a little where the model
+    // was squeezed in X to fit the bed); Arachne prints that one-line ring as a single line.
+    const double first_layer = print_config->opt_float("initial_layer_print_height");
+    if (forca_hollow_to_outline(*model().objects[0], line_width / std::min(1.0, scale_obj), first_layer)) {
+        model().objects[0]->config.set_key_value("wall_generator", new ConfigOptionEnum<PerimeterGeneratorType>(PerimeterGeneratorType::Arachne));
+        wxGetApp().obj_list()->add_volumes_to_object_in_list(0);
+        changed_objects({ 0 });
     }
 
     auto new_params  = params;
@@ -16788,10 +16810,10 @@ void Plater::calib_retraction(const Calib_Params& params, bool skip_confirm)
     p->background_process.fff_print()->set_calib_params(params);
 }
 
-void Plater::calib_VFA(const Calib_Params& params)
+void Plater::calib_VFA(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_vfa_name = wxString::Format(L"VFA test");
-    new_project(false, false, calib_vfa_name);
+    new_project(skip_confirm, false, calib_vfa_name); // Forca: skip_confirm
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_VFA_Tower)
         return;
@@ -16871,10 +16893,10 @@ void Plater::calib_VFA(const Calib_Params& params)
     p->background_process.fff_print()->set_calib_params(calib_params);
 }
 
-void Plater::calib_input_shaping_freq(const Calib_Params& params)
+void Plater::calib_input_shaping_freq(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_input_shaping_name = wxString::Format(L"Input shaping Frequency test");
-    new_project(false, false, calib_input_shaping_name);
+    new_project(skip_confirm, false, calib_input_shaping_name); // Forca: skip_confirm
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Input_shaping_freq)
         return;
@@ -16937,10 +16959,10 @@ void Plater::calib_input_shaping_freq(const Calib_Params& params)
     p->background_process.fff_print()->set_calib_params(params);
 }
 
-void Plater::calib_input_shaping_damp(const Calib_Params& params)
+void Plater::calib_input_shaping_damp(const Calib_Params& params, bool skip_confirm)
 {
     const auto calib_input_shaping_name = wxString::Format(L"Input shaping Damping test");
-    new_project(false, false, calib_input_shaping_name);
+    new_project(skip_confirm, false, calib_input_shaping_name); // Forca: skip_confirm
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Input_shaping_damp)
         return;
@@ -17002,10 +17024,10 @@ void Plater::calib_input_shaping_damp(const Calib_Params& params)
     p->background_process.fff_print()->set_calib_params(params);
 }
 
-void Plater::Calib_Cornering(const Calib_Params& params)
+void Plater::Calib_Cornering(const Calib_Params& params, bool skip_confirm)
 {
     const auto Calib_Cornering = wxString::Format(L"Cornering test");
-    new_project(false, false, Calib_Cornering);
+    new_project(skip_confirm, false, Calib_Cornering); // Forca: skip_confirm
     wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
     if (params.mode != CalibMode::Calib_Cornering)
         return;
@@ -20079,6 +20101,12 @@ void Plater::print_job_finished(wxCommandEvent &evt)
 #endif // __APPLE__
     }
 
+
+    // Forca Academy: record the print that was just sent (not a reprint from the printer's SD card). No-op when off.
+    if (p && p->m_select_machine_dlg && p->m_select_machine_dlg->get_print_type() == FROM_NORMAL)
+        forca_academy_on_print_sent(p->m_select_machine_dlg->get_print_plate_idx(), evt.GetString().ToStdString(),
+                                    forca_ai_printer_label(evt.GetString().ToStdString()),
+                                    &p->m_select_machine_dlg->get_ams_mapping_list());
 
     Slic3r::DeviceManager* dev = Slic3r::GUI::wxGetApp().getDeviceManager();
     if (!dev) return;

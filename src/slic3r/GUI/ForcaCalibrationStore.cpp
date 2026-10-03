@@ -69,6 +69,11 @@ void ForcaCalibrationStore::load()
                     for (auto it = r["before"].begin(); it != r["before"].end(); ++it)
                         if (it.value().is_number())
                             run.before[it.key()] = it.value().get<double>();
+                run.kind = r.value("kind", std::string());
+                if (r.contains("before_text") && r["before_text"].is_object())
+                    for (auto it = r["before_text"].begin(); it != r["before_text"].end(); ++it)
+                        if (it.value().is_string())
+                            run.before_text[it.key()] = it.value().get<std::string>();
                 m_runs.push_back(std::move(run));
             }
         }
@@ -87,6 +92,11 @@ void ForcaCalibrationStore::load()
             ent.rec.pass           = e.value("pass", 0);
             ent.rec.derived_preset = e.value("derived_preset", std::string());
             ent.rec.updated_at     = e.value("updated_at", std::string());
+            if (e.contains("values") && e["values"].is_object())
+                for (auto it = e["values"].begin(); it != e["values"].end(); ++it)
+                    if (it.value().is_number())
+                        ent.rec.values[it.key()] = it.value().get<double>();
+            ent.rec.note = e.value("note", std::string());
             m_entries.push_back(std::move(ent));
         }
     } catch (...) {
@@ -115,6 +125,13 @@ void ForcaCalibrationStore::save() const
             e["pass"]           = ent.rec.pass;
             e["derived_preset"] = ent.rec.derived_preset;
             e["updated_at"]     = ent.rec.updated_at;
+            if (!ent.rec.values.empty()) {
+                e["values"] = json::object();
+                for (const auto& kv : ent.rec.values)
+                    e["values"][kv.first] = kv.second;
+            }
+            if (!ent.rec.note.empty())
+                e["note"] = ent.rec.note;
             j["entries"].push_back(e);
         }
         j["runs"] = json::array();
@@ -128,6 +145,13 @@ void ForcaCalibrationStore::save() const
             r["before"]     = json::object();
             for (const auto& kv : run.before)
                 r["before"][kv.first] = kv.second;
+            if (!run.kind.empty())
+                r["kind"] = run.kind;
+            if (!run.before_text.empty()) {
+                r["before_text"] = json::object();
+                for (const auto& kv : run.before_text)
+                    r["before_text"][kv.first] = kv.second;
+            }
             j["runs"].push_back(r);
         }
         const fs::path dir = fs::path(Slic3r::data_dir()) / "forca";
@@ -236,7 +260,7 @@ void ForcaCalibrationStore::forget_filament(const std::string& printer, const st
 bool ForcaCalibrationStore::get_run(const std::string& printer, const std::string& nozzle, const std::string& target, Run& out) const
 {
     for (const auto& r : m_runs)
-        if (r.printer == printer && r.nozzle == nozzle && r.target == target) {
+        if (r.kind.empty() && r.printer == printer && r.nozzle == nozzle && r.target == target) { // filament runs only
             out = r;
             return true;
         }
@@ -246,13 +270,46 @@ bool ForcaCalibrationStore::get_run(const std::string& printer, const std::strin
 void ForcaCalibrationStore::start_run(const Run& run)
 {
     Run existing;
-    if (run.target.empty() || get_run(run.printer, run.nozzle, run.target, existing))
+    if (run.target.empty() || (run.kind.empty() ? get_run(run.printer, run.nozzle, run.target, existing)
+                                                : get_printer_run(run.target, existing)))
         return; // a run's "before" is fixed at its first Apply
     Run r = run;
     if (r.started_at.empty())
         r.started_at = today_iso();
     m_runs.push_back(std::move(r));
     save();
+}
+
+void ForcaCalibrationStore::set_record(const Key& key, const Record& rec)
+{
+    Entry* e = find(key);
+    if (!e) {
+        m_entries.push_back(Entry{ key, Record{} });
+        e = &m_entries.back();
+    }
+    e->rec            = rec;
+    e->rec.updated_at = today_iso();
+    save();
+}
+
+bool ForcaCalibrationStore::get_printer_run(const std::string& printer_preset, Run& out) const
+{
+    for (const auto& r : m_runs)
+        if (r.kind == "printer" && r.target == printer_preset) {
+            out = r;
+            return true;
+        }
+    return false;
+}
+
+void ForcaCalibrationStore::forget_printer_run(const std::string& printer_preset)
+{
+    const size_t before = m_runs.size();
+    m_runs.erase(std::remove_if(m_runs.begin(), m_runs.end(), [&](const Run& r) {
+        return r.kind == "printer" && r.target == printer_preset;
+    }), m_runs.end());
+    if (m_runs.size() != before)
+        save();
 }
 
 }} // namespace Slic3r::GUI

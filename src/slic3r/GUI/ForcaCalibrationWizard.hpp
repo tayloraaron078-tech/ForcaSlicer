@@ -27,6 +27,13 @@ class ConfigOption;
 namespace GUI {
 
 class Plater;
+class ForcaPrinterCalibration;
+
+// Shared with the printer track (ForcaPrinterCalibration).
+wxString forca_hard_wrap(const wxString& s, size_t max_chars);  // explicit line breaks (see hard_wrap in the .cpp)
+bool     forca_calib_test_generated();      // a calibration test was generated in this app session
+void     forca_mark_calib_test_generated(); // (after it, calib_* skip new_project's confirm dialogs)
+void     forca_discard_transient_preset_changes(); // revert a prior test's throwaway preset edits
 
 // Forca Slicer Calibration Wizard -- native, slicer-integrated guided filament calibration.
 //
@@ -60,9 +67,13 @@ public:
 
     // Jump to a calibration (progress-bar step click); start_flow_recheck() = the optional recheck marker.
     void select_calibration(Cal cal);
+    // Printer track (ForcaPrinterCalibration): progress-bar click on one of its steps.
+    void select_printer_step(int step);
     void start_flow_recheck();
     // Back to the Start page to calibrate another filament (finish card / final check "Calibrate another filament").
     void start_new_calibration();
+    // The user chose a filament (dialog / "Calibrate another filament"): the Start page, without asking again.
+    void calibrate_a_filament();
 
     // Called whenever what the progress panel shows may have changed.
     void set_state_changed_callback(std::function<void()> cb) { m_on_state_changed = std::move(cb); }
@@ -76,6 +87,7 @@ public:
         bool     pending  = false; // a test is out for printing
         bool     current  = false;
         bool     optional = false; // markers that don't count toward the percentage
+        int      printer_step = -1; // printer track: ForcaPrinterCalibration::Step (cal is unused then)
     };
     struct Row {
         wxString label;
@@ -93,17 +105,26 @@ public:
         std::vector<Row>  rows;
         double            percent  = 0;
         bool              complete = false;
+        int               core_steps    = CORE_STEPS; // steps drawn as bar segments (the rest are optional markers)
+        bool              printer_track = false;      // printer calibration (filament = the printer's name)
     };
     ProgressModel progress_model() const;
 
 private:
     static constexpr int PAGE_RESULT = static_cast<int>(Cal::Count); // shared result page follows the gen pages
     static constexpr int PAGE_START  = PAGE_RESULT + 1;               // "start a calibration" page (filament pick)
+    static constexpr int PAGE_PRINTER = PAGE_START + 1;               // printer track (ForcaPrinterCalibration)
 
     wxPanel* build_start_page(wxWindow* parent);
     void     update_start_note();                  // explains what Start will do for the picked filament
     void     on_start_run(wxCommandEvent& evt);    // leave the Start page: first unfinished step of the picked filament
     bool     on_start_page() const;
+    void     set_printer_track(bool on); // printer track shows its own page and hides the filament/calibration rows
+    // A focused control (the pressed button, or the one focus returns to after a dialog) must not scroll the
+    // wizard: its buttons sit at the bottom, so every new page would open scrolled down (same as Preferences).
+    bool     ShouldScrollToChildOnFocus(wxWindow*) override { return false; }
+    void     ask_what_to_calibrate();    // "What are you calibrating?" dialog -> printer track or filament Start page
+    void     add_something_else_button(wxPanel* panel, wxSizer* row); // "Calibrate something else" -> the dialog
 
     wxPanel* build_temp_gen_page(wxWindow* parent);
     wxPanel* build_mvs_gen_page(wxWindow* parent);
@@ -255,6 +276,15 @@ private:
     std::string           m_run_target;              // run being worked on this session ("" = none yet)
     std::string           m_run_printer;
     std::string           m_run_nozzle;
+
+    // Printer track (Start page choice).
+    ForcaPrinterCalibration* m_printer       { nullptr };
+    bool                     m_printer_track { false };
+    bool                     m_chose_filament { false };  // answered "A filament" and nothing started since
+    int                      m_scrolled_page  { -1 };     // page last scrolled to the top (see relayout)
+    wxSizer*                 m_filament_row  { nullptr };
+    wxSizer*                 m_cal_row       { nullptr };
+    wxSizer*                 m_cfg_box       { nullptr };
 };
 
 }} // namespace Slic3r::GUI

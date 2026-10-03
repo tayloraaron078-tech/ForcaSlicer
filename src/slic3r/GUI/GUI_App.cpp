@@ -101,6 +101,7 @@
 #include "MainFrame.hpp"
 #include "Plater.hpp"
 #include "ForcaAI.hpp"
+#include "ForcaAcademy.hpp"
 #include "GLCanvas3D.hpp"
 #include "EncodedFilament.hpp"
 #include "GeneratedConfig.hpp"
@@ -3568,6 +3569,8 @@ bool GUI_App::on_init_inner()
     BOOST_LOG_TRIVIAL(info) << "main frame firstly shown";
     // Forca AI is opt-in: only listens if the user turned it on (remembered in the app config).
     ForcaAI::instance().start_if_enabled();
+    // Forca Academy: settings defaults; resume following prints sent before a restart (to record how they ended).
+    forca_academy_start();
 
 //#if BBL_HAS_FIRST_PAGE
     //BBS: set tp3DEditor firstly

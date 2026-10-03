@@ -384,10 +384,10 @@ public:
     wxWindow* canvas_host_panel() const;
     void      set_forca_calibration_mode(bool on);
     void calib_retraction(const Calib_Params& params, bool skip_confirm = false);
-    void calib_VFA(const Calib_Params& params);
-    void calib_input_shaping_freq(const Calib_Params& params);
-    void calib_input_shaping_damp(const Calib_Params& params);
-    void Calib_Cornering(const Calib_Params& params);
+    void calib_VFA(const Calib_Params& params, bool skip_confirm = false); // Forca: skip_confirm for the Calibration Wizard
+    void calib_input_shaping_freq(const Calib_Params& params, bool skip_confirm = false); // Forca
+    void calib_input_shaping_damp(const Calib_Params& params, bool skip_confirm = false); // Forca
+    void Calib_Cornering(const Calib_Params& params, bool skip_confirm = false); // Forca
 
     BuildVolume_Type get_build_volume_type() const;
 

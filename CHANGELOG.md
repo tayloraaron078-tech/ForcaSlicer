@@ -14,6 +14,72 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+## 0.1.0-alpha.2 — 2026-10-02
+
+### Added
+- **Forca AI control levels.** The Forca AI window now has a level: **Guarded** (the default, unchanged) or
+  **Advanced**, which you confirm through a warning. At Advanced the AI may save over your files and edit your user
+  presets -- Forca first copies each file into `Documents\Forca AI\Backups` -- and a print request opens the print
+  dialog straight away instead of an approval card; you still press Send. Only you can change the level (no AI
+  command can); the top bar shows "(Advanced)" while it is on, and `forca_status` tells the AI which rules apply.
+- **Forca AI print grants.** At the Advanced level you can give the AI a grant to start prints itself: which printers,
+  how many prints, for how many hours, and the longest print. Forca sends a grant print only to an idle printer whose
+  bed is clear -- you click "Bed is clear" (one clearing per print), or, if you allow it, the AI checks the bed with
+  the camera (`forca_bed_check`; the picture is kept). The AI names the printer slot for every filament (`A4`, `Ext`);
+  Forca checks the slot holds that material, sets the print dialog to it and checks it again before sending (the
+  dialog's own auto-mapping can pick a different slot). The send goes through the normal print dialog with a 10-second
+  countdown you can cancel, and stops wherever the dialog would ask you to confirm something. Bambu printers only for
+  now. Grants end when used up, on time, on Revoke, on choosing Guarded, or on restart.
+- **Print grants can name the files to print.** Add files to a grant, each with a number of copies and a note for the
+  AI (orientation, material, settings). The AI imports them, arranges copies, picks settings following your note and
+  prints until every copy is sent; Forca sends only plates made of the grant's files, never more copies than are still
+  owed, and shows the progress in the Forca AI window. The grant ends when all copies are sent.
+- **Printer calibration in the Calibration Wizard.** Opening the wizard now asks what you are calibrating: a filament
+  (as before) or **your printer** -- once per printer and nozzle, before the filaments. A **Calibrate something else**
+  button on every wizard page brings the question back (a filament's progress is kept). The printer track runs
+  OrcaSlicer's own tests in order: **Input Shaping** (frequency, then damping), **Cornering** (jerk, junction
+  deviation or Klipper's square corner velocity) and **VFA** (speeds that cause fine vertical ribbing). The result
+  page turns the height you measure on the tower into the value. You choose where results go: **update your printer
+  preset** (its old values are backed up and a "Restore this printer's backup" button puts them back) or **a new
+  "(calibrated)" printer preset**, which is also added to any network printer the original was on. Klipper printers
+  also get the lines for printer.cfg. Bambu Lab printers only get VFA -- they tune their own vibration compensation
+  and cornering.
+- **The Calibration Wizard speaks your language.** Its text is translated into all 22 of OrcaSlicer's languages
+  (machine translations, marked as such in the catalogs; recurring terms follow each language's OrcaSlicer
+  wording). Chinese, Japanese and Thai text now wraps inside the wizard instead of stretching it.
+- **Forca Academy print journal** (Preferences > Forca Academy, off by default). When on, every print Forca sends --
+  to a Bambu printer, or uploaded to a network printer with "print" -- gets a folder in Documents\Forca Academy
+  (or a folder you choose): the printer, presets, filaments (and, on Bambu printers, the AMS tray each one printed
+  from), settings you changed, estimates and a picture of the
+  plate, as plain JSON and Markdown that you and any AI can read. Nothing is uploaded.
+  - **File > Print Journal:** your recorded prints with their picture and details; mark each Success / Partial /
+    Failed with quick tags (stringing, warping, layer shift, ...) and a note, and add photos (or drop them on the
+    window). "Add a print" records the plate for prints Forca didn't send, such as SD-card prints.
+  - **Calibration history:** results you apply in the Calibration Wizard are added to the material's (or printer's)
+    page in the journal.
+  - **How it ended (Bambu):** Forca follows each recorded print until the printer reports it finished or failed
+    (even across a restart), and adds that, the time it took and any printer errors to the record -- plus, if you
+    like, a camera picture of the result (on by default) and pictures every few minutes while it prints (off by
+    default; Preferences > Forca Academy).
+  - **Printer pages:** each printer gets a page with what Forca knows about it (model, firmware, connection, AMS
+    units, camera, preset), refreshed on every print; your own notes on the page are kept.
+  - **Forca AI tools:** an AI can check the journal's status, list, read and search it, record a print's outcome
+    (never over yours), write its own notes, lessons and playbooks (it can add to your notes but never replace
+    them), and save a camera picture with a print (`forca_camera_snapshot` `save_to_print`).
+
+### Fixed
+- **Max Volumetric Speed test stays on the bed.** Its first layer is now a thin-walled outline, like Bambu Studio's
+  test model, so the brim goes on both sides of the wall instead of only outside. Before, filaments such as PCTG could
+  lift off partway through. The wall follows your nozzle's line width; above the first layer the test prints as
+  before. Applies to the Calibration Wizard and to Calibration > Max flowrate.
+- **Calibration Wizard pages open at the top.** Before, a new step often opened scrolled to the bottom (wherever
+  the button you pressed was), so you had to scroll up to read it.
+- **Forca AI's G-code export applies your post-processing scripts**, exactly like File → Export G-code. Before, an AI
+  export skipped them on non-Bambu printers. If a script renames the output onto one of your files, the AI still
+  refuses to overwrite it.
+- **Two Preferences tooltips are translated again** (Stealth mode and Enable Bambu Cloud), in all 22 languages. They
+  had fallen back to English when Forca reworded them for Orca Cloud being off.
+
 ## 0.1.0-alpha.1 — 2026-09-26 — first public alpha
 
 Everything below, from the first dated section on, is in this release.

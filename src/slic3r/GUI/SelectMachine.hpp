@@ -598,10 +598,22 @@ public:
     bool is_selected_ams_drying(MachineObject* obj);
 
     PrintFromType get_print_type() {return m_print_type;};
+    int         get_print_plate_idx() const { return m_print_plate_idx; } // Forca Academy: the plate that was sent
+    const std::vector<FilamentInfo>& get_ams_mapping_list() const { return m_ams_mapping_result; } // Forca Academy: trays used
     wxString    format_steel_name(NozzleType type);
     PrintDialogStatus  get_status() { return m_print_status; }
+    // Forca: pre-approved AI printing (ForcaAIAutonomy.cpp). forca_clean_ready: this dialog could send to `dev_id`
+    // now with nothing for the user to confirm (ready, no printer or filament message). forca_auto_send: presses Send
+    // for the AI, but refuses (false + why, nothing sent) wherever the user would be asked to confirm something.
+    bool forca_clean_ready(const std::string& dev_id, std::string& why) const;
+    bool forca_auto_send(std::string& why);
+    // Forca: maps filament `filament_id` (FilamentInfo::id, 0-based) to the printer slot (ams_id, slot_id), the way a
+    // click in the mapping popup does. False + why if the printer has no such slot.
+    bool forca_set_mapping(int filament_id, const std::string& ams_id, const std::string& slot_id, std::string& why);
 
 private:
+    bool     m_forca_auto_send { false }; // Forca: on_ok_btn runs for the AI's pre-approved send
+    wxString m_forca_auto_refused;        // Forca: what on_ok_btn would have asked the user to confirm
     void EnableEditing(bool enable);
 
     /* update scroll area size*/

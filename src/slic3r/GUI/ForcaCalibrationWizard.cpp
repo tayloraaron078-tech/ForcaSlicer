@@ -1,4 +1,6 @@
 #include "ForcaCalibrationWizard.hpp"
+#include "ForcaPrinterCalibration.hpp"
+#include "ForcaAcademy.hpp"
 
 #include "GUI_App.hpp"
 #include "I18N.hpp"
@@ -94,30 +96,123 @@ static bool parse_positive_list(const wxString& s, std::vector<double>& out)
     return true;
 }
 
-// Show the two-routes intro once per app session.
-static bool s_forca_intro_shown = false;
+// Columns a character takes when wrapping: CJK / full-width characters are about two Latin letters wide, and Thai
+// vowel and tone marks sit on the letter before them.
+static size_t wrap_columns(wxUniChar c)
+{
+    const unsigned u = c.GetValue();
+    if ((u >= 0x0E31 && u <= 0x0E3A && u != 0x0E32 && u != 0x0E33) || (u >= 0x0E47 && u <= 0x0E4E))
+        return 0;
+    if ((u >= 0x1100 && u <= 0x115F) || (u >= 0x2E80 && u <= 0xA4CF) || (u >= 0xAC00 && u <= 0xD7A3) ||
+        (u >= 0xF900 && u <= 0xFAFF) || (u >= 0xFE30 && u <= 0xFE4F) || (u >= 0xFF00 && u <= 0xFF60) ||
+        (u >= 0xFFE0 && u <= 0xFFE6))
+        return 2;
+    return 1;
+}
+
+// A line may break before c (not before a closing mark, punctuation or a Thai mark on the previous letter).
+static bool may_break_before(wxUniChar c)
+{
+    static const wxString closing = wxString::FromUTF8("\xe3\x80\x81\xe3\x80\x82\xef\xbc\x8c\xef\xbc\x8e\xef\xbc\x89\xe3\x80\x8d\xe3\x80\x8f\xef\xbc\x81\xef\xbc\x9f\xef\xbc\x9a\xef\xbc\x9b"
+                                                       ")]%.,:;!?"); // 、。，．）」』！？：；
+    return wrap_columns(c) > 0 && closing.Find(c) == wxNOT_FOUND;
+}
+
+// Wrap text to at most max_chars columns per line with explicit newlines. at_spaces = false only breaks runs without
+// a space that are longer than a line: Chinese, Japanese and Thai have no spaces between words, so a translated
+// sentence is one "word" that neither wrapping at spaces nor wxStaticText::Wrap() would break (it widens the wizard).
+static wxString wrap_text(const wxString& s, size_t max_chars, bool at_spaces)
+{
+    wxString out;
+    if (!at_spaces) {
+        size_t run = 0;
+        for (wxUniChar c : s) {
+            if (c == ' ' || c == '\n') {
+                run = 0;
+            } else {
+                const size_t cw = wrap_columns(c);
+                if (run > 0 && run + cw > max_chars && may_break_before(c)) {
+                    out += '\n';
+                    run = 0;
+                }
+                run += cw;
+            }
+            out += c;
+        }
+        return out;
+    }
+    wxString line;
+    size_t   line_cols = 0;
+    auto flush = [&]() {
+        if (!out.empty()) out += "\n";
+        out += line;
+        line.Clear();
+        line_cols = 0;
+    };
+    wxStringTokenizer tok(s, " ");
+    while (tok.HasMoreTokens()) {
+        const wxString w = tok.GetNextToken();
+        size_t cols = 0;
+        for (wxUniChar c : w)
+            cols += wrap_columns(c);
+        if (!line.empty() && (cols > max_chars || line_cols + 1 + cols <= max_chars)) {
+            line += " ";
+            ++line_cols;
+        } else if (!line.empty()) {
+            flush();
+        }
+        if (cols <= max_chars) {
+            line += w;
+            line_cols += cols;
+            continue;
+        }
+        for (wxUniChar c : w) { // longer than a line: break it between characters
+            if (c == '\n') {
+                flush();
+                continue;
+            }
+            const size_t cw = wrap_columns(c);
+            if (!line.empty() && line_cols + cw > max_chars && may_break_before(c))
+                flush();
+            line += c;
+            line_cols += cw;
+        }
+    }
+    if (!line.empty())
+        flush();
+    return out;
+}
 
 // Hard-wrap text to at most max_chars per line at word boundaries (explicit newlines). Used instead of
 // wxStaticText::Wrap(), which is unreliable when the label is set dynamically (it left text unwrapped,
 // clipping it and widening the dialog).
-static wxString hard_wrap(const wxString& s, size_t max_chars)
+static wxString hard_wrap(const wxString& s, size_t max_chars) { return wrap_text(s, max_chars, true); }
+
+// wxStaticText::Wrap(px) for text that may have no spaces (see wrap_text): break over-long words first, at ~64 columns
+// (the 460 DIP the wizard wraps at), then let Wrap break at spaces as before.
+static void wrap_label(wxStaticText* st, int px)
 {
-    wxStringTokenizer tok(s, " ");
-    wxString out, line;
-    while (tok.HasMoreTokens()) {
-        const wxString w = tok.GetNextToken();
-        if (!line.empty() && line.length() + 1 + w.length() > max_chars) {
-            if (!out.empty()) out += "\n";
-            out += line;
-            line.Clear();
-        }
-        line = line.empty() ? w : (line + " " + w);
+    st->SetLabel(wrap_text(st->GetLabel(), 64, false));
+    st->Wrap(px);
+}
+
+// Shared with the printer track (ForcaPrinterCalibration).
+wxString forca_hard_wrap(const wxString& s, size_t max_chars) { return hard_wrap(s, max_chars); }
+bool     forca_calib_test_generated() { return s_forca_calib_test_generated; }
+void     forca_mark_calib_test_generated() { s_forca_calib_test_generated = true; }
+
+void forca_discard_transient_preset_changes()
+{
+    // A calibration test print sets throwaway values on the print/printer/filament presets (spiral mode,
+    // temperature/flow overrides, jerk for the machine tests, etc.). Left dirty, they leak into the NEXT test -- e.g.
+    // MVS's spiral mode pops the "spiral only works when..." warning during the flow slice. Revert them first; real
+    // results are written to named presets by Apply, so nothing of value is lost.
+    for (Preset::Type t : { Preset::TYPE_PRINT, Preset::TYPE_FILAMENT, Preset::TYPE_PRINTER }) {
+        if (Tab* tab = wxGetApp().get_tab(t))
+            if (tab->m_presets && tab->current_preset_is_dirty())
+                tab->m_presets->discard_current_changes();
     }
-    if (!line.empty()) {
-        if (!out.empty()) out += "\n";
-        out += line;
-    }
-    return out;
+    wxGetApp().load_current_presets(false);
 }
 
 // Remove a trailing " (calibrated <...>)" suffix so a default name derives from the underlying base.
@@ -221,17 +316,19 @@ ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     m_printer_value = add_static_row(_L("Printer:"));
     m_nozzle_value  = add_static_row(_L("Nozzle:"));
 
-    auto add_choice_row = [&](const wxString& label) -> wxChoice* {
+    auto add_choice_row = [&](const wxString& label, wxSizer** out_row) -> wxChoice* {
         auto* row = new wxBoxSizer(wxHORIZONTAL);
         row->Add(new wxStaticText(this, wxID_ANY, label, wxDefaultPosition, FromDIP(wxSize(180, -1))), 0, wxALIGN_CENTER_VERTICAL);
         auto* c = new wxChoice(this, wxID_ANY);
         row->Add(c, 1, wxALIGN_CENTER_VERTICAL);
         cfg_box->Add(row, 0, wxALL | wxEXPAND, FromDIP(3));
+        *out_row = row; // Forca printer track: hidden while calibrating the printer
         return c;
     };
-    m_filament_choice = add_choice_row(_L("Filament to calibrate:"));
+    m_cfg_box = cfg_box;
+    m_filament_choice = add_choice_row(_L("Filament to calibrate:"), &m_filament_row);
     m_filament_choice->Bind(wxEVT_CHOICE, &ForcaCalibrationWizard::on_filament_changed, this);
-    m_cal_choice = add_choice_row(_L("Calibration:"));
+    m_cal_choice = add_choice_row(_L("Calibration:"), &m_cal_row);
     m_cal_choice->Append(_L("Temperature"));
     m_cal_choice->Append(_L("Max Volumetric Speed"));
     m_cal_choice->Append(_L("Flow Rate"));
@@ -257,6 +354,10 @@ ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     m_book->AddPage(build_final_check_page(m_book),    _L("Final check"));
     m_book->AddPage(build_result_page(m_book),         _L("Result"));      // PAGE_RESULT
     m_book->AddPage(build_start_page(m_book),          _L("Start"));       // PAGE_START
+    // Forca printer track: shares the store (one instance -- it loads and rewrites the whole file).
+    m_printer = new ForcaPrinterCalibration(m_book, m_plater, m_store, [this]() { relayout(); },
+                                            [this]() { ask_what_to_calibrate(); });
+    m_book->AddPage(m_printer,                         _L("Printer"));     // PAGE_PRINTER
     root->Add(m_book, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, pad);
 
     SetSizer(root);
@@ -266,6 +367,8 @@ ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     ForcaCalibrationStore::Record r;
     if (m_store.get(current_key(), r) && r.status == "pending")
         show_gen_page();
+    else if (const int ps = m_printer->pending_step(); ps >= 0) // a printer test is out for printing
+        select_printer_step(ps);
     else
         start_new_calibration();
 }
@@ -281,7 +384,7 @@ wxPanel* ForcaCalibrationWizard::build_temp_gen_page(wxWindow* parent)
     auto* coach = new wxStaticText(panel, wxID_ANY,
         _L("A temperature tower prints the same shape at descending nozzle temperatures. After it prints, "
            "choose the band with the cleanest surface, least stringing and strongest layer bonding."));
-    coach->Wrap(wrap);
+    wrap_label(coach, wrap);
     box->Add(coach, 0, wxALL, FromDIP(6));
 
     auto* range = new wxBoxSizer(wxHORIZONTAL);
@@ -311,7 +414,7 @@ wxPanel* ForcaCalibrationWizard::build_mvs_gen_page(wxWindow* parent)
         _L("This prints a single-wall tower whose speed rises with height. Watch for where the surface "
            "turns rough or the walls start under-extruding. Measure the height (mm) of the last section "
            "that still looked good -- the result page turns that height into your max flow for you."));
-    coach->Wrap(wrap);
+    wrap_label(coach, wrap);
     box->Add(coach, 0, wxALL, FromDIP(6));
 
     auto* range = new wxBoxSizer(wxHORIZONTAL);
@@ -444,7 +547,7 @@ wxPanel* ForcaCalibrationWizard::build_final_check_page(wxWindow* parent)
     add_run_buttons(panel, box, wxEmptyString); // no result to enter
 
     auto* another_btn = new wxButton(panel, wxID_ANY, _L("Calibrate another filament"));
-    another_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { start_new_calibration(); });
+    another_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { calibrate_a_filament(); });
     box->Add(another_btn, 0, wxALL, FromDIP(6));
 
     auto* outer = new wxBoxSizer(wxVERTICAL);
@@ -470,9 +573,12 @@ wxPanel* ForcaCalibrationWizard::build_start_page(wxWindow* parent)
     m_start_note->SetMinSize(FromDIP(wxSize(430, -1)));
     box->Add(m_start_note, 0, wxALL, FromDIP(6));
 
+    auto* row = new wxBoxSizer(wxHORIZONTAL);
     auto* start_btn = new wxButton(panel, wxID_ANY, _L("Start calibration"));
     start_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_start_run, this);
-    box->Add(start_btn, 0, wxALL, FromDIP(6));
+    row->Add(start_btn, 0, wxRIGHT, FromDIP(8));
+    add_something_else_button(panel, row);
+    box->Add(row, 0, wxALL, FromDIP(6));
 
     auto* outer = new wxBoxSizer(wxVERTICAL);
     outer->Add(box, 0, wxEXPAND);
@@ -494,21 +600,30 @@ void ForcaCalibrationWizard::add_run_buttons(wxPanel* panel, wxSizer* box, const
         _L("Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when "
            "it closes you enter your result here. Generate only puts the test on the plate (shown on the "
            "right) so you can slice/export it yourself, then come back here to enter your result."));
-    gen_note->Wrap(FromDIP(460));
+    wrap_label(gen_note, FromDIP(460));
     gen_note->SetForegroundColour(wxColour("#6B6B6B"));
     box->Add(gen_note, 0, wxALL, FromDIP(6));
 
-    if (result_label.IsEmpty())
-        return;
     auto* row = new wxBoxSizer(wxHORIZONTAL);
-    auto* result_btn = new wxButton(panel, wxID_ANY, result_label);
-    result_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_goto_result, this);
-    row->Add(result_btn, 0, wxRIGHT, FromDIP(8));
-    auto* skip_btn = new wxButton(panel, wxID_ANY, _L("Skip this step"));
-    skip_btn->SetToolTip(_L("Keep your current value for this setting and move on to the next calibration."));
-    skip_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_skip, this);
-    row->Add(skip_btn, 0);
+    if (!result_label.IsEmpty()) {
+        auto* result_btn = new wxButton(panel, wxID_ANY, result_label);
+        result_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_goto_result, this);
+        row->Add(result_btn, 0, wxRIGHT, FromDIP(8));
+        auto* skip_btn = new wxButton(panel, wxID_ANY, _L("Skip this step"));
+        skip_btn->SetToolTip(_L("Keep your current value for this setting and move on to the next calibration."));
+        skip_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_skip, this);
+        row->Add(skip_btn, 0, wxRIGHT, FromDIP(8));
+    }
+    add_something_else_button(panel, row);
     box->Add(row, 0, wxALL, FromDIP(6));
+}
+
+void ForcaCalibrationWizard::add_something_else_button(wxPanel* panel, wxSizer* row)
+{
+    auto* btn = new wxButton(panel, wxID_ANY, _L("Calibrate something else"));
+    btn->SetToolTip(_L("Calibrate your printer or a different filament. This filament's progress is kept."));
+    btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { ask_what_to_calibrate(); });
+    row->Add(btn, 0);
 }
 
 wxPanel* ForcaCalibrationWizard::build_pa_gen_page(wxWindow* parent)
@@ -598,7 +713,7 @@ wxPanel* ForcaCalibrationWizard::build_result_page(wxWindow* parent)
     m_height_help = new wxPanel(panel);
     auto* help_sizer = new wxBoxSizer(wxVERTICAL);
     m_height_hint = new wxStaticText(m_height_help, wxID_ANY, "");
-    m_height_hint->Wrap(wrap);
+    wrap_label(m_height_hint, wrap);
     m_height_hint->SetForegroundColour(wxColour("#6B6B6B"));
     help_sizer->Add(m_height_hint, 0, wxBOTTOM, FromDIP(4));
     auto* hrow = new wxBoxSizer(wxHORIZONTAL);
@@ -656,7 +771,7 @@ wxPanel* ForcaCalibrationWizard::build_result_page(wxWindow* parent)
            "if you started from a different profile. The result is written into that preset and it is "
            "selected; if the name already exists it is updated in place. Your starting preset is left "
            "unchanged."));
-    note->Wrap(wrap);
+    wrap_label(note, wrap);
     note->SetForegroundColour(wxColour("#6B6B6B"));
     sizer->Add(note, 0, wxBOTTOM, FromDIP(10));
 
@@ -860,16 +975,7 @@ void ForcaCalibrationWizard::update_default_preset_name()
 
 void ForcaCalibrationWizard::discard_transient_preset_changes()
 {
-    // A calibration test print sets throwaway values on the print/printer/filament presets (spiral mode,
-    // temperature/flow overrides, etc.). Left dirty, they leak into the NEXT test -- e.g. MVS's spiral
-    // mode pops the "spiral only works when..." warning during the flow slice. Revert them first; the real
-    // results were already written to a named preset by Apply, so nothing of value is lost.
-    for (Preset::Type t : { Preset::TYPE_PRINT, Preset::TYPE_FILAMENT, Preset::TYPE_PRINTER }) {
-        if (Tab* tab = wxGetApp().get_tab(t))
-            if (tab->m_presets && tab->current_preset_is_dirty())
-                tab->m_presets->discard_current_changes();
-    }
-    wxGetApp().load_current_presets(false);
+    forca_discard_transient_preset_changes();
 }
 
 // ---- Event handlers ----------------------------------------------------------------------------
@@ -968,7 +1074,7 @@ void ForcaCalibrationWizard::show_result_page()
                "max flow = start + height x step = %g + height x %g.\n"
                "Enter that height here and the Max flow is filled in for you, or type the flow yourself."),
             start, step));
-        m_height_hint->Wrap(FromDIP(460));
+        wrap_label(m_height_hint, FromDIP(460));
     }
 
     // Per-calibration guidance line on the result page.
@@ -1310,6 +1416,7 @@ void ForcaCalibrationWizard::launch_current_test(bool send_after)
             // a stray click, with the "blocked window" ding).
             if (ok) {
                 CallAfter([this, has_result]() {
+                    forca_academy_mark_source("calibration_wizard: " + cal_id(m_cal));
                     m_plater->print_current_plate(); // printer-specific send dialog (modal)
                     if (has_result)
                         show_result_page();
@@ -1714,6 +1821,15 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
         break;
     }
 
+    { // Forca Academy: the material page's calibration history (no-op when the journal is off)
+        const Preset& printer = wxGetApp().preset_bundle->printers.get_edited_preset();
+        const auto*   nozzle  = printer.config.option<ConfigOptionFloats>("nozzle_diameter");
+        char          nz[32]  = "";
+        if (nozzle && !nozzle->values.empty())
+            std::snprintf(nz, sizeof(nz), ", nozzle %.2f mm", nozzle->values.front());
+        forca_academy_log_calibration(false, saved_name, cal_id(done) + ": " + into_u8(val_str) + " -- " + printer.name + nz +
+                                                             " (Calibration Wizard)");
+    }
     wxString msg = wxString::Format(_L("Saved %s to the filament preset:\n%s\n\nIt is now selected."),
                                     val_str, wxString::FromUTF8(saved_name.c_str()));
     bool recheck = false;
@@ -1855,38 +1971,75 @@ void ForcaCalibrationWizard::on_tab_activated()
 {
     // Warn first (before re-syncing the picker to whatever is active now), then re-sync WITHOUT the resume jump so
     // the user lands exactly where they left the tab (including a half-filled result page).
-    check_run_presets();
-    const bool on_result = m_book->GetSelection() == PAGE_RESULT;
-    const bool on_start  = on_start_page();
-    const Cal  before    = m_cal;
-    refresh_presets(false);
-    // A finished run (all six steps) starts a new calibration when the user comes back to the tab.
-    // Only a run FINISHED in this visit (not merely a filament that is complete from before -- the user may be
-    // re-running a step on it) sends the user to the Start page.
-    if (on_start || (!on_result && m_run_finished))
-        start_new_calibration();
-    else if (!on_result || m_cal != before)
-        show_gen_page();
-    else
+    if (m_printer_track) { // Forca printer track: stay on its page; the printer may have changed meanwhile
+        refresh_presets(false);
+        m_printer->refresh();
         relayout();
-
-    if (!s_forca_intro_shown) {
-        s_forca_intro_shown = true;
-        // Parented to the main window so it opens centred on Forca, not on the wizard's left-hand panel.
-        MessageDialog dlg(wxGetApp().mainframe,
-            _L("Pick the filament you are calibrating -- or an existing profile close to it to start from -- "
-               "then pick a calibration. All the steps in a run are saved into ONE filament preset that you "
-               "name on the first step. The test appears on the plate on the right, and the progress bar and "
-               "before/after table above it fill in as you go.\n\n"
-               "Two ways to run each calibration:\n\n"
-               "1) Slice & send to printer -- Forca slices the test and opens your printer's normal send "
-               "dialog; print it, then enter the result here.\n\n"
-               "2) Generate only -- Forca puts the test on the plate so you can slice or export it yourself "
-               "(for example to an SD card), then come back here to enter your result.\n\n"
-               "You can switch to other tabs at any time; this tab picks up where you left off."),
-            _L("Forca Slicer Calibration Wizard"), wxICON_INFORMATION | wxOK);
-        dlg.ShowModal();
+    } else {
+        check_run_presets();
+        const bool on_result = m_book->GetSelection() == PAGE_RESULT;
+        const bool on_start  = on_start_page();
+        const Cal  before    = m_cal;
+        refresh_presets(false);
+        // A finished run (all six steps) starts a new calibration when the user comes back to the tab.
+        // Only a run FINISHED in this visit (not merely a filament that is complete from before -- the user may be
+        // re-running a step on it) sends the user to the Start page.
+        if (on_start || (!on_result && m_run_finished))
+            start_new_calibration();
+        else if (!on_result || m_cal != before)
+            show_gen_page();
+        else
+            relayout();
     }
+
+    // Arriving at the Start page (not in the middle of a test): ask what to calibrate -- unless the user already
+    // answered "A filament" and has not started anything since (e.g. they stepped out to change the filament).
+    if (on_start_page() && !m_chose_filament)
+        ask_what_to_calibrate();
+}
+
+void ForcaCalibrationWizard::ask_what_to_calibrate()
+{
+    wxString printer_state;
+    if (m_printer) {
+        int done = 0, total = 0;
+        m_printer->completion(done, total);
+        if (total > 0 && done >= total)
+            printer_state = _L("(This printer's calibration is complete.)");
+        else if (done > 0)
+            printer_state = wxString::Format(_L("(This printer's calibration is in progress: %d of %d steps.)"), done, total);
+    }
+    // Parented to the main window so it opens centred on Forca, not on the wizard's left-hand panel.
+    MessageDialog dlg(wxGetApp().mainframe,
+        _L("What are you calibrating?") + "\n\n" +
+        _L("My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do "
+           "it first: it changes how the filament tests print.") +
+        (printer_state.IsEmpty() ? wxString() : " " + printer_state) + "\n\n" +
+        _L("A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, "
+           "all saved into ONE filament preset that you name on the first step.") + "\n\n" +
+        _L("Each test appears on the plate on the right, and the progress bar and before/after table above it fill "
+           "in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; "
+           "Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). "
+           "Either way, come back here to enter your result. You can switch to other tabs at any time; this tab "
+           "picks up where you left off."),
+        _L("Forca Slicer Calibration Wizard"), wxICON_QUESTION);
+    dlg.AddButton(wxID_YES, _L("My printer"), false);
+    dlg.AddButton(wxID_NO, _L("A filament"), true);
+    if (dlg.ShowModal() == wxID_YES) {
+        m_chose_filament = false;
+        set_printer_track(true);
+        m_book->ChangeSelection(PAGE_PRINTER); // no event (see show_gen_page)
+        m_printer->begin();
+        relayout();
+    } else { // "A filament" (or the dialog was closed): the filament Start page
+        calibrate_a_filament();
+    }
+}
+
+void ForcaCalibrationWizard::calibrate_a_filament()
+{
+    start_new_calibration();
+    m_chose_filament = true; // an explicit choice: returning to the tab does not ask again
 }
 
 void ForcaCalibrationWizard::select_calibration(Cal cal)
@@ -1904,6 +2057,31 @@ void ForcaCalibrationWizard::select_calibration(Cal cal)
     show_gen_page();
 }
 
+void ForcaCalibrationWizard::select_printer_step(int step)
+{
+    if (!m_printer || step < 0 || step >= static_cast<int>(ForcaPrinterCalibration::Step::Count))
+        return;
+    set_printer_track(true);
+    m_book->ChangeSelection(PAGE_PRINTER); // no event (see show_gen_page)
+    m_printer->select_step(static_cast<ForcaPrinterCalibration::Step>(step));
+    relayout();
+}
+
+void ForcaCalibrationWizard::set_printer_track(bool on)
+{
+    m_printer_track = on;
+    if (on)
+        m_chose_filament = false;
+    if (m_cfg_box && m_filament_row && m_cal_row) {
+        m_cfg_box->Show(m_filament_row, !on, true);
+        m_cfg_box->Show(m_cal_row, !on, true);
+    }
+    if (m_status_label)
+        m_status_label->Show(!on);
+    if (on)
+        hide_warning(); // the filament run's preset warning does not apply here
+}
+
 bool ForcaCalibrationWizard::on_start_page() const
 {
     return m_book && m_book->GetSelection() == PAGE_START;
@@ -1911,6 +2089,7 @@ bool ForcaCalibrationWizard::on_start_page() const
 
 void ForcaCalibrationWizard::start_new_calibration()
 {
+    set_printer_track(false); // the Start page shows the filament header rows again
     set_cal(Cal::Temperature);
     m_flow_pass    = 1;
     m_flow_recheck = false;
@@ -1940,6 +2119,7 @@ void ForcaCalibrationWizard::update_start_note()
 
 void ForcaCalibrationWizard::on_start_run(wxCommandEvent& /*evt*/)
 {
+    m_chose_filament = false; // a filament run started: the next Start-page visit asks again
     // Continue at the first core step without a result or skip; a finished filament re-runs from Temperature.
     Cal first = Cal::Temperature;
     const ProgressModel pm = progress_model();
@@ -1982,6 +2162,13 @@ void ForcaCalibrationWizard::relayout()
     FitInside(); // scrolled panel: update the virtual size instead of resizing the window
     if (wxWindow* parent = GetParent())
         parent->Layout();
+    // A different page opens scrolled to the top; the same page keeps its position (e.g. ticking a checkbox).
+    const int page = m_book->GetSelection() * 100 + (m_book->GetSelection() == PAGE_PRINTER ? m_printer->current_page() : 0);
+    if (page != m_scrolled_page) {
+        m_scrolled_page = page;
+        Scroll(0, 0);
+        CallAfter([this]() { Scroll(0, 0); }); // after any focus change has scrolled a button into view
+    }
     notify_state_changed();
     s_in_relayout = false;
 }
@@ -2103,6 +2290,8 @@ void ForcaCalibrationWizard::hide_warning()
 
 ForcaCalibrationWizard::ProgressModel ForcaCalibrationWizard::progress_model() const
 {
+    if (m_printer_track && m_printer) // Forca printer track
+        return m_printer->progress_model();
     ProgressModel m;
     PresetBundle* b = wxGetApp().preset_bundle;
     if (!b)

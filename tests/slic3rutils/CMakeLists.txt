@@ -24,6 +24,10 @@ add_executable(${_TEST_NAME}_tests
     test_plugin_cloud_metadata.cpp
     test_plugin_audit.cpp
     test_forca_brand.cpp
+    test_forca_calibration_store.cpp
+    test_forca_calibration_wizard.cpp
+    test_forca_academy.cpp
+    test_forca_ai_autonomy.cpp
     test_shortcuts.cpp
     ../fff_print/test_helpers.cpp
     )

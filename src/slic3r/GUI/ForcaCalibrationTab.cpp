@@ -131,7 +131,7 @@ ForcaCalibrationProgressPanel::ForcaCalibrationProgressPanel(wxWindow* parent, F
     m_save_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationProgressPanel::on_save_image, this);
     m_save_btn->Hide();
     m_new_btn = new wxButton(this, wxID_ANY, _L("Calibrate another filament"));
-    m_new_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { if (m_wizard) m_wizard->start_new_calibration(); });
+    m_new_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { if (m_wizard) m_wizard->calibrate_a_filament(); });
     m_new_btn->Hide();
 
     Bind(wxEVT_PAINT, &ForcaCalibrationProgressPanel::on_paint, this);
@@ -145,6 +145,8 @@ void ForcaCalibrationProgressPanel::refresh_model()
 {
     if (m_wizard)
         m_model = m_wizard->progress_model();
+    // Forca printer track: after the printer, the next thing is a filament.
+    m_new_btn->SetLabel(m_model.printer_track ? _L("Calibrate a filament") : _L("Calibrate another filament"));
     m_save_btn->Show(m_model.complete);
     m_new_btn->Show(m_model.complete);
     position_buttons();
@@ -186,7 +188,8 @@ void ForcaCalibrationProgressPanel::draw(wxDC& dc, const wxSize& size, bool reco
     int y = FromDIP(10);
     dc.SetFont(Label::Head_16);
     dc.SetTextForeground(pal.text);
-    const wxString title = m_model.complete ? _L("Calibration complete") : _L("Calibrating");
+    const wxString title = m_model.printer_track ? (m_model.complete ? _L("Printer calibration complete") : _L("Calibrating printer"))
+                         : (m_model.complete ? _L("Calibration complete") : _L("Calibrating"));
     dc.DrawText(title, pad, y);
     int tx = pad + dc.GetTextExtent(title).x + FromDIP(10);
     dc.SetFont(Label::Head_14);
@@ -206,7 +209,7 @@ void ForcaCalibrationProgressPanel::draw(wxDC& dc, const wxSize& size, bool reco
     dc.SetPen(*wxTRANSPARENT_PEN);
     dc.SetBrush(wxBrush(pal.track));
     dc.DrawRoundedRectangle(bar, radius);
-    const int    n_core   = ForcaCalibrationWizard::CORE_STEPS;
+    const int    n_core   = std::max(1, m_model.core_steps); // the printer track has 1-4 steps
     const double seg_w    = double(bar.width) / n_core;
     const int    fill_w   = int(std::round(bar.width * std::clamp(m_model.percent, 0.0, 100.0) / 100.0));
     if (fill_w > 0) {
@@ -250,7 +253,7 @@ void ForcaCalibrationProgressPanel::draw(wxDC& dc, const wxSize& size, bool reco
         dc.SetTextForeground(st.skipped ? pal.subtle : pal.text);
         dc.DrawText(st.name, lx + dot + FromDIP(4), y + (label_h - te.y) / 2);
         if (record_hits) {
-            m_step_hits.push_back({ wxRect(sx, bar.y, sw, bar_h + FromDIP(6) + label_h), st.cal });
+            m_step_hits.push_back({ wxRect(sx, bar.y, sw, bar_h + FromDIP(6) + label_h), st.cal, false, st.printer_step });
             wxString tip = st.skipped ? _L("Skipped") : st.fraction >= 1.0 ? _L("Done") : st.fraction > 0 ? _L("Pass 1 of 2 done")
                                                       : st.pending ? _L("Test printing") : _L("Not started");
             m_tips.push_back({ m_step_hits.back().rect, st.name + ": " + tip + " - " + _L("click to open this step") });
@@ -258,7 +261,8 @@ void ForcaCalibrationProgressPanel::draw(wxDC& dc, const wxSize& size, bool reco
     }
     y += label_h + FromDIP(4);
 
-    // Optional markers (not counted).
+    // Optional markers (not counted); the printer track has none.
+    if (m_model.steps.size() > size_t(n_core)) {
     dc.SetFont(Label::Body_12);
     dc.SetTextForeground(pal.subtle);
     int ox = pad;
@@ -282,6 +286,8 @@ void ForcaCalibrationProgressPanel::draw(wxDC& dc, const wxSize& size, bool reco
         ox += w + FromDIP(16);
     }
     y += dc.GetCharHeight() + FromDIP(12);
+    } else
+        y += FromDIP(6);
 
     // Before/after table.
     const int row_h   = FromDIP(24);
@@ -353,7 +359,9 @@ void ForcaCalibrationProgressPanel::on_left_down(wxMouseEvent& evt)
     for (const Hit& h : m_step_hits)
         if (h.rect.Contains(evt.GetPosition())) {
             if (m_wizard) {
-                if (h.recheck)
+                if (h.printer_step >= 0)
+                    m_wizard->select_printer_step(h.printer_step);
+                else if (h.recheck)
                     m_wizard->start_flow_recheck();
                 else
                     m_wizard->select_calibration(h.cal);

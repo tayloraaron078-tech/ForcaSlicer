@@ -9832,6 +9832,10 @@ msgstr ""
 "참고: 스텔스 모드를 활성화하면 사용자 프로필이 Orca Cloud에 백업되지 않습니다."
 
 # AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "이 옵션은 Bambu Cloud 등 모든 클라우드 기능을 비활성화합니다. 완전히 오프라인으로 작업하려는 사용자는 이 옵션을 활성화할 수 있습니다."
+
+# AI Translated
 msgid "Hide login side panel"
 msgstr "로그인 사이드 패널 숨기기"
 
@@ -9856,6 +9860,10 @@ msgstr "Bambu Cloud 활성화"
 # AI Translated
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Orca Cloud와 함께 Bambu Cloud에도 로그인할 수 있도록 허용합니다. 활성화하면 홈 화면에 Bambu 로그인 영역이 표시됩니다."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Bambu Cloud에 로그인할 수 있도록 허용합니다. 활성화하면 홈 화면에 Bambu 로그인 영역이 표시됩니다."
 
 # AI Translated
 msgid "Update & sync"
@@ -23291,8 +23299,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "결과"
 
 msgid "Flip direction"
 msgstr ""
@@ -25386,6 +25395,1386 @@ msgstr ""
 "ABS와 같이 뒤틀림이 발생하기 쉬운 소재를 출력할 때, 히트베드 온도를 적절하게 높이면 뒤틀림 가능성을 줄일 수 있다는 사실을 알고 계셨나요?"
 
 # AI Translated
+msgid "Retraction length"
+msgstr "후퇴 길이"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "XY 수축"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Z 수축"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer 교정 마법사"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "닫기"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "현재 구성"
+
+# AI Translated
+msgid "Printer:"
+msgstr "프린터:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "노즐:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "교정할 필라멘트:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "교정:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "압출량"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "수축"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "최종 확인 출력 (선택 사항)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "최대 압출량"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "최종 확인"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "온도 타워는 노즐 온도를 낮춰 가며 같은 모양을 출력합니다. 출력이 끝나면 표면이 가장 깨끗하고, 스트링이 가장 적고, 층 접착이 가장 강한 구간을 고르세요."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "시작 온도 (높음):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "종료 온도 (낮음):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "타워를 이미 출력했음 - 결과 입력"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "높이에 따라 속도가 올라가는 단일 벽 타워를 출력합니다. 표면이 거칠어지거나 벽에 압출 부족이 시작되는 곳을 살펴보세요. 아직 괜찮아 보였던 마지막 구간의 높이(mm)를 재세요 -- 결과 페이지가 그 높이를 최대 압출량으로 바꿔 줍니다."
+
+# AI Translated
+msgid "Start:"
+msgstr "시작:"
+
+# AI Translated
+msgid "End:"
+msgstr "끝:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "단계 (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "방식:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "클래식 (거친 + 정밀 패스)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (권장 + 완벽주의)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "이 패스를 이미 출력했음 - 결과 입력"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Orca의 후퇴 타워를 출력합니다. 링마다 후퇴 길이가 한 단계씩 늘어납니다. 스트링이 사라지는 가장 낮은 구간을 찾아 그 아래의 링을 세고, 그 수를 결과 페이지에 입력하면 후퇴 길이를 얻습니다. 스트링이 없는 가장 짧은 길이를 사용하세요."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "단계 (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "직접 드라이브: 기본 범위 0-2 mm가 대부분의 필라멘트에 맞습니다. 보우덴: 끝을 늘리세요 (예: 6)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "한 변이 %g mm인 사각 개방형 프레임과 한쪽 모서리에 높이 %g mm의 기둥을 출력합니다. 완전히 식힌 뒤(가능하면 몇 시간) 캘리퍼로 재세요: X 방향 바깥 폭, Y 방향 바깥 폭(코끼리 발을 피하려면 처음 몇 층 위에서 재기), 기둥 높이. 결과 페이지가 이를 필라멘트의 XY 및 Z 수축 보정으로 바꿔 줍니다."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "프레임을 이미 출력했음 - 측정값 입력"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "선택적인 확인 테스트: 교정된 필라멘트 사전 설정으로 Autodesk FDM Test(Orca에 포함된 모델)를 출력합니다. 오버행, 브리지, 스트링, 작은 디테일과 치수를 한 번의 출력으로 확인합니다. 여기서는 아무것도 저장되지 않습니다 -- 이상한 부분이 있으면 위의 선택 목록에서 해당 교정을 다시 실행하세요. 교정된 사전 설정은 이미 저장되고 선택되어 있습니다."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "다른 필라멘트 교정"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "교정 시작"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "위의 \"교정할 필라멘트\"에서 교정할 필라멘트 -- 또는 출발점이 될 비슷한 기존 프로필 -- 을 고른 다음 시작을 누르세요. 단계는 다음 순서로 진행됩니다: 온도, 최대 압출 속도, 압출량, 압력 어드밴스, 후퇴, 수축."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "교정 시작"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "슬라이스 && 프린터로 전송"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "생성만 (직접 출력)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "슬라이스 & 전송은 테스트를 플레이트에 놓고 슬라이스한 뒤 프린터의 전송 대화 상자를 엽니다. 대화 상자가 닫히면 여기에 결과를 입력합니다. 생성만은 테스트를 플레이트에 놓아(오른쪽에 표시) 직접 슬라이스/내보내기할 수 있게 하며, 그다음 여기로 돌아와 결과를 입력하면 됩니다."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "이 단계 건너뛰기"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "이 설정의 현재 값을 유지하고 다음 교정으로 넘어갑니다."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "다른 것 교정"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "프린터나 다른 필라멘트를 교정합니다. 이 필라멘트의 진행 상황은 유지됩니다."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA 타워 (권장)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "압출기:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "직접 드라이브"
+
+# AI Translated
+msgid "Step:"
+msgstr "단계:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "가속도 (선택 사항):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "속도 (선택 사항):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "이 테스트를 이미 출력했음 - 결과 입력"
+
+# AI Translated
+msgid "Enter result"
+msgstr "결과 입력"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "측정한 높이 (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "결과:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "측정한 X 폭 (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "측정한 Y 폭 (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "측정한 기둥 높이 (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "사전 설정으로 저장:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "사전 설정의 이름은 원하는 대로 지으세요 -- 예를 들어 다른 프로필에서 시작했더라도 실제로 교정하는 필라멘트 이름으로. 결과는 그 사전 설정에 기록되고 선택됩니다. 같은 이름이 이미 있으면 업데이트됩니다. 시작한 사전 설정은 바뀌지 않습니다."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "적용하고 사전 설정에 저장"
+
+# AI Translated
+msgid "Final check print"
+msgstr "최종 확인 출력"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "압출량 비율 %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "후퇴 %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY 수축 %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s 테스트 대기 중 (생성: %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "최종 확인 출력이 생성되었습니다 (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "마지막 %s 결과: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s 건너뜀 (%s). 현재 값이 유지됩니다."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "최적 온도 (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "최대 압출량 (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "최적 블록 번호:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "최적 PA 값:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "후퇴 길이 (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "그 구간 아래의 링 수:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "캘리퍼가 필요 없습니다: 타워의 링 하나가 후퇴 한 단계를 나타냅니다. 스트링이 없는 가장 낮은 구간을 찾아 그 아래의 링을 세세요 (맨 아래 구간, 링 0개가 시작입니다):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\n길이 = 시작 + 링 수 x 단계 = %g + 링 수 x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "여기에 링 수를 입력하면 길이가 자동으로 채워집니다. 길이를 직접 입력해도 됩니다."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "모서리가 가장 선명해 보이는 높이(mm)를 잰 다음:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = 시작 + 단계 x 높이 = %g + %g x 높이.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "여기에 그 높이를 입력하면 PA 값이 자동으로 채워집니다. 값을 직접 입력해도 됩니다."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "처음이신가요? 보기 좋았던 마지막 구간의 높이(mm)를 적어 둔 다음:\n최대 압출량 = 시작 + 높이 x 단계 = %g + 높이 x %g.\n여기에 그 높이를 입력하면 최대 압출량이 자동으로 채워집니다. 압출량을 직접 입력해도 됩니다."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "폭이 가장 고른 선 옆에 인쇄된 값을 입력하세요."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "모서리가 가장 선명하고 깨끗한 패턴 위에 인쇄된 값을 입력하세요."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "측정한 값을 입력하세요. 현재 Z 값을 유지하려면 Z를 비워 두세요. 현재 보정: XY %.2f%%, Z %.2f%% (이 출력에 이미 적용되어 반영되어 있습니다)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "PA 값을 높여 가며 선을 출력하고 각 선에 값을 표시합니다. 폭이 가장 고른 선을 고르고 -- 속도가 바뀌는 곳에서 불룩하지 않고(PA가 너무 낮음) 가늘어지지 않는(너무 높음) -- 그 선의 값을 입력하세요."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "PA 값을 높여 가며 겹친 모서리 패턴을 출력하고 각 패턴에 값을 표시합니다. 모서리가 가장 선명하고 깨끗한 것을 고르고 -- 불룩하지 않고(PA가 너무 낮음) 둥글거나 틈이 없는(너무 높음) -- 그 값을 입력하세요."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "높이 1 mm마다 PA가 한 단계씩 올라가는 속이 빈 타워를 출력합니다. 모서리가 가장 선명해 보이는 높이를 찾아 -- 불룩하지 않고(PA가 너무 낮음) 틈이나 둥글어짐이 없는(너무 높음) --, 캘리퍼로 재서 결과 페이지에 입력하면 PA 값을 얻습니다."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "이 필라멘트에 맞는 유효한 온도 범위를 입력하세요:\n%d ~ %d C 사이, 시작은 끝보다 5 C 이상 높아야 합니다."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "유효한 값을 입력하세요:\n시작 > 0, 단계 > 0, 끝 > 시작 + 단계."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "유효한 후퇴 값을 입력하세요:\n시작 >= 0, 단계 > 0, 끝 > 시작 + 단계, 끝 <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "유효한 PA 값을 입력하세요:\n시작 >= 0, 단계 >= 0.001, 끝 > 시작 + 단계."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "가속도와 속도는 쉼표로 구분한 양수이거나 비워 두어야 합니다."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "슬라이스가 끝나지 않아 아무것도 전송되지 않았습니다. 오류를 고친 뒤 다시 시도하세요."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "수축 테스트"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca 수축 프레임"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "압력 어드밴스 이후의 선택적 재확인입니다."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "2회 중 1회차 패스입니다. 다음에 정밀 패스가 이어집니다."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "2회 중 2회차 패스이며, 마지막 패스입니다."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "윗면이 가장 매끄럽고 평평한 블록 아래의 번호를 입력하세요. 음수 = 압출량 감소, 양수 = 압출량 증가. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "새 압출량: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "새 압출량: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "새 압출량: %.3f + 번호."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "새 압출량: %.3f x (1 + 번호/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "PA 이후 재확인 (완벽주의 패스)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "PA 이후 재확인 (정밀 패스)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "2회 중 1회차 (권장)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "2회 중 2회차 (완벽주의)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "2회 중 1회차 (거친)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "2회 중 2회차 (정밀)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Orca의 YOLO 테스트는 블록 한 줄을 출력하며, 각 블록에 -0.02나 +0.01 같은 작은 압출량 오프셋이 표시됩니다. 윗면이 가장 매끄럽고 평평한 블록 -- 부풀지 않고(압출량 과다) 틈이 없는(압출량 부족) -- 을 고르고, 인쇄된 그대로 번호를 입력하세요. 보통은 권장 패스로 충분하며, 완벽주의 패스는 더 작은 단계로 다듬습니다."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "압출량 비율이 조금씩 다른 블록 한 줄을 출력하고 각 블록에 번호를 표시합니다. 윗면을 보고 윗면이 가장 매끄럽고 평평한 블록 -- 부풀지 않고(압출량 과다) 틈이 없는(압출량 부족) -- 을 고르세요. 그 블록의 번호를 입력하게 됩니다. 압출량은 두 번의 패스로 진행됩니다: 거친 패스 후, 첫 결과 주변에서 정밀 패스를 합니다."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "이 필라멘트의 온도를 %d ~ %d C 사이로 입력하세요."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "최대 압출 속도를 %.1f ~ %.1f mm3/s 사이로 입력하세요."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "최적 블록의 번호를 -%g ~ %g 사이로 입력하세요."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "그 블록 번호로는 압출량 비율이 %.3f가 되어 안전 범위 %.2f-%.2f를 벗어납니다. 번호를 다시 확인하세요."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "압력 어드밴스 값을 %.2f ~ %.2f 사이로 입력하세요."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "후퇴 길이를 0 ~ %g mm 사이로 입력하세요."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "측정한 X와 Y 폭(약 %g mm)과, 원하면 기둥 높이(약 %g mm)를 입력하세요."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "그 측정값으로는 XY %.2f%% / Z %.2f%%가 되어 타당한 범위 %g-%g%%를 벗어납니다. 다시 확인하세요."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "사전 설정의 이름을 입력하세요."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "사전 설정을 저장할 수 없습니다."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "다음: 최대 압출 속도."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "다음: 압출량."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "압출량 재확인을 저장했습니다. 다음: 후퇴."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "1회차 패스를 저장했습니다. 다음: 압출량 2회차 패스."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "압출량 완료. 다음: 압력 어드밴스."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "다음: 수축."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "이것으로 교정이 끝났습니다. 원하면 최종 확인을 출력해 프로필 전체를 확인하세요."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s을(를) 필라멘트 사전 설정에 저장했습니다:\n%s\n\n지금 선택되어 있습니다."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "선택 사항: 압력 어드밴스를 조정하면 압출량이 보이는 방식이 바뀔 수 있습니다. 지금 정밀 압출량 패스를 한 번 실행해 재확인할까요?\n\n예 = 압출량 재확인 후 후퇴.\n아니요 = 바로 후퇴로."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "사용할 수 있는 사전 설정 번들이 없습니다."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "필라멘트 사전 설정 '%s'을(를) 찾을 수 없습니다."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "이름은 시스템 사전 설정의 이름과 같을 수 없습니다."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "같은 이름의 사전 설정이 이미 있습니다."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "새 사전 설정을 만들지 못했습니다."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(이 프린터의 교정이 완료되었습니다.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(이 프린터의 교정이 진행 중입니다: %d / %d 단계.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "무엇을 교정하시겠습니까?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "내 프린터 -- 선택한 프린터의 입력 셰이핑, 코너링, VFA를 프린터와 노즐마다 한 번씩 교정합니다. 먼저 하세요: 필라멘트 테스트가 출력되는 방식이 달라집니다."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "필라멘트 -- 온도, 최대 압출 속도, 압출량, 압력 어드밴스, 후퇴, 수축. 모두 첫 단계에서 이름을 붙이는 하나의 필라멘트 사전 설정에 저장됩니다."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "각 테스트는 오른쪽 플레이트에 나타나며, 그 위의 진행 막대와 전/후 표가 진행에 따라 채워집니다. 슬라이스 & 프린터로 전송은 테스트를 슬라이스하고 프린터의 일반 전송 대화 상자를 엽니다. 생성만은 테스트를 플레이트에 놓아 직접 슬라이스하거나 내보낼 수 있게 합니다(예: SD 카드로). 어느 쪽이든 여기로 돌아와 결과를 입력하세요. 언제든 다른 탭으로 전환할 수 있으며, 이 탭은 멈춘 곳에서 다시 시작합니다."
+
+# AI Translated
+msgid "My printer"
+msgstr "내 프린터"
+
+# AI Translated
+msgid "A filament"
+msgstr "필라멘트"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "이 필라멘트는 이미 교정이 완료되었습니다 -- 결과가 오른쪽에 표시됩니다. 새 필라멘트를 교정하려면 위에서 다른 필라멘트를 고르고, 이것을 다시 교정하려면 시작을 누르세요."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "이 필라멘트는 교정이 진행 중입니다 (%d%% 완료). 시작을 누르면 멈춘 곳에서 이어집니다."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "%s을(를) 건너뛸까요? 현재 값은 유지되며, 진행 막대에서 클릭하거나 위에서 선택하면 언제든 돌아올 수 있습니다."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "프린터 또는 노즐이 %s (%s mm)(으)로 바뀌었습니다. 이 실행은 %s (%s mm)에서 시작되었습니다. 새 결과는 이 프린터용 별도의 실행으로 시작됩니다."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "다른 탭에서 활성 필라멘트가 %s(으)로 바뀌었지만, 이 실행은 %s을(를) 교정하고 있습니다."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "%s(으)로 돌아가기"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "압력 어드밴스"
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "압출량 재확인"
+
+# AI Translated
+msgid "printer default"
+msgstr "프린터 기본값"
+
+# AI Translated
+msgid "skipped"
+msgstr "건너뜀"
+
+# AI Translated
+msgid "testing..."
+msgstr "테스트 중..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "요약 이미지 저장"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "이 전/후 요약을 PNG 이미지로 저장합니다."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "필라멘트 교정"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "프린터 교정 완료"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "프린터 교정 중"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "교정 완료"
+
+# AI Translated
+msgid "Skipped"
+msgstr "건너뜀"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "2회 중 1회차 완료"
+
+# AI Translated
+msgid "Test printing"
+msgstr "테스트 출력 중"
+
+# AI Translated
+msgid "Not started"
+msgstr "시작 안 함"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "클릭하여 이 단계 열기"
+
+# AI Translated
+msgid "Optional:"
+msgstr "선택 사항:"
+
+# AI Translated
+msgid "Setting"
+msgstr "설정"
+
+# AI Translated
+msgid "Before"
+msgstr "이전"
+
+# AI Translated
+msgid "After"
+msgstr "이후"
+
+# AI Translated
+msgid "Change"
+msgstr "변화"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "%s에 건너뜀"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "%s에 테스트 생성"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "%s에 측정"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer 교정 마법사 - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "교정 요약 저장"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "이미지를 저장할 수 없습니다."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "프린터 교정"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "이 교정들은 프린터 자체를 조정하며, 프린터와 노즐마다 한 번씩 합니다. 필라멘트를 교정하기 전에 하세요: 필라멘트 테스트가 출력되는 방식이 달라집니다. 순서: 입력 셰이핑(주파수, 그다음 감쇠), 코너링, VFA. 프린터가 사용할 수 없는 단계는 제외됩니다."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "셰이퍼 주파수"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "셰이퍼 감쇠"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "이 프린터의 백업 복원"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "마법사가 처음 업데이트하기 전에 이 프린터 사전 설정에 있던 설정으로 되돌립니다."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "이미 출력했음 - 결과 입력"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "프린터의 현재 설정을 유지하고 다음 교정으로 넘어갑니다."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "입력 셰이핑 - 주파수"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Orca의 링잉 타워는 높이에 따라 입력 셰이퍼 주파수를 올립니다(X와 Y는 각자 범위를 가질 수 있음). 출력 후 X 면과 Y 면에서 링잉 -- 모서리와 글자 뒤의 잔상 -- 이 가장 약한 높이를 찾으세요. 결과 페이지가 각 높이를 주파수로 바꿔 줍니다."
+
+# AI Translated
+msgid "Test model:"
+msgstr "테스트 모델:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "셰이퍼:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X 시작 (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X 끝:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y 시작 (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y 끝:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "테스트 중 감쇠:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "입력 셰이핑 - 감쇠"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "주파수를 설정한 상태에서 이 타워는 높이에 따라 감쇠비를 올립니다. 링잉이 가장 약한 높이를 찾으세요. 결과 페이지가 이를 감쇠비로 바꿔 줍니다. 아래 주파수는 주파수 단계의 결과입니다."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "주파수 X (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "감쇠 시작:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "이 타워는 높이에 따라 코너링 속도(Jerk, Junction Deviation 또는 Klipper의 square corner velocity)를 올립니다. 높을수록 빠르지만 모서리가 둥글어지고 흔들립니다. 모서리가 아직 선명하고 깨끗한 가장 높은 지점을 찾으세요. 결과 페이지가 그 높이를 값으로 바꿔 줍니다."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (미세 수직 결함)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "이 타워는 블록마다 외벽 속도를 올립니다. 특정 속도에서는 모터와 벨트의 공진 때문에 미세한 세로 줄무늬(VFA)가 나타납니다. 줄무늬가 보이는 블록을 적어 두세요(아래에서부터 세어 첫 블록이 1). 결과 페이지가 벽에서 피해야 할 속도를 알려 줍니다. 끝은 필라멘트가 압출할 수 있는 범위 안으로 유지하세요."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "시작 (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "최적 높이, X 면 (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "최적 높이, Y 면 (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "주파수 Y (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "최적 높이 (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "값:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "줄무늬가 있는 블록 (예: 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "출력할 때마다 시작 시 Forca가 입력 셰이핑을 설정"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "셰이퍼 설정을 G-code에 기록하여(Orca의 \"입력 셰이핑 출력\") 프린터 펌웨어에 저장된 값을 덮어씁니다. 펌웨어에서 관리한다면(예: Klipper의 printer.cfg) 꺼 두세요."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper는 이 값들을 printer.cfg에 보관합니다. 그곳에 이 줄들을 추가하거나 업데이트한 뒤 Klipper를 다시 시작하세요:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "이 프린터 사전 설정 업데이트 (이전 값은 백업됨)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "새 프린터 사전 설정으로 저장:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Bambu Lab 프린터는 진동 보정(입력 셰이핑)을 스스로 조정하므로 여기서 교정할 것이 없습니다."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca는 이 프린터의 G-code 유형에 대해 입력 셰이핑을 설정하지 않습니다."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Bambu Lab 프린터는 코너링(Jerk)을 자체 펌웨어에서 관리합니다."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "값이 낮을수록 모서리가 선명해지지만 출력이 느려집니다."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "이 프린터 사전 설정에 값이 있으므로 Marlin Junction Deviation (mm)."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: square corner velocity (mm/s)로 테스트합니다."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: mm/s 단위의 Jerk (필요하면 Orca가 변환)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "기존 Jerk (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "이 단계는 선택한 프린터에 적용되지 않습니다: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "단계: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: %s에 테스트 생성 - 출력한 뒤 결과를 입력하세요."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s 건너뜀 (%s). 프린터 설정이 유지됩니다."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: 마지막 결과를 %s에 저장했습니다."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "주파수 범위와 감쇠에 숫자를 입력하세요."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "유효한 주파수를 입력하세요: 0 <= 시작 < 끝 <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "감쇠비를 0 이상 1 미만으로 입력하세요."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "주파수와 감쇠 범위에 숫자를 입력하세요."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "유효한 주파수를 입력하세요: 0 < 주파수 <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "유효한 감쇠 범위를 입력하세요: 0 <= 시작 < 끝 <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "시작과 끝에 숫자를 입력하세요."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "유효한 범위를 입력하세요: 0 <= 시작 < 끝 <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "높은 값(%s 초과)은 층 밀림을 일으킬 수 있습니다. 계속할까요?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "시작, 끝, 단계에 숫자를 입력하세요."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "유효한 속도를 입력하세요: 시작은 10 초과, 단계는 0 초과, 끝은 시작 + 단계 이상."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "결과 입력: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "베드에서 각 면의 링잉이 가장 약한 곳까지 재세요 (X 면: X 방향 움직임으로 링잉이 생기는 면)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\n주파수 = 시작 + 높이 / %.1f mm x (끝 - 시작)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "감쇠비:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Junction Deviation (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Jerk (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "베드에서 링잉이 가장 약한 곳까지 재세요."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "베드에서 모서리가 아직 선명하고 깨끗한 가장 높은 지점까지 재세요."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\n값 = %s + 높이 / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "미세한 세로 줄무늬가 보이는 블록 번호를 입력하세요 (맨 아래 블록이 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\n속도 = %s + (블록 - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(여기서는 테스트 타워의 높이를 알 수 없으므로 값을 직접 입력하세요.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "시스템 프린터 사전 설정이므로 변경할 수 없습니다. 결과는 새 사전 설정에 저장됩니다."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "이 사전 설정은 이미 마법사가 만든 교정된 사본입니다."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "이 사전 설정을 사용하는 모든 네트워크 프린터에 사본이 추가됩니다."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "줄무늬가 있는 속도: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "프린터 사전 설정을 찾을 수 없습니다."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "새 프린터 사전 설정의 이름을 입력하세요."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "시스템 프린터 사전 설정은 변경할 수 없습니다. 결과를 새 사전 설정으로 저장하세요."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "프린터 사전 설정을 저장하지 못했습니다."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "주파수를 입력하세요 (0 초과, 500 Hz 이하)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "셰이퍼 %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "감쇠비를 입력하세요 (0 이상 1 미만)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "감쇠비 %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "0 초과 %s 이하의 값을 입력하세요."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Junction Deviation %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Jerk %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "줄무늬가 보이지 않음 - 피해야 할 속도가 없습니다."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "블록 번호를 입력하세요 (1 = 맨 아래 블록). 예: 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "프로세스 사전 설정에서 외벽(및 보이는 다른 벽)의 속도를 이 값들과 최소 한 단계 떨어지게 유지하세요."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "프린터 사전 설정을 저장할 수 없습니다."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "저장됨: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "프린터 사전 설정에 기록했습니다:\n%s\n\n지금 선택되어 있습니다."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "프린터 사전 설정은 변경되지 않았습니다 (이 설정은 펌웨어가 관리합니다)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: 결과 페이지에 표시된 printer.cfg 줄을 printer.cfg에 넣는 것을 잊지 마세요."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "이것으로 프린터 교정이 끝났습니다. 다음: 필라멘트를 교정하세요 (마법사가 무엇을 교정할지 물으면 \"필라멘트\"를 선택)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "다음: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "%s을(를) 건너뛸까요? 프린터는 현재 설정을 유지하며, 진행 막대에서 언제든 돌아올 수 있습니다."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "\"%s\"의 프린터 설정을 마법사가 처음 업데이트하기 전 상태로 되돌리시겠습니까 (%s)? 이 프린터에 대한 마법사의 결과는 지워집니다."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "백업 복원"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "프린터 사전 설정을 복원할 수 없습니다."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "프린터 사전 설정이 이전 설정으로 돌아갔습니다."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "프린터 교정 - 노즐 %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "셰이퍼 주파수"
+
+# AI Translated
+msgid "Shaper type"
+msgstr "셰이퍼 유형"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "셰이퍼 주파수 X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "셰이퍼 주파수 Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "감쇠비"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Junction Deviation (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "피해야 할 VFA 속도 (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "없음"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "교정 마법사"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "프린터 및 필라멘트 안내 교정"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "버그 신고 또는 기능 요청"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "GitHub에서 Forca Slicer 이슈 양식 열기"
+
+# AI Translated
+msgid "Connected"
+msgstr "연결됨"
+
+# AI Translated
+msgid "Stringing"
+msgstr "스트링"
+
+# AI Translated
+msgid "Warping"
+msgstr "뒤틀림"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "레이어 밀림"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "스파게티"
+
+# AI Translated
+msgid "Supports"
+msgstr "서포트"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "압출 부족"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "과압출"
+
+# AI Translated
+msgid "Ringing"
+msgstr "링잉"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "층 분리"
+
+# AI Translated
+msgid "Partial"
+msgstr "부분 성공"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "출력 일지"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "출력 일지가 꺼져 있어 Forca가 보낸 출력을 기록하지 않습니다. 켜면 각 출력의 기록을 Forca Academy 폴더에 남깁니다 (환경설정에서 다시 끌 수 있습니다)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "켜기"
+
+# AI Translated
+msgid "Open folder"
+msgstr "폴더 열기"
+
+# AI Translated
+msgid "Date"
+msgstr "날짜"
+
+# AI Translated
+msgid "Print"
+msgstr "출력"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "기록 안 됨"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "문제점 (선택 사항)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "사진 추가"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "이 출력의 사진이나 동영상을 해당 폴더로 복사합니다. 이 창에 끌어다 놓을 수도 있습니다."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "출력 폴더 열기"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "사진 및 동영상"
+
+# AI Translated
+msgid "Add a print"
+msgstr "출력 추가"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "현재 플레이트를 출력으로 기록합니다 -- SD 카드에서 시작한 출력처럼 Forca가 보내지 않은 출력용입니다."
+
+# AI Translated
+msgid "Folder:"
+msgstr "폴더:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "아직 기록된 출력이 없습니다"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "필라멘트 %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "예상 시간: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "사진: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "먼저 목록에서 출력을 고른 다음 사진을 추가하세요."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "출력 일지 기록"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Forca가 보내는 모든 출력 -- 프린터, 사전 설정, 필라멘트, 변경한 설정, 예상치, 플레이트 이미지 -- 를 Forca Academy 폴더에 기록하여, 사용자와 모든 AI가 무엇이 잘 됐는지 돌아볼 수 있게 합니다. SD 카드 출력은 직접 추가할 수 있습니다. 아무것도 업로드되지 않습니다."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy 폴더"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "출력 일지가 저장되는 곳: 일반 Markdown 및 JSON 파일입니다. AI는 AGENTS.md부터 읽습니다."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Forca Academy 폴더 선택"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Forca Academy 폴더를 엽니다 (필요하면 시작 파일과 함께 만듭니다)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "기록된 출력: 결과, 메모, 사진 추가"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "출력이 끝나면 카메라 사진 찍기"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Forca가 로컬 네트워크에서 접근할 수 있는 카메라가 있는 Bambu 프린터: 기록된 출력이 완료되거나 실패하면 결과 사진 한 장을 해당 출력의 camera 폴더에 저장합니다."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "출력 중 카메라 사진"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "기록된 출력이 진행되는 동안 몇 분마다 카메라 사진을 보관할지 정합니다. 실패 과정을 되짚을 수 있습니다 (0 = 끄기). Bambu 프린터만 해당. 카메라는 한 번에 한 명만 볼 수 있어, 다른 앱이 보고 있으면 사진이 건너뛰어질 수 있습니다."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "프린터 보고: 완료"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "프린터 보고: 실패"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "프린터 보고: 중지됨"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "프린터 보고: 종료됨 (확인 안 됨)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(보낸 후 %d분)"
+
+# AI Translated
 #~ msgid "Tab"
 #~ msgstr "탭"
 
@@ -25661,9 +27050,6 @@ msgstr ""
 #~ msgctxt "Sync_Nozzle_AMS"
 #~ msgid "Cancel"
 #~ msgstr "취소"
-
-#~ msgid "Print"
-#~ msgstr "출력"
 
 #~ msgid "in"
 #~ msgstr "인치"
@@ -26098,9 +27484,6 @@ msgstr ""
 #~ "빌로우: 펄린 노이즈와 비슷하지만 더 뭉툭합니다.\n"
 #~ "리지드 멀티프랙탈: 날카롭고 들쭉날쭉한 특징을 가진 리지드 노이즈입니다. 대리석과 같은 텍스처를 만듭니다.\n"
 #~ "보로노이: 보로노이: 표면을 보로노이 셀로 나누고 각 셀을 임의의 양만큼 이동시킵니다. 패치워크 텍스처를 만듭니다."
-
-#~ msgid "Flow Rate"
-#~ msgstr "압출량"
 
 #~ msgid ""
 #~ "Zero first layer height is invalid.\n"
@@ -27280,9 +28663,6 @@ msgstr ""
 #~ "제한된 필터링 - 불필요한 내부 브릿지 생성을 피하면서 크게 기울어진 표면에 내부 브릿지를 생성합니다. 이는 가장 어려운 모델에 적합합니다.\n"
 #~ "\n"
 #~ "필터링 없음 - 잠재적인 모든 내부 돌출부에 내부 브릿지를 생성합니다. 이 옵션은 심하게 기울어진 상단 표면 모델에 유용합니다. 그러나 대부분의 경우 불필요한 브릿지가 너무 많이 생성됩니다."
-
-#~ msgid "Shrinkage"
-#~ msgstr "수축"
 
 #~ msgid ""
 #~ "Enables gap fill for the selected surfaces. The minimum gap length that will be filled can be controlled from the filter out tiny gaps option below.\n"

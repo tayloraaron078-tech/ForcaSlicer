@@ -9658,6 +9658,10 @@ msgstr ""
 "這會停用所有雲端功能，包括 Orca Cloud 設定檔同步。偏好完全離線工作的使用者可以啟用此選項。\n"
 "注意：啟用無痕模式時，您的使用者設定檔將不會備份到 Orca Cloud。"
 
+# AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "這會停用所有雲端功能，例如 Bambu Cloud。偏好完全離線工作的使用者可以啟用此選項。"
+
 msgid "Hide login side panel"
 msgstr "隱藏登入側邊面板"
 
@@ -9678,6 +9682,10 @@ msgstr "啟用 Bambu Cloud"
 
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "允許在登入 Orca Cloud 的同時登入 Bambu Cloud。啟用後，首頁會顯示 Bambu 登入區塊。"
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "允許登入 Bambu Cloud。啟用後，首頁會顯示 Bambu 登入區塊。"
 
 msgid "Update & sync"
 msgstr "更新與同步"
@@ -22544,8 +22552,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "結果"
 
 msgid "Flip direction"
 msgstr ""
@@ -24659,6 +24668,1386 @@ msgstr ""
 "避免翹曲\n"
 "您知道嗎？當列印容易翹曲的材料（如 ABS）時，適當提高熱床溫度可以降低翹曲的機率。"
 
+# AI Translated
+msgid "Retraction length"
+msgstr "回抽長度"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "XY 收縮"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Z 收縮"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer 校正精靈"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "關閉"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "目前設定"
+
+# AI Translated
+msgid "Printer:"
+msgstr "列印裝置："
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "噴嘴："
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "要校正的線材："
+
+# AI Translated
+msgid "Calibration:"
+msgstr "校正："
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "流量"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "收縮"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "最終檢查列印（選用）"
+
+# AI Translated
+msgid "Max flow"
+msgstr "最大流量"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "最終檢查"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "溫度塔會在逐漸降低的噴嘴溫度下列印同一個形狀。列印完成後，請選擇表面最乾淨、牽絲最少、層間結合最牢固的那一段。"
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "起始溫度（高）："
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "結束溫度（低）："
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "我已經印過溫度塔 - 輸入結果"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "這會列印一個單壁塔，速度隨高度增加。留意表面從哪裡開始變粗糙，或外牆從哪裡開始擠出不足。測量最後一段仍然良好的部分的高度（mm）-- 結果頁會把這個高度換算成您的最大流量。"
+
+# AI Translated
+msgid "Start:"
+msgstr "起始："
+
+# AI Translated
+msgid "End:"
+msgstr "結束："
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "間距（mm3/s）："
+
+# AI Translated
+msgid "Method:"
+msgstr "方法："
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "經典（粗調 + 細調）"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO（建議 + 完美主義）"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "我已經印過這一輪 - 輸入結果"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "這會列印 Orca 的回抽塔；每經過一個環，回抽長度增加一個間距。找到牽絲消失的最低一段，數出它下面的環數，在結果頁輸入這個數即可得到回抽長度。請使用不牽絲的最短長度。"
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "間距（mm）："
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "直驅：預設的 0-2 mm 範圍適合大多數線材。遠程擠出（Bowden）：請調大結束值（例如 6）。"
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "這會列印一個邊長 %g mm 的方形開口框，一角帶有一根高 %g mm 的柱子。讓它完全冷卻（最好幾個小時），然後用卡尺測量：沿 X 的外寬、沿 Y 的外寬（在最初幾層之上測量，避開象腳）以及柱子高度。結果頁會把這些換算成線材的 XY 和 Z 收縮補償。"
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "我已經印過框架 - 輸入測量值"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "選用的確認測試：用您已校正的線材預設列印 Autodesk FDM Test（Orca 內附的模型）。一次列印即可檢查懸垂、橋接、牽絲、細小特徵和尺寸。這次列印不會儲存任何內容 -- 如果有問題，請從上方的選擇器重新進行相應的校正。您已校正的預設已經儲存並選取。"
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "校正另一種線材"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "開始校正"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "在上方「要校正的線材」中選擇您要校正的線材 -- 或一個相近的現有設定檔作為起點 -- 然後按下開始。步驟依以下順序進行：溫度、最大體積流量、流量、壓力補償、回抽和收縮。"
+
+# AI Translated
+msgid "Start calibration"
+msgstr "開始校正"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "切片 && 傳送到列印裝置"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "僅產生（我自己列印）"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "切片 & 傳送會把測試放到列印板上、進行切片，並開啟列印裝置的傳送對話框；對話框關閉後，在這裡輸入結果。僅產生會把測試放到列印板上（顯示在右側），方便您自己切片/匯出；完成後回到這裡輸入結果。"
+
+# AI Translated
+msgid "Skip this step"
+msgstr "略過此步驟"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "保留此設定的目前數值，並進入下一項校正。"
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "校正其他項目"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "校正您的列印裝置或另一種線材。這種線材的進度會保留。"
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA 塔（建議）"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "擠出機："
+
+# AI Translated
+msgid "Direct drive"
+msgstr "直驅"
+
+# AI Translated
+msgid "Step:"
+msgstr "間距："
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "加速度（選用）："
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "速度（選用）："
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "我已經印過此測試 - 輸入結果"
+
+# AI Translated
+msgid "Enter result"
+msgstr "輸入結果"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "測得高度（mm）："
+
+# AI Translated
+msgid "Result:"
+msgstr "結果："
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "測得 X 寬度（%g mm）："
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "測得 Y 寬度（%g mm）："
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "測得柱高（%g mm）："
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "另存為預設："
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "預設可以隨意命名 -- 例如以您實際正在校正的線材命名，即使您是從另一個設定檔開始的。結果會寫入該預設並將其選取；如果名稱已存在，則更新該預設。您的起始預設保持不變。"
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "套用並儲存到預設"
+
+# AI Translated
+msgid "Final check print"
+msgstr "最終檢查列印"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "流量比例 %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "回抽 %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY 收縮 %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s 測試待完成（產生於 %s）。"
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "已產生最終檢查列印（%s）。"
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "上次 %s 結果：%s（%s）。"
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "已略過 %s（%s）；保留目前數值。"
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "最佳溫度（C）："
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "最大流量（mm3/s）："
+
+# AI Translated
+msgid "Best block number:"
+msgstr "最佳區塊編號："
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "最佳 PA 值："
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "回抽長度（mm）："
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "該段下方的環數："
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "不需要卡尺：塔上的每個環代表一個回抽間距。找到不牽絲的最低一段，數出它下面的環數（最底下一段，0 個環，即起始值）："
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\n長度 = 起始 + 環數 x 間距 = %g + 環數 x %g。\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "在此輸入環數，長度會自動填入；也可以直接輸入長度。"
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "測量轉角最銳利處的高度（mm），然後："
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = 起始 + 間距 x 高度 = %g + %g x 高度。\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "在此輸入該高度，PA 值會自動填入；也可以直接輸入數值。"
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "第一次做嗎？記下最後一段看起來良好的部分的高度（mm），然後：\n最大流量 = 起始 + 高度 x 間距 = %g + 高度 x %g。\n在此輸入該高度，最大流量會自動填入；也可以直接輸入流量。"
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "輸入寬度最均勻的那條線旁邊印出的數值。"
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "輸入轉角最銳利、最乾淨的圖案上方印出的數值。"
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "輸入您的測量值。Z 留空則保留目前的 Z 值。目前補償：XY %.2f%%，Z %.2f%%（已套用於本次列印，因此已計入）。"
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "列印一組 PA 值遞增的線條，每條都標有其數值。選擇寬度最均勻的線條 -- 速度變化處不鼓起（PA 太低），也不變細（太高）-- 並輸入該線條的數值。"
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "列印一組 PA 值遞增的巢狀轉角圖案，每個都標有其數值。選擇轉角最銳利、最乾淨的一個 -- 不鼓起（PA 太低），也不圓角或出現縫隙（太高）-- 並輸入其數值。"
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "列印一個中空塔，其 PA 每升高 1 mm 增加一個間距。找到轉角最銳利的高度 -- 不鼓起（PA 太低），也沒有縫隙或圓角（太高）--，用卡尺測量後在結果頁輸入，即可得到 PA 值。"
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "請為此線材輸入有效的溫度範圍：\n在 %d 到 %d C 之間，且起始值至少比結束值高 5 C。"
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "請輸入有效數值：\n起始 > 0，間距 > 0，結束 > 起始 + 間距。"
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "請輸入有效的回抽數值：\n起始 >= 0，間距 > 0，結束 > 起始 + 間距，結束 <= %g mm。"
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "請輸入有效的 PA 數值：\n起始 >= 0，間距 >= 0.001，結束 > 起始 + 間距。"
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "加速度和速度必須是以逗號分隔的正數，或保持空白。"
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "切片未完成，因此沒有傳送任何內容。請修正錯誤後重試。"
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "收縮測試"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca 收縮框架"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "這是壓力補償之後的選用複查。"
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "這是第 1 輪（共 2 輪）；接下來是細調輪。"
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "這是第 2 輪（共 2 輪）；這是最後一輪。"
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "輸入頂面最平滑、最平整的那塊下方的編號。負數 = 減少流量，正數 = 增加流量。%s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "新流量：%.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "新流量：%.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "新流量：%.3f + 編號。"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "新流量：%.3f x (1 + 編號/100)。"
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "PA 後複查（完美主義輪）"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "PA 後複查（細調輪）"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "第 1/2 輪（建議）"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "第 2/2 輪（完美主義）"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "第 1/2 輪（粗調）"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "第 2/2 輪（細調）"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Orca 的 YOLO 測試會列印一排區塊，每塊都標有一個小的流量偏移，如 -0.02 或 +0.01。選擇頂面最平滑、最平整的那塊 -- 既不鼓起（流量過多），也沒有縫隙（流量過少）-- 並依印出的樣子準確輸入其編號。通常建議輪就足夠了；完美主義輪會以更小的間距進一步細化。"
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "這會列印一排區塊，每塊的流量比例略有不同，並標有編號。觀察頂面，選擇頂面最平滑、最平整的那塊 -- 既不鼓起（流量過多），也沒有縫隙（流量過少）。您將輸入該區塊的編號。流量分兩輪進行：先粗調，再圍繞第一次結果細調。"
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "請為此線材輸入 %d 到 %d C 之間的溫度。"
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "請輸入 %.1f 到 %.1f mm3/s 之間的最大體積流量。"
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "請輸入最佳區塊的編號，範圍 -%g 到 %g。"
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "該區塊編號會把流量比例設為 %.3f，超出安全範圍 %.2f-%.2f。請重新檢查編號。"
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "請輸入 %.2f 到 %.2f 之間的壓力補償值。"
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "請輸入 0 到 %g mm 之間的回抽長度。"
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "請輸入測得的 X 和 Y 寬度（約 %g mm），以及選用的柱高（約 %g mm）。"
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "這些測量值得出 XY %.2f%% / Z %.2f%%，超出合理範圍 %g-%g%%。請重新檢查。"
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "請輸入預設名稱。"
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "無法儲存預設。"
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr "，Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "下一步：最大體積流量。"
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "下一步：流量。"
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "已儲存流量複查。下一步：回抽。"
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "已儲存第 1 輪。下一步：流量第 2 輪。"
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "流量已完成。下一步：壓力補償。"
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "下一步：收縮。"
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "校正到此完成。您也可以列印最終檢查，以確認整個設定檔。"
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "已將 %s 儲存到線材預設：\n%s\n\n現已選取該預設。"
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "選用：調整壓力補償可能會改變流量的表現。現在再做一輪流量細調來複查嗎？\n\n是 = 複查流量，然後回抽。\n否 = 直接進入回抽。"
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "沒有可用的預設套件。"
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "找不到線材預設「%s」。"
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "名稱不能與系統預設名稱相同。"
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "已存在同名預設。"
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "建立新預設失敗。"
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "（此列印裝置的校正已完成。）"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "（此列印裝置的校正進行中：%d / %d 步。）"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "您要校正什麼？"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "我的列印裝置 -- 為所選列印裝置校正輸入震動補償、轉角控制和 VFA，每台列印裝置和每種噴嘴只需一次。請先做這個：它會影響線材測試的列印效果。"
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "一種線材 -- 溫度、最大體積流量、流量、壓力補償、回抽和收縮，全部儲存到您在第一步命名的同一個線材預設中。"
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "每個測試都會出現在右側的列印板上，上方的進度條和前後對照表會隨進度逐步填入。切片 & 傳送到列印裝置會對測試切片並開啟列印裝置的一般傳送對話框；僅產生會把測試放到列印板上，方便您自己切片或匯出（例如匯出到 SD 卡）。無論哪種方式，都請回到這裡輸入結果。您可以隨時切換到其他分頁；此分頁會從您離開的地方繼續。"
+
+# AI Translated
+msgid "My printer"
+msgstr "我的列印裝置"
+
+# AI Translated
+msgid "A filament"
+msgstr "一種線材"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "這種線材已經完成校正 -- 結果顯示在右側。在上方選擇另一種線材來校正新的，或按下開始重新校正這一種。"
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "這種線材的校正正在進行（已完成 %d%%）。按下開始會從中斷處繼續。"
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "略過 %s？目前數值會保留，您可以隨時在進度條中點選它或在上方選擇它來返回。"
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "列印裝置或噴嘴已變更為 %s（%s mm），而本次校正開始於 %s（%s mm）。新的結果將為此列印裝置開始一次獨立的校正。"
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "目前的線材已在另一個分頁中變更為 %s，但本次校正正在校正 %s。"
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "切換回 %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "壓力補償"
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "流量複查"
+
+# AI Translated
+msgid "printer default"
+msgstr "列印裝置預設值"
+
+# AI Translated
+msgid "skipped"
+msgstr "已略過"
+
+# AI Translated
+msgid "testing..."
+msgstr "測試中..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "儲存摘要圖片"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "將此前後對照摘要儲存為 PNG 圖片。"
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "校正一種線材"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "列印裝置校正完成"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "正在校正列印裝置"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "校正完成"
+
+# AI Translated
+msgid "Skipped"
+msgstr "已略過"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "第 1/2 輪已完成"
+
+# AI Translated
+msgid "Test printing"
+msgstr "測試列印中"
+
+# AI Translated
+msgid "Not started"
+msgstr "未開始"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "點選以開啟此步驟"
+
+# AI Translated
+msgid "Optional:"
+msgstr "選用："
+
+# AI Translated
+msgid "Setting"
+msgstr "設定"
+
+# AI Translated
+msgid "Before"
+msgstr "之前"
+
+# AI Translated
+msgid "After"
+msgstr "之後"
+
+# AI Translated
+msgid "Change"
+msgstr "變化"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "略過於 %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "測試產生於 %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "測量於 %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer 校正精靈 - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "儲存校正摘要"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "無法儲存圖片。"
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "列印裝置校正"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "這些校正調整的是列印裝置本身，每台列印裝置和每種噴嘴只需一次。請在校正線材之前進行：它們會影響線材測試的列印效果。順序：輸入震動補償（先頻率，再阻尼）、轉角控制、VFA。您的列印裝置無法使用的步驟會被省略。"
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "整形器頻率"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "整形器阻尼"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "還原此列印裝置的備份"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "還原此列印裝置預設在精靈首次更新它之前的設定。"
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "我已經印過 - 輸入結果"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "保留列印裝置的目前設定，並進入下一項校正。"
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "輸入震動補償 - 頻率"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Orca 的振鈴塔會隨高度提高輸入整形器的頻率（X 和 Y 可以使用各自的範圍）。列印完成後，在 X 面和 Y 面上分別找到振鈴（轉角和文字後面的回波）最弱的高度。結果頁會把每個高度換算成頻率。"
+
+# AI Translated
+msgid "Test model:"
+msgstr "測試模型："
+
+# AI Translated
+msgid "Shaper:"
+msgstr "整形器："
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X 起始（Hz）："
+
+# AI Translated
+msgid "X end:"
+msgstr "X 結束："
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y 起始（Hz）："
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y 結束："
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "測試時的阻尼："
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "輸入震動補償 - 阻尼"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "設定好頻率後，這座塔會隨高度提高阻尼比。找到振鈴最弱的高度；結果頁會把它換算成阻尼比。下方的頻率來自頻率步驟。"
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "頻率 X（Hz）："
+
+# AI Translated
+msgid "Y:"
+msgstr "Y："
+
+# AI Translated
+msgid "Damping start:"
+msgstr "阻尼起始："
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "這座塔會隨高度提高轉角速度（急衝速度、轉折偏移值或 Klipper 的 square corner velocity）。越高越快，但轉角會變圓並抖動。找到轉角仍然銳利乾淨的最高點；結果頁會把這個高度換算成數值。"
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA（垂直細紋）"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "這座塔逐塊提高外牆速度。在某些速度下，由於馬達和皮帶共振，會出現細小的垂直紋路（VFA）。記下您看到紋路的區塊（從下往上數，第一塊是 1）；結果頁會告訴您外牆應避開哪些速度。結束值請保持在線材能夠擠出的範圍內。"
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "起始（mm/s）："
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "最佳高度，X 面（mm）："
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "最佳高度，Y 面（mm）："
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "頻率 Y（Hz）："
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "最佳高度（mm）："
+
+# AI Translated
+msgid "Value:"
+msgstr "數值："
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "有紋路的區塊（例如 5, 6）："
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "讓 Forca 在每次列印開始時設定輸入震動補償"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "把整形器設定寫入 G-code（Orca 的「輸出輸入整形」），覆蓋列印裝置韌體中儲存的值。如果您在韌體中管理這些設定（例如 Klipper 的 printer.cfg），請保持關閉。"
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper 把這些值儲存在 printer.cfg 中。請在其中新增或更新這些行，然後重新啟動 Klipper："
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "更新此列印裝置預設（舊值會備份）"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "另存為新的列印裝置預設："
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Bambu Lab 列印裝置會自行調整振動補償（輸入震動補償），因此這裡無需校正。"
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca 不會為此列印裝置的 G-code 類型設定輸入震動補償。"
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Bambu Lab 列印裝置在自身韌體中管理轉角控制（急衝速度）。"
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "數值越低，轉角越銳利，但列印越慢。"
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Marlin 轉折偏移值（mm），因為此列印裝置預設中設定了該值。"
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper：作為 square corner velocity（mm/s）測試。"
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware：以 mm/s 為單位的急衝速度（需要時由 Orca 換算）。"
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "傳統急衝速度（mm/s）。"
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "此步驟不適用於所選列印裝置： "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "步驟：%s。"
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s：測試產生於 %s - 請列印它，然後輸入結果。"
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "已略過 %s（%s）；保留列印裝置的設定。"
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s：上次結果儲存於 %s。"
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "請為頻率範圍和阻尼輸入數字。"
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "請輸入有效頻率：0 <= 起始 < 結束 <= 500 Hz。"
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "請輸入 0 到 1（不含 1）之間的阻尼比。"
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "請為頻率和阻尼範圍輸入數字。"
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "請輸入有效頻率：0 < 頻率 <= 500 Hz。"
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "請輸入有效的阻尼範圍：0 <= 起始 < 結束 <= 1。"
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "請為起始和結束輸入數字。"
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "請輸入有效範圍：0 <= 起始 < 結束 <= %s。"
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "過高的數值（超過 %s）可能導致層偏移。是否繼續？"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "請為起始、結束和間距輸入數字。"
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "請輸入有效速度：起始大於 10，間距大於 0，結束至少為起始 + 間距。"
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "輸入結果：%s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "從熱床量到每個面上振鈴最弱的位置（X 面：振鈴由 X 方向運動產生的那個面）。"
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\n頻率 = 起始 + 高度 / %.1f mm x (結束 - 起始)。"
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "阻尼比："
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "轉折偏移值（mm）："
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity（mm/s）："
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "急衝速度（mm/s）："
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "從熱床量到振鈴最弱的位置。"
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "從熱床量到轉角仍然銳利乾淨的最高點。"
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\n數值 = %s + 高度 / %.1f mm x (%s - %s)。"
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "輸入您看到細小垂直紋路的區塊編號（最底下一塊是 1）。"
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\n速度 = %s + (區塊 - 1) x %s mm/s。"
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "（這裡不知道您測試塔的高度，因此請直接輸入數值。）"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "這是系統列印裝置預設，無法修改；結果會儲存到新預設中。"
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "此預設已經是精靈建立的已校正副本。"
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "使用此預設的每台網路列印裝置都會新增一個副本。"
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "有紋路的速度：%s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "找不到列印裝置預設。"
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "請輸入新列印裝置預設的名稱。"
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "系統列印裝置預設無法修改；請將結果另存為新預設。"
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "儲存列印裝置預設失敗。"
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "請輸入頻率（大於 0，最多 500 Hz）。"
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "整形器 %s，X %.1f Hz，Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "請輸入阻尼比（0 到 1，不含 1）。"
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "阻尼比 %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "請輸入大於 0、不超過 %s 的數值。"
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "轉折偏移值 %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "急衝速度 %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "未見紋路 - 沒有需要避開的速度。"
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "請輸入區塊編號（1 = 最底下一塊），例如 5, 6。"
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "請在列印參數預設中，讓外牆速度（以及其他可見牆的速度）與這些速度至少相差一個間距。"
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "無法儲存列印裝置預設。"
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "已儲存：%s。"
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "已寫入列印裝置預設：\n%s\n\n現已選取該預設。"
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "列印裝置預設未變更（此設定由韌體保存）。"
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper：請記得把結果頁上顯示的 printer.cfg 行加入 printer.cfg。"
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "列印裝置校正到此完成。下一步：校正您的線材（當精靈詢問您要校正什麼時，選擇「一種線材」）。"
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "下一步：%s。"
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "略過 %s？列印裝置會保留目前設定，您可以隨時從進度條返回。"
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "還原「%s」在精靈首次更新它之前的列印裝置設定（%s）？精靈為它記錄的列印裝置結果將被清除。"
+
+# AI Translated
+msgid "Restore backup"
+msgstr "還原備份"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "無法還原列印裝置預設。"
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "列印裝置預設已還原為先前的設定。"
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "列印裝置校正 - 噴嘴 %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "整形器頻率"
+
+# AI Translated
+msgid "Shaper type"
+msgstr "整形器類型"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "整形器頻率 X（Hz）"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "整形器頻率 Y（Hz）"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "阻尼比"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "轉折偏移值（mm）"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity（mm/s）"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "應避開的 VFA 速度（mm/s）"
+
+# AI Translated
+msgid "none"
+msgstr "無"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "校正精靈"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "列印裝置與線材引導式校正"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "回報錯誤或建議功能"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "在 GitHub 上開啟 Forca Slicer 的問題表單"
+
+# AI Translated
+msgid "Connected"
+msgstr "已連線"
+
+# AI Translated
+msgid "Stringing"
+msgstr "牽絲"
+
+# AI Translated
+msgid "Warping"
+msgstr "翹曲"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "層偏移"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "炒麵"
+
+# AI Translated
+msgid "Supports"
+msgstr "支撐"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "擠出不足"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "擠出過多"
+
+# AI Translated
+msgid "Ringing"
+msgstr "振紋"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "層分離"
+
+# AI Translated
+msgid "Partial"
+msgstr "部分成功"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "列印日誌"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "列印日誌已關閉，因此 Forca 不會記錄它傳送的列印。開啟後，每次列印都會記錄到 Forca Academy 資料夾中（可以在偏好設定中再次關閉）。"
+
+# AI Translated
+msgid "Turn on"
+msgstr "開啟"
+
+# AI Translated
+msgid "Open folder"
+msgstr "開啟資料夾"
+
+# AI Translated
+msgid "Date"
+msgstr "日期"
+
+# AI Translated
+msgid "Print"
+msgstr "列印"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "未記錄"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "出了什麼問題（選用）"
+
+# AI Translated
+msgid "Add photos"
+msgstr "新增照片"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "將這次列印的照片或影片複製到它的資料夾。也可以把它們拖放到此視窗。"
+
+# AI Translated
+msgid "Open print folder"
+msgstr "開啟列印資料夾"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "照片和影片"
+
+# AI Translated
+msgid "Add a print"
+msgstr "新增列印"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "將目前的列印板記錄為一次列印 -- 用於 Forca 沒有傳送的列印，例如從 SD 卡啟動的列印。"
+
+# AI Translated
+msgid "Folder:"
+msgstr "資料夾："
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "尚未記錄任何列印"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "線材 %d：%s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "預估時間：%s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "照片：%d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "請先在清單中選擇一次列印，然後新增它的照片。"
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "記錄列印日誌"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "將 Forca 傳送的每次列印 -- 列印裝置、預設、線材、變更的設定、估算和列印板的圖片 -- 記錄到 Forca Academy 資料夾，方便您和任何 AI 回顧哪些做法有效。從 SD 卡列印的可以手動新增。不會上傳任何內容。"
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy 資料夾"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "列印日誌的存放位置：一般的 Markdown 和 JSON 檔案。AI 從 AGENTS.md 開始讀取。"
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "選擇 Forca Academy 資料夾"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "開啟 Forca Academy 資料夾（如有需要，會連同初始檔案一起建立）。"
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "您記錄的列印：新增結果、備註和照片"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "列印結束時拍一張攝影機照片"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "適用於 Forca 能在區域網路中存取其攝影機的 Bambu 列印裝置：已記錄的列印完成或失敗時，會將一張結果照片儲存到該列印的 camera 資料夾。"
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "列印過程中的攝影機照片"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Forca 在已記錄的列印進行中每隔多少分鐘儲存一張攝影機照片，以便追溯失敗原因（0 = 關閉）。僅限 Bambu 列印裝置。其攝影機同一時間只允許一位觀看者，因此在其他應用程式觀看時可能會略過一張照片。"
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "列印裝置回報：已完成"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "列印裝置回報：失敗"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "列印裝置回報：已停止"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "列印裝置回報：已結束（未監測到）"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "（傳送後 %d 分鐘）"
+
 #~ msgid "Tab"
 #~ msgstr "分頁"
 
@@ -25010,9 +26399,6 @@ msgstr ""
 #~ msgstr ""
 #~ "使填充、橋接、熨燙與表面填充的方向對齊，以跟隨模型在列印板上的方向。\n"
 #~ "啟用後，方向會隨模型一同旋轉，以維持最佳的強度特性。"
-
-#~ msgid "Print"
-#~ msgstr "列印"
 
 #~ msgid "in"
 #~ msgstr "在"
@@ -25574,9 +26960,6 @@ msgstr ""
 #~ "波狀（Billow）：類似柏林噪聲，但紋理較為團塊狀。\n"
 #~ "脊狀多重分形（Ridged Multifractal）：帶有尖銳、鋸齒狀特徵的紋理，可產生類似大理石的效果。\n"
 #~ "沃羅諾伊（Voronoi）：將表面分割成多個區塊，並隨機位移，形成拼貼風格的紋理。"
-
-#~ msgid "Flow Rate"
-#~ msgstr "流量比例"
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "無法同時列印多個溫差較大的線材。否則，列印過程中可能會堵塞或損壞擠出機和噴嘴"

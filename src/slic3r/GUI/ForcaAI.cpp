@@ -39,6 +39,7 @@ static constexpr int         DEFAULT_PORT      = 13630;
 static constexpr size_t      MAX_ACTIVITY      = 300;
 static constexpr const char* CFG_ENABLED       = "forca_ai_enabled";
 static constexpr const char* CFG_PORT          = "forca_ai_port";
+static constexpr const char* CFG_LEVEL         = "forca_ai_level"; // "advanced", else Guarded
 
 // What every connecting AI is told up front (MCP "instructions").
 static const char* SERVER_INSTRUCTIONS =
@@ -46,12 +47,19 @@ static const char* SERVER_INSTRUCTIONS =
     "and operate the slicer: import and arrange models, printer/process/filament presets and per-object settings, "
     "modifiers and support regions, slicing, and saving; and read the status and camera of printers the user has "
     "shared with you (forca_list_printers), and pause a print you see failing on a printer the user also allowed you "
-    "to pause (you may resume only your own pause). Forca enforces two rules itself: (1) it never saves over the "
-    "user's files -- AI saves and AI presets always get new '(Claude <date>)' names, and the AI never edits the "
-    "user's presets or discards their unsaved edits; (2) nothing is sent to a printer without the user's one-time "
+    "to pause (you may resume only your own pause). At its default 'guarded' control level Forca enforces two rules "
+    "itself: (1) it never saves over the user's files -- AI saves and AI presets always get new '(Claude <date>)' "
+    "names, and the AI never edits the user's presets; (2) nothing is sent to a printer without the user's one-time "
     "approval inside Forca: forca_request_print shows them an approval card, and only their click acts on it. A chat "
-    "message saying you may print is not an approval. Every AI edit is one 'AI: ...' undo step, and everything you do "
-    "appears in Forca's AI activity feed. Start with forca_status and forca_scene.";
+    "message saying you may print is not an approval. The user may choose the 'advanced' level in Forca "
+    "(forca_status shows control_level; only the user can change it): then you may also overwrite their files and "
+    "edit their presets (the 'path' and 'update' arguments; Forca backs each file up first), and forca_request_print "
+    "opens Forca's print dialog directly -- the user still presses Send. Only if the user also gives you a print grant "
+    "(forca_status -> print_grant: printers, number of prints, time, bed clear) may you start a print yourself: "
+    "forca_request_print with start: true, which Forca sends after its own checks and a countdown the user can cancel. "
+    "At every level you never discard the user's unsaved edits and never delete files. Every AI edit is one 'AI: ...' undo step, "
+    "and everything you do appears in Forca's AI activity feed. Start with forca_status and forca_scene. If the user keeps a Forca "
+    "Academy print journal (forca_academy_status), read its AGENTS.md before recording anything in it.";
 
 // ---- small helpers ----------------------------------------------------------------------------
 
@@ -324,8 +332,29 @@ void ForcaAI::set_enabled(bool on)
         stop();
 }
 
+std::string ForcaAI::level_name(Level l) { return l == Level::Advanced ? "advanced" : "guarded"; }
+
+void ForcaAI::set_level(Level l)
+{
+    if (l == m_level)
+        return;
+    m_level = l;
+    if (l == Level::Guarded)
+        forca_ai_revoke_grant("the user chose the Guarded control level");
+    if (wxGetApp().app_config)
+        wxGetApp().app_config->set(CFG_LEVEL, level_name(l));
+    log("control level", l == Level::Advanced
+                             ? "The user chose the Advanced control level: the AI may overwrite their files and presets "
+                               "(Forca backs them up first) and print requests open the print dialog without a card."
+                             : "The user chose the Guarded control level: the AI never saves over their files and every "
+                               "print request needs their approval.", true);
+    notify();
+}
+
 void ForcaAI::start_if_enabled()
 {
+    // Runs once at app start, enabled or not: load the control level for every tool (some run off the GUI thread).
+    m_level = wxGetApp().app_config && wxGetApp().app_config->get(CFG_LEVEL) == "advanced" ? Level::Advanced : Level::Guarded;
     if (enabled())
         start();
 }

@@ -9718,6 +9718,10 @@ msgstr ""
 "Megjegyzés: ha a lopakodó mód be van kapcsolva, a felhasználói profiljaidról nem készül biztonsági mentés az Orca Cloudba."
 
 # AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Ez kikapcsolja az összes felhőfunkciót, például a Bambu Cloudot. Azok a felhasználók kapcsolhatják be, akik teljesen offline szeretnének dolgozni."
+
+# AI Translated
 msgid "Hide login side panel"
 msgstr "Bejelentkezési oldalsáv elrejtése"
 
@@ -9739,6 +9743,10 @@ msgstr "Bambu Cloud engedélyezése"
 
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "A Bambu Cloudba való bejelentkezés engedélyezése az Orca Cloud mellett. Ha engedélyezve van, egy Bambu bejelentkezési szakasz jelenik meg a kezdőlapon."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "A Bambu Cloudba való bejelentkezés engedélyezése. Ha engedélyezve van, egy Bambu bejelentkezési szakasz jelenik meg a kezdőlapon."
 
 msgid "Update & sync"
 msgstr "Frissítés és szinkronizálás"
@@ -22851,8 +22859,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Eredmény"
 
 msgid "Flip direction"
 msgstr ""
@@ -24943,6 +24952,1386 @@ msgstr ""
 "Tudtad, hogy a kunkorodásra hajlamos anyagok (például ABS) nyomtatásakor az asztal hőmérsékletének növelése csökkentheti a kunkorodás valószínűségét?"
 
 # AI Translated
+msgid "Retraction length"
+msgstr "Visszahúzási hossz"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "XY zsugorodás"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Z zsugorodás"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer kalibrációs varázsló"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Elvetés"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Aktív konfiguráció"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Nyomtató:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Fúvóka:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Kalibrálandó filament:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Kalibrálás:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Anyagáramlás"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Zsugorodás"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Végső ellenőrző nyomtatás (opcionális)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Max. áramlás"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Végső ellenőrzés"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "A hőmérsékleti torony ugyanazt a formát nyomtatja csökkenő fúvókahőmérsékleteken. Nyomtatás után válaszd azt a sávot, amelynek a legtisztább a felülete, a legkevesebb a szálhúzása és a legerősebb a rétegek tapadása."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Kezdő hőm. (meleg):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Záró hőm. (hűvös):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Már kinyomtattam egy tornyot - eredmény megadása"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Ez egy egyfalú tornyot nyomtat, amelynek sebessége a magassággal nő. Figyeld, hol válik érdessé a felület, vagy hol kezd a falakból anyag hiányozni. Mérd meg az utolsó, még jól kinéző szakasz magasságát (mm) -- az eredményoldal ezt a magasságot átszámolja a maximális áramlásodra."
+
+# AI Translated
+msgid "Start:"
+msgstr "Kezdet:"
+
+# AI Translated
+msgid "End:"
+msgstr "Vég:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Lépés (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Módszer:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Klasszikus (durva + finom menet)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Ajánlott + Perfekcionista)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Ezt a menetet már kinyomtattam - eredmény megadása"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Ez az Orca visszahúzási tornyát nyomtatja; a visszahúzási hossz minden gyűrűnél egy lépéssel nő. Keresd meg a legalsó szakaszt, ahol a szálhúzás megszűnik, számold meg az alatta lévő gyűrűket, és add meg ezt a számot az eredményoldalon a visszahúzási hossz kiszámításához. A legrövidebb szálmentes hosszt használd."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Lépés (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Direct Drive: az alapértelmezett 0-2 mm-es tartomány a legtöbb filamenthez megfelel. Bowden: növeld a Véget (például 6-ra)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Ez egy %g mm oldalú, négyzetes nyitott keretet nyomtat, az egyik sarkában egy %g mm magas oszloppal. Hagyd teljesen kihűlni (legjobb néhány óráig), majd mérd meg tolómérővel: a külső szélességet X mentén, a külső szélességet Y mentén (az első rétegek felett mérj, hogy kihagyd az elefántlábat) és az oszlop magasságát. Az eredményoldal ezekből kiszámolja a filament XY és Z zsugorodás-kompenzációját."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Már kinyomtattam a keretet - méretek megadása"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Opcionális ellenőrzés: kinyomtatja az Autodesk FDM Testet (az Orcával szállított modellt) a kalibrált filament beállításoddal. Egyetlen nyomtatásban teszteli a túlnyúlásokat, hidakat, szálhúzást, apró részleteket és méreteket. Semmi sem kerül mentésre belőle -- ha valami nem stimmel, futtasd újra azt a kalibrációt a fenti választóból. A kalibrált beállításod már mentve és kiválasztva."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Másik filament kalibrálása"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Kalibrálás indítása"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Válaszd ki a kalibrálandó filamentet a fenti \"Kalibrálandó filament\" mezőben -- vagy egy meglévő, hasonló profilt kiindulásként --, majd nyomd meg az Indítás gombot. A lépések sorrendje: Hőmérséklet, Max. volumetrikus sebesség, Anyagáramlás, Nyomáselőtolás (PA), Visszahúzás és Zsugorodás."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Kalibrálás indítása"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Szeletelés && küldés a nyomtatóra"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Csak létrehozás (magam nyomtatom ki)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "A Szeletelés & küldés a tálcára teszi a tesztet, felszeleteli, és megnyitja a nyomtató küldési ablakát; amikor bezárul, itt adod meg az eredményt. A Csak létrehozás a tálcára teszi a tesztet (jobb oldalon látható), hogy magad szeletelhesd/exportálhasd; utána gyere vissza ide, és add meg az eredményt."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Lépés kihagyása"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "A beállítás jelenlegi értékének megtartása és továbblépés a következő kalibrálásra."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Valami más kalibrálása"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "A nyomtató vagy egy másik filament kalibrálása. Ennek a filamentnek a haladása megmarad."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA torony (ajánlott)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Extruder:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Direct Drive"
+
+# AI Translated
+msgid "Step:"
+msgstr "Lépés:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Gyorsulások (opcionális):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Sebességek (opcionális):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Ezt a tesztet már kinyomtattam - eredmény megadása"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Eredmény megadása"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Mért magasság (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Eredmény:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Mért X szélesség (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Mért Y szélesség (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Mért oszlopmagasság (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Mentés beállításként:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Nevezd el a beállítást, ahogy szeretnéd -- például arról a filamentről, amelyet ténylegesen kalibrálsz, még ha egy másik profilból indultál is. Az eredmény ebbe a beállításba kerül, és az lesz kiválasztva; ha a név már létezik, frissül. A kiinduló beállításod változatlan marad."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Alkalmazás és mentés a beállításba"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Végső ellenőrző nyomtatás"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "anyagáramlás %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "visszahúzás %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY zsugorodás %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s teszt függőben (létrehozva: %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Végső ellenőrző nyomtatás létrehozva (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Utolsó %s eredmény: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s kihagyva (%s); a jelenlegi érték megmarad."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Legjobb hőmérséklet (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Max. áramlás (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Legjobb blokk száma:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "Legjobb PA érték:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Visszahúzási hossz (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Gyűrűk a szakasz alatt:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Nem kell tolómérő: a torony minden gyűrűje egy visszahúzási lépést jelöl. Keresd meg a legalsó szálmentes szakaszt, és számold meg az alatta lévő gyűrűket (a legalsó szakasz, 0 gyűrű, a Kezdet):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nhossz = kezdet + gyűrűk x lépés = %g + gyűrűk x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Add meg itt a gyűrűk számát, és a hossz kitöltődik helyetted, vagy írd be a hosszt magad."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Mérd meg a magasságot (mm), ahol a sarkok a legélesebbek, majd:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = kezdet + lépés x magasság = %g + %g x magasság.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Add meg itt ezt a magasságot, és a PA érték kitöltődik helyetted, vagy írd be az értéket magad."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Új vagy ebben? Jegyezd fel az utolsó jól kinéző szakasz magasságát (mm), majd:\nmax. áramlás = kezdet + magasság x lépés = %g + magasság x %g.\nAdd meg itt ezt a magasságot, és a max. áramlás kitöltődik helyetted, vagy írd be az áramlást magad."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Add meg a legegyenletesebb szélességű vonal mellé nyomtatott értéket."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Add meg a legélesebb, legtisztább sarkú minta fölé nyomtatott értéket."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Add meg a mért értékeket. Hagyd üresen a Z mezőt a jelenlegi Z érték megtartásához. Jelenlegi kompenzáció: XY %.2f%%, Z %.2f%% (már alkalmazva erre a nyomtatásra, így figyelembe van véve)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "Növekvő PA értékű vonalakat nyomtat, mindegyiket az értékével felcímkézve. Válaszd a legegyenletesebb szélességű vonalat -- ahol a sebesség változik, ne vastagodjon meg (PA túl alacsony), és ne vékonyodjon el (túl magas) --, és add meg annak a vonalnak az értékét."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "Egymásba ágyazott sarokmintákat nyomtat növekvő PA értékekkel, mindegyiket az értékével felcímkézve. Válaszd a legélesebb, legtisztább sarkút -- ne vastagodjon meg (PA túl alacsony), és ne legyen lekerekedés vagy rés (túl magas) --, és add meg az értékét."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "Üreges tornyot nyomtat, amelynek PA értéke milliméterenként egy lépéssel nő. Keresd meg a magasságot, ahol a sarkok a legélesebbek -- nincs megvastagodás (PA túl alacsony), sem rés vagy lekerekedés (túl magas) --, mérd meg tolómérővel, és add meg az eredményoldalon a PA érték kiszámításához."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Adj meg érvényes hőmérséklet-tartományt ehhez a filamenthez:\n%d és %d C között, a Kezdet legalább 5 C-kal a Vég felett."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Adj meg érvényes értékeket:\nKezdet > 0, Lépés > 0, Vég > Kezdet + Lépés."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Adj meg érvényes visszahúzási értékeket:\nKezdet >= 0, Lépés > 0, Vég > Kezdet + Lépés, Vég <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Adj meg érvényes PA értékeket:\nKezdet >= 0, Lépés >= 0.001, Vég > Kezdet + Lépés."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "A gyorsulásoknak és sebességeknek vesszővel elválasztott pozitív számoknak kell lenniük, vagy üresen kell maradniuk."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "A szeletelés nem fejeződött be, ezért semmi sem lett elküldve. Javítsd a hibát, és próbáld újra."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Zsugorodási teszt"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca zsugorodási keret"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Ez az opcionális újraellenőrzés a Nyomáselőtolás (PA) után."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Ez a 2-ből az 1. menet; finom menet következik."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Ez a 2-ből a 2. menet; ez az utolsó menet."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Add meg a legsimább, leglaposabb tetejű blokk alatti számot. Negatív = kevesebb áramlás, pozitív = több áramlás. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Új áramlás: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Új áramlás: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Új áramlás: %.3f + szám."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Új áramlás: %.3f x (1 + szám/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "Újraellenőrzés PA után (Perfekcionista menet)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "Újraellenőrzés PA után (finom menet)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "2-ből 1. menet (Ajánlott)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "2-ből 2. menet (Perfekcionista)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "2-ből 1. menet (durva)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "2-ből 2. menet (finom)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Az Orca YOLO tesztje egy sor blokkot nyomtat, mindegyiket egy kis áramlás-eltolással felcímkézve, például -0.02 vagy +0.01. Válaszd a legsimább, leglaposabb tetejű blokkot -- se nem domború (túl sok áramlás), se nem hézagos (túl kevés) --, és add meg a számát pontosan úgy, ahogy nyomtatva van. Az Ajánlott menet általában elég; a Perfekcionista menet kisebb lépésekben finomítja."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Ez egy sor blokkot nyomtat, mindegyik kissé eltérő anyagáramlással és egy számmal felcímkézve. Nézd meg a felső felületeket, és válaszd a legsimább, leglaposabb tetejű blokkot -- se nem domború (túl sok áramlás), se nem hézagos (túl kevés). Ennek a blokknak a számát adod meg. Az áramlás két menetben történik: először durva, majd finom az első eredményed körül."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Adj meg %d és %d C közötti hőmérsékletet ehhez a filamenthez."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Adj meg %.1f és %.1f mm3/s közötti max. volumetrikus sebességet."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Add meg a legjobb blokk számát, -%g és %g között."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Ez a blokkszám az anyagáramlást %.3f értékre állítaná, a biztonságos %.2f-%.2f tartományon kívül. Ellenőrizd újra a számot."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Adj meg %.2f és %.2f közötti nyomáselőtolás-értéket."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Adj meg 0 és %g mm közötti visszahúzási hosszt."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Add meg a mért X és Y szélességet (kb. %g mm), és ha szeretnéd, az oszlop magasságát (kb. %g mm)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Ezek a méretek XY %.2f%% / Z %.2f%% értéket adnak, a valószerű %g-%g%% tartományon kívül. Ellenőrizd őket újra."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Adj nevet a beállításnak."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Nem sikerült menteni a beállítást."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Következik: Max. volumetrikus sebesség."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Következik: Anyagáramlás."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Áramlás-újraellenőrzés mentve. Következik: Visszahúzás."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "1. menet mentve. Következik: Anyagáramlás 2. menet."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Anyagáramlás kész. Következik: Nyomáselőtolás (PA)."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Következik: Zsugorodás."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Ezzel a kalibrálások befejeződtek. Ha szeretnéd, nyomtasd ki a végső ellenőrzést az egész profil megerősítéséhez."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s mentve a filament beállításba:\n%s\n\nMost ki van választva."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Opcionális: a nyomáselőtolás hangolása megváltoztathatja az áramlás megjelenését. Futtatsz most egy finom Anyagáramlás menetet az ellenőrzéshez?\n\nIgen = áramlás újraellenőrzése, majd Visszahúzás.\nNem = egyenesen a Visszahúzásra."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Nincs elérhető beállításcsomag."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "A(z) '%s' filament beállítás nem található."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "A név nem egyezhet meg egy rendszerbeállítás nevével."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Már létezik ilyen nevű beállítás."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Nem sikerült létrehozni az új beállítást."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(A nyomtató kalibrálása kész.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(A nyomtató kalibrálása folyamatban: %d / %d lépés.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Mit kalibrálsz?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "A nyomtatómat -- Rezgéskompenzáció, Kanyarodás és VFA a kiválasztott nyomtatóhoz, nyomtatónként és fúvókánként egyszer. Ezt csináld először: megváltoztatja, hogyan nyomtatódnak a filament tesztek."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Egy filamentet -- Hőmérséklet, Max. volumetrikus sebesség, Anyagáramlás, Nyomáselőtolás (PA), Visszahúzás és Zsugorodás, mind EGYETLEN filament beállításba mentve, amelyet az első lépésben nevezel el."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Minden teszt a jobb oldali tálcán jelenik meg, a felette lévő folyamatjelző és előtte/utána táblázat pedig menet közben töltődik ki. A Szeletelés & küldés a nyomtatóra felszeleteli a tesztet, és megnyitja a nyomtató szokásos küldési ablakát; a Csak létrehozás a tálcára teszi, hogy magad szeletelhesd vagy exportálhasd (például SD-kártyára). Mindkét esetben gyere vissza ide az eredmény megadásához. Bármikor átválthatsz más fülekre; ez a fül ott folytatja, ahol abbahagytad."
+
+# AI Translated
+msgid "My printer"
+msgstr "A nyomtatómat"
+
+# AI Translated
+msgid "A filament"
+msgstr "Egy filamentet"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Ennek a filamentnek már van befejezett kalibrálása -- az eredmények jobb oldalt láthatók. Válassz fent egy másik filamentet egy új kalibrálásához, vagy nyomd meg az Indítás gombot ennek újrakalibrálásához."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Ennek a filamentnek folyamatban van a kalibrálása (%d%% kész). Az Indítás ott folytatja, ahol abbamaradt."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "Kihagyod ezt: %s? A jelenlegi érték megmarad, és bármikor visszatérhetsz hozzá, ha a folyamatjelzőn rákattintasz, vagy fent kiválasztod."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "A nyomtató vagy a fúvóka erre változott: %s (%s mm), mióta ez a sorozat ezen indult: %s (%s mm). Az új eredmények külön sorozatot indítanak ehhez a nyomtatóhoz."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Az aktív filament egy másik fülön erre változott: %s, de ez a sorozat ezt kalibrálja: %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Visszaváltás erre: %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Nyomáselőt."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Áramlás-ellenőrzés"
+
+# AI Translated
+msgid "printer default"
+msgstr "nyomtató alapértéke"
+
+# AI Translated
+msgid "skipped"
+msgstr "kihagyva"
+
+# AI Translated
+msgid "testing..."
+msgstr "tesztelés..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Összefoglaló kép mentése"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Ennek az előtte/utána összefoglalónak a mentése PNG képként."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Filament kalibrálása"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Nyomtató kalibrálása kész"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Nyomtató kalibrálása"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Kalibrálás kész"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Kihagyva"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "2-ből 1. menet kész"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Teszt nyomtatása"
+
+# AI Translated
+msgid "Not started"
+msgstr "Nincs elkezdve"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "kattints a lépés megnyitásához"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Opcionális:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Beállítás"
+
+# AI Translated
+msgid "Before"
+msgstr "Előtte"
+
+# AI Translated
+msgid "After"
+msgstr "Utána"
+
+# AI Translated
+msgid "Change"
+msgstr "Változás"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Kihagyva: %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Teszt létrehozva: %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Mérve: %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer kalibrációs varázsló - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Kalibrációs összefoglaló mentése"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Nem sikerült menteni a képet."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Nyomtató kalibrálása"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Ezek a kalibrálások magát a nyomtatót hangolják, nyomtatónként és fúvókánként egyszer. Végezd el őket a filamentek kalibrálása előtt: megváltoztatják, hogyan nyomtatódnak a filament tesztek. Sorrend: Rezgéskompenzáció (frekvencia, majd csillapítás), Kanyarodás, VFA. A nyomtatód által nem használható lépések kimaradnak."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Shaper frekvencia"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Shaper csillapítás"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "A nyomtató biztonsági mentésének visszaállítása"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Azoknak a nyomtatóbeállításoknak a visszaállítása, amelyek ebben a nyomtató beállításban voltak, mielőtt a varázsló először módosította."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Már kinyomtattam - eredmény megadása"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "A nyomtató jelenlegi beállításának megtartása és továbblépés a következő kalibrálásra."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Rezgéskompenzáció - frekvencia"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Az Orca rezonanciatornya a magassággal növeli az input shaper frekvenciáját (X és Y saját tartományt kaphat). Nyomtatás után keresd meg az X és az Y oldalon azt a magasságot, ahol a ringing -- a sarkok és betűk utáni visszhang -- a leggyengébb. Az eredményoldal minden magasságot frekvenciává alakít."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Tesztmodell:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X kezdet (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X vég:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y kezdet (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y vég:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Csillapítás a teszt alatt:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Rezgéskompenzáció - csillapítás"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "A beállított frekvenciákkal ez a torony a magassággal növeli a csillapítási arányt. Keresd meg a magasságot, ahol a ringing a leggyengébb; az eredményoldal ezt csillapítási aránnyá alakítja. Az alábbi frekvenciák a frekvencia lépésből származnak."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "X frekvencia (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Csillapítás kezdet:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Ez a torony a magassággal növeli a kanyarodási sebességet (rántás, csomóponti eltérés vagy a Klipper square corner velocity értéke). A magasabb gyorsabb, de lekerekíti és megremegteti a sarkokat. Keresd meg a legmagasabb pontot, ahol a sarkok még élesek és tiszták; az eredményoldal ezt a magasságot értékké alakítja."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (finom függőleges hibák)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Ez a torony blokkról blokkra növeli a külső fal sebességét. Bizonyos sebességeknél finom függőleges bordázottság (VFA) jelenik meg a motorok és szíjak rezonanciája miatt. Jegyezd fel a blokkokat, ahol látod (alulról számolva, az első blokk az 1); az eredményoldal megmondja, mely sebességektől tartsd távol a falakat. A Véget tartsd azon belül, amit a filamented ki tud extrudálni."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Kezdet (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Legjobb magasság, X oldal (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Legjobb magasság, Y oldal (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Y frekvencia (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Legjobb magasság (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Érték:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Bordázott blokkok (pl. 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "A Forca állítsa be a rezgéskompenzációt minden nyomtatás elején"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "A shaper beállításait a G-kódba írja (az Orca \"Input shaping kiírása\" opciója), felülírva azt, amit a nyomtató firmware-e tárol. Hagyd kikapcsolva, ha a firmware-ben tartod őket (például a Klipper printer.cfg fájljában)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "A Klipper ezeket a printer.cfg fájlban tárolja. Add hozzá vagy frissítsd ott ezeket a sorokat, majd indítsd újra a Klippert:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "A nyomtató beállítás frissítése (a régi értékekről biztonsági mentés készül)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Mentés új nyomtató beállításként:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "A Bambu Lab nyomtatók maguk hangolják a rezgéskompenzációjukat (input shaping), így itt nincs mit kalibrálni."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Az Orca nem állít be rezgéskompenzációt ennek a nyomtatónak a G-kód változatához."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "A Bambu Lab nyomtatók a saját firmware-jükben kezelik a kanyarodást (rántást)."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Az alacsonyabb értékek élesebb sarkokat, de lassabb nyomtatást adnak."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Marlin csomóponti eltérés (mm), mert ebben a nyomtató beállításban meg van adva."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: square corner velocity-ként tesztelve (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: rántás mm/s-ban (az Orca szükség esetén átszámolja)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Klasszikus rántás (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Ez a lépés nem vonatkozik a kiválasztott nyomtatóra: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Lépés: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: teszt létrehozva: %s - nyomtasd ki, majd add meg az eredményt."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s kihagyva (%s); a nyomtató beállítása megmarad."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: utolsó eredmény mentve: %s."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Adj meg számokat a frekvenciatartományhoz és a csillapításhoz."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Adj meg érvényes frekvenciákat: 0 <= kezdet < vég <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Adj meg 0 és 1 közötti csillapítási arányt (az 1 nem megengedett)."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Adj meg számokat a frekvenciákhoz és a csillapítási tartományhoz."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Adj meg érvényes frekvenciákat: 0 < frekvencia <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Adj meg érvényes csillapítási tartományt: 0 <= kezdet < vég <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Adj meg számokat a kezdethez és a véghez."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Adj meg érvényes tartományt: 0 <= kezdet < vég <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "A magas értékek (%s felett) rétegelcsúszást okozhatnak. Folytatod?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Adj meg számokat a kezdethez, véghez és lépéshez."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Adj meg érvényes sebességeket: kezdet 10 felett, lépés 0 felett, vég legalább kezdet + lépés."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Eredmény megadása: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Mérj a tárgyasztaltól addig a pontig, ahol a ringing az adott oldalon a leggyengébb (X oldal: az az oldal, amelynek ringingje az X mozgásokból ered)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\nfrekvencia = kezdet + magasság / %.1f mm x (vég - kezdet)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Csillapítási arány:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Csomóponti eltérés (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Rántás (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Mérj a tárgyasztaltól addig a pontig, ahol a ringing a leggyengébb."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Mérj a tárgyasztaltól a legmagasabb pontig, ahol a sarkok még élesek és tiszták."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\nérték = %s + magasság / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Add meg azoknak a blokkoknak a számát, ahol finom függőleges bordázottságot látsz (az alsó blokk az 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\nsebesség = %s + (blokk - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(A teszted tornyának magassága itt nem ismert, ezért írd be közvetlenül az értéket.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Ez egy rendszer nyomtató beállítás, amely nem módosítható; az eredmény egy új beállításba kerül."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Ez a beállítás már a varázsló által készített kalibrált másolat."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Egy másolat hozzáadódik minden hálózati nyomtatóhoz, amely ezt a beállítást használja."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Bordázott sebességek: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "A nyomtató beállítás nem található."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Adj nevet az új nyomtató beállításnak."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Rendszer nyomtató beállítás nem módosítható; mentsd az eredményt új beállításként."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Nem sikerült menteni a nyomtató beállítást."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Add meg a frekvenciákat (0 felett, legfeljebb 500 Hz)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Add meg a csillapítási arányt (0-tól 1-ig, az 1 nem megengedett)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Csillapítási arány %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Adj meg 0 feletti értéket, legfeljebb %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Csomóponti eltérés %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Rántás %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Nem látható bordázottság - nincs kerülendő sebesség."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Add meg a blokkszámokat (1 = az alsó blokk), pl. 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "A folyamat beállításban tartsd a külső fal (és más látható falak) sebességét legalább egy lépésnyire ezektől."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Nem sikerült menteni a nyomtató beállítást."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Mentve: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "A nyomtató beállításba írva:\n%s\n\nMost ki van választva."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "A nyomtató beállítás nem változott (ezt a beállítást a firmware kezeli)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: ne felejtsd el beírni a printer.cfg fájlba az eredményoldalon látható printer.cfg sorokat."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Ezzel a nyomtató kalibrálása kész. Következik: kalibráld a filamentjeidet (válaszd az \"Egy filamentet\" lehetőséget, amikor a varázsló megkérdezi, mit kalibrálsz)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Következik: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "Kihagyod ezt: %s? A nyomtató megtartja a jelenlegi beállítását, és bármikor visszatérhetsz hozzá a folyamatjelzőről."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "Visszaállítod azokat a nyomtatóbeállításokat, amelyek itt voltak: \"%s\", mielőtt a varázsló először módosította (%s)? A varázsló nyomtató-eredményei ehhez törlődnek."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Biztonsági mentés visszaállítása"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Nem sikerült visszaállítani a nyomtató beállítást."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "A nyomtató beállítás ismét a korábbi értékeket tartalmazza."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Nyomtató kalibrálása - fúvóka %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Shaper frekv."
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Shaper típus"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Shaper frekvencia X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Shaper frekvencia Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Csillapítási arány"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Csomóponti eltérés (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Kerülendő VFA sebességek (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "nincs"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Kalibrációs varázsló"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Irányított nyomtató- és filamentkalibrálás"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Hiba bejelentése vagy funkció kérése"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "A Forca Slicer hibabejelentő űrlapjainak megnyitása a GitHubon"
+
+# AI Translated
+msgid "Connected"
+msgstr "Csatlakozva"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Szálhúzás"
+
+# AI Translated
+msgid "Warping"
+msgstr "Vetemedés"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Rétegelcsúszás"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Spagetti"
+
+# AI Translated
+msgid "Supports"
+msgstr "Támaszok"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Alulextrudálás"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Túlextrudálás"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Rétegszétválás"
+
+# AI Translated
+msgid "Partial"
+msgstr "Részleges"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Nyomtatási napló"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "A nyomtatási napló ki van kapcsolva, így a Forca nem rögzíti az elküldött nyomtatásokat. Kapcsold be, hogy minden nyomtatásról feljegyzés készüljön a Forca Academy mappában (a Beállításokban újra kikapcsolhatod)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Bekapcsolás"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Mappa megnyitása"
+
+# AI Translated
+msgid "Date"
+msgstr "Dátum"
+
+# AI Translated
+msgid "Print"
+msgstr "Nyomtatás"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Nincs rögzítve"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Mi ment félre (opcionális)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Fotók hozzáadása"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "A nyomtatás fotóinak vagy videóinak másolása a mappájába. Ide, az ablakra is húzhatod őket."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Nyomtatás mappájának megnyitása"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Fotók és videók"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Nyomtatás hozzáadása"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "A tálca jelenlegi állapotának rögzítése nyomtatásként -- olyan nyomtatásokhoz, amelyeket nem a Forca küldött, például SD-kártyáról indítottakhoz."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Mappa:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Még nincs rögzített nyomtatás"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "%d. filament: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Becsült idő: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Fotók: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Először válassz egy nyomtatást a listában, aztán add hozzá a fotóit."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Nyomtatási napló vezetése"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Rögzít minden nyomtatást, amelyet a Forca elküld -- nyomtató, beállítások, filamentek, módosított értékek, becslések és a tálca képe -- a Forca Academy mappában, hogy te és bármely MI visszanézhesse, mi vált be. Az SD-kártyás nyomtatások kézzel hozzáadhatók. Semmi sem kerül feltöltésre."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy mappa"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Hol tárolódik a nyomtatási napló: egyszerű Markdown és JSON fájlok. Egy MI az AGENTS.md-vel kezd."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Forca Academy mappa kiválasztása"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "A Forca Academy mappa megnyitása (szükség esetén létrehozza a kezdőfájlokkal)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "A rögzített nyomtatásaid: add hozzá az eredményt, jegyzeteket és fotókat"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Kamerakép készítése a nyomtatás végén"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Olyan Bambu nyomtatókhoz, amelyek kameráját a Forca eléri a helyi hálózaton: amikor egy rögzített nyomtatás befejeződik vagy meghiúsul, egy kép az eredményről a nyomtatás camera mappájába kerül."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Kameraképek nyomtatás közben"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Hány percenként tart meg a Forca egy kameraképet egy futó rögzített nyomtatásról, hogy egy hiba visszakövethető legyen (0 = ki). Csak Bambu nyomtatók. A kamerájuk egyszerre egy nézőt enged, így kimaradhat egy kép, amíg egy másik alkalmazás nézi."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "A nyomtató jelentése: kész"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "A nyomtató jelentése: sikertelen"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "A nyomtató jelentése: leállítva"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "A nyomtató jelentése: befejeződött (nem látott)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(%d perccel a küldés után)"
+
+# AI Translated
 #~ msgid "Tab"
 #~ msgstr "Tab"
 
@@ -25230,9 +26619,6 @@ msgstr ""
 
 #~ msgid "Align infill direction to model"
 #~ msgstr "Kitöltési irány igazítása a modellhez"
-
-#~ msgid "Print"
-#~ msgstr "Nyomtatás"
 
 #~ msgid "in"
 #~ msgstr "in"
@@ -25805,9 +27191,6 @@ msgstr ""
 #~ "Billow: Hasonló a Perlin-zajhoz, de csomósabb.\n"
 #~ "Bordás multifraktális: Barázdált zaj éles, recés jellemzőkkel. Márványszerű textúrát hoz létre.\n"
 #~ "Voronoi: Voronoi-cellákra osztja a felületet, és mindegyiket véletlen mértékben eltolja. Foltszerű textúrát eredményez."
-
-#~ msgid "Flow Rate"
-#~ msgstr "Anyagáramlás"
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "Nem lehet együtt nyomtatni több olyan filamenttel, amelyek között nagy a hőmérsékletkülönbség. Ellenkező esetben az extruder és a fúvóka eltömődhet vagy megsérülhet nyomtatás közben."

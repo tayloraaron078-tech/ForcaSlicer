@@ -708,6 +708,12 @@ void BBLTopbar::UpdateForcaAIItem()
         label += " - " + _L("Connected");
     else if (state == ForcaAI::State::Error)
         label += " - " + _L("Error");
+    if (state != ForcaAI::State::Off && ForcaAI::instance().level() == ForcaAI::Level::Advanced) {
+        // Always visible while the rules are relaxed, and how many prints the AI may still start on its own.
+        const ForcaAIGrant grant = forca_ai_grant();
+        label += " (" + _L("Advanced") +
+                 (grant.id ? ", " + wxString::Format(_L("AI may print %d more"), grant.prints_left) : wxString()) + ")";
+    }
     m_forca_ai_item->SetLabel(label);
     m_forca_ai_item->SetBitmap(create_scaled_bitmap(state == ForcaAI::State::Off ? "forca_ai_inactive" : "forca_ai", this, TOPBAR_ICON_SIZE));
     Realize();

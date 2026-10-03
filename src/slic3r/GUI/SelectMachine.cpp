@@ -2832,6 +2832,11 @@ void SelectMachineDialog::on_ok_btn(wxCommandEvent &event)
         confirm_text.push_back(ConfirmBeforeSendInfo(_L("There are some unknown filaments in the AMS mappings. Please check whether they are the required filaments. If they are okay, click \"Confirm\" to start printing.")));
     }
 
+    if (has_slice_warnings && m_forca_auto_send) {
+        // Forca: an AI send never answers a warning for the user -- it stops, and the user decides.
+        m_forca_auto_refused = confirm_text.empty() ? _L("Warning") : confirm_text.front().text;
+        return;
+    }
     if (has_slice_warnings)
     {
         ConfirmBeforeSendDialog confirm_dlg(this, wxID_ANY, _L("Warning"));
@@ -2909,11 +2914,71 @@ void SelectMachineDialog::on_ok_btn(wxCommandEvent &event)
             m_checkbox_list["timelapse"]->getValue() == "on" &&
             !m_timelapse_storage.empty())
         {
+            if (m_forca_auto_send) { // Forca: the storage check may need the user
+                m_forca_auto_refused = "the timelapse storage check (turn timelapse off for AI prints)";
+                return;
+            }
             start_timelapse_storage_check(obj_);
         } else {
             this->on_send_print();
         }
     }
+}
+
+// Forca: pre-approved AI printing (see SelectMachine.hpp).
+bool SelectMachineDialog::forca_clean_ready(const std::string& dev_id, std::string& why) const
+{
+    if (m_is_in_sending_mode)
+        why = "the print dialog is already sending";
+    else if (m_printer_last_select != dev_id)
+        why = "the print dialog has a different printer selected";
+    else if (m_print_status != PrintDialogStatus::PrintStatusReadyToGo)
+        why = "the print dialog is not ready to send (" + PrePrintChecker::get_print_status_info(m_print_status) + ")";
+    else if (!m_pre_print_checker.printerList.empty() || !m_pre_print_checker.filamentList.empty())
+        why = "the print dialog shows a printer or filament message for the user";
+    return why.empty();
+}
+
+bool SelectMachineDialog::forca_set_mapping(int filament_id, const std::string& ams_id, const std::string& slot_id, std::string& why)
+{
+    DeviceManager* dev = wxGetApp().getDeviceManager();
+    MachineObject* obj = dev ? dev->get_selected_machine() : nullptr;
+    if (!obj || obj->get_dev_id() != m_printer_last_select) {
+        why = "the print dialog is not showing the printer Forca is connected to";
+        return false;
+    }
+    if (!obj->contains_tray(ams_id, slot_id)) {
+        why = "the printer has no slot " + ams_id + "/" + slot_id;
+        return false;
+    }
+    const DevAmsTray tray    = obj->get_tray(ams_id, slot_id);
+    const wxColour   colour  = DevAmsTray::decode_color(tray.color);
+    const bool       ext     = devPrinterUtil::IsVirtualSlot(ams_id);
+    const int        tray_id = ext ? atoi(ams_id.c_str()) : atoi(ams_id.c_str()) * AMS_TOTAL_COUNT + atoi(slot_id.c_str());
+    // The event the mapping popup posts (MappingItem::send_event), handled the same way.
+    wxCommandEvent evt(EVT_SET_FINISH_MAPPING);
+    evt.SetInt(tray_id);
+    evt.SetString(wxString::Format("%d|%d|%d|%d|%s|%d|%s|%s", colour.Red(), colour.Green(), colour.Blue(), colour.Alpha(),
+                                   wxString::FromUTF8(tray.get_display_filament_type()), filament_id, ams_id, slot_id));
+    m_current_filament_id = filament_id;
+    on_set_finish_mapping(evt);
+    return true;
+}
+
+bool SelectMachineDialog::forca_auto_send(std::string& why)
+{
+    if (!forca_clean_ready(m_printer_last_select, why))
+        return false;
+    m_forca_auto_send = true;
+    m_forca_auto_refused.clear();
+    wxCommandEvent evt;
+    on_ok_btn(evt);
+    m_forca_auto_send = false;
+    if (!m_forca_auto_refused.empty()) {
+        why = "the print dialog would ask the user to confirm: " + into_u8(m_forca_auto_refused);
+        return false;
+    }
+    return true;
 }
 
 wxString SelectMachineDialog::format_steel_name(NozzleType type)

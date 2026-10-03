@@ -8,6 +8,8 @@
 
 class wxCheckBox;
 class wxCheckListBox;
+class wxRadioButton;
+class wxButton;
 class wxStaticText;
 class wxTextCtrl;
 class wxListCtrl;
@@ -31,6 +33,12 @@ private:
     wxCheckListBox*          m_pausers  { nullptr }; // per-printer "AI may pause" (only counts on a shared printer)
     std::vector<std::string> m_printer_ids;           // device id per m_printers row
     bool                     m_printers_built { false };
+    wxRadioButton*           m_guarded  { nullptr };   // control level (HQ PLAN_forca_ai.md §10a)
+    wxRadioButton*           m_advanced { nullptr };
+    wxStaticText*            m_grant_text { nullptr }; // print grant (pre-approved autonomy)
+    wxButton*                m_grant_btn  { nullptr };
+    wxButton*                m_bed_btn    { nullptr };
+    wxButton*                m_revoke_btn { nullptr };
 };
 
 }} // namespace Slic3r::GUI

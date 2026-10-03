@@ -9506,6 +9506,10 @@ msgstr ""
 "Honek hodeiko eginbide guztiak desgaitzen ditu, Orca Cloud profilen sinkronizazioa barne. Guztiz lineaz kanpo lan egin nahi duten erabiltzaileek aukera hau gaitu dezakete.\n"
 "Oharra: Modu ezkutua gaituta dagoenean, zure erabiltzaile-profilen segurtasun-kopiarik ez da egingo Orca Cloud-en."
 
+# AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Honek hodeiko eginbide guztiak desgaitzen ditu, Bambu Cloud esaterako. Guztiz lineaz kanpo lan egin nahi duten erabiltzaileek aukera hau gaitu dezakete."
+
 msgid "Hide login side panel"
 msgstr "Ezkutatu saioa hasteko alboko panela"
 
@@ -9526,6 +9530,10 @@ msgstr "Gaitu Bambu Cloud"
 
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Baimendu Bambu Cloud-en saioa hastea Orca Cloud-ekin batera. Gaituta dagoenean, Bambu saioa hasteko atal bat agertzen da hasierako orrian."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Baimendu Bambu Cloud-en saioa hastea. Gaituta dagoenean, Bambu saioa hasteko atal bat agertzen da hasierako orrian."
 
 msgid "Update & sync"
 msgstr "Eguneratu eta sinkronizatu"
@@ -22271,8 +22279,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Emaitza"
 
 msgid "Flip direction"
 msgstr ""
@@ -24361,6 +24370,1386 @@ msgstr ""
 "Saihestu okertzea\n"
 "Ba al zenekien ABS bezalako okertzeko joera duten materialak inprimatzean ohe beroaren tenperatura egoki igotzeak okertzeko probabilitatea murriztu dezakeela?"
 
+# AI Translated
+msgid "Retraction length"
+msgstr "Atzera-egitearen luzera"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "XY uzkurdura"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Z uzkurdura"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer kalibrazio-morroia"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Baztertu"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Konfigurazio aktiboa"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Inprimagailua:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Pita:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Kalibratu beharreko filamentua:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Kalibrazioa:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Fluxu-tasa"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Uzkurdura"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Azken egiaztapen-inprimaketa (aukerakoa)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Fluxu max."
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Azken egiaztapena"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Tenperatura-dorre batek forma bera inprimatzen du piten tenperatura beheranzkoetan. Inprimatu ondoren, aukeratu gainazal garbiena, hari gutxien eta geruzen arteko lotura sendoena duen zerrenda."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Hasierako tenp. (beroa):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Amaierako tenp. (hotza):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Dorre bat inprimatu dut jada - sartu emaitza"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Honek horma bakarreko dorre bat inprimatzen du, eta haren abiadura altuerarekin igotzen da. Begiratu non bihurtzen den gainazala zakarra edo non hasten diren hormak material faltan. Neurtu oraindik ondo zegoen azken zatiaren altuera (mm) -- emaitzen orriak altuera hori zure gehieneko fluxu bihurtzen du."
+
+# AI Translated
+msgid "Start:"
+msgstr "Hasiera:"
+
+# AI Translated
+msgid "End:"
+msgstr "Amaiera:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Urratsa (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Metodoa:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Klasikoa (pasada lodia + fina)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Gomendatua + Perfekzionista)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Pasada hau inprimatu dut jada - sartu emaitza"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Honek Orcaren atzera-egite dorrea inprimatzen du; atzera-egitearen luzera urrats bat hazten da eraztun bakoitzean. Aurkitu hariak desagertzen diren zatirik baxuena, zenbatu azpiko eraztunak eta sartu kopuru hori emaitzen orrian atzera-egitearen luzera lortzeko. Erabili haririk gabeko luzerarik laburrena."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Urratsa (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Trakzio zuzena: 0-2 mm-ko tarte lehenetsiak filamentu gehienetarako balio du. Bowden: igo Amaiera (adibidez 6ra)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Honek %g mm-ko alde irekiko marko karratu bat inprimatzen du, %g mm-ko altuerako zutoin batekin izkina batean. Utzi guztiz hozten (hobe ordu batzuk) eta neurtu kalibrearekin: kanpoko zabalera X-n zehar, kanpoko zabalera Y-n zehar (neurtu lehen geruzen gainetik elefante-oina saihesteko) eta zutoinaren altuera. Emaitzen orriak horiek filamentuaren XY eta Z uzkurdura-konpentsazio bihurtzen ditu."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Markoa inprimatu dut jada - sartu neurriak"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Aukerako konfiantza-egiaztapen bat: Autodesk FDM Test (Orcarekin datorren eredua) inprimatzen du zure filamentu-aurrezarpen kalibratuarekin. Hegalkinak, zubiak, hariak, xehetasun txikiak eta neurriak probatzen ditu inprimaketa bakarrean. Ez da ezer gordetzen -- zerbait gaizki ikusten bada, errepikatu kalibrazio hori goiko hautatzailetik. Zure aurrezarpen kalibratua gordeta eta hautatuta dago jada."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Kalibratu beste filamentu bat"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Hasi kalibrazio bat"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Aukeratu kalibratzen ari zaren filamentua goiko \"Kalibratu beharreko filamentua\" atalean -- edo antzeko profil bat abiapuntu gisa -- eta sakatu Hasi. Urratsak ordena honetan doaz: Tenperatura, Gehieneko abiadura bolumetrikoa, Fluxu-tasa, Presio linealaren aitzinapena, Atzera-egitea eta Uzkurdura."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Hasi kalibrazioa"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Xerratu && bidali inprimagailura"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Sortu soilik (neuk inprimatuko dut)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Xerratu & bidali-k proba plakan jartzen du, xerratu egiten du eta inprimagailuaren bidalketa-leihoa irekitzen du; ixten denean, zure emaitza hemen sartzen duzu. Sortu soilik-ek proba plakan jartzen du (eskuinean ikusten da) zuk zeuk xerratu/esportatu dezazun; gero itzuli hona zure emaitza sartzeko."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Jauzi egin urrats honi"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Mantendu ezarpen honen uneko balioa eta joan hurrengo kalibraziora."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Kalibratu beste zerbait"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Kalibratu zure inprimagailua edo beste filamentu bat. Filamentu honen aurrerapena gordetzen da."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA dorrea (gomendatua)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Estrusorea:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Trakzio zuzena"
+
+# AI Translated
+msgid "Step:"
+msgstr "Urratsa:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Azelerazioak (aukerakoa):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Abiadurak (aukerakoa):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Proba hau inprimatu dut jada - sartu emaitza"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Sartu emaitza"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Neurtutako altuera (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Emaitza:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Neurtutako X zabalera (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Neurtutako Y zabalera (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Neurtutako zutoinaren altuera (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Gorde aurrezarpen gisa:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Eman aurrezarpenari nahi duzun izena -- adibidez benetan kalibratzen ari zaren filamentuarena, beste profil batetik abiatu bazara ere. Emaitza aurrezarpen horretan idazten da eta hura hautatzen da; izena lehendik badago, eguneratu egiten da. Zure hasierako aurrezarpena ez da aldatzen."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Aplikatu eta gorde aurrezarpenean"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Azken egiaztapen-inprimaketa"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "fluxu-ratioa %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "atzera-egitea %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY uzkurdura %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s proba zain (sortua: %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Azken egiaztapen-inprimaketa sortua (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Azken %s emaitza: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s saltatu da (%s); zure uneko balioa mantentzen da."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Tenperaturarik onena (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Fluxu max. (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Blokerik onenaren zenbakia:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "PA baliorik onena:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Atzera-egitearen luzera (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Zati horren azpiko eraztunak:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Ez da kalibrerik behar: dorreko eraztun bakoitzak atzera-egite urrats bat markatzen du. Aurkitu haririk gabeko zatirik baxuena eta zenbatu azpiko eraztunak (beheko zatia, 0 eraztun, Hasiera da):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nluzera = hasiera + eraztunak x urratsa = %g + eraztunak x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Sartu hemen eraztun kopurua eta luzera zuretzat betetzen da, edo idatzi luzera zeuk."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Neurtu izkinak zorrotzenak diren altuera (mm), eta gero:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = hasiera + urratsa x altuera = %g + %g x altuera.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Sartu hemen altuera hori eta PA balioa zuretzat betetzen da, edo idatzi balioa zeuk."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Berria zara honetan? Idatzi ondo ikusten zen azken zatiaren altuera (mm), eta gero:\nfluxu max. = hasiera + altuera x urratsa = %g + altuera x %g.\nSartu hemen altuera hori eta fluxu max. zuretzat betetzen da, edo idatzi fluxua zeuk."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Sartu zabalera berdinena duen lerroaren ondoan inprimatutako balioa."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Sartu izkina zorrotz eta garbienak dituen ereduaren gainean inprimatutako balioa."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Sartu neurtu duzuna. Utzi Z hutsik uneko Z balioa mantentzeko. Uneko konpentsazioa: XY %.2f%%, Z %.2f%% (inprimaketa honi aplikatuta dago jada, beraz kontuan hartzen da)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "PA balio gorakorrak dituzten lerro multzo bat inprimatzen du, bakoitza bere balioarekin etiketatuta. Aukeratu zabalera berdinena duen lerroa -- abiadura aldatzen den tokian loditzerik gabe (PA baxuegia) eta mehetzerik gabe (altuegia) -- eta sartu lerro horren balioa."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "PA balio gorakorrak dituzten izkina-eredu habiaratuak inprimatzen ditu, bakoitza bere balioarekin etiketatuta. Aukeratu izkina zorrotz eta garbienak dituena -- loditzerik gabe (PA baxuegia) eta biribiltzerik edo hutsunerik gabe (altuegia) -- eta sartu haren balioa."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "Dorre huts bat inprimatzen du, eta haren PA urrats bat igotzen da altuerako mm bakoitzeko. Aurkitu izkinak zorrotzenak diren altuera -- loditzerik gabe (PA baxuegia) eta hutsunerik edo biribiltzerik gabe (altuegia) --, neurtu kalibrearekin eta sartu emaitzen orrian PA balioa lortzeko."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Sartu filamentu honentzako tenperatura-tarte baliodun bat:\n%d eta %d C artean, Hasiera Amaiera baino gutxienez 5 C gorago dagoela."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Sartu balio baliodunak:\nHasiera > 0, Urratsa > 0, Amaiera > Hasiera + Urratsa."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Sartu atzera-egite balio baliodunak:\nHasiera >= 0, Urratsa > 0, Amaiera > Hasiera + Urratsa, Amaiera <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Sartu PA balio baliodunak:\nHasiera >= 0, Urratsa >= 0.001, Amaiera > Hasiera + Urratsa."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "Azelerazioek eta abiadurek komaz bereizitako zenbaki positiboak izan behar dute, edo hutsik geratu."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "Xerratzea ez da amaitu, beraz ez da ezer bidali. Konpondu errorea eta saiatu berriro."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Uzkurdura-proba"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca uzkurdura-markoa"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Hau Presio linealaren aitzinapenaren ondoko aukerako egiaztapena da."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Hau 2tik 1. pasada da; pasada fin bat dator gero."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Hau 2tik 2. pasada da; azken pasada da."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Sartu goiko aldea leunena eta lauena duen blokearen azpiko zenbakia. Negatiboa = fluxu gutxiago, positiboa = fluxu gehiago. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Fluxu berria: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Fluxu berria: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Fluxu berria: %.3f + zenbakia."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Fluxu berria: %.3f x (1 + zenbakia/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "PA ondoko egiaztapena (Perfekzionista pasada)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "PA ondoko egiaztapena (pasada fina)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "2tik 1. pasada (Gomendatua)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "2tik 2. pasada (Perfekzionista)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "2tik 1. pasada (lodia)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "2tik 2. pasada (fina)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Orcaren YOLO probak bloke-ilara bat inprimatzen du, bakoitza fluxu-desplazamendu txiki batekin etiketatuta, -0.02 edo +0.01 esaterako. Aukeratu goiko aldea leunena eta lauena duen blokea -- ez puztua (fluxu gehiegi) ez hutsuneduna (gutxiegi) -- eta sartu haren zenbakia inprimatuta dagoen bezala. Gomendatua pasada nahikoa izaten da; Perfekzionista pasadak urrats txikiagoetan fintzen du."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Honek bloke-ilara bat inprimatzen du, bakoitza fluxu-ratio apur bat desberdinarekin eta zenbaki batekin etiketatuta. Begiratu goiko gainazalei eta aukeratu goiko aldea leunena eta lauena duen blokea -- ez puztua (fluxu gehiegi) ez hutsuneduna (gutxiegi). Bloke horren zenbakia sartuko duzu. Fluxua bi pasadatan egiten da: lodia lehenik, eta gero fina zure lehen emaitzaren inguruan."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Sartu filamentu honentzat %d eta %d C arteko tenperatura bat."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Sartu %.1f eta %.1f mm3/s arteko gehieneko abiadura bolumetriko bat."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Sartu blokerik onenaren zenbakia, -%g eta %g artean."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Bloke-zenbaki horrek fluxu-ratioa %.3f-ean jarriko luke, %.2f-%.2f tarte seguruaren kanpo. Egiaztatu berriro zenbakia."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Sartu %.2f eta %.2f arteko presio-aitzinapen balio bat."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Sartu 0 eta %g mm arteko atzera-egite luzera bat."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Sartu neurtutako X eta Y zabalerak (%g mm inguru) eta, nahi baduzu, zutoinaren altuera (%g mm inguru)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Neurri horiek XY %.2f%% / Z %.2f%% ematen dute, %g-%g%% tarte sinesgarriaren kanpo. Egiaztatu berriro."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Sartu aurrezarpenaren izena."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Ezin izan da aurrezarpena gorde."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Hurrengoa: Gehieneko abiadura bolumetrikoa."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Hurrengoa: Fluxu-tasa."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Fluxu-egiaztapena gordeta. Hurrengoa: Atzera-egitea."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "1. pasada gordeta. Hurrengoa: Fluxu-tasa 2. pasada."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Fluxu-tasa osatuta. Hurrengoa: Presio linealaren aitzinapena."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Hurrengoa: Uzkurdura."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Honekin kalibrazioak osatu dira. Nahi baduzu, inprimatu azken egiaztapena profil osoa berresteko."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s filamentu-aurrezarpenean gorde da:\n%s\n\nOrain hautatuta dago."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Aukerakoa: presio-aitzinapena doitzeak fluxuaren itxura alda dezake. Fluxu-tasaren pasada fin bat egin orain egiaztatzeko?\n\nBai = egiaztatu fluxua, gero Atzera-egitea.\nEz = joan zuzenean Atzera-egitera."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Ez dago aurrezarpen-sortarik eskuragarri."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "Ez da '%s' filamentu-aurrezarpena aurkitu."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "Izenak ezin du sistemako aurrezarpen baten izenaren berdina izan."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Badago izen hori duen aurrezarpen bat."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Ezin izan da aurrezarpen berria sortu."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(Inprimagailu honen kalibrazioa osatuta dago.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(Inprimagailu honen kalibrazioa abian dago: %d / %d urrats.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Zer kalibratzen ari zara?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Nire inprimagailua -- Sarrera-moldaketa, Kurbatzea eta VFA hautatutako inprimagailuarentzat, behin inprimagailu eta pita bakoitzeko. Egin hau lehenik: filamentu-probak nola inprimatzen diren aldatzen du."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Filamentu bat -- Tenperatura, Gehieneko abiadura bolumetrikoa, Fluxu-tasa, Presio linealaren aitzinapena, Atzera-egitea eta Uzkurdura, dena lehen urratsean izendatzen duzun filamentu-aurrezarpen BAKAR batean gordeta."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Proba bakoitza eskuineko plakan agertzen da, eta gaineko aurrerapen-barra eta aurretik/ondoren taula betetzen joaten dira. Xerratu & bidali inprimagailura-k proba xerratu eta zure inprimagailuaren ohiko bidalketa-leihoa irekitzen du; Sortu soilik-ek plakan jartzen du zuk zeuk xerratu edo esportatu dezazun (adibidez SD txartel batera). Edonola ere, itzuli hona zure emaitza sartzeko. Beste fitxetara alda zaitezke edozein unetan; fitxa honek utzi zenuen tokitik jarraitzen du."
+
+# AI Translated
+msgid "My printer"
+msgstr "Nire inprimagailua"
+
+# AI Translated
+msgid "A filament"
+msgstr "Filamentu bat"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Filamentu honek kalibrazio osatu bat du jada -- emaitzak eskuinean ikusten dira. Aukeratu beste filamentu bat goian berri bat kalibratzeko, edo sakatu Hasi hau berriro kalibratzeko."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Filamentu honek kalibrazio bat du abian (%d%% eginda). Hasi-k utzitako tokitik jarraitzen du."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "%s saltatu? Zure uneko balioa mantentzen da, eta edozein unetan itzul zaitezke aurrerapen-barran klik eginez edo goian aukeratuz."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "Inprimagailua edo pita %s (%s mm) izatera aldatu da saio hau %s-n (%s mm) hasi zenetik. Emaitza berriek saio bereizi bat hasiko dute inprimagailu honentzat."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Filamentu aktiboa %s izatera aldatu da beste fitxa batean, baina saio hau %s kalibratzen ari da."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Itzuli %s-ra"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Presio-aitz."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Fluxu-egiaztap."
+
+# AI Translated
+msgid "printer default"
+msgstr "inprimagailuaren lehenetsia"
+
+# AI Translated
+msgid "skipped"
+msgstr "saltatua"
+
+# AI Translated
+msgid "testing..."
+msgstr "probatzen..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Gorde laburpen-irudia"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Gorde aurretik/ondoren laburpen hau PNG irudi gisa."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Kalibratu filamentu bat"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Inprimagailuaren kalibrazioa osatuta"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Inprimagailua kalibratzen"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Kalibrazioa osatuta"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Saltatua"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "2tik 1. pasada eginda"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Proba inprimatzen"
+
+# AI Translated
+msgid "Not started"
+msgstr "Hasi gabe"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "egin klik urrats hau irekitzeko"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Aukerakoa:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Ezarpena"
+
+# AI Translated
+msgid "Before"
+msgstr "Aurretik"
+
+# AI Translated
+msgid "After"
+msgstr "Ondoren"
+
+# AI Translated
+msgid "Change"
+msgstr "Aldaketa"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Saltatua: %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Proba sortua: %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Neurtua: %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer kalibrazio-morroia - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Gorde kalibrazio-laburpena"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Ezin izan da irudia gorde."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Inprimagailuaren kalibrazioa"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Kalibrazio hauek inprimagailua bera doitzen dute, behin inprimagailu eta pita bakoitzeko. Egin itzazu filamentuak kalibratu aurretik: filamentu-probak nola inprimatzen diren aldatzen dute. Ordena: Sarrera-moldaketa (maiztasuna, gero moteltzea), Kurbatzea, VFA. Zure inprimagailuak erabili ezin dituen urratsak kanpoan geratzen dira."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Shaper maiztasuna"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Shaper moteltzea"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Leheneratu inprimagailu honen babeskopia"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Jarri berriro inprimagailu-aurrezarpen honek morroiak lehen aldiz eguneratu aurretik zituen ezarpenak."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Inprimatu dut jada - sartu emaitza"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Mantendu inprimagailuaren uneko ezarpena eta joan hurrengo kalibraziora."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Sarrera-moldaketa - maiztasuna"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Orcaren erresonantzia-dorreak input shaper-aren maiztasuna igotzen du altuerarekin (X-k eta Y-k beren tarteak izan ditzakete). Inprimatu ondoren, aurkitu X aurpegian eta Y aurpegian ringing-a -- izkinen eta letren ondorengo oihartzuna -- ahulena den altuera. Emaitzen orriak altuera bakoitza maiztasun bihurtzen du."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Proba-eredua:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper-a:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X hasiera (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X amaiera:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y hasiera (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y amaiera:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Moteltzea probaren bitartean:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Sarrera-moldaketa - moteltzea"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Zure maiztasunak ezarrita, dorre honek moteltze-ratioa igotzen du altuerarekin. Aurkitu ringing-a ahulena den altuera; emaitzen orriak moteltze-ratio bihurtzen du. Beheko maiztasunak maiztasun-urratsetik datoz."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "X maiztasuna (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Moteltze-hasiera:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Dorre honek izkinetako abiadura (jerka, lotura-desbideratzea edo Klipperren square corner velocity) igotzen du altuerarekin. Altuagoa azkarragoa da, baina izkinak biribiltzen eta dardarazten ditu. Aurkitu izkinak oraindik zorrotz eta garbi dauden punturik altuena; emaitzen orriak altuera hori balio bihurtzen du."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (artefaktu bertikal finak)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Dorre honek kanpoko hormaren abiadura igotzen du blokez bloke. Abiadura jakin batzuetan ildaska bertikal finak (VFA) agertzen dira, motorren eta uhalen erresonantziagatik. Idatzi ikusten dituzun blokeak (behetik zenbatuta, lehen blokea 1 da); emaitzen orriak esaten dizu zein abiaduratatik urrundu behar dituzun hormak. Mantendu Amaiera zure filamentuak estruditu dezakeenaren barruan."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Hasiera (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Altuerarik onena, X aurpegia (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Altuerarik onena, Y aurpegia (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Y maiztasuna (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Altuerarik onena (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Balioa:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Ildaskak dituzten blokeak (adib. 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Utzi Forcari sarrera-moldaketa ezartzen inprimaketa bakoitzaren hasieran"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Shaper-aren ezarpenak G-code-an idazten ditu (Orcaren \"Igorri input shaping\"), inprimagailuaren firmwareak gordeta duena gainidatziz. Utzi desaktibatuta firmwarean gordetzen badituzu (adibidez Klipperren printer.cfg-n)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipperrek printer.cfg-n gordetzen ditu hauek. Gehitu edo eguneratu lerro hauek bertan, eta gero berrabiarazi Klipper:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Eguneratu inprimagailu-aurrezarpen hau (balio zaharren babeskopia egiten da)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Gorde inprimagailu-aurrezarpen berri gisa:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Bambu Lab inprimagailuek beren bibrazio-konpentsazioa (sarrera-moldaketa) doitzen dute, beraz hemen ez dago ezer kalibratzeko."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orcak ez du sarrera-moldaketarik ezartzen inprimagailu honen G-code motarentzat."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Bambu Lab inprimagailuek beren firmwarean kudeatzen dute kurbatzea (jerka)."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Balio baxuagoek izkina zorrotzagoak ematen dituzte, baina inprimaketa motelagoa."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Marlin lotura-desbideratzea (mm), inprimagailu-aurrezarpen honek bat ezarrita duelako."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: square corner velocity gisa probatua (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: jerka mm/s-tan (Orcak bihurtzen du behar denean)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Jerk klasikoa (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Urrats hau ez da hautatutako inprimagailuari aplikatzen: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Urratsa: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: proba sortua %s-n - inprimatu, eta gero sartu emaitza."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s saltatu da (%s); inprimagailuaren ezarpena mantentzen da."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: azken emaitza gordea %s-n."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Sartu zenbakiak maiztasun-tarterako eta moteltzerako."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Sartu maiztasun baliodunak: 0 <= hasiera < amaiera <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Sartu 0tik 1era (1 barne hartu gabe) moteltze-ratio bat."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Sartu zenbakiak maiztasunetarako eta moteltze-tarterako."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Sartu maiztasun baliodunak: 0 < maiztasuna <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Sartu moteltze-tarte baliodun bat: 0 <= hasiera < amaiera <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Sartu zenbakiak hasierarako eta amaierarako."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Sartu tarte baliodun bat: 0 <= hasiera < amaiera <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Balio altuek (%s-tik gora) geruza-desplazamenduak eragin ditzakete. Jarraitu?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Sartu zenbakiak hasierarako, amaierarako eta urratserako."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Sartu abiadura baliodunak: hasiera 10etik gora, urratsa 0tik gora, amaiera gutxienez hasiera + urratsa."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Sartu emaitza: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Neurtu ohetik ringing-a aurpegi bakoitzean ahulena den tokiraino (X aurpegia: ringing-a X mugimenduetatik datorren aurpegia)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\nmaiztasuna = hasiera + altuera / %.1f mm x (amaiera - hasiera)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Moteltze-ratioa:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Lotura-desbideratzea (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Jerka (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Neurtu ohetik ringing-a ahulena den tokiraino."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Neurtu ohetik izkinak oraindik zorrotz eta garbi dauden punturik altueneraino."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\nbalioa = %s + altuera / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Sartu ildaska bertikal finak ikusten dituzun blokeen zenbakiak (beheko blokea 1 da)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\nabiadura = %s + (blokea - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Zure probaren dorrearen altuera ez da hemen ezagutzen, beraz idatzi balioa zuzenean.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Hau sistemako inprimagailu-aurrezarpen bat da, ezin da aldatu; emaitza aurrezarpen berri batera doa."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Aurrezarpen hau morroiak egindako kopia kalibratu bat da jada."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Kopia bat gehitzen zaio aurrezarpen hau erabiltzen duen sareko inprimagailu bakoitzari."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Ildaskak dituzten abiadurak: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "Ez da inprimagailu-aurrezarpena aurkitu."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Sartu inprimagailu-aurrezarpen berriaren izena."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Sistemako inprimagailu-aurrezarpen bat ezin da aldatu; gorde emaitza aurrezarpen berri gisa."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Ezin izan da inprimagailu-aurrezarpena gorde."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Sartu maiztasunak (0tik gora, 500 Hz-raino)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Sartu moteltze-ratioa (0tik 1era, 1 barne hartu gabe)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Moteltze-ratioa %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Sartu 0tik gorako balio bat, gehienez %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Lotura-desbideratzea %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Jerka %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Ez da ildaskarik ikusi - ez dago saihesteko abiadurarik."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Sartu bloke-zenbakiak (1 = beheko blokea), adib. 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "Mantendu kanpoko hormaren abiadura (eta beste horma ikusgarrienak) hauetatik gutxienez urrats bat urrun, prozesu-aurrezarpenean."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Ezin izan da inprimagailu-aurrezarpena gorde."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Gordeta: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Inprimagailu-aurrezarpenean idatzita:\n%s\n\nOrain hautatuta dago."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "Inprimagailu-aurrezarpena ez da aldatu (firmwareak kudeatzen du ezarpen hau)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: gogoratu emaitzen orrian erakutsitako printer.cfg lerroak printer.cfg-n jartzea."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Honekin inprimagailuaren kalibrazioa osatu da. Hurrengoa: kalibratu zure filamentuak (erantzun \"Filamentu bat\" morroiak zer kalibratzen ari zaren galdetzen dizunean)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Hurrengoa: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "%s saltatu? Inprimagailuak uneko ezarpena mantentzen du, eta edozein unetan itzul zaitezke aurrerapen-barratik."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "Jarri berriro \"%s\"-k morroiak lehen aldiz eguneratu aurretik zituen inprimagailu-ezarpenak (%s)? Morroiaren inprimagailu-emaitzak ezabatzen dira."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Leheneratu babeskopia"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Ezin izan da inprimagailu-aurrezarpena leheneratu."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "Inprimagailu-aurrezarpenak lehengo ezarpenak ditu berriro."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Inprimagailuaren kalibrazioa - pita %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Shaper maizt."
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Shaper mota"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Shaper X maiztasuna (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Shaper Y maiztasuna (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Moteltze-ratioa"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Lotura-desbideratzea (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Saihestu beharreko VFA abiadurak (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "bat ere ez"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Kalibrazio-morroia"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Inprimagailuaren eta filamentuaren kalibrazio gidatua"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Jakinarazi akats bat edo eskatu eginbide bat"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Ireki Forca Slicer-en arazo-inprimakiak GitHub-en"
+
+# AI Translated
+msgid "Connected"
+msgstr "Konektatuta"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Hariak"
+
+# AI Translated
+msgid "Warping"
+msgstr "Okertzea"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Geruza-desplazamendua"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Espagetia"
+
+# AI Translated
+msgid "Supports"
+msgstr "Euskarriak"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Estrusio eskasa"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Gehiegizko estrusioa"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Geruzen bereizketa"
+
+# AI Translated
+msgid "Partial"
+msgstr "Partziala"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Inprimaketa-egunkaria"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "Inprimaketa-egunkaria desaktibatuta dago, beraz Forcak ez ditu erregistratzen bidaltzen dituen inprimaketak. Aktibatu inprimaketa bakoitzaren erregistroa Forca Academy karpetan gordetzeko (Hobespenetan desaktiba dezakezu berriro)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Aktibatu"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Ireki karpeta"
+
+# AI Translated
+msgid "Date"
+msgstr "Data"
+
+# AI Translated
+msgid "Print"
+msgstr "Inprimaketa"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Erregistratu gabe"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Zer joan da gaizki (aukerakoa)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Gehitu argazkiak"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Kopiatu inprimaketa honen argazkiak edo bideoak bere karpetara. Leiho honetara ere arrasta ditzakezu."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Ireki inprimaketaren karpeta"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Argazkiak eta bideoak"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Gehitu inprimaketa bat"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Erregistratu plaka orain dagoen bezala inprimaketa gisa -- Forcak bidali ez dituen inprimaketetarako, SD txartel batetik hasitakoak adibidez."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Karpeta:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Oraindik ez dago inprimaketarik erregistratuta"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "%d. filamentua: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Gutxi gorabeherako denbora: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Argazkiak: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Aukeratu lehenik inprimaketa bat zerrendan, eta gero gehitu haren argazkiak."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Eraman inprimaketa-egunkari bat"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Forcak bidaltzen duen inprimaketa bakoitza erregistratzen du -- inprimagailua, aurrezarpenak, filamentuak, aldatutako ezarpenak, estimazioak eta plakaren irudi bat -- Forca Academy karpetan, zuk eta edozein AAk zer funtzionatu duen berrikus dezazuen. SD txartel batetik egindako inprimaketak eskuz gehi daitezke. Ez da ezer igotzen."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy karpeta"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Inprimaketa-egunkaria non gordetzen den: Markdown eta JSON fitxategi soilak. AA batek AGENTS.md-tik hasten du."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Aukeratu Forca Academy karpeta"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Ireki Forca Academy karpeta (behar izanez gero hasierako fitxategiekin sortzen du)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Zure inprimaketa erregistratuak: gehitu emaitza, oharrak eta argazkiak"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Atera kamera-argazki bat inprimaketa bat amaitzean"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Forcak sare lokalean irits daitekeen kamera duten Bambu inprimagailuetarako: erregistratutako inprimaketa bat amaitzean edo huts egitean, emaitzaren argazki bat inprimaketaren camera karpetara doa."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Kamera-argazkiak inprimaketa batean"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Zenbat minututik behin gordetzen duen Forcak martxan dagoen inprimaketa erregistratu baten kamera-argazki bat, hutsegite bat jarraitu ahal izateko (0 = desaktibatuta). Bambu inprimagailuak soilik. Haien kamerak ikusle bakarra onartzen du aldi berean, beraz argazki bat salta daiteke beste aplikazio bat begira dagoen bitartean."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "Inprimagailuak jakinarazi du: amaituta"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "Inprimagailuak jakinarazi du: huts egin du"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "Inprimagailuak jakinarazi du: geldituta"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "Inprimagailuak jakinarazi du: amaituta (ikusi gabe)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(bidali eta %d min-ra)"
+
 #~ msgid "Tab"
 #~ msgstr "Fitxa"
 
@@ -25021,9 +26410,6 @@ msgstr ""
 #~ msgid "Bed Type"
 #~ msgstr "Ohean mota"
 
-#~ msgid "Start calibration"
-#~ msgstr "Hasi kalibrazioa"
-
 #~ msgid "Last Step"
 #~ msgstr "Azken urratsa"
 
@@ -25309,9 +26695,6 @@ msgstr ""
 
 #~ msgid "travel"
 #~ msgstr "ibilbidea"
-
-#~ msgid "Print"
-#~ msgstr "Inprimatu"
 
 #~ msgid "Switch to silent mode"
 #~ msgstr "Aldatu modu isilera"
@@ -27397,9 +28780,6 @@ msgstr ""
 
 #~ msgid "How to use calibration result?"
 #~ msgstr "Nola erabili kalibrazioaren emaitza?"
-
-#~ msgid "Flow Rate"
-#~ msgstr "Fluxu"
 
 #, c-format, boost-format
 #~ msgid ""

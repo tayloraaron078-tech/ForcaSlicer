@@ -164,6 +164,10 @@ Get-ChildItem (Join-Path $RepoRoot 'resources\images') -Filter *.svg | ForEach-O
     if ([IO.File]::ReadAllText($_.FullName).Contains('M23.527,29.084')) { Fail "resources/images/$($_.Name): has Orca's orca-and-wave drawing" }
 }
 
+# 4b) Forca's own interface translations (tools/forca/forca_translations*.json, including the Calibration Wizard) are in every catalog.
+& powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $RepoRoot 'tools\forca\apply_forca_translations.ps1') -Check | Out-Null
+if ($LASTEXITCODE -ne 0) { Fail "Forca translations missing from localization/i18n: run tools/forca/apply_forca_translations.ps1" }
+
 # 5) Review list: untranslated literals mentioning Orca (not failures; check whether each is shown to users).
 #    Skipped: translated strings and their continuation lines (renamed at runtime by forca_brand), comments, logs,
 #    URLs, Orca's services/models/file names, and the known-intentional files/identifiers below.

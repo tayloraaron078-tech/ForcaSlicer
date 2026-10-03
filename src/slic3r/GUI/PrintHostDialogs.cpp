@@ -38,6 +38,7 @@
 #include "../Utils/CrealityPrint.hpp"
 #include "BitmapComboBox.hpp"
 #include "wxExtensions.hpp"
+#include "ForcaAcademy.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -1296,6 +1297,10 @@ PrintHostQueueDialog::PrintHostQueueDialog(wxWindow *parent)
 void PrintHostQueueDialog::append_job(const PrintHostJob &job)
 {
     wxCHECK_RET(!job.empty(), "PrintHostQueueDialog: Attempt to append an empty job");
+    // Forca Academy: an upload that prints gets a record when it completes (its job id is its row).
+    if (job.upload_data.post_action == PrintHostPostUploadAction::StartPrint ||
+        job.upload_data.post_action == PrintHostPostUploadAction::QueuePrint)
+        forca_academy_hold_upload(size_t(job_list->GetItemCount()), job.printhost->get_host());
 
     wxVector<wxVariant> fields;
     fields.push_back(wxVariant(wxString::Format("%d", job_list->GetItemCount() + 1)));
@@ -1389,6 +1394,7 @@ void PrintHostQueueDialog::on_progress(Event &evt)
     } else {
         set_state(evt.job_id, ST_COMPLETED);
         job_list->SetValue(wxVariant(100), evt.job_id, COL_PROGRESS);
+        forca_academy_upload_done(evt.job_id, true); // Forca Academy
     }
 
     on_list_select();
@@ -1407,6 +1413,7 @@ void PrintHostQueueDialog::on_error(Event &evt)
     wxCHECK_RET(evt.job_id < (size_t)job_list->GetItemCount(), "Out of bounds access to job list");
 
     set_state(evt.job_id, ST_ERROR);
+    forca_academy_upload_done(evt.job_id, false); // Forca Academy
 
     auto errormsg = format_wxstr("%1%\n%2%", _L("Error uploading to print host") + ":", evt.status);
     job_list->SetValue(wxVariant(0), evt.job_id, COL_PROGRESS);
@@ -1427,6 +1434,7 @@ void PrintHostQueueDialog::on_cancel(Event &evt)
     wxCHECK_RET(evt.job_id < (size_t)job_list->GetItemCount(), "Out of bounds access to job list");
 
     set_state(evt.job_id, ST_CANCELLED);
+    forca_academy_upload_done(evt.job_id, false); // Forca Academy
     job_list->SetValue(wxVariant(0), evt.job_id, COL_PROGRESS);
 
     on_list_select();

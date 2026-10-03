@@ -9692,6 +9692,10 @@ msgstr ""
 "Išjungia visas debesijos funkcijas, įskaitant „Orca Cloud“ profilių sinchronizavimą. Naudotojai, kurie nori dirbti visiškai neprisijungę prie tinklo, gali įjungti šią parinktį.\n"
 "Pastaba: kai įjungtas slaptas režimas, jūsų naudotojo profilių atsarginės kopijos nebus kuriamos „Orca Cloud“ debesyje."
 
+# AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Išjungia visas debesijos funkcijas, pavyzdžiui, „Bambu Cloud“. Naudotojai, kurie nori dirbti visiškai neprisijungę prie tinklo, gali įjungti šią parinktį."
+
 msgid "Hide login side panel"
 msgstr "Slėpti prisijungimo šoninį skydelį"
 
@@ -9712,6 +9716,10 @@ msgstr "Įjungti „Bambu Cloud“"
 
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Leisti prisijungti prie „Bambu Cloud“ kartu su „Orca Cloud“. Kai įjungta, pradžios puslapyje rodoma „Bambu“ prisijungimo skiltis."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Leisti prisijungti prie „Bambu Cloud“. Kai įjungta, pradžios puslapyje rodoma „Bambu“ prisijungimo skiltis."
 
 msgid "Update & sync"
 msgstr "Atnaujinimas ir sinchronizavimas"
@@ -22582,8 +22590,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Rezultatas"
 
 msgid "Flip direction"
 msgstr ""
@@ -24672,6 +24681,1386 @@ msgstr ""
 "Venkite deformacijų (warping)\n"
 "Ar žinojote, kad spausdinant medžiagas, kurios yra linkusios trauktis ir riestis (pvz., ABS), tinkamas kaitinamojo pagrindo temperatūros padidinimas gali sumažinti deformacijų (warping) tikimybę?"
 
+# AI Translated
+msgid "Retraction length"
+msgstr "Atitraukimo ilgis"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "Susitraukimas XY"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Susitraukimas Z"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Forca Slicer kalibravimo vedlys"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Uždaryti"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Aktyvi konfigūracija"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Spausdintuvas:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Purkštukas:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Kalibruojama gija:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Kalibravimas:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Srautas"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Susitraukimas"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Galutinis kontrolinis spaudinys (neprivaloma)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Maks. srautas"
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Galutinė patikra"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Temperatūros bokštelis spausdina tą pačią formą mažėjant purkštuko temperatūrai. Atspausdinę pasirinkite juostą su švariausiu paviršiumi, mažiausiu siūlelių kiekiu ir stipriausiu sluoksnių sukibimu."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Pradinė temp. (karšta):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Galinė temp. (vėsi):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Bokštelį jau atspausdinau - įvesti rezultatą"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Spausdinamas vienos sienelės bokštelis, kurio greitis didėja su aukščiu. Stebėkite, kur paviršius tampa šiurkštus arba sienelėms pradeda trūkti medžiagos. Išmatuokite paskutinės dar gerai atrodžiusios dalies aukštį (mm) -- rezultato puslapis šį aukštį perskaičiuos į jūsų maksimalų srautą."
+
+# AI Translated
+msgid "Start:"
+msgstr "Pradžia:"
+
+# AI Translated
+msgid "End:"
+msgstr "Pabaiga:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Žingsnis (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Metodas:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Klasikinis (grubus + tikslus praėjimas)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Rekomenduojamas + Perfekcionistas)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Šį praėjimą jau atspausdinau - įvesti rezultatą"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Spausdinamas Orca atitraukimo bokštelis; atitraukimo ilgis ties kiekvienu žiedu padidėja vienu žingsniu. Raskite žemiausią dalį, kurioje siūleliai išnyksta, suskaičiuokite žiedus po ja ir įveskite šį skaičių rezultato puslapyje, kad gautumėte atitraukimo ilgį. Naudokite trumpiausią ilgį be siūlelių."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Žingsnis (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Tiesioginė pavara: numatytasis 0-2 mm intervalas tinka daugumai gijų. Bowden: padidinkite Pabaigą (pavyzdžiui, iki 6)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Spausdinamas kvadratinis atviras rėmelis, kurio kraštinė %g mm, su %g mm aukščio stulpeliu viename kampe. Leiskite jam visiškai atvėsti (geriausia kelias valandas), tada išmatuokite slankmačiu: išorinį plotį išilgai X, išorinį plotį išilgai Y (matuokite virš pirmųjų sluoksnių, kad išvengtumėte dramblio pėdos) ir stulpelio aukštį. Rezultato puslapis tai perskaičiuos į gijos XY ir Z susitraukimo kompensaciją."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Rėmelį jau atspausdinau - įvesti matmenis"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Neprivaloma patikimumo patikra: spausdina Autodesk FDM Test (modelį, pateikiamą su Orca) su jūsų sukalibruotu gijos profiliu. Vienu spaudiniu patikrinamos iškyšos, tiltai, siūleliai, smulkios detalės ir matmenys. Iš jo niekas neišsaugoma -- jei kas nors atrodo ne taip, pakartokite tą kalibravimą iš sąrašo viršuje. Jūsų sukalibruotas profilis jau išsaugotas ir pasirinktas."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Kalibruoti kitą giją"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Pradėti kalibravimą"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Viršuje lauke \"Kalibruojama gija\" pasirinkite kalibruojamą giją -- arba esamą panašų profilį kaip atspirties tašką -- ir paspauskite Pradėti. Žingsniai vyksta tokia tvarka: Temperatūra, Didžiausias tūrinis greitis, Srautas, Pressure Advance, Atitraukimas ir Susitraukimas."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Pradėti kalibravimą"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Sluoksniuoti && siųsti į spausdintuvą"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Tik sugeneruoti (atspausdinsiu pats)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Sluoksniuoti & siųsti padeda testą ant plokštės, jį sluoksniuoja ir atidaro spausdintuvo siuntimo langą; jam užsidarius, rezultatą įvedate čia. Tik sugeneruoti padeda testą ant plokštės (matomas dešinėje), kad galėtumėte patys jį sluoksniuoti/eksportuoti; tada grįžkite čia įvesti rezultato."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Praleisti šį žingsnį"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Palikti dabartinę šio nustatymo reikšmę ir pereiti prie kito kalibravimo."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Kalibruoti ką nors kita"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Kalibruoti spausdintuvą arba kitą giją. Šios gijos pažanga išsaugoma."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "PA bokštelis (rekomenduojama)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Ekstruderis:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Tiesioginė pavara"
+
+# AI Translated
+msgid "Step:"
+msgstr "Žingsnis:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Pagreičiai (neprivaloma):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Greičiai (neprivaloma):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Šį testą jau atspausdinau - įvesti rezultatą"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Įvesti rezultatą"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Išmatuotas aukštis (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Rezultatas:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Išmatuotas X plotis (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Išmatuotas Y plotis (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Išmatuotas stulpelio aukštis (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Išsaugoti kaip profilį:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Pavadinkite profilį kaip norite -- pavyzdžiui, pagal giją, kurią iš tikrųjų kalibruojate, net jei pradėjote nuo kito profilio. Rezultatas įrašomas į tą profilį ir jis pasirenkamas; jei toks pavadinimas jau yra, profilis atnaujinamas. Jūsų pradinis profilis lieka nepakitęs."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Taikyti ir išsaugoti profilyje"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Galutinis kontrolinis spaudinys"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "srauto santykis %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "atitraukimas %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "XY susitraukimas %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "%s testas laukia (sugeneruotas %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Galutinis kontrolinis spaudinys sugeneruotas (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Paskutinis %s rezultatas: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s praleista (%s); dabartinė reikšmė paliekama."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Geriausia temperatūra (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Maks. srautas (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Geriausio bloko numeris:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "Geriausia PA reikšmė:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Atitraukimo ilgis (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Žiedų po ta dalimi:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "Slankmačio nereikia: kiekvienas bokštelio žiedas žymi vieną atitraukimo žingsnį. Raskite žemiausią dalį be siūlelių ir suskaičiuokite žiedus po ja (apatinė dalis, 0 žiedų, yra Pradžia):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nilgis = pradžia + žiedai x žingsnis = %g + žiedai x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Įveskite čia žiedų skaičių ir ilgis bus užpildytas už jus, arba įrašykite ilgį patys."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Išmatuokite aukštį (mm), kuriame kampai atrodo ryškiausi, tada:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = pradžia + žingsnis x aukštis = %g + %g x aukštis.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Įveskite čia tą aukštį ir PA reikšmė bus užpildyta už jus, arba įrašykite reikšmę patys."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "Pirmą kartą? Užsirašykite paskutinės gerai atrodžiusios dalies aukštį (mm), tada:\nmaks. srautas = pradžia + aukštis x žingsnis = %g + aukštis x %g.\nĮveskite čia tą aukštį ir maks. srautas bus užpildytas už jus, arba įrašykite srautą patys."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Įveskite reikšmę, atspausdintą šalia tolygiausio pločio linijos."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Įveskite reikšmę, atspausdintą virš rašto su ryškiausiais ir švariausiais kampais."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Įveskite tai, ką išmatavote. Palikite Z tuščią, kad liktų dabartinė Z reikšmė. Dabartinė kompensacija: XY %.2f%%, Z %.2f%% (jau pritaikyta šiam spaudiniui, todėl įskaičiuota)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "Spausdinamos linijos su didėjančiomis PA reikšmėmis, kiekviena pažymėta savo reikšme. Pasirinkite tolygiausio pločio liniją -- be sustorėjimo ten, kur keičiasi greitis (PA per maža), ir be suplonėjimo (per didelė) -- ir įveskite tos linijos reikšmę."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "Spausdinami įdėtiniai kampų raštai su didėjančiomis PA reikšmėmis, kiekvienas pažymėtas savo reikšme. Pasirinkite tą, kurio kampai ryškiausi ir švariausi -- be sustorėjimo (PA per maža) ir be suapvalėjimo ar tarpų (per didelė) -- ir įveskite jo reikšmę."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "Spausdinamas tuščiaviduris bokštelis, kurio PA padidėja vienu žingsniu kiekvienam aukščio mm. Raskite aukštį, kuriame kampai atrodo ryškiausi -- be sustorėjimo (PA per maža) ir be tarpų ar suapvalėjimo (per didelė) --, išmatuokite jį slankmačiu ir įveskite rezultato puslapyje, kad gautumėte PA reikšmę."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Įveskite tinkamą šios gijos temperatūros intervalą:\nNuo %d iki %d C, kai Pradžia bent 5 C aukščiau už Pabaigą."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Įveskite tinkamas reikšmes:\nPradžia > 0, Žingsnis > 0, Pabaiga > Pradžia + Žingsnis."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Įveskite tinkamas atitraukimo reikšmes:\nPradžia >= 0, Žingsnis > 0, Pabaiga > Pradžia + Žingsnis, Pabaiga <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Įveskite tinkamas PA reikšmes:\nPradžia >= 0, Žingsnis >= 0.001, Pabaiga > Pradžia + Žingsnis."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "Pagreičiai ir greičiai turi būti kableliais atskirti teigiami skaičiai arba palikti tušti."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "Sluoksniavimas nebaigtas, todėl niekas neišsiųsta. Ištaisykite klaidą ir bandykite dar kartą."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Susitraukimo testas"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Forca susitraukimo rėmelis"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Tai neprivaloma pakartotinė patikra po Pressure Advance."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Tai 1 praėjimas iš 2; toliau bus tikslus praėjimas."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Tai 2 praėjimas iš 2; tai paskutinis praėjimas."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Įveskite numerį po bloku su lygiausiu ir plokščiausiu viršumi. Neigiamas = mažiau srauto, teigiamas = daugiau srauto. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Naujas srautas: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Naujas srautas: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Naujas srautas: %.3f + numeris."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Naujas srautas: %.3f x (1 + numeris/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "Patikra po PA (Perfekcionisto praėjimas)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "Patikra po PA (tikslus praėjimas)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "1 praėjimas iš 2 (Rekomenduojamas)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "2 praėjimas iš 2 (Perfekcionistas)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "1 praėjimas iš 2 (grubus)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "2 praėjimas iš 2 (tikslus)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "Orca YOLO testas spausdina blokų eilę, kiekvienas pažymėtas nedideliu srauto poslinkiu, pvz., -0.02 arba +0.01. Pasirinkite bloką su lygiausiu ir plokščiausiu viršumi -- nei išsipūtusiu (per didelis srautas), nei su tarpais (per mažas) -- ir įveskite jo numerį tiksliai taip, kaip atspausdinta. Paprastai užtenka Rekomenduojamo praėjimo; Perfekcionisto praėjimas jį patikslina mažesniais žingsniais."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Spausdinama blokų eilė, kiekvienas su šiek tiek kitokiu srauto santykiu ir pažymėtas numeriu. Apžiūrėkite viršutinius paviršius ir pasirinkite bloką su lygiausiu ir plokščiausiu viršumi -- nei išsipūtusiu (per didelis srautas), nei su tarpais (per mažas). Įvesite to bloko numerį. Srautas kalibruojamas dviem praėjimais: grubiu, o tada tiksliu aplink jūsų pirmąjį rezultatą."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Įveskite šios gijos temperatūrą nuo %d iki %d C."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Įveskite didžiausią tūrinį greitį nuo %.1f iki %.1f mm3/s."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Įveskite geriausio bloko numerį, nuo -%g iki %g."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Šis bloko numeris nustatytų srauto santykį %.3f, už saugaus intervalo %.2f-%.2f ribų. Patikrinkite numerį dar kartą."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Įveskite Pressure Advance reikšmę nuo %.2f iki %.2f."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Įveskite atitraukimo ilgį nuo 0 iki %g mm."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Įveskite išmatuotus X ir Y pločius (apie %g mm) ir, jei norite, stulpelio aukštį (apie %g mm)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Šie matmenys duoda XY %.2f%% / Z %.2f%%, už tikėtino intervalo %g-%g%% ribų. Patikrinkite juos dar kartą."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Įveskite profilio pavadinimą."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "Nepavyko išsaugoti profilio."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Toliau: Didžiausias tūrinis greitis."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Toliau: Srautas."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Srauto patikra išsaugota. Toliau: Atitraukimas."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "1 praėjimas išsaugotas. Toliau: Srautas, 2 praėjimas."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Srautas baigtas. Toliau: Pressure Advance."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Toliau: Susitraukimas."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Kalibravimai baigti. Jei norite, atspausdinkite galutinę patikrą, kad patvirtintumėte visą profilį."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s išsaugota gijos profilyje:\n%s\n\nDabar jis pasirinktas."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Neprivaloma: Pressure Advance derinimas gali pakeisti srauto išvaizdą. Atlikti dabar vieną tikslų Srauto praėjimą patikrai?\n\nTaip = patikrinti srautą, tada Atitraukimas.\nNe = iškart pereiti prie Atitraukimo."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "Nėra prieinamo profilių rinkinio."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "Gijos profilis '%s' nerastas."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "Pavadinimas negali sutapti su sisteminio profilio pavadinimu."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Profilis tokiu pavadinimu jau yra."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "Nepavyko sukurti naujo profilio."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(Šio spausdintuvo kalibravimas baigtas.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(Šio spausdintuvo kalibravimas vyksta: %d iš %d žingsnių.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "Ką kalibruojate?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Mano spausdintuvas -- Įvesties formavimas, Posūkiai ir VFA pasirinktam spausdintuvui, vieną kartą kiekvienam spausdintuvui ir purkštukui. Atlikite tai pirmiausia: tai keičia, kaip spausdinami gijos testai."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Gija -- Temperatūra, Didžiausias tūrinis greitis, Srautas, Pressure Advance, Atitraukimas ir Susitraukimas, viskas išsaugoma VIENAME gijos profilyje, kurį pavadinate pirmajame žingsnyje."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Kiekvienas testas atsiranda ant plokštės dešinėje, o virš jos esanti pažangos juosta ir lentelė „prieš/po“ pildosi eigoje. Sluoksniuoti & siųsti į spausdintuvą sluoksniuoja testą ir atidaro įprastą spausdintuvo siuntimo langą; Tik sugeneruoti padeda jį ant plokštės, kad galėtumėte patys jį sluoksniuoti ar eksportuoti (pavyzdžiui, į SD kortelę). Bet kuriuo atveju grįžkite čia įvesti rezultato. Bet kada galite pereiti į kitus skirtukus; šis skirtukas tęs nuo ten, kur baigėte."
+
+# AI Translated
+msgid "My printer"
+msgstr "Mano spausdintuvas"
+
+# AI Translated
+msgid "A filament"
+msgstr "Gija"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Ši gija jau turi baigtą kalibravimą -- rezultatai rodomi dešinėje. Viršuje pasirinkite kitą giją, kad sukalibruotumėte naują, arba paspauskite Pradėti, kad šią kalibruotumėte iš naujo."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Šios gijos kalibravimas vyksta (atlikta %d%%). Pradėti tęs nuo ten, kur sustota."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "Praleisti %s? Dabartinė reikšmė paliekama, ir bet kada galite prie to grįžti spustelėję pažangos juostoje arba pasirinkę viršuje."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "Spausdintuvas arba purkštukas pasikeitė į %s (%s mm) nuo tada, kai ši serija prasidėjo su %s (%s mm). Nauji rezultatai pradės atskirą seriją šiam spausdintuvui."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "Aktyvi gija kitame skirtuke pasikeitė į %s, bet ši serija kalibruoja %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Grįžti prie %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Pressure adv."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Srauto patikra"
+
+# AI Translated
+msgid "printer default"
+msgstr "spausdintuvo numatytoji"
+
+# AI Translated
+msgid "skipped"
+msgstr "praleista"
+
+# AI Translated
+msgid "testing..."
+msgstr "testuojama..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Išsaugoti suvestinės vaizdą"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Išsaugoti šią „prieš/po“ suvestinę kaip PNG vaizdą."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Kalibruoti giją"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Spausdintuvo kalibravimas baigtas"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Kalibruojamas spausdintuvas"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Kalibravimas baigtas"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Praleista"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "1 praėjimas iš 2 atliktas"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Testas spausdinamas"
+
+# AI Translated
+msgid "Not started"
+msgstr "Nepradėta"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "spustelėkite, kad atidarytumėte šį žingsnį"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Neprivaloma:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Nustatymas"
+
+# AI Translated
+msgid "Before"
+msgstr "Prieš"
+
+# AI Translated
+msgid "After"
+msgstr "Po"
+
+# AI Translated
+msgid "Change"
+msgstr "Pokytis"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Praleista %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Testas sugeneruotas %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Išmatuota %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Forca Slicer kalibravimo vedlys - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Išsaugoti kalibravimo suvestinę"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "Nepavyko išsaugoti vaizdo."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Spausdintuvo kalibravimas"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Šie kalibravimai derina patį spausdintuvą, vieną kartą kiekvienam spausdintuvui ir purkštukui. Atlikite juos prieš kalibruodami gijas: jie keičia, kaip spausdinami gijos testai. Tvarka: Įvesties formavimas (dažnis, tada slopinimas), Posūkiai, VFA. Žingsniai, kurių jūsų spausdintuvas negali naudoti, praleidžiami."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Shaper dažnis"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Shaper slopinimas"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Atkurti šio spausdintuvo atsarginę kopiją"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Grąžinti spausdintuvo nustatymus, kuriuos šis spausdintuvo profilis turėjo, kol vedlys jo pirmą kartą nepakeitė."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Jau atspausdinau - įvesti rezultatą"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Palikti dabartinį spausdintuvo nustatymą ir pereiti prie kito kalibravimo."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Įvesties formavimas - dažnis"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "Orca bangavimo bokštelis didina input shaper dažnį su aukščiu (X ir Y gali turėti savo intervalus). Atspausdinę X ir Y sienelėse raskite aukštį, kuriame bangavimas (ringing) -- aidas po kampų ir raidžių -- silpniausias. Rezultato puslapis kiekvieną aukštį perskaičiuoja į dažnį."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Testo modelis:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X pradžia (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X pabaiga:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y pradžia (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y pabaiga:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Slopinimas testo metu:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Įvesties formavimas - slopinimas"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Nustačius dažnius, šis bokštelis didina slopinimo koeficientą su aukščiu. Raskite aukštį, kuriame bangavimas silpniausias; rezultato puslapis jį perskaičiuoja į slopinimo koeficientą. Toliau nurodyti dažniai paimti iš dažnio žingsnio."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "Dažnis X (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Slopinimo pradžia:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Šis bokštelis didina greitį kampuose (trūktelėjimą, sujungimo nuokrypį arba Klipper square corner velocity) su aukščiu. Aukščiau yra greičiau, bet kampai apvalėja ir dreba. Raskite aukščiausią tašką, kuriame kampai dar ryškūs ir švarūs; rezultato puslapis tą aukštį perskaičiuoja į reikšmę."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (smulkūs vertikalūs artefaktai)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Šis bokštelis blokas po bloko didina išorinės sienelės greitį. Esant tam tikriems greičiams, dėl variklių ir diržų rezonanso atsiranda smulkūs vertikalūs rumbeliai (VFA). Užsirašykite blokus, kuriuose juos matote (skaičiuojant nuo apačios, pirmas blokas yra 1); rezultato puslapis pasakys, nuo kokių greičių laikyti sieneles atokiau. Pabaigą laikykite ribose, kurias jūsų gija gali išspausti."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Pradžia (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Geriausias aukštis, X sienelė (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Geriausias aukštis, Y sienelė (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Dažnis Y (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Geriausias aukštis (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Reikšmė:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Blokai su rumbeliais (pvz., 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Leisti Forca nustatyti įvesties formavimą kiekvieno spausdinimo pradžioje"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Įrašo shaper nustatymus į G-kodą (Orca \"Išvesti input shaping\"), pakeisdamas tai, kas išsaugota spausdintuvo programinėje įrangoje. Palikite išjungtą, jei juos laikote programinėje įrangoje (pavyzdžiui, Klipper printer.cfg)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper šias reikšmes laiko printer.cfg. Pridėkite arba atnaujinkite ten šias eilutes, tada paleiskite Klipper iš naujo:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Atnaujinti šį spausdintuvo profilį (senos reikšmės išsaugomos atsarginėje kopijoje)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Išsaugoti kaip naują spausdintuvo profilį:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Bambu Lab spausdintuvai patys derina vibracijų kompensavimą (įvesties formavimą), todėl čia nėra ką kalibruoti."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca nenustato įvesties formavimo šio spausdintuvo G-kodo tipui."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Bambu Lab spausdintuvai posūkius (trūktelėjimą) valdo savo programinėje įrangoje."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Mažesnės reikšmės duoda ryškesnius kampus, bet lėtesnį spausdinimą."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Marlin sujungimo nuokrypis (mm), nes šiame spausdintuvo profilyje jis nustatytas."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: testuojama kaip square corner velocity (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: trūktelėjimas mm/s (Orca prireikus jį perskaičiuoja)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Klasikinis trūktelėjimas (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Šis žingsnis netaikomas pasirinktam spausdintuvui: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Žingsnis: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: testas sugeneruotas %s - atspausdinkite jį, tada įveskite rezultatą."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s praleista (%s); spausdintuvo nustatymas paliekamas."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: paskutinis rezultatas išsaugotas %s."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Įveskite skaičius dažnių intervalui ir slopinimui."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Įveskite tinkamus dažnius: 0 <= pradžia < pabaiga <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Įveskite slopinimo koeficientą nuo 0 iki 1 (neįskaitant 1)."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Įveskite skaičius dažniams ir slopinimo intervalui."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Įveskite tinkamus dažnius: 0 < dažnis <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Įveskite tinkamą slopinimo intervalą: 0 <= pradžia < pabaiga <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Įveskite skaičius pradžiai ir pabaigai."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Įveskite tinkamą intervalą: 0 <= pradžia < pabaiga <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Didelės reikšmės (virš %s) gali sukelti sluoksnių poslinkius. Tęsti?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Įveskite skaičius pradžiai, pabaigai ir žingsniui."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Įveskite tinkamus greičius: pradžia virš 10, žingsnis virš 0, pabaiga bent pradžia + žingsnis."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Įvesti rezultatą: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Matuokite nuo pagrindo iki vietos, kur bangavimas kiekvienoje sienelėje silpniausias (X sienelė: ta, kurios bangavimą sukelia judėjimas X ašimi)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\ndažnis = pradžia + aukštis / %.1f mm x (pabaiga - pradžia)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Slopinimo koeficientas:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Sujungimo nuokrypis (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Trūktelėjimas (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Matuokite nuo pagrindo iki vietos, kur bangavimas silpniausias."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Matuokite nuo pagrindo iki aukščiausio taško, kuriame kampai dar ryškūs ir švarūs."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\nreikšmė = %s + aukštis / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Įveskite blokų, kuriuose matote smulkius vertikalius rumbelius, numerius (apatinis blokas yra 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\ngreitis = %s + (blokas - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Jūsų testo bokštelio aukštis čia nežinomas, todėl įrašykite pačią reikšmę.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Tai sisteminis spausdintuvo profilis, kurio pakeisti negalima; rezultatas įrašomas į naują profilį."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Šis profilis jau yra vedlio sukurta sukalibruota kopija."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Kopija pridedama prie kiekvieno tinklo spausdintuvo, kuris naudoja šį profilį."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Greičiai su rumbeliais: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "Spausdintuvo profilis nerastas."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Įveskite naujo spausdintuvo profilio pavadinimą."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Sisteminio spausdintuvo profilio pakeisti negalima; išsaugokite rezultatą kaip naują profilį."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "Nepavyko išsaugoti spausdintuvo profilio."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Įveskite dažnius (virš 0, iki 500 Hz)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Įveskite slopinimo koeficientą (nuo 0 iki 1, neįskaitant 1)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Slopinimo koeficientas %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Įveskite reikšmę virš 0, ne daugiau kaip %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Sujungimo nuokrypis %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Trūktelėjimas %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "Rumbelių nematyti - vengtinų greičių nėra."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Įveskite blokų numerius (1 = apatinis blokas), pvz., 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "Proceso profilyje laikykite išorinės sienelės (ir kitų matomų sienelių) greitį bent vienu žingsniu atokiau nuo šių."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "Nepavyko išsaugoti spausdintuvo profilio."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Išsaugota: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Įrašyta į spausdintuvo profilį:\n%s\n\nDabar jis pasirinktas."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "Spausdintuvo profilis nepakeistas (šį nustatymą valdo programinė įranga)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: nepamirškite įrašyti rezultato puslapyje rodomų printer.cfg eilučių į printer.cfg."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Spausdintuvo kalibravimas baigtas. Toliau: sukalibruokite savo gijas (atsakykite \"Gija\", kai vedlys paklaus, ką kalibruojate)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Toliau: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "Praleisti %s? Spausdintuvas pasilieka dabartinį nustatymą, ir bet kada galite prie to grįžti per pažangos juostą."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "Grąžinti spausdintuvo nustatymus, kuriuos \"%s\" turėjo, kol vedlys jo pirmą kartą nepakeitė (%s)? Vedlio spausdintuvo rezultatai jam bus išvalyti."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Atkurti atsarginę kopiją"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "Nepavyko atkurti spausdintuvo profilio."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "Spausdintuvo profilis vėl turi ankstesnius nustatymus."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Spausdintuvo kalibravimas - purkštukas %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Shaper dažn."
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Shaper tipas"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Shaper dažnis X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Shaper dažnis Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Slopinimo koeficientas"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Sujungimo nuokrypis (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Vengtini VFA greičiai (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "nėra"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Kalibravimo vedlys"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Vedamas spausdintuvo ir gijos kalibravimas"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Pranešti apie klaidą arba pasiūlyti funkciją"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Atidaryti Forca Slicer pranešimų formas GitHub svetainėje"
+
+# AI Translated
+msgid "Connected"
+msgstr "Prisijungta"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Siūleliai"
+
+# AI Translated
+msgid "Warping"
+msgstr "Deformacija"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Sluoksnio poslinkis"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Spagečiai"
+
+# AI Translated
+msgid "Supports"
+msgstr "Atramos"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Per mažas išspaudimas"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Per didelis išspaudimas"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Sluoksnių atsiskyrimas"
+
+# AI Translated
+msgid "Partial"
+msgstr "Iš dalies"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Spaudinių žurnalas"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "Spaudinių žurnalas išjungtas, todėl Forca neįrašo siunčiamų spaudinių. Įjunkite jį, kad kiekvienas spaudinys būtų įrašytas Forca Academy aplanke (nustatymuose galite vėl išjungti)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Įjungti"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Atidaryti aplanką"
+
+# AI Translated
+msgid "Date"
+msgstr "Data"
+
+# AI Translated
+msgid "Print"
+msgstr "Spaudinys"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Neįrašyta"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Kas nepavyko (neprivaloma)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Pridėti nuotraukų"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Nukopijuoti šio spaudinio nuotraukas ar vaizdo įrašus į jo aplanką. Juos taip pat galite nutempti ant šio lango."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Atidaryti spaudinio aplanką"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Nuotraukos ir vaizdo įrašai"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Pridėti spaudinį"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Įrašyti plokštę tokią, kokia yra dabar, kaip spaudinį -- spaudiniams, kurių Forca nesiuntė, pvz., paleistiems iš SD kortelės."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Aplankas:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Dar nėra įrašytų spaudinių"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "Gija %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Numatomas laikas: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Nuotraukos: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Pirmiausia pasirinkite spaudinį sąraše, tada pridėkite jo nuotraukas."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Vesti spaudinių žurnalą"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Įrašo kiekvieną Forca siunčiamą spaudinį -- spausdintuvą, profilius, gijas, pakeistus nustatymus, įvertinimus ir plokštės vaizdą -- Forca Academy aplanke, kad jūs ir bet kuris DI galėtumėte peržiūrėti, kas pavyko. Spaudinius iš SD kortelės galima pridėti rankiniu būdu. Niekas neįkeliama."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Forca Academy aplankas"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Kur laikomas spaudinių žurnalas: paprasti Markdown ir JSON failai. DI pradeda nuo AGENTS.md."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Pasirinkti Forca Academy aplanką"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Atidaryti Forca Academy aplanką (prireikus sukuriant jį su pradiniais failais)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Jūsų įrašyti spaudiniai: pridėkite rezultatą, pastabas ir nuotraukas"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Baigus spausdinimą daryti kameros nuotrauką"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Bambu spausdintuvams su kamera, kurią Forca pasiekia vietiniame tinkle: kai įrašytas spaudinys baigiamas arba nepavyksta, rezultato nuotrauka išsaugoma spaudinio camera aplanke."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Kameros nuotraukos spausdinant"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Kas kiek minučių Forca išsaugo vykdomo įrašyto spaudinio kameros nuotrauką, kad būtų galima atsekti nesėkmę (0 = išjungta). Tik Bambu spausdintuvai. Jų kamera leidžia vieną žiūrovą, todėl nuotrauka gali būti praleista, kol žiūri kita programa."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "Spausdintuvas pranešė: baigta"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "Spausdintuvas pranešė: nepavyko"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "Spausdintuvas pranešė: sustabdyta"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "Spausdintuvas pranešė: baigta (nestebėta)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(%d min po išsiuntimo)"
+
 #~ msgid "Tab"
 #~ msgstr "Tab"
 
@@ -25018,9 +26407,6 @@ msgstr ""
 #~ "Sulygiuoja užpildo, tiltelių, lyginimo ir paviršiaus užpildymo kryptis pagal modelio orientaciją ant pagrindo.\n"
 #~ "Kai įjungta, kryptys sukasi kartu su modeliu, kad būtų išlaikytos optimalios tvirtumo charakteristikos."
 
-#~ msgid "Print"
-#~ msgstr "Spausdinti"
-
 #~ msgid "in"
 #~ msgstr "col."
 
@@ -25327,9 +26713,6 @@ msgstr ""
 
 #~ msgid "Bed Type"
 #~ msgstr "Pagrindo tipas"
-
-#~ msgid "Start calibration"
-#~ msgstr "Pradėti kalibravimą"
 
 #~ msgid "Last Step"
 #~ msgstr "Atgal"

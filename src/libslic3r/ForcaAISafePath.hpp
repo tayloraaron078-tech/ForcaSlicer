@@ -28,6 +28,12 @@ bool path_is_free(const boost::filesystem::path& path);
 boost::filesystem::path new_path(const boost::filesystem::path& dir, const std::string& stem, const std::string& ext,
                                  const std::string& date, int max_tries = 10000);
 
+// The Advanced control level (HQ PLAN_forca_ai.md §10a) lets the AI overwrite the user's files, but Forca copies each
+// one first: to "<backup_root>/<date>/<file name>" ("<stem> 2<ext>", " 3", ... when that is taken). Only a regular file
+// is copied. Returns the copy's path, or empty + `err` -- then the file must not be overwritten.
+boost::filesystem::path backup_copy(const boost::filesystem::path& file, const boost::filesystem::path& backup_root,
+                                    const std::string& date, std::string& err, int max_tries = 10000);
+
 // The ledger of files the AI wrote (a JSON file): the AI may overwrite a file only when the ledger lists it and its
 // content is unchanged since the AI's last write -- once the user edits it, it is theirs.
 class Ledger

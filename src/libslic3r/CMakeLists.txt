@@ -146,6 +146,8 @@ set(lisbslic3r_sources
     FileParserError.hpp
     ForcaAISafePath.cpp
     ForcaAISafePath.hpp
+    ForcaCalibModel.cpp
+    ForcaCalibModel.hpp
     ForcaPresetMerge.cpp
     ForcaPresetMerge.hpp
     Fill/Fill3DHoneycomb.cpp

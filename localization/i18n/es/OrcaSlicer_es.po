@@ -9422,6 +9422,10 @@ msgstr ""
 "Esto desactiva todas las funciones en la nube, incluida la sincronización de perfiles con Orca Cloud. Los usuarios que prefieran trabajar totalmente sin conexión pueden activar esta opción.\n"
 "Nota: Cuando el modo sigiloso está activado, no se realizará ninguna copia de seguridad de tus perfiles de usuario en Orca Cloud."
 
+# AI Translated
+msgid "This disables all cloud features, such as Bambu Cloud. Users who prefer to work entirely offline can enable this option."
+msgstr "Esto desactiva todas las funciones en la nube, como Bambu Cloud. Los usuarios que prefieran trabajar totalmente sin conexión pueden activar esta opción."
+
 msgid "Hide login side panel"
 msgstr "Ocultar el panel lateral de inicio de sesión"
 
@@ -9442,6 +9446,10 @@ msgstr "Habilitar Bambu Cloud"
 
 msgid "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."
 msgstr "Permite iniciar sesión en Bambu Cloud junto con Orca Cloud. Cuando se activa esta opción, aparece un apartado de inicio de sesión de Bambu en la página de inicio."
+
+# AI Translated
+msgid "Allow logging into Bambu Cloud. When enabled, a Bambu login section appears on the homepage."
+msgstr "Permite iniciar sesión en Bambu Cloud. Cuando se activa esta opción, aparece un apartado de inicio de sesión de Bambu en la página de inicio."
 
 msgid "Update & sync"
 msgstr "Actualizar y sincronizar"
@@ -22090,8 +22098,9 @@ msgstr ""
 msgid "Intersect"
 msgstr ""
 
+# AI Translated
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 msgid "Flip direction"
 msgstr ""
@@ -24174,6 +24183,1386 @@ msgstr ""
 "Evita la deformación\n"
 "¿Sabías que al imprimir materiales propensos a la deformación como el ABS, aumentar adecuadamente la temperatura de la cama térmica puede reducir la probabilidad de deformaciones?"
 
+# AI Translated
+msgid "Retraction length"
+msgstr "Longitud de retracción"
+
+# AI Translated
+msgid "Shrinkage XY"
+msgstr "Contracción XY"
+
+# AI Translated
+msgid "Shrinkage Z"
+msgstr "Contracción Z"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard"
+msgstr "Asistente de calibración de Forca Slicer"
+
+# AI Translated
+msgid "Dismiss"
+msgstr "Descartar"
+
+# AI Translated
+msgid "Active configuration"
+msgstr "Configuración activa"
+
+# AI Translated
+msgid "Printer:"
+msgstr "Impresora:"
+
+# AI Translated
+msgid "Nozzle:"
+msgstr "Boquilla:"
+
+# AI Translated
+msgid "Filament to calibrate:"
+msgstr "Filamento a calibrar:"
+
+# AI Translated
+msgid "Calibration:"
+msgstr "Calibración:"
+
+# AI Translated
+msgid "Flow Rate"
+msgstr "Flujo"
+
+# AI Translated
+msgid "Shrinkage"
+msgstr "Contracción"
+
+# AI Translated
+msgid "Final check print (optional)"
+msgstr "Impresión de comprobación final (opcional)"
+
+# AI Translated
+msgid "Max flow"
+msgstr "Flujo máx."
+
+# AI Translated
+msgid "PA"
+msgstr "PA"
+
+# AI Translated
+msgid "Final check"
+msgstr "Comprobación final"
+
+# AI Translated
+msgid "A temperature tower prints the same shape at descending nozzle temperatures. After it prints, choose the band with the cleanest surface, least stringing and strongest layer bonding."
+msgstr "Una torre de temperatura imprime la misma forma a temperaturas de boquilla descendentes. Cuando termine, elija la franja con la superficie más limpia, menos hilos y la mejor unión entre capas."
+
+# AI Translated
+msgid "Start temp (hot):"
+msgstr "Temp. inicial (caliente):"
+
+# AI Translated
+msgid "End temp (cool):"
+msgstr "Temp. final (fría):"
+
+# AI Translated
+msgid "I have already printed a tower - enter result"
+msgstr "Ya he impreso una torre - introducir resultado"
+
+# AI Translated
+msgid "This prints a single-wall tower whose speed rises with height. Watch for where the surface turns rough or the walls start under-extruding. Measure the height (mm) of the last section that still looked good -- the result page turns that height into your max flow for you."
+msgstr "Esto imprime una torre de pared simple cuya velocidad aumenta con la altura. Observe dónde la superficie se vuelve rugosa o las paredes empiezan a quedarse sin material. Mida la altura (mm) de la última sección que aún se veía bien -- la página de resultados convierte esa altura en su flujo máximo."
+
+# AI Translated
+msgid "Start:"
+msgstr "Inicio:"
+
+# AI Translated
+msgid "End:"
+msgstr "Fin:"
+
+# AI Translated
+msgid "Step (mm3/s):"
+msgstr "Paso (mm3/s):"
+
+# AI Translated
+msgid "Method:"
+msgstr "Método:"
+
+# AI Translated
+msgid "Classic (coarse + fine pass)"
+msgstr "Clásico (pasada gruesa + fina)"
+
+# AI Translated
+msgid "YOLO (Recommended + Perfectionist)"
+msgstr "YOLO (Recomendado + Perfeccionista)"
+
+# AI Translated
+msgid "I have already printed this pass - enter result"
+msgstr "Ya he impreso esta pasada - introducir resultado"
+
+# AI Translated
+msgid "This prints Orca's retraction tower; the retraction length grows by one step at each ring. Find the lowest section where the stringing stops, count the rings below it, and enter that count on the result page to get the retraction length. Use the shortest length that is string-free."
+msgstr "Esto imprime la torre de retracción de Orca; la longitud de retracción aumenta un paso en cada anillo. Busque la sección más baja en la que desaparecen los hilos, cuente los anillos que hay debajo e introduzca ese número en la página de resultados para obtener la longitud de retracción. Use la longitud más corta sin hilos."
+
+# AI Translated
+msgid "Step (mm):"
+msgstr "Paso (mm):"
+
+# AI Translated
+msgid "Direct drive: the default 0-2 mm range fits most filaments. Bowden: raise End (for example to 6)."
+msgstr "Extrusor directo: el rango predeterminado de 0-2 mm sirve para la mayoría de filamentos. Bowden: aumente Fin (por ejemplo a 6)."
+
+# AI Translated
+msgid "This prints a square open frame %g mm across with a %g mm tall post in one corner. Let it cool fully (ideally a few hours), then measure with calipers: the outer width along X, the outer width along Y (measure above the first few layers to skip any elephant's foot), and the post height. The result page turns those into the filament's XY and Z shrinkage compensation."
+msgstr "Esto imprime un marco cuadrado abierto de %g mm de lado con un poste de %g mm de alto en una esquina. Déjelo enfriar por completo (idealmente unas horas) y mida con un calibre: el ancho exterior en X, el ancho exterior en Y (mida por encima de las primeras capas para evitar la pata de elefante) y la altura del poste. La página de resultados convierte esas medidas en la compensación de contracción XY y Z del filamento."
+
+# AI Translated
+msgid "I have already printed the frame - enter measurements"
+msgstr "Ya he impreso el marco - introducir medidas"
+
+# AI Translated
+msgid "An optional confidence check: prints the Autodesk FDM Test (Orca's bundled model) with your calibrated filament preset. It exercises overhangs, bridges, stringing, small features and dimensions in one print. Nothing is saved from it -- if something looks off, re-run that calibration from the picker above. Your calibrated preset is already saved and selected."
+msgstr "Una comprobación opcional de confianza: imprime el Autodesk FDM Test (el modelo incluido en Orca) con su perfil de filamento calibrado. Pone a prueba voladizos, puentes, hilos, detalles pequeños y dimensiones en una sola impresión. No se guarda nada de ella -- si algo no se ve bien, repita esa calibración desde el selector de arriba. Su perfil calibrado ya está guardado y seleccionado."
+
+# AI Translated
+msgid "Calibrate another filament"
+msgstr "Calibrar otro filamento"
+
+# AI Translated
+msgid "Start a calibration"
+msgstr "Iniciar una calibración"
+
+# AI Translated
+msgid "Pick the filament you are calibrating in \"Filament to calibrate\" above -- or an existing profile close to it to start from -- then press Start. The steps run in order: Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage."
+msgstr "Elija el filamento que está calibrando en \"Filamento a calibrar\" arriba -- o un perfil existente parecido como punto de partida -- y pulse Iniciar. Los pasos se ejecutan en este orden: Temperatura, Velocidad Volumétrica Máxima, Flujo, Pressure Advance, Retracción y Contracción."
+
+# AI Translated
+msgid "Start calibration"
+msgstr "Iniciar calibración"
+
+# AI Translated
+msgid "Slice && send to printer"
+msgstr "Laminar && enviar a la impresora"
+
+# AI Translated
+msgid "Generate only (I will print it myself)"
+msgstr "Solo generar (lo imprimo yo)"
+
+# AI Translated
+msgid "Slice & send puts the test on the plate, slices it and opens your printer's send dialog; when it closes you enter your result here. Generate only puts the test on the plate (shown on the right) so you can slice/export it yourself, then come back here to enter your result."
+msgstr "Laminar & enviar coloca la prueba en la cama, la lamina y abre el diálogo de envío de su impresora; cuando se cierra, introduce aquí su resultado. Solo generar coloca la prueba en la cama (se ve a la derecha) para que la lamine/exporte usted mismo; después vuelva aquí para introducir su resultado."
+
+# AI Translated
+msgid "Skip this step"
+msgstr "Omitir este paso"
+
+# AI Translated
+msgid "Keep your current value for this setting and move on to the next calibration."
+msgstr "Mantener su valor actual para este ajuste y pasar a la siguiente calibración."
+
+# AI Translated
+msgid "Calibrate something else"
+msgstr "Calibrar otra cosa"
+
+# AI Translated
+msgid "Calibrate your printer or a different filament. This filament's progress is kept."
+msgstr "Calibrar su impresora u otro filamento. El progreso de este filamento se conserva."
+
+# AI Translated
+msgid "PA Tower (recommended)"
+msgstr "Torre PA (recomendado)"
+
+# AI Translated
+msgid "Extruder:"
+msgstr "Extrusor:"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Extrusor directo"
+
+# AI Translated
+msgid "Step:"
+msgstr "Paso:"
+
+# AI Translated
+msgid "Accelerations (optional):"
+msgstr "Aceleraciones (opcional):"
+
+# AI Translated
+msgid "Speeds (optional):"
+msgstr "Velocidades (opcional):"
+
+# AI Translated
+msgid "I have already printed this test - enter result"
+msgstr "Ya he impreso esta prueba - introducir resultado"
+
+# AI Translated
+msgid "Enter result"
+msgstr "Introducir resultado"
+
+# AI Translated
+msgid "Measured height (mm):"
+msgstr "Altura medida (mm):"
+
+# AI Translated
+msgid "Result:"
+msgstr "Resultado:"
+
+# AI Translated
+msgid "Measured X width (%g mm):"
+msgstr "Ancho X medido (%g mm):"
+
+# AI Translated
+msgid "Measured Y width (%g mm):"
+msgstr "Ancho Y medido (%g mm):"
+
+# AI Translated
+msgid "Measured post height (%g mm):"
+msgstr "Altura del poste medida (%g mm):"
+
+# AI Translated
+msgid "Save as preset:"
+msgstr "Guardar como perfil:"
+
+# AI Translated
+msgid "Name the preset whatever you like -- for example the actual filament you are calibrating, even if you started from a different profile. The result is written into that preset and it is selected; if the name already exists it is updated in place. Your starting preset is left unchanged."
+msgstr "Ponga al perfil el nombre que quiera -- por ejemplo el del filamento que realmente está calibrando, aunque haya partido de otro perfil. El resultado se escribe en ese perfil y queda seleccionado; si el nombre ya existe, se actualiza. Su perfil de partida no cambia."
+
+# AI Translated
+msgid "Apply and save to preset"
+msgstr "Aplicar y guardar en el perfil"
+
+# AI Translated
+msgid "Final check print"
+msgstr "Impresión de comprobación final"
+
+# AI Translated
+msgid "flow ratio %.3f"
+msgstr "factor de flujo %.3f"
+
+# AI Translated
+msgid "PA %.3f"
+msgstr "PA %.3f"
+
+# AI Translated
+msgid "retraction %.2f mm"
+msgstr "retracción %.2f mm"
+
+# AI Translated
+msgid "XY shrinkage %.2f%%"
+msgstr "contracción XY %.2f%%"
+
+# AI Translated
+msgid "%s test pending (generated %s)."
+msgstr "Prueba de %s pendiente (generada %s)."
+
+# AI Translated
+msgid "Final check print generated (%s)."
+msgstr "Impresión de comprobación final generada (%s)."
+
+# AI Translated
+msgid "Last %s result: %s (%s)."
+msgstr "Último resultado de %s: %s (%s)."
+
+# AI Translated
+msgid "%s was skipped (%s); your current value is kept."
+msgstr "%s se omitió (%s); se mantiene su valor actual."
+
+# AI Translated
+msgid "Best temperature (C):"
+msgstr "Mejor temperatura (C):"
+
+# AI Translated
+msgid "Max flow (mm3/s):"
+msgstr "Flujo máx. (mm3/s):"
+
+# AI Translated
+msgid "Best block number:"
+msgstr "Mejor número de bloque:"
+
+# AI Translated
+msgid "Best PA value:"
+msgstr "Mejor valor de PA:"
+
+# AI Translated
+msgid "Retraction length (mm):"
+msgstr "Longitud de retracción (mm):"
+
+# AI Translated
+msgid "Rings below that section:"
+msgstr "Anillos debajo de esa sección:"
+
+# AI Translated
+msgid "No calipers needed: each ring on the tower marks one retraction step. Find the lowest string-free section and count the rings below it (the bottom section, 0 rings, is Start):"
+msgstr "No hace falta calibre: cada anillo de la torre marca un paso de retracción. Busque la sección sin hilos más baja y cuente los anillos que hay debajo (la sección inferior, 0 anillos, es Inicio):"
+
+# AI Translated
+msgid "\nlength = start + rings x step = %g + rings x %g.\n"
+msgstr "\nlongitud = inicio + anillos x paso = %g + anillos x %g.\n"
+
+# AI Translated
+msgid "Enter the ring count here and the length is filled in for you, or type the length yourself."
+msgstr "Introduzca aquí el número de anillos y la longitud se rellena sola, o escriba la longitud usted mismo."
+
+# AI Translated
+msgid "Measure the height (mm) where the corners look sharpest, then:"
+msgstr "Mida la altura (mm) donde las esquinas se ven más nítidas y luego:"
+
+# AI Translated
+msgid "\nPA = start + step x height = %g + %g x height.\n"
+msgstr "\nPA = inicio + paso x altura = %g + %g x altura.\n"
+
+# AI Translated
+msgid "Enter that height here and the PA value is filled in for you, or type the value yourself."
+msgstr "Introduzca aquí esa altura y el valor de PA se rellena solo, o escriba el valor usted mismo."
+
+# AI Translated
+msgid "New to this? Note the height (mm) of the last good-looking section, then:\nmax flow = start + height x step = %g + height x %g.\nEnter that height here and the Max flow is filled in for you, or type the flow yourself."
+msgstr "¿Es nuevo en esto? Anote la altura (mm) de la última sección que se ve bien y luego:\nflujo máx. = inicio + altura x paso = %g + altura x %g.\nIntroduzca aquí esa altura y el flujo máx. se rellena solo, o escriba el flujo usted mismo."
+
+# AI Translated
+msgid "Enter the value printed next to the line with the most even width."
+msgstr "Introduzca el valor impreso junto a la línea de ancho más uniforme."
+
+# AI Translated
+msgid "Enter the value printed above the pattern with the sharpest, cleanest corners."
+msgstr "Introduzca el valor impreso encima del patrón con las esquinas más nítidas y limpias."
+
+# AI Translated
+msgid "Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."
+msgstr "Introduzca lo que midió. Deje Z vacío para mantener el valor Z actual. Compensación actual: XY %.2f%%, Z %.2f%% (ya aplicada a esta impresión, así que está tenida en cuenta)."
+
+# AI Translated
+msgid "Prints a set of lines at increasing PA values, each labelled with its value. Pick the line with the most even width -- no bulge where the speed changes (PA too low) and no thin gap (too high) -- and enter that line's value."
+msgstr "Imprime una serie de líneas con valores de PA crecientes, cada una etiquetada con su valor. Elija la línea de ancho más uniforme -- sin abultamiento donde cambia la velocidad (PA demasiado bajo) ni estrechamiento (demasiado alto) -- e introduzca el valor de esa línea."
+
+# AI Translated
+msgid "Prints nested corner patterns at increasing PA values, each labelled with its value. Pick the one with the sharpest, cleanest corners -- no bulge (PA too low) and no rounding or gaps (too high) -- and enter its value."
+msgstr "Imprime patrones de esquinas anidados con valores de PA crecientes, cada uno etiquetado con su valor. Elija el de esquinas más nítidas y limpias -- sin abultamiento (PA demasiado bajo) ni redondeo o huecos (demasiado alto) -- e introduzca su valor."
+
+# AI Translated
+msgid "Prints a hollow tower whose PA rises one step per mm of height. Find the height where the corners look sharpest -- no bulge (PA too low) and no gaps or rounding (too high) -- measure it with calipers, and enter it on the result page to get the PA value."
+msgstr "Imprime una torre hueca cuyo PA sube un paso por cada mm de altura. Busque la altura donde las esquinas se ven más nítidas -- sin abultamiento (PA demasiado bajo) ni huecos o redondeo (demasiado alto) --, mídala con un calibre e introdúzcala en la página de resultados para obtener el valor de PA."
+
+# AI Translated
+msgid "Please enter a valid temperature range for this filament:\nBetween %d and %d C, with Start at least 5 C above End."
+msgstr "Introduzca un rango de temperatura válido para este filamento:\nEntre %d y %d C, con Inicio al menos 5 C por encima de Fin."
+
+# AI Translated
+msgid "Please enter valid values:\nStart > 0, Step > 0, End > Start + Step."
+msgstr "Introduzca valores válidos:\nInicio > 0, Paso > 0, Fin > Inicio + Paso."
+
+# AI Translated
+msgid "Please enter valid retraction values:\nStart >= 0, Step > 0, End > Start + Step, End <= %g mm."
+msgstr "Introduzca valores de retracción válidos:\nInicio >= 0, Paso > 0, Fin > Inicio + Paso, Fin <= %g mm."
+
+# AI Translated
+msgid "Please enter valid PA values:\nStart >= 0, Step >= 0.001, End > Start + Step."
+msgstr "Introduzca valores de PA válidos:\nInicio >= 0, Paso >= 0.001, Fin > Inicio + Paso."
+
+# AI Translated
+msgid "Accelerations and speeds must be comma-separated positive numbers, or left blank."
+msgstr "Las aceleraciones y velocidades deben ser números positivos separados por comas, o dejarse en blanco."
+
+# AI Translated
+msgid "Slicing did not finish, so nothing was sent. Fix the error and try again."
+msgstr "El laminado no terminó, así que no se envió nada. Corrija el error e inténtelo de nuevo."
+
+# AI Translated
+msgid "Shrinkage test"
+msgstr "Prueba de contracción"
+
+# AI Translated
+msgid "Forca shrinkage frame"
+msgstr "Marco de contracción de Forca"
+
+# AI Translated
+msgid "This is the optional recheck after Pressure Advance."
+msgstr "Esta es la comprobación opcional después de Pressure Advance."
+
+# AI Translated
+msgid "This is pass 1 of 2; a fine pass follows."
+msgstr "Esta es la pasada 1 de 2; sigue una pasada fina."
+
+# AI Translated
+msgid "This is pass 2 of 2; it is the final pass."
+msgstr "Esta es la pasada 2 de 2; es la pasada final."
+
+# AI Translated
+msgid "Enter the number under the block with the smoothest, flattest top. Negative = less flow, positive = more flow. %s"
+msgstr "Introduzca el número bajo el bloque con la parte superior más lisa y plana. Negativo = menos flujo, positivo = más flujo. %s"
+
+# AI Translated
+msgid "New flow: %.3f + %g = %.3f"
+msgstr "Nuevo flujo: %.3f + %g = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f x (1 + %g/100) = %.3f"
+msgstr "Nuevo flujo: %.3f x (1 + %g/100) = %.3f"
+
+# AI Translated
+msgid "New flow: %.3f + number."
+msgstr "Nuevo flujo: %.3f + número."
+
+# AI Translated
+msgid "New flow: %.3f x (1 + number/100)."
+msgstr "Nuevo flujo: %.3f x (1 + número/100)."
+
+# AI Translated
+msgid "Recheck after PA (Perfectionist pass)"
+msgstr "Comprobación tras PA (pasada Perfeccionista)"
+
+# AI Translated
+msgid "Recheck after PA (fine pass)"
+msgstr "Comprobación tras PA (pasada fina)"
+
+# AI Translated
+msgid "Pass 1 of 2 (Recommended)"
+msgstr "Pasada 1 de 2 (Recomendado)"
+
+# AI Translated
+msgid "Pass 2 of 2 (Perfectionist)"
+msgstr "Pasada 2 de 2 (Perfeccionista)"
+
+# AI Translated
+msgid "Pass 1 of 2 (coarse)"
+msgstr "Pasada 1 de 2 (gruesa)"
+
+# AI Translated
+msgid "Pass 2 of 2 (fine)"
+msgstr "Pasada 2 de 2 (fina)"
+
+# AI Translated
+msgid "Orca's YOLO test prints one row of blocks, each labelled with a small flow offset such as -0.02 or +0.01. Pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little) -- and enter its number exactly as printed. The Recommended pass is usually enough; the Perfectionist pass refines it in finer steps."
+msgstr "La prueba YOLO de Orca imprime una fila de bloques, cada uno etiquetado con un pequeño ajuste de flujo como -0.02 o +0.01. Elija el bloque con la parte superior más lisa y plana -- ni abombada (demasiado flujo) ni con huecos (demasiado poco) -- e introduzca su número tal como está impreso. La pasada Recomendado suele bastar; la pasada Perfeccionista la afina en pasos más pequeños."
+
+# AI Translated
+msgid "This prints a row of blocks, each at a slightly different flow ratio and labelled with a number. Look at the top surfaces and pick the block whose top is smoothest and flattest -- not bulging (too much flow) and not gappy (too little). You will enter that block's number. Flow runs in two passes: a coarse pass, then a fine pass around your first result."
+msgstr "Esto imprime una fila de bloques, cada uno con un factor de flujo ligeramente distinto y etiquetado con un número. Mire las superficies superiores y elija el bloque con la parte superior más lisa y plana -- ni abombada (demasiado flujo) ni con huecos (demasiado poco). Introducirá el número de ese bloque. El flujo se hace en dos pasadas: una gruesa y luego una fina en torno a su primer resultado."
+
+# AI Translated
+msgid "Please enter a temperature between %d and %d C for this filament."
+msgstr "Introduzca una temperatura entre %d y %d C para este filamento."
+
+# AI Translated
+msgid "Please enter a max volumetric speed between %.1f and %.1f mm3/s."
+msgstr "Introduzca una velocidad volumétrica máxima entre %.1f y %.1f mm3/s."
+
+# AI Translated
+msgid "Please enter the best block's number, between -%g and %g."
+msgstr "Introduzca el número del mejor bloque, entre -%g y %g."
+
+# AI Translated
+msgid "That block number would set the flow ratio to %.3f, outside the safe range %.2f-%.2f. Please re-check the number."
+msgstr "Ese número de bloque fijaría el factor de flujo en %.3f, fuera del rango seguro %.2f-%.2f. Vuelva a comprobar el número."
+
+# AI Translated
+msgid "Please enter a pressure-advance value between %.2f and %.2f."
+msgstr "Introduzca un valor de Pressure Advance entre %.2f y %.2f."
+
+# AI Translated
+msgid "Please enter a retraction length between 0 and %g mm."
+msgstr "Introduzca una longitud de retracción entre 0 y %g mm."
+
+# AI Translated
+msgid "Please enter the measured X and Y widths (about %g mm) and, optionally, the post height (about %g mm)."
+msgstr "Introduzca los anchos X e Y medidos (unos %g mm) y, si quiere, la altura del poste (unos %g mm)."
+
+# AI Translated
+msgid "Those measurements give XY %.2f%% / Z %.2f%%, outside the plausible range %g-%g%%. Please re-check them."
+msgstr "Esas medidas dan XY %.2f%% / Z %.2f%%, fuera del rango plausible %g-%g%%. Vuelva a comprobarlas."
+
+# AI Translated
+msgid "Please enter a name for the preset."
+msgstr "Introduzca un nombre para el perfil."
+
+# AI Translated
+msgid "Could not save the preset."
+msgstr "No se pudo guardar el perfil."
+
+# AI Translated
+msgid ", Z %.2f%%"
+msgstr ", Z %.2f%%"
+
+# AI Translated
+msgid "Next up: Max Volumetric Speed."
+msgstr "Siguiente: Velocidad Volumétrica Máxima."
+
+# AI Translated
+msgid "Next up: Flow Rate."
+msgstr "Siguiente: Flujo."
+
+# AI Translated
+msgid "Flow recheck saved. Next up: Retraction."
+msgstr "Comprobación de flujo guardada. Siguiente: Retracción."
+
+# AI Translated
+msgid "Pass 1 saved. Next: Flow Rate pass 2."
+msgstr "Pasada 1 guardada. Siguiente: Flujo pasada 2."
+
+# AI Translated
+msgid "Flow Rate complete. Next up: Pressure Advance."
+msgstr "Flujo completado. Siguiente: Pressure Advance."
+
+# AI Translated
+msgid "Next up: Shrinkage."
+msgstr "Siguiente: Contracción."
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, print the final check to confirm the whole profile."
+msgstr "Con esto se completan las calibraciones. Si quiere, imprima la comprobación final para confirmar el perfil completo."
+
+# AI Translated
+msgid "Saved %s to the filament preset:\n%s\n\nIt is now selected."
+msgstr "%s guardado en el perfil de filamento:\n%s\n\nAhora está seleccionado."
+
+# AI Translated
+msgid "Optional: tuning pressure advance can shift how flow looks. Run one fine Flow Rate pass now to recheck it?\n\nYes = recheck flow, then Retraction.\nNo = go straight to Retraction."
+msgstr "Opcional: ajustar Pressure Advance puede cambiar cómo se ve el flujo. ¿Hacer ahora una pasada fina de Flujo para comprobarlo?\n\nSí = comprobar el flujo y luego Retracción.\nNo = ir directamente a Retracción."
+
+# AI Translated
+msgid "No preset bundle is available."
+msgstr "No hay ningún paquete de perfiles disponible."
+
+# AI Translated
+msgid "The filament preset '%s' was not found."
+msgstr "No se encontró el perfil de filamento '%s'."
+
+# AI Translated
+msgid "The name cannot be the same as a system preset name."
+msgstr "El nombre no puede ser igual al de un perfil del sistema."
+
+# AI Translated
+msgid "A preset with that name already exists."
+msgstr "Ya existe un perfil con ese nombre."
+
+# AI Translated
+msgid "Creating the new preset failed."
+msgstr "No se pudo crear el nuevo perfil."
+
+# AI Translated
+msgid "(This printer's calibration is complete.)"
+msgstr "(La calibración de esta impresora está completa.)"
+
+# AI Translated
+msgid "(This printer's calibration is in progress: %d of %d steps.)"
+msgstr "(La calibración de esta impresora está en curso: %d de %d pasos.)"
+
+# AI Translated
+msgid "What are you calibrating?"
+msgstr "¿Qué está calibrando?"
+
+# AI Translated
+msgid "My printer -- Input Shaping, Cornering and VFA for the selected printer, once per printer and nozzle. Do it first: it changes how the filament tests print."
+msgstr "Mi impresora -- Input Shaping, Esquinado y VFA para la impresora seleccionada, una vez por impresora y boquilla. Hágalo primero: cambia cómo se imprimen las pruebas de filamento."
+
+# AI Translated
+msgid "A filament -- Temperature, Max Volumetric Speed, Flow Rate, Pressure Advance, Retraction and Shrinkage, all saved into ONE filament preset that you name on the first step."
+msgstr "Un filamento -- Temperatura, Velocidad Volumétrica Máxima, Flujo, Pressure Advance, Retracción y Contracción, todo guardado en UN solo perfil de filamento al que pone nombre en el primer paso."
+
+# AI Translated
+msgid "Each test appears on the plate on the right, and the progress bar and before/after table above it fill in as you go. Slice & send to printer slices the test and opens your printer's normal send dialog; Generate only puts it on the plate so you can slice or export it yourself (for example to an SD card). Either way, come back here to enter your result. You can switch to other tabs at any time; this tab picks up where you left off."
+msgstr "Cada prueba aparece en la cama de la derecha, y la barra de progreso y la tabla de antes/después de encima se van rellenando. Laminar & enviar a la impresora lamina la prueba y abre el diálogo de envío habitual de su impresora; Solo generar la coloca en la cama para que la lamine o exporte usted mismo (por ejemplo a una tarjeta SD). En ambos casos, vuelva aquí para introducir su resultado. Puede cambiar a otras pestañas en cualquier momento; esta pestaña continúa donde lo dejó."
+
+# AI Translated
+msgid "My printer"
+msgstr "Mi impresora"
+
+# AI Translated
+msgid "A filament"
+msgstr "Un filamento"
+
+# AI Translated
+msgid "This filament already has a completed calibration -- its results are shown on the right. Pick a different filament above to calibrate a new one, or press Start to re-run this one."
+msgstr "Este filamento ya tiene una calibración completa -- sus resultados se muestran a la derecha. Elija otro filamento arriba para calibrar uno nuevo, o pulse Iniciar para volver a calibrar este."
+
+# AI Translated
+msgid "This filament has a calibration in progress (%d%% done). Start continues where it left off."
+msgstr "Este filamento tiene una calibración en curso (%d%% hecho). Iniciar continúa donde se quedó."
+
+# AI Translated
+msgid "Skip %s? Your current value is kept, and you can come back to it any time by clicking it in the progress bar or picking it above."
+msgstr "¿Omitir %s? Se mantiene su valor actual, y puede volver a él en cualquier momento haciendo clic en la barra de progreso o eligiéndolo arriba."
+
+# AI Translated
+msgid "The printer or nozzle changed to %s (%s mm) since this run started on %s (%s mm). New results will start a separate run for this printer."
+msgstr "La impresora o la boquilla cambió a %s (%s mm) desde que esta serie empezó en %s (%s mm). Los nuevos resultados iniciarán una serie aparte para esta impresora."
+
+# AI Translated
+msgid "The active filament changed to %s in another tab, but this run is calibrating %s."
+msgstr "El filamento activo cambió a %s en otra pestaña, pero esta serie está calibrando %s."
+
+# AI Translated
+msgid "Switch back to %s"
+msgstr "Volver a %s"
+
+# AI Translated
+msgid "Pressure adv."
+msgstr "Pressure adv."
+
+# AI Translated
+msgid "Flow recheck"
+msgstr "Comprob. flujo"
+
+# AI Translated
+msgid "printer default"
+msgstr "predeterminado de la impresora"
+
+# AI Translated
+msgid "skipped"
+msgstr "omitido"
+
+# AI Translated
+msgid "testing..."
+msgstr "probando..."
+
+# AI Translated
+msgid "Save summary image"
+msgstr "Guardar imagen de resumen"
+
+# AI Translated
+msgid "Save this before/after summary as a PNG image."
+msgstr "Guardar este resumen de antes/después como imagen PNG."
+
+# AI Translated
+msgid "Calibrate a filament"
+msgstr "Calibrar un filamento"
+
+# AI Translated
+msgid "Printer calibration complete"
+msgstr "Calibración de la impresora completada"
+
+# AI Translated
+msgid "Calibrating printer"
+msgstr "Calibrando la impresora"
+
+# AI Translated
+msgid "Calibration complete"
+msgstr "Calibración completada"
+
+# AI Translated
+msgid "Skipped"
+msgstr "Omitido"
+
+# AI Translated
+msgid "Pass 1 of 2 done"
+msgstr "Pasada 1 de 2 hecha"
+
+# AI Translated
+msgid "Test printing"
+msgstr "Imprimiendo la prueba"
+
+# AI Translated
+msgid "Not started"
+msgstr "Sin empezar"
+
+# AI Translated
+msgid "click to open this step"
+msgstr "haga clic para abrir este paso"
+
+# AI Translated
+msgid "Optional:"
+msgstr "Opcional:"
+
+# AI Translated
+msgid "Setting"
+msgstr "Ajuste"
+
+# AI Translated
+msgid "Before"
+msgstr "Antes"
+
+# AI Translated
+msgid "After"
+msgstr "Después"
+
+# AI Translated
+msgid "Change"
+msgstr "Cambio"
+
+# AI Translated
+msgid "Skipped on %s"
+msgstr "Omitido el %s"
+
+# AI Translated
+msgid "Test generated on %s"
+msgstr "Prueba generada el %s"
+
+# AI Translated
+msgid "Measured on %s"
+msgstr "Medido el %s"
+
+# AI Translated
+msgid "Forca Slicer Calibration Wizard - %s"
+msgstr "Asistente de calibración de Forca Slicer - %s"
+
+# AI Translated
+msgid "Save calibration summary"
+msgstr "Guardar resumen de calibración"
+
+# AI Translated
+msgid "Could not save the image."
+msgstr "No se pudo guardar la imagen."
+
+# AI Translated
+msgid "Printer calibration"
+msgstr "Calibración de la impresora"
+
+# AI Translated
+msgid "These calibrations tune the printer itself, once per printer and nozzle. Do them before calibrating filaments: they change how the filament tests print. Order: Input Shaping (frequency, then damping), Cornering, VFA. Steps your printer can't use are left out."
+msgstr "Estas calibraciones ajustan la propia impresora, una vez por impresora y boquilla. Hágalas antes de calibrar filamentos: cambian cómo se imprimen las pruebas de filamento. Orden: Input Shaping (frecuencia y luego amortiguación), Esquinado, VFA. Los pasos que su impresora no puede usar se omiten."
+
+# AI Translated
+msgid "Shaper frequency"
+msgstr "Frecuencia del shaper"
+
+# AI Translated
+msgid "Shaper damping"
+msgstr "Amortiguación del shaper"
+
+# AI Translated
+msgid "Restore this printer's backup"
+msgstr "Restaurar la copia de seguridad de esta impresora"
+
+# AI Translated
+msgid "Put back the printer settings this printer preset had before the wizard first updated it."
+msgstr "Volver a poner los ajustes que tenía este perfil de impresora antes de que el asistente lo actualizara por primera vez."
+
+# AI Translated
+msgid "I have already printed it - enter result"
+msgstr "Ya lo he impreso - introducir resultado"
+
+# AI Translated
+msgid "Keep the printer's current setting and move on to the next calibration."
+msgstr "Mantener el ajuste actual de la impresora y pasar a la siguiente calibración."
+
+# AI Translated
+msgid "Input Shaping - frequency"
+msgstr "Input Shaping - frecuencia"
+
+# AI Translated
+msgid "Orca's ringing tower raises the input shaper frequency with height (X and Y can use their own ranges). After it prints, find the height on the X face and on the Y face where the ringing -- the echo after corners and letters -- is weakest. The result page turns each height into a frequency."
+msgstr "La torre de resonancia de Orca sube la frecuencia del input shaper con la altura (X e Y pueden tener sus propios rangos). Cuando termine, busque en la cara X y en la cara Y la altura donde el ringing -- el eco tras las esquinas y las letras -- es más débil. La página de resultados convierte cada altura en una frecuencia."
+
+# AI Translated
+msgid "Test model:"
+msgstr "Modelo de prueba:"
+
+# AI Translated
+msgid "Shaper:"
+msgstr "Shaper:"
+
+# AI Translated
+msgid "X start (Hz):"
+msgstr "X inicio (Hz):"
+
+# AI Translated
+msgid "X end:"
+msgstr "X fin:"
+
+# AI Translated
+msgid "Y start (Hz):"
+msgstr "Y inicio (Hz):"
+
+# AI Translated
+msgid "Y end:"
+msgstr "Y fin:"
+
+# AI Translated
+msgid "Damping during the test:"
+msgstr "Amortiguación durante la prueba:"
+
+# AI Translated
+msgid "Input Shaping - damping"
+msgstr "Input Shaping - amortiguación"
+
+# AI Translated
+msgid "With your frequencies set, this tower raises the damping ratio with height. Find the height where the ringing is weakest; the result page turns it into the damping ratio. The frequencies below come from the frequency step."
+msgstr "Con sus frecuencias ya ajustadas, esta torre sube el factor de amortiguación con la altura. Busque la altura donde el ringing es más débil; la página de resultados la convierte en el factor de amortiguación. Las frecuencias de abajo vienen del paso de frecuencia."
+
+# AI Translated
+msgid "Frequency X (Hz):"
+msgstr "Frecuencia X (Hz):"
+
+# AI Translated
+msgid "Y:"
+msgstr "Y:"
+
+# AI Translated
+msgid "Damping start:"
+msgstr "Amortiguación inicial:"
+
+# AI Translated
+msgid "This tower raises the cornering speed (jerk, junction deviation or Klipper's square corner velocity) with height. Higher is faster but rounds and shakes the corners. Find the highest point where the corners are still sharp and clean; the result page turns that height into the value."
+msgstr "Esta torre sube la velocidad en esquinas (jerk, junction deviation o square corner velocity de Klipper) con la altura. Más alto es más rápido, pero redondea y hace vibrar las esquinas. Busque el punto más alto donde las esquinas aún son nítidas y limpias; la página de resultados convierte esa altura en el valor."
+
+# AI Translated
+msgid "VFA (vertical fine artifacts)"
+msgstr "VFA (artefactos verticales finos)"
+
+# AI Translated
+msgid "This tower steps the outer wall speed up block by block. Fine vertical ribbing (VFA) shows up at certain speeds, from motor and belt resonance. Note the blocks where you see it (count from the bottom, the first block is 1); the result page tells you which speeds to keep your walls away from. Keep End within what your filament can extrude."
+msgstr "Esta torre sube la velocidad de la pared exterior bloque a bloque. A ciertas velocidades aparecen finas estrías verticales (VFA), por resonancia de motores y correas. Anote los bloques donde las ve (contando desde abajo, el primer bloque es 1); la página de resultados le indica de qué velocidades mantener alejadas sus paredes. Mantenga Fin dentro de lo que su filamento puede extruir."
+
+# AI Translated
+msgid "Start (mm/s):"
+msgstr "Inicio (mm/s):"
+
+# AI Translated
+msgid "Best height, X face (mm):"
+msgstr "Mejor altura, cara X (mm):"
+
+# AI Translated
+msgid "Best height, Y face (mm):"
+msgstr "Mejor altura, cara Y (mm):"
+
+# AI Translated
+msgid "Frequency Y (Hz):"
+msgstr "Frecuencia Y (Hz):"
+
+# AI Translated
+msgid "Best height (mm):"
+msgstr "Mejor altura (mm):"
+
+# AI Translated
+msgid "Value:"
+msgstr "Valor:"
+
+# AI Translated
+msgid "Blocks with ribbing (e.g. 5, 6):"
+msgstr "Bloques con estrías (p. ej. 5, 6):"
+
+# AI Translated
+msgid "Let Forca set input shaping at the start of each print"
+msgstr "Dejar que Forca ajuste el input shaping al inicio de cada impresión"
+
+# AI Translated
+msgid "Writes the shaper settings into the G-code (Orca's \"Emit input shaping\"), overriding what the printer's firmware has stored. Leave it off if you keep them in the firmware (for example Klipper's printer.cfg)."
+msgstr "Escribe los ajustes del shaper en el G-code (\"Emitir input shaping\" de Orca), por encima de lo que tenga guardado el firmware de la impresora. Déjelo desactivado si los guarda en el firmware (por ejemplo en el printer.cfg de Klipper)."
+
+# AI Translated
+msgid "Klipper keeps these in printer.cfg. Add or update these lines there, then restart Klipper:"
+msgstr "Klipper guarda estos valores en printer.cfg. Añada o actualice allí estas líneas y reinicie Klipper:"
+
+# AI Translated
+msgid "Update this printer preset (the old values are backed up)"
+msgstr "Actualizar este perfil de impresora (se hace copia de seguridad de los valores anteriores)"
+
+# AI Translated
+msgid "Save as a new printer preset:"
+msgstr "Guardar como nuevo perfil de impresora:"
+
+# AI Translated
+msgid "Bambu Lab printers tune their own vibration compensation (input shaping), so there is nothing to calibrate here."
+msgstr "Las impresoras Bambu Lab ajustan su propia compensación de vibraciones (input shaping), así que aquí no hay nada que calibrar."
+
+# AI Translated
+msgid "Orca does not set input shaping for this printer's G-code flavor."
+msgstr "Orca no ajusta el input shaping para el tipo de G-code de esta impresora."
+
+# AI Translated
+msgid "Bambu Lab printers manage cornering (jerk) in their own firmware."
+msgstr "Las impresoras Bambu Lab gestionan el esquinado (jerk) en su propio firmware."
+
+# AI Translated
+msgid "Lower values give sharper corners but slower printing."
+msgstr "Los valores más bajos dan esquinas más nítidas pero una impresión más lenta."
+
+# AI Translated
+msgid "Marlin junction deviation (mm), because this printer preset has one set."
+msgstr "Junction deviation de Marlin (mm), porque este perfil de impresora tiene una definida."
+
+# AI Translated
+msgid "Klipper: tested as square corner velocity (mm/s)."
+msgstr "Klipper: probado como square corner velocity (mm/s)."
+
+# AI Translated
+msgid "RepRapFirmware: jerk in mm/s (Orca converts it where needed)."
+msgstr "RepRapFirmware: jerk en mm/s (Orca lo convierte cuando hace falta)."
+
+# AI Translated
+msgid "Classic jerk (mm/s)."
+msgstr "Jerk clásico (mm/s)."
+
+# AI Translated
+msgid "This step does not apply to the selected printer: "
+msgstr "Este paso no se aplica a la impresora seleccionada: "
+
+# AI Translated
+msgid "Step: %s."
+msgstr "Paso: %s."
+
+# AI Translated
+msgid "%s: test generated on %s - print it, then enter the result."
+msgstr "%s: prueba generada el %s - imprímala y luego introduzca el resultado."
+
+# AI Translated
+msgid "%s was skipped (%s); the printer's setting is kept."
+msgstr "%s se omitió (%s); se mantiene el ajuste de la impresora."
+
+# AI Translated
+msgid "%s: last result saved on %s."
+msgstr "%s: último resultado guardado el %s."
+
+# AI Translated
+msgid "Please enter numbers for the frequency range and the damping."
+msgstr "Introduzca números para el rango de frecuencia y la amortiguación."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 <= start < end <= 500 Hz."
+msgstr "Introduzca frecuencias válidas: 0 <= inicio < fin <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a damping ratio from 0 up to (not including) 1."
+msgstr "Introduzca un factor de amortiguación de 0 hasta 1 (sin incluir)."
+
+# AI Translated
+msgid "Please enter numbers for the frequencies and the damping range."
+msgstr "Introduzca números para las frecuencias y el rango de amortiguación."
+
+# AI Translated
+msgid "Please enter valid frequencies: 0 < frequency <= 500 Hz."
+msgstr "Introduzca frecuencias válidas: 0 < frecuencia <= 500 Hz."
+
+# AI Translated
+msgid "Please enter a valid damping range: 0 <= start < end <= 1."
+msgstr "Introduzca un rango de amortiguación válido: 0 <= inicio < fin <= 1."
+
+# AI Translated
+msgid "Please enter numbers for the start and end."
+msgstr "Introduzca números para el inicio y el fin."
+
+# AI Translated
+msgid "Please enter a valid range: 0 <= start < end <= %s."
+msgstr "Introduzca un rango válido: 0 <= inicio < fin <= %s."
+
+# AI Translated
+msgid "High values (above %s) can cause layer shifts. Continue?"
+msgstr "Los valores altos (por encima de %s) pueden causar desplazamientos de capa. ¿Continuar?"
+
+# AI Translated
+msgid "Please enter numbers for start, end and step."
+msgstr "Introduzca números para inicio, fin y paso."
+
+# AI Translated
+msgid "Please enter valid speeds: start above 10, step above 0, end at least start + step."
+msgstr "Introduzca velocidades válidas: inicio por encima de 10, paso por encima de 0, fin al menos inicio + paso."
+
+# AI Translated
+msgid "Enter result: %s"
+msgstr "Introducir resultado: %s"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest on each face (X face: the side whose ringing comes from X moves)."
+msgstr "Mida desde la cama hasta donde el ringing es más débil en cada cara (cara X: la cara cuyo ringing viene de los movimientos en X)."
+
+# AI Translated
+msgid "\nfrequency = start + height / %.1f mm x (end - start)."
+msgstr "\nfrecuencia = inicio + altura / %.1f mm x (fin - inicio)."
+
+# AI Translated
+msgid "Damping ratio:"
+msgstr "Factor de amortiguación:"
+
+# AI Translated
+msgid "Junction deviation (mm):"
+msgstr "Junction deviation (mm):"
+
+# AI Translated
+msgid "Square corner velocity (mm/s):"
+msgstr "Square corner velocity (mm/s):"
+
+# AI Translated
+msgid "Jerk (mm/s):"
+msgstr "Jerk (mm/s):"
+
+# AI Translated
+msgid "Measure from the bed to where the ringing is weakest."
+msgstr "Mida desde la cama hasta donde el ringing es más débil."
+
+# AI Translated
+msgid "Measure from the bed to the highest point where the corners are still sharp and clean."
+msgstr "Mida desde la cama hasta el punto más alto donde las esquinas aún son nítidas y limpias."
+
+# AI Translated
+msgid "\nvalue = %s + height / %.1f mm x (%s - %s)."
+msgstr "\nvalor = %s + altura / %.1f mm x (%s - %s)."
+
+# AI Translated
+msgid "Enter the block numbers where you see fine vertical ribbing (the bottom block is 1)."
+msgstr "Introduzca los números de los bloques donde ve finas estrías verticales (el bloque inferior es 1)."
+
+# AI Translated
+msgid "\nspeed = %s + (block - 1) x %s mm/s."
+msgstr "\nvelocidad = %s + (bloque - 1) x %s mm/s."
+
+# AI Translated
+msgid "(The tower height of your test isn't known here, so type the value itself.)"
+msgstr "(Aquí no se conoce la altura de la torre de su prueba, así que escriba el valor directamente.)"
+
+# AI Translated
+msgid "This is a system printer preset, which can't be changed; the result goes into a new preset."
+msgstr "Este es un perfil de impresora del sistema, que no se puede cambiar; el resultado va a un perfil nuevo."
+
+# AI Translated
+msgid "This preset is already a calibrated copy made by the wizard."
+msgstr "Este perfil ya es una copia calibrada creada por el asistente."
+
+# AI Translated
+msgid "A copy is added to any network printer this preset is used by."
+msgstr "Se añade una copia a cada impresora de red que usa este perfil."
+
+# AI Translated
+msgid "Speeds with ribbing: %s mm/s"
+msgstr "Velocidades con estrías: %s mm/s"
+
+# AI Translated
+msgid "The printer preset was not found."
+msgstr "No se encontró el perfil de impresora."
+
+# AI Translated
+msgid "Please enter a name for the new printer preset."
+msgstr "Introduzca un nombre para el nuevo perfil de impresora."
+
+# AI Translated
+msgid "A system printer preset can't be changed; save the result as a new preset."
+msgstr "Un perfil de impresora del sistema no se puede cambiar; guarde el resultado como perfil nuevo."
+
+# AI Translated
+msgid "Saving the printer preset failed."
+msgstr "No se pudo guardar el perfil de impresora."
+
+# AI Translated
+msgid "Please enter the frequencies (above 0, up to 500 Hz)."
+msgstr "Introduzca las frecuencias (por encima de 0, hasta 500 Hz)."
+
+# AI Translated
+msgid "Shaper %s, X %.1f Hz, Y %.1f Hz"
+msgstr "Shaper %s, X %.1f Hz, Y %.1f Hz"
+
+# AI Translated
+msgid "Please enter the damping ratio (0 up to, not including, 1)."
+msgstr "Introduzca el factor de amortiguación (de 0 hasta 1, sin incluir)."
+
+# AI Translated
+msgid "Damping ratio %.3f"
+msgstr "Factor de amortiguación %.3f"
+
+# AI Translated
+msgid "Please enter a value above 0, up to %s."
+msgstr "Introduzca un valor por encima de 0, hasta %s."
+
+# AI Translated
+msgid "Junction deviation %.3f mm"
+msgstr "Junction deviation %.3f mm"
+
+# AI Translated
+msgid "Square corner velocity %.1f mm/s"
+msgstr "Square corner velocity %.1f mm/s"
+
+# AI Translated
+msgid "Jerk %.1f mm/s"
+msgstr "Jerk %.1f mm/s"
+
+# AI Translated
+msgid "No ribbing seen - no speeds to avoid."
+msgstr "No se ven estrías - no hay velocidades que evitar."
+
+# AI Translated
+msgid "Please enter block numbers (1 = the bottom block), e.g. 5, 6."
+msgstr "Introduzca números de bloque (1 = el bloque inferior), p. ej. 5, 6."
+
+# AI Translated
+msgid "Keep your outer wall speed (and other visible wall speeds) at least one step away from these, in the process preset."
+msgstr "Mantenga la velocidad de su pared exterior (y de otras paredes visibles) al menos un paso lejos de estas, en el perfil de proceso."
+
+# AI Translated
+msgid "Could not save the printer preset."
+msgstr "No se pudo guardar el perfil de impresora."
+
+# AI Translated
+msgid "Saved: %s."
+msgstr "Guardado: %s."
+
+# AI Translated
+msgid "Written to the printer preset:\n%s\n\nIt is now selected."
+msgstr "Escrito en el perfil de impresora:\n%s\n\nAhora está seleccionado."
+
+# AI Translated
+msgid "The printer preset was not changed (the firmware keeps this setting)."
+msgstr "El perfil de impresora no se cambió (el firmware guarda este ajuste)."
+
+# AI Translated
+msgid "Klipper: remember to put the printer.cfg lines shown on the result page into printer.cfg."
+msgstr "Klipper: recuerde poner en printer.cfg las líneas de printer.cfg que se muestran en la página de resultados."
+
+# AI Translated
+msgid "That completes the printer calibration. Next: calibrate your filaments (answer \"A filament\" when the wizard asks what you are calibrating)."
+msgstr "Con esto se completa la calibración de la impresora. Siguiente: calibre sus filamentos (responda \"Un filamento\" cuando el asistente pregunte qué está calibrando)."
+
+# AI Translated
+msgid "Next up: %s."
+msgstr "Siguiente: %s."
+
+# AI Translated
+msgid "Skip %s? The printer keeps its current setting, and you can come back to it any time from the progress bar."
+msgstr "¿Omitir %s? La impresora mantiene su ajuste actual, y puede volver a él en cualquier momento desde la barra de progreso."
+
+# AI Translated
+msgid "Put back the printer settings \"%s\" had before the wizard first updated it (%s)? The wizard's printer results for it are cleared."
+msgstr "¿Volver a poner los ajustes de impresora que tenía \"%s\" antes de que el asistente lo actualizara por primera vez (%s)? Los resultados de impresora del asistente para ella se borran."
+
+# AI Translated
+msgid "Restore backup"
+msgstr "Restaurar copia de seguridad"
+
+# AI Translated
+msgid "Could not restore the printer preset."
+msgstr "No se pudo restaurar el perfil de impresora."
+
+# AI Translated
+msgid "The printer preset has its earlier settings again."
+msgstr "El perfil de impresora vuelve a tener sus ajustes anteriores."
+
+# AI Translated
+msgid "Printer calibration - nozzle %s mm"
+msgstr "Calibración de la impresora - boquilla %s mm"
+
+# AI Translated
+msgid "Shaper freq."
+msgstr "Frec. shaper"
+
+# AI Translated
+msgid "Shaper type"
+msgstr "Tipo de shaper"
+
+# AI Translated
+msgid "Shaper frequency X (Hz)"
+msgstr "Frecuencia del shaper X (Hz)"
+
+# AI Translated
+msgid "Shaper frequency Y (Hz)"
+msgstr "Frecuencia del shaper Y (Hz)"
+
+# AI Translated
+msgid "Damping ratio"
+msgstr "Factor de amortiguación"
+
+# AI Translated
+msgid "Junction deviation (mm)"
+msgstr "Junction deviation (mm)"
+
+# AI Translated
+msgid "Square corner velocity (mm/s)"
+msgstr "Square corner velocity (mm/s)"
+
+# AI Translated
+msgid "VFA speeds to avoid (mm/s)"
+msgstr "Velocidades VFA a evitar (mm/s)"
+
+# AI Translated
+msgid "none"
+msgstr "ninguna"
+
+# AI Translated
+msgid "Calibration Wizard"
+msgstr "Asistente de calibración"
+
+# AI Translated
+msgid "Guided printer and filament calibration"
+msgstr "Calibración guiada de impresora y filamento"
+
+# AI Translated
+msgid "Report a Bug or Request a Feature"
+msgstr "Informar de un error o pedir una función"
+
+# AI Translated
+msgid "Open Forca Slicer's issue forms on GitHub"
+msgstr "Abrir los formularios de incidencias de Forca Slicer en GitHub"
+
+# AI Translated
+msgid "Connected"
+msgstr "Conectado"
+
+# AI Translated
+msgid "Stringing"
+msgstr "Hilos"
+
+# AI Translated
+msgid "Warping"
+msgstr "Deformación"
+
+# AI Translated
+msgid "Layer shift"
+msgstr "Desplazamiento de capa"
+
+# AI Translated
+msgid "Spaghetti"
+msgstr "Espagueti"
+
+# AI Translated
+msgid "Supports"
+msgstr "Soportes"
+
+# AI Translated
+msgid "Under-extrusion"
+msgstr "Subextrusión"
+
+# AI Translated
+msgid "Over-extrusion"
+msgstr "Sobreextrusión"
+
+# AI Translated
+msgid "Ringing"
+msgstr "Ringing"
+
+# AI Translated
+msgid "Layer separation"
+msgstr "Separación de capas"
+
+# AI Translated
+msgid "Partial"
+msgstr "Parcial"
+
+# AI Translated
+msgid "Print Journal"
+msgstr "Diario de impresión"
+
+# AI Translated
+msgid "The print journal is off, so Forca is not recording the prints it sends. Turn it on to keep a record of each print in the Forca Academy folder (you can turn it off again in Preferences)."
+msgstr "El diario de impresión está desactivado, así que Forca no registra las impresiones que envía. Actívelo para guardar un registro de cada impresión en la carpeta Forca Academy (puede desactivarlo de nuevo en Preferencias)."
+
+# AI Translated
+msgid "Turn on"
+msgstr "Activar"
+
+# AI Translated
+msgid "Open folder"
+msgstr "Abrir carpeta"
+
+# AI Translated
+msgid "Date"
+msgstr "Fecha"
+
+# AI Translated
+msgid "Print"
+msgstr "Impresión"
+
+# AI Translated
+msgid "Not recorded"
+msgstr "Sin registrar"
+
+# AI Translated
+msgid "What went wrong (optional)"
+msgstr "Qué salió mal (opcional)"
+
+# AI Translated
+msgid "Add photos"
+msgstr "Añadir fotos"
+
+# AI Translated
+msgid "Copy photos or videos of this print into its folder. You can also drop them on this window."
+msgstr "Copiar fotos o vídeos de esta impresión a su carpeta. También puede soltarlos sobre esta ventana."
+
+# AI Translated
+msgid "Open print folder"
+msgstr "Abrir carpeta de la impresión"
+
+# AI Translated
+msgid "Photos and videos"
+msgstr "Fotos y vídeos"
+
+# AI Translated
+msgid "Add a print"
+msgstr "Añadir una impresión"
+
+# AI Translated
+msgid "Record the plate as it is now as a print -- for prints Forca did not send, such as one started from an SD card."
+msgstr "Registrar la cama tal como está ahora como una impresión -- para impresiones que Forca no envió, como una iniciada desde una tarjeta SD."
+
+# AI Translated
+msgid "Folder:"
+msgstr "Carpeta:"
+
+# AI Translated
+msgid "No prints recorded yet"
+msgstr "Todavía no hay impresiones registradas"
+
+# AI Translated
+msgid "Filament %d: %s"
+msgstr "Filamento %d: %s"
+
+# AI Translated
+msgid "Estimated time: %s"
+msgstr "Tiempo estimado: %s"
+
+# AI Translated
+msgid "Photos: %d"
+msgstr "Fotos: %d"
+
+# AI Translated
+msgid "Pick a print in the list first, then add its photos."
+msgstr "Elija primero una impresión de la lista y luego añada sus fotos."
+
+# AI Translated
+msgid "Keep a print journal"
+msgstr "Llevar un diario de impresión"
+
+# AI Translated
+msgid "Records every print Forca sends -- printer, presets, filaments, changed settings, estimates and a picture of the plate -- in the Forca Academy folder, so you and any AI can look back at what worked. Prints from an SD card can be added by hand. Nothing is uploaded."
+msgstr "Registra cada impresión que envía Forca -- impresora, perfiles, filamentos, ajustes cambiados, estimaciones y una imagen de la cama -- en la carpeta Forca Academy, para que usted y cualquier IA puedan repasar lo que funcionó. Las impresiones desde una tarjeta SD se pueden añadir a mano. No se sube nada."
+
+# AI Translated
+msgid "Forca Academy folder"
+msgstr "Carpeta de Forca Academy"
+
+# AI Translated
+msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "Dónde se guarda el diario de impresión: archivos Markdown y JSON sencillos. Una IA empieza por AGENTS.md."
+
+# AI Translated
+msgid "Choose the Forca Academy folder"
+msgstr "Elegir la carpeta de Forca Academy"
+
+# AI Translated
+msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
+msgstr "Abrir la carpeta de Forca Academy (creándola con sus archivos iniciales si hace falta)."
+
+# AI Translated
+msgid "Your recorded prints: add the result, notes and photos"
+msgstr "Sus impresiones registradas: añada el resultado, notas y fotos"
+
+# AI Translated
+msgid "Take a camera picture when a print ends"
+msgstr "Tomar una foto con la cámara al terminar una impresión"
+
+# AI Translated
+msgid "For Bambu printers with a camera Forca can reach on the local network: when a recorded print finishes or fails, one picture of the result goes into the print's camera folder."
+msgstr "Para impresoras Bambu con una cámara que Forca alcanza en la red local: cuando una impresión registrada termina o falla, una foto del resultado va a la carpeta camera de la impresión."
+
+# AI Translated
+msgid "Camera pictures during a print"
+msgstr "Fotos de la cámara durante una impresión"
+
+# AI Translated
+msgid "Every how many minutes Forca keeps a camera picture of a recorded print while it runs, so a failure can be traced back (0 = off). Bambu printers only. Their camera allows one viewer at a time, so a picture may be skipped while another app is watching."
+msgstr "Cada cuántos minutos guarda Forca una foto de la cámara de una impresión registrada mientras se imprime, para poder rastrear un fallo (0 = desactivado). Solo impresoras Bambu. Su cámara admite un solo espectador, así que puede saltarse una foto si otra aplicación está mirando."
+
+# AI Translated
+msgid "Printer reported: finished"
+msgstr "La impresora informó: terminada"
+
+# AI Translated
+msgid "Printer reported: failed"
+msgstr "La impresora informó: fallida"
+
+# AI Translated
+msgid "Printer reported: stopped"
+msgstr "La impresora informó: detenida"
+
+# AI Translated
+msgid "Printer reported: ended (not seen)"
+msgstr "La impresora informó: terminada (no observada)"
+
+# AI Translated
+msgid "(%d min after sending)"
+msgstr "(%d min después del envío)"
+
 #~ msgid "Tab"
 #~ msgstr "Pestaña"
 
@@ -24528,9 +25917,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Alinea las direcciones de relleno, puente, alisado y relleno superficial para que sigan la orientación del modelo sobre la placa de impresión.\n"
 #~ "Cuando está activada, las direcciones giran junto con el modelo para mantener sus características de resistencia óptimas."
-
-#~ msgid "Print"
-#~ msgstr "Imprimir"
 
 #~ msgid "in"
 #~ msgstr "pulg"
@@ -25101,9 +26487,6 @@ msgstr ""
 #~ "Billow: Similar al ruido Perlin, pero más agrupado.\n"
 #~ "Ridged Multifractal: Ruido con crestas afiladas y rasgos dentados. Crea texturas tipo mármol.\n"
 #~ "Voronoi: Divide la superficie en celdas Voronoi y desplaza cada una por una cantidad aleatoria. Crea una textura enparches."
-
-#~ msgid "Flow Rate"
-#~ msgstr "Factor de Flujo"
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "No se pueden imprimir varios filamentos con grandes diferencias de temperatura juntos. De lo contrario, el extrusor y la boquilla pueden obstruirse o dañarse durante la impresión"
@@ -26239,9 +27622,6 @@ msgstr ""
 #~ "Filtrado limitado - Crea puentes internos en superficies muy inclinadas, evitando crear puentes internos innecesarios. Funciona bien en la mayoría de los modelos difíciles.\n"
 #~ "\n"
 #~ "Sin filtro: crea puentes interiores en todos los posibles voladizos interiores. Esta opción es útil para modelos de superficie superior muy inclinada. Sin embargo, en la mayoría de los casos crea demasiados puentes innecesarios."
-
-#~ msgid "Shrinkage"
-#~ msgstr "Contracción"
 
 #~ msgid "Your object appears to be too large. It will be scaled down to fit the heat bed automatically."
 #~ msgstr "Su objeto parece demasiado grande, ¿Desea disminuirlo para que quepa en la cama caliente automáticamente?."

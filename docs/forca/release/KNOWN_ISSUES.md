@@ -13,14 +13,22 @@ differently).
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
   enable it in Preferences). Forca hasn't changed it.
-- **Forca's own screens are English only** (Calibration Wizard, Forca AI window, support-region tools). The rest of
-  the app keeps OrcaSlicer's translations.
+- **Some of Forca's own screens are English only** (Forca AI window, support-region tools). The Calibration Wizard
+  is translated into all of OrcaSlicer's languages, by machine for now -- corrections welcome. The rest of the app
+  keeps OrcaSlicer's translations.
 
 ## Regional support interfaces
 - The top-Z gap is shared by all regions on an object (one gap for all regions; the filament can differ per region).
 
 ## Calibration Wizard
-- Machine calibrations (input shaping, cornering, VFA) aren't in the wizard yet — use OrcaSlicer's Calibration menu.
+- Printer calibration (Input Shaping, Cornering, VFA) is new. It runs OrcaSlicer's own tests, but it has only been
+  tried on a few printers so far -- Marlin and RepRapFirmware printers not at all yet. Printer reports especially
+  welcome.
+
+## Forca Academy (print journal)
+- New. Prints sent from the multi-device page, and prints started from an SD card, aren't recorded automatically -- add them
+  with "Add a print" in File > Print Journal.
+- Journal files (AGENTS.md, notes) are written in English.
 
 ## Forca AI (experimental)
 - **Off by default**; only works on the same computer; needs the key shown in the Forca AI window.
@@ -28,7 +36,17 @@ differently).
   print manager is watching, the AI's snapshot times out after 25 s — open the live view in Forca's Device tab and the
   AI uses that picture instead.
 - Live printer status comes from the printer selected in Forca's Device tab.
-- Exported G-code is the sliced file as-is: **post-processing scripts are not run** for AI exports.
 - A plate picture from the AI shows the objects only (not the bed or modifier boxes).
 - AI clients (for example Claude Code) load Forca's tool list when they connect; after updating Forca, reconnect them.
 - No macOS entry point for the Forca AI window yet (Windows builds only anyway).
+- **Print grants are Bambu Lab only** for now (other printers: the AI can still ask, and you send).
+- **The camera bed check can't see the whole plate:** a Bambu H2S camera, for one, doesn't show the strip nearest the
+  door. Turn on camera bed checks only if you are fine with that; your own "Bed is clear" click has no blind spot.
+
+## Crashes we know about
+- **Shortly after sending a print to a Bambu printer** (about 15-30 seconds), Forca can close unexpectedly. The print
+  itself is already on the printer and carries on; restart Forca and, with the print journal on, it picks the print
+  up again. The crash is inside Bambu's network plugin, which Forca can't change.
+- **Rarely, when a print grant opens the print dialog**, Forca has closed unexpectedly before anything was sent.
+  Seen twice, not since; Forca now logs each step so the next one can be found. If it happens to you, please report
+  it and attach the newest `debug_*.log.0` from Help → Show Configuration Folder → `log`.
