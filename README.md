@@ -42,6 +42,8 @@ and interface layers, while the rest of the supports follow the object's normal 
 - Works with **Grid, Snug, Tree (Slim / Strong / Hybrid) and Organic** supports.
 - Paint helpers: Vertical / Horizontal stroke lock and "on overhangs only".
 
+https://github.com/user-attachments/assets/23ea01ea-bb8d-438b-8dfe-0c72c96b8af4
+
 ## Calibration Wizard
 A per-filament guided flow in its own tab: **Temperature → Max Volumetric Speed → Flow → Pressure Advance →
 (flow recheck) → Retraction → Shrinkage → (final check print)**.
@@ -51,6 +53,8 @@ A per-filament guided flow in its own tab: **Temperature → Max Volumetric Spee
 - Progress bar and before/after table; results go into **one new "(calibrated)" filament preset** — your starting
   preset is never changed.
 
+<img width="1906" height="1026" alt="Screenshot 2026-10-03 210209" src="https://github.com/user-attachments/assets/d9b69b5b-ec0a-406b-acbf-ba388dec8257" />
+  
 ## Forca AI (experimental, off by default)
 **Bring your own AI — or don't.** Forca doesn't contain an AI and doesn't need one. Forca AI is only a door that
 *your* AI app can use, and it stays shut unless you open it: while it's off, the connection isn't running at all,
@@ -74,6 +78,14 @@ printer whose bed you marked clear, after a 10-second countdown you can cancel. 
 (with copies and a note), so the AI does the whole job and prints nothing else.
 
 See [SECURITY.md](SECURITY.md) for how it's protected.
+
+<table>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/162c2f1a-9dfe-47eb-952c-39b18ed9629d" width="100%" alt="Screenshot 210254"></td>
+    <td><img src="https://github.com/user-attachments/assets/31153daf-cfd9-4cf7-8050-541eeba3229c" width="100%" alt="Screenshot 210332"></td>
+  </tr>
+</table>
+
 
 # Install (Windows)
 Download one of these from [Releases](https://github.com/tayloraaron078-tech/ForcaSlicer/releases):
