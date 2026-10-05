@@ -30,6 +30,7 @@ class PhysicalPrinterDialog : public DPIDialog
     ConfigOptionsGroup* m_optgroup          { nullptr };
 
     Button*     m_printhost_browse_btn              {nullptr};
+    Button*     m_forca_find_webui_btn              {nullptr}; // Forca: find Fluidd / Mainsail for the Device tab
     Button*     m_printhost_test_btn                {nullptr};
     Button*     m_printhost_generate_creds_btn      {nullptr};
     Button*     m_printhost_logout_btn              {nullptr};

@@ -6,7 +6,8 @@ differently).
 ## General
 - **Windows 64-bit only.** No macOS or Linux builds yet.
 - **Not code-signed.** Windows SmartScreen warns on first run (More info → Run anyway).
-- **Tested mainly on Bambu Lab printers** (mostly an H2S). Other brands use OrcaSlicer's own code paths and should
+- **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
+  Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
 - **Built on OrcaSlicer's 2.5.0 development line** (merged up to late September 2026), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
@@ -26,9 +27,22 @@ differently).
   welcome.
 
 ## Forca Academy (print journal)
-- New. Prints sent from the multi-device page, and prints started from an SD card, aren't recorded automatically -- add them
-  with "Add a print" in File > Print Journal.
+- Prints started from an SD card aren't recorded automatically -- add them with "Add a print" in File > Print Journal.
+- Multi-device sends are recorded, but how the print ended is only followed on the printer selected in the Device tab.
+- Klipper and Flashforge prints are followed while Forca is running and can reach the printer; a stock Flashforge
+  printer needs its access code in the printer's network settings (API Key / Password).
 - Journal files (AGENTS.md, notes) are written in English.
+
+## Non-Bambu printers
+- **Happy Hare and Moonraker filament sync fixes are experimental and untested by us** (no Happy Hare, Spoolman lane
+  sync or ACE setup here). They come from two OrcaSlicer pull requests that are not merged upstream yet. If you use
+  Happy Hare or Moonraker filament data, please tell us on
+  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3) whether "Synchronize filament list" works.
+- **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the
+  printer's network settings (API Key / Password). Other Flashforge models with the same local API should work but
+  are untested. A Flashforge printer's own camera is not used for Forca Academy pictures yet.
+- **Klipper web interface search** looks in the usual places (the printer's address, ports 81 / 4408 / 4409, /fluidd,
+  /mainsail); type the address in Device UI if yours is elsewhere.
 
 ## Forca AI (experimental)
 - **Off by default**; only works on the same computer; needs the key shown in the Forca AI window.

@@ -1973,6 +1973,10 @@ msgstr "G-code 文件"
 msgid "Supported files"
 msgstr "支持的文件"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "模型文件（不含 3MF）"
+
 msgid "ZIP files"
 msgstr "ZIP 文件"
 
@@ -25831,6 +25835,50 @@ msgstr "打印机报告：已结束（未监测到）"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "（发送后 %d 分钟）"
+
+# AI Translated
+msgid "Preparing"
+msgstr "准备中"
+
+# AI Translated
+msgid "Paused"
+msgstr "已暂停"
+
+# AI Translated
+msgid "No print running"
+msgstr "没有正在进行的打印"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "已用时间"
+
+# AI Translated
+msgid "Remaining"
+msgstr "剩余时间"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "要显示此打印机的状态，请在打印机的网络设置中，将其访问码（显示在打印机屏幕上）填入“API秘钥/密码”。"
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "在此打印机上查找 Fluidd 或 Mainsail，并显示在“设备”标签页中"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "请先输入打印机地址。"
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "在此打印机上未找到 Fluidd 或 Mainsail 页面。您仍可以在“设备用户界面”中手动输入其网址。"
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "在“设备”标签页中显示此网页界面："
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "打印板已清空"
 
 #~ msgid "Tab"
 #~ msgstr "标签"

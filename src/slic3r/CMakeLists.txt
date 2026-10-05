@@ -80,6 +80,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/ForcaAcademy.cpp
     GUI/ForcaAIAcademy.cpp
     GUI/ForcaAcademy.hpp
+    GUI/ForcaFlashforgePanel.cpp
+    GUI/ForcaFlashforgePanel.hpp
+    GUI/ForcaHostStatus.cpp
+    GUI/ForcaHostStatus.hpp
     GUI/ForcaPrintJournal.cpp
     GUI/ForcaPrintJournal.hpp
     GUI/ForcaAITools.cpp

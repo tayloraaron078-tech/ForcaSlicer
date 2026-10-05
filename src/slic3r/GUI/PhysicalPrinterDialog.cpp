@@ -1,4 +1,7 @@
 #include "PhysicalPrinterDialog.hpp"
+#include "ForcaHostStatus.hpp" // Forca: find Fluidd / Mainsail
+
+#include <wx/choicdlg.h>
 #include "PresetComboBoxes.hpp"
 #include "PrinterCloudAuthDialog.hpp"
 
@@ -334,6 +337,40 @@ void PhysicalPrinterDialog::build_printhost_settings(ConfigOptionsGroup* m_optgr
         return sizer;
     };
 
+    // Forca: look for the printer's Fluidd / Mainsail pages and put the chosen one in Device UI (the Device tab shows it).
+    auto forca_find_webui = [=](wxWindow* parent) {
+        auto sizer = create_sizer_with_btn(parent, &m_forca_find_webui_btn, "", _L("Search"));
+        m_forca_find_webui_btn->SetToolTip(_L("Look for Fluidd or Mainsail on this printer and show it in the Device tab"));
+        m_forca_find_webui_btn->Bind(wxEVT_BUTTON, [this, m_optgroup](wxCommandEvent&) {
+            const std::string host = m_config->opt_string("print_host");
+            if (host.empty()) {
+                show_error(this, _L("Enter the printer's address first."));
+                return;
+            }
+            std::vector<std::pair<std::string, std::string>> found;
+            {
+                wxBusyCursor wait;
+                found = forca_find_web_interfaces(host);
+            }
+            if (found.empty()) {
+                show_info(this, _L("No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."),
+                          _L("Device UI"));
+                return;
+            }
+            wxArrayString choices;
+            for (const auto& f : found)
+                choices.Add(from_u8(f.first + "  (" + f.second + ")"));
+            wxSingleChoiceDialog dlg(this, _L("Show this web interface in the Device tab:"), _L("Device UI"), choices);
+            if (dlg.ShowModal() != wxID_OK)
+                return;
+            const std::string url = found[dlg.GetSelection()].second;
+            m_config->opt_string("print_host_webui") = url;
+            if (Field* field = m_optgroup->get_field("print_host_webui"))
+                field->set_value(from_u8(url), true);
+        });
+        return sizer;
+    };
+
     // Set a wider width for a better alignment
     Option option = m_optgroup->get_option("print_host");
     option.opt.width = Field::def_width_wider();
@@ -346,7 +383,9 @@ void PhysicalPrinterDialog::build_printhost_settings(ConfigOptionsGroup* m_optgr
 
     option = m_optgroup->get_option("print_host_webui");
     option.opt.width = Field::def_width_wider();
-    m_optgroup->append_single_option_line(option);
+    Line webui_line = m_optgroup->create_single_option_line(option);
+    webui_line.append_widget(forca_find_webui);
+    m_optgroup->append_line(webui_line);
 
     {
         // For bbl printers, we build a fake option to control whether the original device tab should be used

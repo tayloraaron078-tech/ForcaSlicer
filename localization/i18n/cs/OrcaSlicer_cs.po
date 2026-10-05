@@ -2066,6 +2066,10 @@ msgstr "G-code soubory"
 msgid "Supported files"
 msgstr "Podporované soubory"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Soubory modelů bez 3MF"
+
 msgid "ZIP files"
 msgstr "ZIP soubory"
 
@@ -26587,6 +26591,50 @@ msgstr "Tiskárna hlásí: ukončeno (nesledováno)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min po odeslání)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Příprava"
+
+# AI Translated
+msgid "Paused"
+msgstr "Pozastaveno"
+
+# AI Translated
+msgid "No print running"
+msgstr "Neprobíhá žádný tisk"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Uplynulo"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Zbývá"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Chcete-li zobrazit stav této tiskárny, zadejte její přístupový kód (zobrazený na displeji tiskárny) v síťovém nastavení tiskárny do pole API klíč / heslo."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Vyhledat na této tiskárně Fluidd nebo Mainsail a zobrazit jej na kartě Zařízení"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Nejprve zadejte adresu tiskárny."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Na této tiskárně nebyla nalezena žádná stránka Fluidd ani Mainsail. Jeho webovou adresu můžete stále zadat do pole UI zařízení."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Zobrazit toto webové rozhraní na kartě Zařízení:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Podložka je prázdná"
 
 # AI Translated
 #~ msgid "Tab"

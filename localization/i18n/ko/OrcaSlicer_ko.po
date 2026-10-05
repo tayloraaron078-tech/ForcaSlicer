@@ -2057,6 +2057,10 @@ msgstr "G-code 파일"
 msgid "Supported files"
 msgstr "지원되는 파일"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "모델 파일(3MF 제외)"
+
 msgid "ZIP files"
 msgstr "ZIP 파일"
 
@@ -26773,6 +26777,50 @@ msgstr "프린터 보고: 종료됨 (확인 안 됨)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(보낸 후 %d분)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "준비 중"
+
+# AI Translated
+msgid "Paused"
+msgstr "일시 정지됨"
+
+# AI Translated
+msgid "No print running"
+msgstr "진행 중인 출력이 없습니다"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "경과"
+
+# AI Translated
+msgid "Remaining"
+msgstr "남은 시간"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "이 프린터의 상태를 표시하려면 프린터 화면에 표시되는 액세스 코드를 프린터 네트워크 설정의 API 키 / 비밀번호에 입력하세요."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "이 프린터에서 Fluidd 또는 Mainsail을 찾아 장치 탭에 표시합니다"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "먼저 프린터 주소를 입력하세요."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "이 프린터에서 Fluidd 또는 Mainsail 페이지를 찾지 못했습니다. 장치 UI에 웹 주소를 직접 입력할 수도 있습니다."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "이 웹 인터페이스를 장치 탭에 표시:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "플레이트가 비었습니다"
 
 # AI Translated
 #~ msgid "Tab"

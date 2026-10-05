@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forca - Flashforge printer</title>
+<!-- Forca: the Device tab for stock-firmware Flashforge printers. ForcaFlashforgePanel.cpp calls forcaInit() once
+     and forcaStatus() every few seconds; the buttons post {command: "forca_flashforge", action} back to it. -->
+<style>
+  :root { --bg: #f4f6f9; --card: #ffffff; --text: #1d2430; --muted: #6b7686; --line: #dde3ea; --accent: #2b6cb0;
+          --ok: #2f855a; --warn: #b7791f; --bad: #c53030; --track: #e6ebf1; }
+  body.dark { --bg: #1e2127; --card: #272b33; --text: #e6e9ee; --muted: #9aa4b2; --line: #3a404b; --accent: #63a4e8;
+              --ok: #48bb78; --warn: #ecc94b; --bad: #fc8181; --track: #353b46; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: var(--bg); color: var(--text);
+         font: 14px/1.45 "Segoe UI", -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .state { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .dot.printing, .dot.preparing { background: var(--accent); }
+  .dot.paused { background: var(--warn); }
+  .dot.finished, .dot.idle { background: var(--ok); }
+  .dot.failed, .dot.stopped { background: var(--bad); }
+  .file { color: var(--muted); margin-top: 6px; word-break: break-all; }
+  .bar { height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; margin: 14px 0 8px; }
+  .bar > div { height: 100%; width: 0; background: var(--accent); transition: width .4s; }
+  .facts { display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); }
+  .facts b { color: var(--text); font-weight: 600; }
+  .temps { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .temp .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .temp .value { font-size: 22px; font-weight: 600; }
+  .temp .target { color: var(--muted); font-size: 13px; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+  button { font: inherit; padding: 8px 18px; border-radius: 6px; border: 1px solid var(--line); background: var(--card);
+           color: var(--text); cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.stop:not(:disabled) { color: var(--bad); border-color: var(--bad); }
+  .notice { color: var(--muted); }
+  .error { color: var(--bad); margin-top: 8px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="notice"><span class="notice" id="noticeText">...</span></div>
+
+  <div class="card hidden" id="job">
+    <div class="head">
+      <div class="state"><span class="dot" id="dot"></span><span id="state"></span></div>
+      <div class="buttons">
+        <button id="clear" class="hidden"></button>
+        <button id="pause"></button>
+        <button id="stop" class="stop"></button>
+      </div>
+    </div>
+    <div class="file" id="file"></div>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="facts">
+      <span id="pct"></span>
+      <span><span id="layerLabel"></span> <b id="layer"></b></span>
+      <span><span id="elapsedLabel"></span> <b id="elapsed"></b></span>
+      <span><span id="remainingLabel"></span> <b id="remaining"></b></span>
+    </div>
+    <div class="error hidden" id="message"></div>
+  </div>
+
+  <div class="card hidden" id="printer">
+    <div class="temps">
+      <div class="temp"><div class="label" id="nozzleLabel"></div><div class="value" id="nozzle"></div><div class="target" id="nozzleTarget"></div></div>
+      <div class="temp"><div class="label" id="bedLabel"></div><div class="value" id="bed"></div><div class="target" id="bedTarget"></div></div>
+      <div class="temp" id="chamberBox"><div class="label" id="chamberLabel"></div><div class="value" id="chamber"></div></div>
+      <div class="temp"><div class="label" id="filamentLabel"></div><div class="value" id="filament"></div></div>
+    </div>
+    <div class="buttons" style="margin-top:16px"><button id="light"></button></div>
+  </div>
+</div>
+<script>
+  var L = {}, last = null;
+  function $(id) { return document.getElementById(id); }
+  function send(action, extra) {
+    var msg = { command: "forca_flashforge", action: action };
+    for (var k in extra || {}) msg[k] = extra[k];
+    if (window.wx && window.wx.postMessage) window.wx.postMessage(JSON.stringify(msg));
+  }
+  function temp(v) { return v >= 0 ? Math.round(v) + "°C" : "-"; }
+  function time(s) {
+    if (!(s >= 0)) return "-";
+    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    return h > 0 ? h + "h " + m + "m" : m + "m";
+  }
+  function forcaInit(init) {
+    L = init.labels || {};
+    document.body.classList.toggle("dark", !!init.dark);
+    $("noticeText").textContent = L.connecting || "";
+    $("stop").textContent = L.stop; $("light").textContent = L.light; $("clear").textContent = L.clear_plate;
+    $("layerLabel").textContent = L.layer; $("elapsedLabel").textContent = L.elapsed;
+    $("remainingLabel").textContent = L.remaining; $("nozzleLabel").textContent = L.nozzle;
+    $("bedLabel").textContent = L.bed; $("chamberLabel").textContent = L.chamber;
+    $("filamentLabel").textContent = L.filament;
+  }
+  function forcaCommandFailed() { $("message").textContent = L.offline; $("message").classList.remove("hidden"); }
+  function forcaStatus(s) {
+    last = s;
+    if (!s.ok) {
+      $("noticeText").textContent = L[s.problem] || L.offline;
+      $("notice").classList.remove("hidden"); $("job").classList.add("hidden"); $("printer").classList.add("hidden");
+      return;
+    }
+    $("notice").classList.add("hidden"); $("job").classList.remove("hidden"); $("printer").classList.remove("hidden");
+    var active = s.state === "printing" || s.state === "paused" || s.state === "preparing";
+    $("dot").className = "dot " + s.state;
+    $("state").textContent = L[s.state] || s.state;
+    $("file").textContent = s.file || (active ? "" : L.no_job);
+    var pct = s.progress >= 0 ? Math.round(s.progress * 100) : 0;
+    $("bar").style.width = (active || s.state === "finished" ? pct : 0) + "%";
+    $("pct").textContent = active ? pct + "%" : "";
+    $("layer").textContent = s.layer >= 0 && s.total_layers > 0 ? s.layer + " / " + s.total_layers : "-";
+    $("elapsed").textContent = time(s.elapsed_s);
+    $("remaining").textContent = active ? time(s.remaining_s) : "-";
+    $("pause").textContent = s.state === "paused" ? L.resume : L.pause;
+    $("pause").disabled = !(s.state === "printing" || s.state === "paused");
+    $("stop").disabled = !active;
+    // A finished or stopped print waits for "plate cleared" on the printer before it takes the next job.
+    $("clear").classList.toggle("hidden", !(s.state === "finished" || s.state === "stopped"));
+    $("pause").classList.toggle("hidden", !$("clear").classList.contains("hidden"));
+    $("stop").classList.toggle("hidden", !$("clear").classList.contains("hidden"));
+    $("message").textContent = s.message || ""; $("message").classList.toggle("hidden", !s.message);
+    $("nozzle").textContent = temp(s.nozzle); $("nozzleTarget").textContent = s.nozzle_target > 0 ? "→ " + temp(s.nozzle_target) : "";
+    $("bed").textContent = temp(s.bed); $("bedTarget").textContent = s.bed_target > 0 ? "→ " + temp(s.bed_target) : "";
+    $("chamberBox").classList.toggle("hidden", !(s.chamber > 0));
+    $("chamber").textContent = temp(s.chamber);
+    $("filament").textContent = s.filament || "-";
+    $("light").textContent = L.light + ": " + (s.light ? "●" : "○");
+  }
+  $("pause").onclick = function () { if (last) send(last.state === "paused" ? "resume" : "pause"); };
+  $("stop").onclick = function () { send("stop"); };
+  $("clear").onclick = function () { send("clear_plate"); };
+  $("light").onclick = function () { if (last) send("light", { on: !last.light }); };
+</script>
+</body>
+</html>

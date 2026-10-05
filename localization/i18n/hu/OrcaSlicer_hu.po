@@ -2049,6 +2049,10 @@ msgstr "G-code fájlok"
 msgid "Supported files"
 msgstr "Támogatott fájlok"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Modellfájlok 3MF nélkül"
+
 msgid "ZIP files"
 msgstr "ZIP fájlok"
 
@@ -26330,6 +26334,50 @@ msgstr "A nyomtató jelentése: befejeződött (nem látott)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d perccel a küldés után)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Előkészítés"
+
+# AI Translated
+msgid "Paused"
+msgstr "Szüneteltetve"
+
+# AI Translated
+msgid "No print running"
+msgstr "Nincs folyamatban lévő nyomtatás"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Eltelt"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Hátralévő"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "A nyomtató állapotának megjelenítéséhez adja meg a hozzáférési kódját (a nyomtató kijelzőjén látható) a nyomtató hálózati beállításaiban, az API kulcs / jelszó mezőben."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Fluidd vagy Mainsail keresése ezen a nyomtatón, és megjelenítése a Nyomtató lapon"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Először adja meg a nyomtató címét."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Ezen a nyomtatón nem található Fluidd vagy Mainsail oldal. A webcímét továbbra is beírhatja az Eszköz UI mezőbe."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "A webes felület megjelenítése a Nyomtató lapon:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "A tálca üres"
 
 # AI Translated
 #~ msgid "Tab"

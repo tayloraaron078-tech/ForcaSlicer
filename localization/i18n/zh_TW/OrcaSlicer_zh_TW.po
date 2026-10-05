@@ -2025,6 +2025,10 @@ msgstr "G-code 檔案"
 msgid "Supported files"
 msgstr "支援的檔案"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "模型檔案（不含 3MF）"
+
 msgid "ZIP files"
 msgstr "ZIP 檔案"
 
@@ -26047,6 +26051,50 @@ msgstr "列印裝置回報：已結束（未監測到）"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "（傳送後 %d 分鐘）"
+
+# AI Translated
+msgid "Preparing"
+msgstr "準備中"
+
+# AI Translated
+msgid "Paused"
+msgstr "已暫停"
+
+# AI Translated
+msgid "No print running"
+msgstr "沒有進行中的列印"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "已用時間"
+
+# AI Translated
+msgid "Remaining"
+msgstr "剩餘時間"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "若要顯示此印表機的狀態，請在印表機的網路設定中，將其存取代碼（顯示於印表機螢幕上）填入「API 金鑰 / 密碼」。"
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "在此印表機上尋找 Fluidd 或 Mainsail，並顯示於「裝置」分頁中"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "請先輸入印表機位址。"
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "在此印表機上找不到 Fluidd 或 Mainsail 頁面。您仍可在「裝置使用者介面」中手動輸入其網址。"
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "在「裝置」分頁中顯示此網頁介面："
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "列印板已清空"
 
 #~ msgid "Tab"
 #~ msgstr "分頁"

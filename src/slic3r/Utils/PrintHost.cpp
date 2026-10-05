@@ -3,6 +3,7 @@
 #include <vector>
 #include <thread>
 #include <exception>
+#include <algorithm>
 #include <boost/optional.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -31,6 +32,7 @@
 #include "ElegooLink.hpp"
 #include "3DPrinterOS.hpp"
 #include "Moonraker.hpp"
+#include "../GUI/ForcaFlashforgePanel.hpp" // Forca: Flashforge status page
 
 namespace fs = boost::filesystem;
 using boost::optional;
@@ -95,13 +97,24 @@ std::string PrintHost::get_print_host_webui(DynamicPrintConfig* config)
         webui_url = ElegooLink::get_print_host_webui(config);
         break;
     }
+    case htFlashforge: // Forca: stock Flashforge firmware has no web interface -- show Forca's status page
+        if (config->opt_string("print_host_webui").empty() && !config->opt_string("print_host").empty())
+            webui_url = GUI::forca_flashforge_page_url();
+        break;
     default: break;
     }
 
     if (webui_url.empty()) {
         webui_url = config->opt_string("print_host_webui");
-        if (webui_url.empty())
+        if (webui_url.empty()) {
             webui_url = config->opt_string("print_host");
+            // Forca: a Moonraker host given with Moonraker's own port (7125) serves its API there, not Fluidd /
+            // Mainsail: open the printer's web server on the default port instead.
+            if (host_type == htMoonraker)
+                if (const size_t port = webui_url.find(":7125");
+                    port != std::string::npos && (port + 5 == webui_url.size() || webui_url[port + 5] == '/'))
+                    webui_url.erase(port, 5);
+        }
         if (webui_url.empty())
             return webui_url;
     }
@@ -299,6 +312,10 @@ void PrintHostJobQueue::priv::progress_fn(Http::Progress progress, bool &cancel)
 
     if (! cancel) {
         int gui_progress = progress.ultotal > 0 ? 100*progress.ulnow / progress.ultotal : 0;
+        // Forca: the last byte going out is not the printer accepting the job (it may still answer "busy"); only
+        // perform_job's emit_progress(100) after a successful upload means done -- the queue window and Forca
+        // Academy both treat 100 as completed.
+        gui_progress = std::min(gui_progress, 99);
         if (gui_progress != prev_progress) {
             emit_progress(gui_progress);
             prev_progress = gui_progress;

@@ -1972,6 +1972,10 @@ msgstr "Arquivos G-code"
 msgid "Supported files"
 msgstr "Arquivos suportados"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Arquivos de modelo sem 3MF"
+
 msgid "ZIP files"
 msgstr "Arquivos ZIP"
 
@@ -25614,6 +25618,50 @@ msgstr "A impressora informou: terminou (não observado)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min após o envio)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Preparando"
+
+# AI Translated
+msgid "Paused"
+msgstr "Pausado"
+
+# AI Translated
+msgid "No print running"
+msgstr "Nenhuma impressão em andamento"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Decorrido"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Restante"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Para mostrar o status desta impressora, insira o código de acesso dela (exibido na tela da impressora) nas configurações de rede da impressora, em Chave da API / Senha."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Procurar Fluidd ou Mainsail nesta impressora e mostrá-lo na aba Dispositivo"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Insira primeiro o endereço da impressora."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Nenhuma página do Fluidd ou do Mainsail foi encontrada nesta impressora. Você ainda pode digitar o endereço web dela em Interface do dispositivo."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Mostrar esta interface web na aba Dispositivo:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "A placa está livre"
 
 #~ msgid "Tab"
 #~ msgstr "Tab"

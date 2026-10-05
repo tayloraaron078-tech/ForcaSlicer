@@ -14,6 +14,49 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+## 0.1.0-alpha.3 — 2026-10-05
+
+### Added
+- **Import file-type filter.** The Import dialog now has a file-type list: "Supported files" (the default, as before),
+  "Model files without 3MF" (hides projects and downloaded 3MFs), 3MF, STL, STEP and OBJ. Forca remembers the last one
+  you picked. ([#4](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/4))
+- **Moonraker filament sync picks the exact preset** (*experimental, untested on our hardware -- testers with
+  Moonraker filament data wanted on [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3)*). When
+  Moonraker's `lane_data` carries a `filament_id` or `setting_id` (e.g. from spoolman-lane-sync or a Creality ACE),
+  Forca matches that preset before falling back to the material type. From OrcaSlicer PR
+  [#14423](https://github.com/OrcaSlicer/OrcaSlicer/pull/14423) by Broncosis, not yet merged upstream.
+  ([#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3))
+- **Device tab for stock Flashforge printers.** Stock-firmware Flashforge printers (Adventurer 5M / 5X ...) have no
+  web interface, so their Device tab used to show "refused to connect". It now shows Forca's own status page: state,
+  file, progress, layer, elapsed / remaining time, nozzle / bed / chamber temperatures, filament, and Pause / Resume /
+  Stop and the light. After a print it offers "Plate is clear" (the printer takes no new job until that is confirmed),
+  and during the start routine (leveling) it shows Preparing -- the printer ignores Pause until the first layer. It
+  reads the printer's local API, which needs the printer's access code (from its screen) in the printer's network
+  settings under API Key / Password.
+- **Forca Academy follows Klipper and Flashforge prints to the end.** Prints sent to Klipper printers (Moonraker,
+  Elegoo's Klipper printers, Moonraker answering as OctoPrint) and to stock Flashforge printers (with the access code
+  set) now get the same "how it ended" record as Bambu prints, plus the end photo and the every-N-minutes pictures
+  when the printer has a webcam in Moonraker or in Fluidd / Mainsail's camera settings. A Klipper print cancelled from
+  Fluidd is recorded as stopped (Moonraker's job history). The Academy never stores the printer's key or access code.
+- **Forca Academy records multi-machine sends.** Each printer's send from the multi-device page gets its own record
+  once that printer received the job.
+- **Find Fluidd / Mainsail.** A "Search" button next to Device UI in a printer's network settings looks for Fluidd and
+  Mainsail on the printer and puts the one you pick in the Device tab.
+
+### Fixed
+- **Device tab of a Moonraker printer set up with port 7125** opened Moonraker's API instead of Fluidd / Mainsail; it
+  now opens the printer's web page on the normal port (an address in Device UI still wins).
+- **A print the printer refused ("Printer is busy") counted as sent.** The upload window showed it as completed and
+  Forca Academy recorded it, because the upload reported 100% when the last byte left the PC, before the printer
+  answered. 100% now means the printer accepted the job.
+- **Forca Academy tray colours** were saved wrongly for some AMS trays (`##05774` instead of `#057748`).
+- **Happy Hare filament sync** (*experimental, untested on our hardware -- Happy Hare users, please report on
+  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3)*). "Synchronize filament list" no longer reports
+  no filament on Moonraker + Happy Hare printers when Happy Hare published an empty `lane_data` skeleton; Forca then
+  reads the gates from Happy Hare itself. From OrcaSlicer PR
+  [#14798](https://github.com/OrcaSlicer/OrcaSlicer/pull/14798) by WeLizard, not yet merged upstream.
+  ([#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3))
+
 ## 0.1.0-alpha.2 — 2026-10-02
 
 ### Added

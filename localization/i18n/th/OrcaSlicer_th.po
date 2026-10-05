@@ -2052,6 +2052,10 @@ msgstr "ไฟล์ G-code"
 msgid "Supported files"
 msgstr "ไฟล์ที่รองรับ"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "ไฟล์โมเดลที่ไม่ใช่ 3MF"
+
 msgid "ZIP files"
 msgstr "ไฟล์ ZIP"
 
@@ -26086,6 +26090,50 @@ msgstr "เครื่องพิมพ์รายงาน: จบแล้�
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d นาทีหลังส่ง)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "กำลังเตรียม"
+
+# AI Translated
+msgid "Paused"
+msgstr "หยุดชั่วคราวแล้ว"
+
+# AI Translated
+msgid "No print running"
+msgstr "ไม่มีงานพิมพ์ที่กำลังทำงาน"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "เวลาที่ผ่านไป"
+
+# AI Translated
+msgid "Remaining"
+msgstr "เวลาที่เหลือ"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "หากต้องการแสดงสถานะของเครื่องพิมพ์นี้ ให้ป้อนรหัสการเข้าถึง (แสดงบนหน้าจอของเครื่องพิมพ์) ในการตั้งค่าเครือข่ายของเครื่องพิมพ์ ที่ช่อง คีย์ API / รหัสผ่าน"
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "ค้นหา Fluidd หรือ Mainsail บนเครื่องพิมพ์นี้และแสดงในแท็บอุปกรณ์"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "โปรดป้อนที่อยู่ของเครื่องพิมพ์ก่อน"
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "ไม่พบหน้า Fluidd หรือ Mainsail บนเครื่องพิมพ์นี้ คุณยังสามารถพิมพ์ที่อยู่เว็บได้เองใน UI ของอุปกรณ์"
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "แสดงอินเทอร์เฟซเว็บนี้ในแท็บอุปกรณ์:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "แผ่นพิมพ์ว่างแล้ว"
 
 #~ msgid "Tab"
 #~ msgstr "แท็บ"

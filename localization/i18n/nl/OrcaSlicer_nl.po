@@ -2236,6 +2236,10 @@ msgid "Supported files"
 msgstr "Ondersteunde bestanden"
 
 # AI Translated
+msgid "Model files without 3MF"
+msgstr "Modelbestanden zonder 3MF"
+
+# AI Translated
 msgid "ZIP files"
 msgstr "ZIP-bestanden"
 
@@ -28484,6 +28488,50 @@ msgstr "Printer meldde: beëindigd (niet gezien)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min na verzenden)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Voorbereiden"
+
+# AI Translated
+msgid "Paused"
+msgstr "Gepauzeerd"
+
+# AI Translated
+msgid "No print running"
+msgstr "Geen print bezig"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Verstreken"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Resterend"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Om de status van deze printer te tonen, voert u de toegangscode (te zien op het scherm van de printer) in bij de netwerkinstellingen van de printer, onder API sleutel / wachtwoord."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Zoek Fluidd of Mainsail op deze printer en toon het op het tabblad Apparaat"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Voer eerst het adres van de printer in."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Er is geen Fluidd- of Mainsail-pagina gevonden op deze printer. U kunt het webadres nog steeds invullen bij UI van het apparaat."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Deze webinterface tonen op het tabblad Apparaat:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Plaat is leeg"
 
 # AI Translated
 #~ msgid "Tab"

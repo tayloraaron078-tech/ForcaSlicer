@@ -2048,6 +2048,10 @@ msgstr "G-codeファイル"
 msgid "Supported files"
 msgstr "対応ファイル"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "モデルファイル（3MFを除く）"
+
 msgid "ZIP files"
 msgstr "ZIPファイル"
 
@@ -26906,6 +26910,50 @@ msgstr "プリンターの報告: 終了 (未確認)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(送信から %d 分後)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "準備中"
+
+# AI Translated
+msgid "Paused"
+msgstr "一時停止中"
+
+# AI Translated
+msgid "No print running"
+msgstr "実行中の印刷はありません"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "経過"
+
+# AI Translated
+msgid "Remaining"
+msgstr "残り"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "このプリンターの状態を表示するには、プリンターの画面に表示されるアクセスコードを、プリンターのネットワーク設定の「APIキー/パスワード」に入力してください。"
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "このプリンターでFluiddまたはMainsailを探し、デバイスタブに表示します"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "先にプリンターのアドレスを入力してください。"
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "このプリンターでFluiddまたはMainsailのページが見つかりませんでした。デバイスUIにWebアドレスを直接入力することもできます。"
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "このWebインターフェースをデバイスタブに表示:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "プレートは空です"
 
 # AI Translated
 #~ msgid "Tab"

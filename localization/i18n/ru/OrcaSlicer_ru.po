@@ -2038,6 +2038,10 @@ msgstr "Файлы G-code"
 msgid "Supported files"
 msgstr "Поддерживаемые файлы"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Файлы моделей без 3MF"
+
 msgid "ZIP files"
 msgstr "ZIP-архивы"
 
@@ -26708,6 +26712,50 @@ msgstr "Принтер сообщил: завершено (не отслежен
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d мин после отправки)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Подготовка"
+
+# AI Translated
+msgid "Paused"
+msgstr "Пауза"
+
+# AI Translated
+msgid "No print running"
+msgstr "Печать не выполняется"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Прошло"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Осталось"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Чтобы показать состояние этого принтера, введите его код доступа (отображается на экране принтера) в сетевых настройках принтера, в поле API-ключ / пароль."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Найти Fluidd или Mainsail на этом принтере и показать на вкладке Принтер"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Сначала введите адрес принтера."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "На этом принтере не найдена страница Fluidd или Mainsail. Вы можете ввести её веб-адрес в поле URL-адрес хоста вручную."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Показывать этот веб-интерфейс на вкладке Принтер:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Стол свободен"
 
 # Название кнопки на клавиатуре, на момент 2.3.2 используется в 5 местах в
 # значении названия кнопки

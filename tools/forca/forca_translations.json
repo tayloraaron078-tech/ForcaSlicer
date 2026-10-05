@@ -191,6 +191,34 @@
         "zh_CN": "已连接",
         "zh_TW": "已連線"
       }
+    },
+    {
+      "msgid": "Model files without 3MF",
+      "after": "Supported files",
+      "translations": {
+        "ca": "Fitxers de model sense 3MF",
+        "cs": "Soubory modelů bez 3MF",
+        "de": "Modelldateien ohne 3MF",
+        "es": "Archivos de modelo sin 3MF",
+        "eu": "Eredu-fitxategiak 3MF gabe",
+        "fr": "Fichiers de modèle sans 3MF",
+        "hu": "Modellfájlok 3MF nélkül",
+        "it": "File modello senza 3MF",
+        "ja": "モデルファイル（3MFを除く）",
+        "ko": "모델 파일(3MF 제외)",
+        "lt": "Modelių failai be 3MF",
+        "nl": "Modelbestanden zonder 3MF",
+        "pl": "Pliki modeli bez 3MF",
+        "pt_BR": "Arquivos de modelo sem 3MF",
+        "ru": "Файлы моделей без 3MF",
+        "sv": "Modellfiler utan 3MF",
+        "th": "ไฟล์โมเดลที่ไม่ใช่ 3MF",
+        "tr": "3MF hariç model dosyaları",
+        "uk": "Файли моделей без 3MF",
+        "vi": "File mô hình không gồm 3MF",
+        "zh_CN": "模型文件（不含 3MF）",
+        "zh_TW": "模型檔案（不含 3MF）"
+      }
     }
   ]
 }

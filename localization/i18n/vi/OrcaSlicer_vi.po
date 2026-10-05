@@ -2129,6 +2129,10 @@ msgid "Supported files"
 msgstr "File được hỗ trợ"
 
 # AI Translated
+msgid "Model files without 3MF"
+msgstr "File mô hình không gồm 3MF"
+
+# AI Translated
 msgid "ZIP files"
 msgstr "File ZIP"
 
@@ -27415,6 +27419,50 @@ msgstr "Máy in báo: đã kết thúc (không theo dõi được)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d phút sau khi gửi)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Đang chuẩn bị"
+
+# AI Translated
+msgid "Paused"
+msgstr "Đã tạm dừng"
+
+# AI Translated
+msgid "No print running"
+msgstr "Không có bản in nào đang chạy"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Đã trôi qua"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Còn lại"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Để hiển thị trạng thái của máy in này, hãy nhập mã truy cập (hiển thị trên màn hình máy in) trong cài đặt mạng của máy in, tại mục Khóa API / Mật khẩu."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Tìm Fluidd hoặc Mainsail trên máy in này và hiển thị trong thẻ Thiết bị"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Hãy nhập địa chỉ máy in trước."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Không tìm thấy trang Fluidd hoặc Mainsail trên máy in này. Bạn vẫn có thể nhập địa chỉ web vào Giao diện thiết bị."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Hiển thị giao diện web này trong thẻ Thiết bị:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Bàn in đã trống"
 
 # AI Translated
 #~ msgid "Tab"

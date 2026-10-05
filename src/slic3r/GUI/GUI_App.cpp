@@ -611,9 +611,8 @@ static const FileWildcards file_wildcards_by_type[FT_SIZE] = {
 // The function accepts a custom extension parameter. If the parameter is provided, the custom extension
 // will be added as a fist to the list. This is important for a "file save" dialog on OSX, which strips
 // an extension from the provided initial file name and substitutes it with the default extension (the first one in the template).
-wxString file_wildcards(FileType file_type, const std::string &custom_extension)
+static wxString format_wildcards(const FileWildcards& data, const std::string &custom_extension)
 {
-    const FileWildcards& data = file_wildcards_by_type[file_type];
     std::string title;
     std::string mask;
     std::string custom_ext_lower;
@@ -661,6 +660,11 @@ wxString file_wildcards(FileType file_type, const std::string &custom_extension)
         }
     const wxString translated_title = Slic3r::GUI::I18N::translate(data.title_id);
     return GUI::format_wxstr("%s (%s)|%s", translated_title, title, mask);
+}
+
+wxString file_wildcards(FileType file_type, const std::string &custom_extension)
+{
+    return format_wildcards(file_wildcards_by_type[file_type], custom_extension);
 }
 
 static std::string libslic3r_translate_callback(const char *s) { return _u8L(s); } // Forca: via forca_brand() (I18N.cpp)
@@ -5030,6 +5034,17 @@ void GUI_App::load_project(wxWindow *parent, wxString& input_file) const
 void GUI_App::import_model(wxWindow *parent, wxArrayString& input_files) const
 {
     input_files.Clear();
+    // Forca: a file-type dropdown (ForcaSlicer issue #4). "Supported files" stays the default; "without 3MF" hides
+    // projects and downloaded 3MFs when only meshes are wanted. The last choice is remembered.
+    FileWildcards without_3mf{L("Model files without 3MF"), {}};
+    for (const std::string_view& ext : file_wildcards_by_type[FT_MODEL].file_extensions)
+        if (ext != ".3mf")
+            without_3mf.file_extensions.push_back(ext);
+    const wxString wildcards = file_wildcards(FT_MODEL) + "|" + format_wildcards(without_3mf, {}) + "|" +
+                               file_wildcards(FT_3MF) + "|" + file_wildcards(FT_STL) + "|" + file_wildcards(FT_STEP) + "|" +
+                               file_wildcards(FT_OBJ);
+    constexpr int filter_count = 6;
+
     wxFileDialog dialog(parent ? parent : GetTopWindow(),
 #ifdef __APPLE__
         _L("Choose one or more files (3MF/STEP/STL/SVG/OBJ/AMF/USD*/ABC/PLY):"),
@@ -5037,10 +5052,17 @@ void GUI_App::import_model(wxWindow *parent, wxArrayString& input_files) const
         _L("Choose one or more files (3MF/STEP/STL/SVG/OBJ/AMF):"),
 #endif
         from_u8(app_config->get_last_dir()), "",
-        file_wildcards(FT_MODEL), wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
+        wildcards, wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
 
-    if (dialog.ShowModal() == wxID_OK)
+    const std::string saved_filter = app_config->get("forca_import_filter");
+    const int filter = saved_filter.empty() ? 0 : std::atoi(saved_filter.c_str());
+    if (filter > 0 && filter < filter_count)
+        dialog.SetFilterIndex(filter);
+
+    if (dialog.ShowModal() == wxID_OK) {
         dialog.GetPaths(input_files);
+        app_config->set("forca_import_filter", std::to_string(dialog.GetFilterIndex()));
+    }
 }
 
 void GUI_App::import_zip(wxWindow* parent, wxString& input_file) const

@@ -2,6 +2,7 @@
 
 #include "I18N.hpp"
 #include "PrinterWebView.hpp"
+#include "ForcaFlashforgePanel.hpp" // Forca: Flashforge status page
 #include "slic3r/GUI/GUI_App.hpp"
 #include "slic3r/GUI/Widgets/WebView.hpp"
 #include "slic3r/Utils/PrintHost.hpp"
@@ -314,6 +315,10 @@ std::unique_ptr<PrinterWebViewHandler> create_printer_webview_handler(PrinterWeb
     {
         case PrintHostType::htElegooLink:
             return std::make_unique<ElegooPrinterWebViewHandler>(owner);
+        case PrintHostType::htFlashforge: // Forca: only for Forca's own status page (no Device UI address set)
+            if (cfg->opt_string("print_host_webui").empty())
+                return forca_make_flashforge_handler(owner);
+            return nullptr;
         default:
             return nullptr;
     }

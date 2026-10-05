@@ -238,6 +238,15 @@ TEST_CASE("AMS trays get the names the printer shows", "[ForcaAcademy]")
     CHECK(forca_academy_tray_label(254, 0) == "Ext 2");
 }
 
+TEST_CASE("AMS tray colours are #RRGGBB with or without the printer's #", "[ForcaAcademy]")
+{
+    CHECK(forca_academy_tray_colour("057748FF") == "#057748");
+    CHECK(forca_academy_tray_colour("#057748FF") == "#057748");
+    CHECK(forca_academy_tray_colour("#8E9089") == "#8E9089");
+    CHECK(forca_academy_tray_colour("") == "");
+    CHECK(forca_academy_tray_colour("#") == "");
+}
+
 TEST_CASE("How the printer said a print ended goes into the record and the notes", "[ForcaAcademy]")
 {
     ScopedDir      tmp;

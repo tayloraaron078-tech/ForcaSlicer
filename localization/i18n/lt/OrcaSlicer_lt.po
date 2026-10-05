@@ -2054,6 +2054,10 @@ msgstr "G-code failai"
 msgid "Supported files"
 msgstr "Palaikomi failai"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Modelių failai be 3MF"
+
 msgid "ZIP files"
 msgstr "ZIP failai"
 
@@ -26060,6 +26064,50 @@ msgstr "Spausdintuvas pranešė: baigta (nestebėta)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min po išsiuntimo)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Ruošiama"
+
+# AI Translated
+msgid "Paused"
+msgstr "Pristabdyta"
+
+# AI Translated
+msgid "No print running"
+msgstr "Nevyksta joks spausdinimas"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Praėjo"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Liko"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Norėdami matyti šio spausdintuvo būseną, įveskite jo prieigos kodą (rodomas spausdintuvo ekrane) spausdintuvo tinklo nustatymuose, laukelyje API raktas / slaptažodis."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Ieškoti Fluidd arba Mainsail šiame spausdintuve ir rodyti skirtuke Įrenginys"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Pirmiausia įveskite spausdintuvo adresą."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Šiame spausdintuve nerastas joks Fluidd ar Mainsail puslapis. Jo žiniatinklio adresą vis tiek galite įvesti laukelyje Įrenginio sąsaja."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Rodyti šią žiniatinklio sąsają skirtuke Įrenginys:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Plokštė tuščia"
 
 #~ msgid "Tab"
 #~ msgstr "Tab"

@@ -5,6 +5,8 @@
 #include "nlohmann/json.hpp"
 #include "MainFrame.hpp"
 #include "GUI_App.hpp"
+#include "ForcaAcademy.hpp" // Forca Academy: records multi-machine sends
+#include "ForcaAI.hpp"      // Forca: forca_ai_printer_label
 
 #include <exception>
 
@@ -170,6 +172,7 @@ int TaskManager::start_print(const std::vector<PrintParams>& params, TaskSetting
     for (auto it = params.begin(); it != params.end(); it++) {
         TaskStateInfo* new_item = new TaskStateInfo(*it);
         task_group.append(new_item);
+        forca_academy_hold_task(new_item->task_info_id, it->plate_index - 1, it->dev_id, forca_ai_printer_label(it->dev_id));
     }
     m_cache_map.push_back(task_group);
     m_map_mutex.unlock();
@@ -257,6 +260,8 @@ int TaskManager::schedule(TaskStateInfo* task)
                     task->set_state(TaskState::TS_SEND_CANCELED);
                 }
             }
+
+            forca_academy_task_done(task->task_info_id, result == 0);
 
             LifecycleEventContext finish_ctx;
             finish_ctx.name = task->params().project_name;

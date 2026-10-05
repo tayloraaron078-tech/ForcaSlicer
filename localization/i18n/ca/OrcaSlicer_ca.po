@@ -2097,6 +2097,10 @@ msgstr "Fitxers G-code"
 msgid "Supported files"
 msgstr "Fitxers compatibles"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Fitxers de model sense 3MF"
+
 msgid "ZIP files"
 msgstr "Fitxers ZIP"
 
@@ -26606,6 +26610,50 @@ msgstr "La impressora ha informat: acabada (no observada)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min després de l'enviament)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Preparant"
+
+# AI Translated
+msgid "Paused"
+msgstr "En pausa"
+
+# AI Translated
+msgid "No print running"
+msgstr "No hi ha cap impressió en curs"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Transcorregut"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Restant"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Per mostrar l'estat d'aquesta impressora, introduïu el seu codi d'accés (es mostra a la pantalla de la impressora) a la configuració de xarxa de la impressora, a Clau API / Contrasenya."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Cerca Fluidd o Mainsail en aquesta impressora i mostra'l a la pestanya Dispositiu"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Primer introduïu l'adreça de la impressora."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "No s'ha trobat cap pàgina de Fluidd o Mainsail en aquesta impressora. Encara podeu escriure la seva adreça web a Interfície d'Usuari del dispositiu."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Mostra aquesta interfície web a la pestanya Dispositiu:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "La placa és buida"
 
 # AI Translated
 #~ msgid "Tab"

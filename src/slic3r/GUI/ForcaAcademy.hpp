@@ -62,6 +62,8 @@ bool forca_academy_append_history(const boost::filesystem::path& page, const std
 // The name Bambu's printer screen and Forca's Device tab give an AMS tray: "A4" (first AMS, slot 4), "B1", "HT-A"
 // (AMS HT), "Ext" / "Ext 2" (external spool holders). `ams_id` / `slot_id` are the printer's ids (0-based).
 std::string forca_academy_tray_label(int ams_id, int slot_id);
+// A tray colour as "#RRGGBB". Printers report "RRGGBBAA" or "#RRGGBBAA"; empty when there is no colour.
+std::string forca_academy_tray_colour(const std::string& printer_colour);
 // How the printer said a print ended: record.json "print_end" = `end`, mirrored as Forca's <!-- forca:print_end -->
 // block at the end of notes.md (replaced when already there).
 bool forca_academy_set_print_end(const boost::filesystem::path& folder, const nlohmann::json& end, std::string& err);
@@ -96,10 +98,15 @@ void forca_academy_log_calibration(bool printer_page, const std::string& page, c
 // end and every N minutes), and the printer's page (printers/) gets its facts refreshed.
 void forca_academy_on_print_sent(int plate_idx, const std::string& dev_id, const std::string& device_label,
                                  const std::vector<FilamentInfo>* trays);
+// Multi-machine sends (TaskManager): hold a snapshot of the plate when a printer's job is queued (GUI thread), write
+// the record when that printer's send succeeded, drop it when it failed or was cancelled. task_done may be called on
+// any thread. `plate_idx` is 0-based.
+void forca_academy_hold_task(int task_id, int plate_idx, const std::string& dev_id, const std::string& device_label);
+void forca_academy_task_done(int task_id, bool ok);
 // Network print hosts: hold a snapshot of the plate when a "print" upload is queued, write it when that upload
 // completes, drop it if it fails or is cancelled. `job_id` is the upload queue's row. hold_upload may be called on
 // any thread (the upload is queued on the background slicing thread); upload_done on the GUI thread.
-void forca_academy_hold_upload(std::size_t job_id, const std::string& host);
+void forca_academy_hold_upload(std::size_t job_id, const std::string& host, const std::string& file);
 void forca_academy_upload_done(std::size_t job_id, bool ok);
 // Print Journal "Add a print": records the current plate now (for prints Forca did not send, e.g. from an SD card).
 // Returns the new folder, or an empty path with `err` set.

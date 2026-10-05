@@ -27,6 +27,7 @@ add_executable(${_TEST_NAME}_tests
     test_forca_calibration_store.cpp
     test_forca_calibration_wizard.cpp
     test_forca_academy.cpp
+    test_forca_host_status.cpp
     test_forca_ai_autonomy.cpp
     test_shortcuts.cpp
     ../fff_print/test_helpers.cpp

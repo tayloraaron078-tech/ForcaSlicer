@@ -2005,6 +2005,10 @@ msgstr "G-code fitxategiak"
 msgid "Supported files"
 msgstr "Onartutako fitxategiak"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "Eredu-fitxategiak 3MF gabe"
+
 msgid "ZIP files"
 msgstr "ZIP fitxategiak"
 
@@ -25749,6 +25753,50 @@ msgstr "Inprimagailuak jakinarazi du: amaituta (ikusi gabe)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(bidali eta %d min-ra)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Prestatzen"
+
+# AI Translated
+msgid "Paused"
+msgstr "Pausatuta"
+
+# AI Translated
+msgid "No print running"
+msgstr "Ez dago inprimaketarik abian"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Igarotako denbora"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Geratzen dena"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Inprimagailu honen egoera erakusteko, idatzi bere sarbide-kodea (inprimagailuaren pantailan ageri da) inprimagailuaren sare-ezarpenetan, API gakoa / Pasahitza eremuan."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Bilatu Fluidd edo Mainsail inprimagailu honetan eta erakutsi Gailua fitxan"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Idatzi lehenik inprimagailuaren helbidea."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Ez da Fluidd edo Mainsail orririk aurkitu inprimagailu honetan. Hala ere, bere web-helbidea idatz dezakezu Gailuaren interfazea eremuan."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Erakutsi web-interfaze hau Gailua fitxan:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Plaka garbi dago"
 
 #~ msgid "Tab"
 #~ msgstr "Fitxa"

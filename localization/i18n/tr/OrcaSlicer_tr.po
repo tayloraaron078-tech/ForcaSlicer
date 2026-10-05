@@ -2054,6 +2054,10 @@ msgstr "G-code dosyaları"
 msgid "Supported files"
 msgstr "Desteklenen dosyalar"
 
+# AI Translated
+msgid "Model files without 3MF"
+msgstr "3MF hariç model dosyaları"
+
 msgid "ZIP files"
 msgstr "ZIP dosyaları"
 
@@ -26537,6 +26541,50 @@ msgstr "Yazıcı bildirdi: bitti (izlenmedi)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(gönderdikten %d dk sonra)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Hazırlanıyor"
+
+# AI Translated
+msgid "Paused"
+msgstr "Duraklatıldı"
+
+# AI Translated
+msgid "No print running"
+msgstr "Devam eden baskı yok"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Geçen süre"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Kalan"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "Bu yazıcının durumunu göstermek için giriş kodunu (yazıcının ekranında gösterilir) yazıcının ağ ayarlarında API Anahtarı / Şifre alanına girin."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Bu yazıcıda Fluidd veya Mainsail'i ara ve Cihaz sekmesinde göster"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Önce yazıcının adresini girin."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Bu yazıcıda Fluidd veya Mainsail sayfası bulunamadı. Web adresini yine de Cihaz kullanıcı arayüzü alanına yazabilirsiniz."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Bu web arayüzünü Cihaz sekmesinde göster:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Plaka boş"
 
 # AI Translated
 #~ msgid "Tab"

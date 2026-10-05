@@ -1,6 +1,7 @@
 #include "ForcaAcademy.hpp"
 
 #include "ForcaAI.hpp" // forca_ai_plate_report
+#include "ForcaHostStatus.hpp" // Klipper / Flashforge print status
 #include "GUI.hpp"     // from_u8 / into_path
 #include "GUI_App.hpp"
 #include "GLCanvas3D.hpp"
@@ -31,6 +32,7 @@
 #include <iterator>
 #include <map>
 #include <mutex>
+#include <set>
 #include <thread>
 
 namespace Slic3r { namespace GUI {
@@ -290,6 +292,12 @@ std::string forca_academy_tray_label(int ams_id, int slot_id)
     return "AMS " + std::to_string(ams_id) + " slot " + std::to_string(slot_id + 1);
 }
 
+std::string forca_academy_tray_colour(const std::string& printer_colour)
+{
+    const std::string hex = !printer_colour.empty() && printer_colour[0] == '#' ? printer_colour.substr(1) : printer_colour;
+    return hex.empty() ? std::string() : "#" + hex.substr(0, 6);
+}
+
 bool forca_academy_append_history(const fs::path& page, const std::string& title, const std::string& line, std::string& err)
 {
     boost::system::error_code ec;
@@ -509,8 +517,9 @@ struct Upload
     bool        snapped  = false;
     bool        finished = false;
     bool        ok       = false;
+    bool        follow   = false; // Forca can read this printer's status (Klipper, Flashforge)
     json        record;
-    std::string png;
+    std::string png, host, file;
 };
 std::mutex                     s_uploads_mutex;
 std::map<std::size_t, Upload> s_uploads; // job id -> upload
@@ -726,6 +735,32 @@ void grab_frame_async(const std::string& dev_id, const fs::path& folder, const s
     }).detach();
 }
 
+std::set<std::string> s_no_host_camera; // print-host addresses that turned out to have no webcam (this session)
+
+// A Klipper printer's webcam (Moonraker). `config` carries the printer's address and key for this one request.
+void grab_host_frame_async(const DynamicPrintConfig& config, const fs::path& folder, const std::string& printer_name,
+                           const std::string& suffix)
+{
+    const std::string host = config.opt_string("print_host");
+    if (s_no_host_camera.count(host))
+        return;
+    std::thread([config, host, folder, printer_name, suffix]() {
+        std::string jpeg, err;
+        if (!forca_fetch_host_snapshot(config, jpeg, err)) {
+            BOOST_LOG_TRIVIAL(info) << "Forca Academy: no camera picture (" << err << ")";
+            if (err == "no camera" && wxTheApp)
+                wxTheApp->CallAfter([host]() { s_no_host_camera.insert(host); });
+            return;
+        }
+        if (wxTheApp)
+            wxTheApp->CallAfter([folder, jpeg, printer_name, suffix]() {
+                std::string e;
+                if (save_frame(folder, jpeg, printer_name, suffix, e).empty())
+                    BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << e;
+            });
+    }).detach();
+}
+
 // ---- printer pages ----
 
 std::string ams_type_name(DevAmsType t)
@@ -804,10 +839,12 @@ std::string update_printer_page(const fs::path& dir, const json& record, Machine
 struct Tracked
 {
     std::string dev_id, folder, name, job; // folder: absolute, UTF-8
+    std::string host, file; // print-host sends (Klipper, Flashforge): the printer's address (no credentials), the uploaded file
     long long   sent = 0, last_frame = 0;
     bool        running = false;
 };
-std::vector<Tracked> s_tracked;
+std::vector<Tracked>  s_tracked;
+std::set<std::string> s_host_polls; // folders whose print-host status read is in flight
 wxTimer*             s_timer = nullptr;
 
 fs::path tracking_file() { return into_path(from_u8(data_dir())) / "forca" / "academy_tracking.json"; }
@@ -816,8 +853,8 @@ void save_tracking()
 {
     json list = json::array();
     for (const Tracked& t : s_tracked)
-        list.push_back({ { "dev_id", t.dev_id }, { "folder", t.folder }, { "name", t.name }, { "job", t.job },
-                         { "sent", t.sent }, { "last_frame", t.last_frame }, { "running", t.running } });
+        list.push_back({ { "dev_id", t.dev_id }, { "folder", t.folder }, { "name", t.name }, { "job", t.job }, { "host", t.host },
+                         { "file", t.file }, { "sent", t.sent }, { "last_frame", t.last_frame }, { "running", t.running } });
     std::string err;
     boost::system::error_code ec;
     fs::create_directories(tracking_file().parent_path(), ec);
@@ -841,10 +878,12 @@ void load_tracking()
         t.folder     = j.value("folder", std::string());
         t.name       = j.value("name", std::string());
         t.job        = j.value("job", std::string());
+        t.host       = j.value("host", std::string());
+        t.file       = j.value("file", std::string());
         t.sent       = j.value("sent", 0LL);
         t.last_frame = j.value("last_frame", 0LL);
         t.running    = j.value("running", false);
-        if (!t.dev_id.empty() && !t.folder.empty())
+        if ((!t.dev_id.empty() || !t.host.empty()) && !t.folder.empty())
             s_tracked.push_back(t);
     }
 }
@@ -858,13 +897,17 @@ int photo_minutes()
     }
 }
 
-void end_print(const Tracked& t, MachineObject* obj, const std::string& state, const std::string& note)
+// `host_config`: a print-host printer's settings (its end photo comes from its webcam); `printer_message`: its error text.
+void end_print(const Tracked& t, MachineObject* obj, const std::string& state, const std::string& note,
+               const DynamicPrintConfig* host_config = nullptr, const std::string& printer_message = {})
 {
     json end = { { "state", state }, { "ended", now_iso() }, { "time_from_send_s", (long long) std::time(nullptr) - t.sent } };
     if (!t.job.empty())
         end["job"] = t.job;
     if (!note.empty())
         end["note"] = note;
+    if (!printer_message.empty())
+        end["print_error"] = printer_message;
     if (obj && obj->print_error != 0)
         end["print_error"] = obj->get_print_error_str();
     json hms = json::array();
@@ -886,8 +929,95 @@ void end_print(const Tracked& t, MachineObject* obj, const std::string& state, c
         BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << err;
     else
         BOOST_LOG_TRIVIAL(info) << "Forca Academy: " << t.folder << " ended (" << state << ")";
-    if (obj && state != "unknown" && wxGetApp().app_config->get_bool("forca_academy_end_photo"))
-        grab_frame_async(t.dev_id, into_path(from_u8(t.folder)), t.name, "end");
+    if (state != "unknown" && wxGetApp().app_config->get_bool("forca_academy_end_photo")) {
+        if (obj)
+            grab_frame_async(t.dev_id, into_path(from_u8(t.folder)), t.name, "end");
+        else if (host_config)
+            grab_host_frame_async(*host_config, into_path(from_u8(t.folder)), t.name, "end");
+    }
+}
+
+// A print-host printer's status arrived (GUI thread): the same rules as a Bambu printer's -- follow the print once the
+// printer runs this job, record how it ended, give up after 6 h if it never started.
+void apply_host_status(const std::string& folder, bool ok, const ForcaHostStatus& st, const DynamicPrintConfig& config)
+{
+    s_host_polls.erase(folder);
+    auto it = std::find_if(s_tracked.begin(), s_tracked.end(), [&](const Tracked& t) { return t.folder == folder; });
+    if (it == s_tracked.end())
+        return;
+    Tracked&        t    = *it;
+    const long long now  = (long long) std::time(nullptr);
+    const auto      drop = [&]() {
+        s_tracked.erase(it);
+        save_tracking();
+    };
+    if (!ok) { // printer off or unreachable: wait, like a Bambu printer without live data
+        if (!t.running && now - t.sent > 6 * 3600)
+            drop();
+        return;
+    }
+    const bool active = st.state == ForcaHostState::Printing || st.state == ForcaHostState::Paused ||
+                        st.state == ForcaHostState::Preparing;
+    if (active) {
+        const bool ours = t.file.empty() || st.file.empty() || forca_same_job_file(t.file, st.file);
+        if (!t.running) {
+            if (!ours) // still busy with an earlier job
+                return;
+            t.running = true;
+            t.job     = st.file;
+            save_tracking();
+        } else if (!ours && !t.job.empty() && !forca_same_job_file(t.job, st.file)) {
+            end_print(t, nullptr, "unknown", "Another print started before Forca saw this one end.");
+            drop();
+            return;
+        }
+        if (const int minutes = photo_minutes();
+            minutes > 0 && st.state != ForcaHostState::Preparing && now - t.last_frame >= minutes * 60LL) {
+            t.last_frame = now;
+            save_tracking();
+            grab_host_frame_async(config, into_path(from_u8(t.folder)), t.name,
+                                  st.layer >= 0 ? "L" + std::to_string(st.layer) : std::string());
+        }
+        return;
+    }
+    if (t.running) {
+        std::string state = st.state == ForcaHostState::Finished ? "finished" :
+                            st.state == ForcaHostState::Failed   ? "failed" :
+                            st.state == ForcaHostState::Stopped  ? "stopped" :
+                                                                   "unknown";
+        // Back to standby (a cancel from Fluidd or a printer macro does that): Moonraker's job history knows the ending.
+        if (state == "unknown" && !st.last_job_end.empty() &&
+            forca_same_job_file(st.last_job_file, t.job.empty() ? t.file : t.job))
+            state = st.last_job_end;
+        end_print(t, nullptr, state, state == "unknown" ? "The printer went idle without saying how the print ended." : "",
+                  &config, st.message);
+        drop();
+        return;
+    }
+    if (now - t.sent > 6 * 3600) // never seen printing
+        drop();
+}
+
+// Ask each followed print-host printer for its status, one request per print at a time, off the GUI thread.
+void poll_hosts()
+{
+    for (const Tracked& t : s_tracked) {
+        if (t.host.empty() || s_host_polls.count(t.folder))
+            continue;
+        DynamicPrintConfig config;
+        if (!forca_find_host_config(t.host, config))
+            continue; // the printer's settings are gone: the 6 h / 7 day rules drop it
+        s_host_polls.insert(t.folder);
+        std::thread([folder = t.folder, config]() {
+            ForcaHostStatus st;
+            std::string     err;
+            const bool      ok = forca_fetch_host_status(config, st, err);
+            if (!ok)
+                BOOST_LOG_TRIVIAL(debug) << "Forca Academy: printer status not read (" << err << ")";
+            if (wxTheApp)
+                wxTheApp->CallAfter([folder, ok, st, config]() { apply_host_status(folder, ok, st, config); });
+        }).detach();
+    }
 }
 
 void tick()
@@ -897,9 +1027,9 @@ void tick()
             s_timer->Stop();
         return;
     }
-    DeviceManager* dev = wxGetApp().getDeviceManager();
-    if (!dev || !forca_academy_enabled())
+    if (!forca_academy_enabled())
         return;
+    DeviceManager*  dev     = wxGetApp().getDeviceManager();
     const long long now     = (long long) std::time(nullptr);
     bool            changed = false;
     for (auto it = s_tracked.begin(); it != s_tracked.end();) {
@@ -907,6 +1037,10 @@ void tick()
         if (now - t.sent > 7 * 24 * 3600 || !fs::exists(into_path(from_u8(t.folder)))) {
             it = s_tracked.erase(it); // given up (or the user moved the record)
             changed = true;
+            continue;
+        }
+        if (!t.host.empty() || !dev) { // print hosts are polled below
+            ++it;
             continue;
         }
         MachineObject* obj = dev->get_my_machine(t.dev_id);
@@ -956,6 +1090,7 @@ void tick()
     }
     if (changed)
         save_tracking();
+    poll_hosts();
 }
 
 void start_timer()
@@ -1007,72 +1142,170 @@ void forca_academy_mark_source(const std::string& source)
     s_source_time = std::time(nullptr);
 }
 
+namespace {
+
+// A Bambu send's record: the plate as it is now, the device, and the tray each filament slot prints from.
+json sent_record(int plate_idx, const std::string& device_label, const std::vector<FilamentInfo>* trays)
+{
+    json record = snapshot(plate_idx, "printer");
+    if (!device_label.empty())
+        record["printer"]["device"] = device_label;
+    // The tray each filament slot printed from (the print dialog's mapping), and what that tray holds.
+    if (trays)
+        for (const FilamentInfo& t : *trays) {
+            if (t.tray_id < 0 || t.id < 0 || size_t(t.id) >= record["filaments"].size())
+                continue; // not mapped
+            int ams = -1, slot = -1;
+            try {
+                ams  = t.ams_id.empty() ? -1 : std::stoi(t.ams_id);
+                slot = t.slot_id.empty() ? -1 : std::stoi(t.slot_id);
+            } catch (...) {}
+            json tray = { { "tray", ams >= 0 ? forca_academy_tray_label(ams, slot) : "tray " + std::to_string(t.tray_id) } };
+            if (ams >= 0) {
+                tray["ams_id"]  = ams;
+                tray["slot_id"] = slot;
+            }
+            if (!t.type.empty())
+                tray["tray_type"] = t.type;
+            if (const std::string colour = forca_academy_tray_colour(t.color); !colour.empty())
+                tray["tray_colour"] = colour;
+            if (!t.filament_id.empty())
+                tray["tray_filament_id"] = t.filament_id;
+            record["filaments"][t.id]["printed_from"] = tray;
+        }
+    return record;
+}
+
+// Writes a Bambu send's record and follows the print until the printer reports it ended.
+void commit_sent_record(json record, const std::string& png, const std::string& dev_id, const std::string& device_label)
+{
+    DeviceManager* dev = wxGetApp().getDeviceManager();
+    MachineObject* obj = dev && !dev_id.empty() ? dev->get_my_machine(dev_id) : nullptr;
+    if (const std::string page = update_printer_page(forca_academy_dir(), record, obj); !page.empty())
+        record["printer"]["page"] = page;
+    const fs::path folder = write(record, png);
+    if (!folder.empty() && !dev_id.empty()) { // follow it until the printer reports it ended
+        Tracked t;
+        t.dev_id = dev_id;
+        t.folder = into_u8(from_path(folder));
+        t.name   = obj ? obj->get_dev_name() : device_label;
+        t.sent   = (long long) std::time(nullptr);
+        s_tracked.erase(std::remove_if(s_tracked.begin(), s_tracked.end(), [&](const Tracked& o) { return o.dev_id == dev_id; }),
+                        s_tracked.end()); // one print per printer at a time
+        s_tracked.push_back(t);
+        save_tracking();
+        start_timer();
+    }
+}
+
+// Multi-machine sends: the plate is snapshotted when the job is queued and written once that printer's send succeeds.
+struct HeldTask
+{
+    json        record;
+    std::string png, dev_id, device_label;
+};
+std::mutex               s_tasks_mutex;
+std::map<int, HeldTask> s_tasks; // TaskManager task id -> snapshot
+
+} // namespace
+
 void forca_academy_on_print_sent(int plate_idx, const std::string& dev_id, const std::string& device_label,
                                  const std::vector<FilamentInfo>* trays)
 {
     if (!forca_academy_enabled())
         return;
     try { // never let the journal get in the way of printing
-        json record = snapshot(plate_idx, "printer");
-        if (!device_label.empty())
-            record["printer"]["device"] = device_label;
-        // The tray each filament slot printed from (the print dialog's mapping), and what that tray holds.
-        if (trays)
-            for (const FilamentInfo& t : *trays) {
-                if (t.tray_id < 0 || t.id < 0 || size_t(t.id) >= record["filaments"].size())
-                    continue; // not mapped
-                int ams = -1, slot = -1;
-                try {
-                    ams  = t.ams_id.empty() ? -1 : std::stoi(t.ams_id);
-                    slot = t.slot_id.empty() ? -1 : std::stoi(t.slot_id);
-                } catch (...) {}
-                json tray = { { "tray", ams >= 0 ? forca_academy_tray_label(ams, slot) : "tray " + std::to_string(t.tray_id) } };
-                if (ams >= 0) {
-                    tray["ams_id"]  = ams;
-                    tray["slot_id"] = slot;
-                }
-                if (!t.type.empty())
-                    tray["tray_type"] = t.type;
-                if (!t.color.empty())
-                    tray["tray_colour"] = "#" + t.color.substr(0, 6);
-                if (!t.filament_id.empty())
-                    tray["tray_filament_id"] = t.filament_id;
-                record["filaments"][t.id]["printed_from"] = tray;
-            }
-        DeviceManager* dev = wxGetApp().getDeviceManager();
-        MachineObject* obj = dev && !dev_id.empty() ? dev->get_my_machine(dev_id) : nullptr;
-        if (const std::string page = update_printer_page(forca_academy_dir(), record, obj); !page.empty())
-            record["printer"]["page"] = page;
-        const fs::path folder = write(record, plate_png(record["plate"]["number"].get<int>() - 1));
-        if (!folder.empty() && !dev_id.empty()) { // follow it until the printer reports it ended
-            Tracked t;
-            t.dev_id = dev_id;
-            t.folder = into_u8(from_path(folder));
-            t.name   = obj ? obj->get_dev_name() : device_label;
-            t.sent   = (long long) std::time(nullptr);
-            s_tracked.erase(std::remove_if(s_tracked.begin(), s_tracked.end(), [&](const Tracked& o) { return o.dev_id == dev_id; }),
-                            s_tracked.end()); // one print per printer at a time
-            s_tracked.push_back(t);
-            save_tracking();
-            start_timer();
-        }
+        json record = sent_record(plate_idx, device_label, trays);
+        const std::string png = plate_png(record["plate"]["number"].get<int>() - 1);
+        commit_sent_record(std::move(record), png, dev_id, device_label);
     } catch (const std::exception& e) {
         BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << e.what();
     }
 }
 
-void forca_academy_hold_upload(std::size_t job_id, const std::string& host)
+void forca_academy_hold_task(int task_id, int plate_idx, const std::string& dev_id, const std::string& device_label)
+{
+    if (!forca_academy_enabled())
+        return;
+    try {
+        HeldTask held;
+        held.record = sent_record(plate_idx, device_label, nullptr);
+        held.record["source"] = "user: multi-machine send";
+        held.png          = plate_png(held.record["plate"]["number"].get<int>() - 1);
+        held.dev_id       = dev_id;
+        held.device_label = device_label;
+        std::lock_guard<std::mutex> lock(s_tasks_mutex);
+        s_tasks[task_id] = std::move(held);
+    } catch (const std::exception& e) {
+        BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << e.what();
+    }
+}
+
+void forca_academy_task_done(int task_id, bool ok)
+{
+    HeldTask held;
+    {
+        std::lock_guard<std::mutex> lock(s_tasks_mutex);
+        auto it = s_tasks.find(task_id);
+        if (it == s_tasks.end())
+            return;
+        held = std::move(it->second);
+        s_tasks.erase(it);
+    }
+    if (!ok)
+        return;
+    wxGetApp().CallAfter([held = std::move(held)]() mutable {
+        try {
+            commit_sent_record(std::move(held.record), held.png, held.dev_id, held.device_label);
+        } catch (const std::exception& e) {
+            BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << e.what();
+        }
+    });
+}
+
+namespace {
+
+// Writes a print-host send's record and, for printers Forca can read (Klipper, Flashforge), follows the print.
+void commit_upload(json record, const std::string& png, const Upload& upload)
+{
+    const fs::path folder = write(record, png);
+    if (folder.empty() || !upload.follow)
+        return;
+    Tracked t;
+    t.folder = into_u8(from_path(folder));
+    t.host   = upload.host;
+    t.file   = upload.file;
+    t.name   = record["printer"].value("physical_printer", std::string());
+    if (t.name.empty())
+        t.name = record["printer"].value("preset", std::string());
+    t.sent = (long long) std::time(nullptr);
+    s_tracked.erase(std::remove_if(s_tracked.begin(), s_tracked.end(), [&](const Tracked& o) { return !o.host.empty() && o.host == t.host; }),
+                    s_tracked.end()); // one print per printer at a time
+    s_tracked.push_back(t);
+    save_tracking();
+    start_timer();
+}
+
+} // namespace
+
+void forca_academy_hold_upload(std::size_t job_id, const std::string& host, const std::string& file)
 {
     {
         std::lock_guard<std::mutex> lock(s_uploads_mutex);
-        s_uploads[job_id] = Upload();
+        Upload upload;
+        upload.host       = safe_host(host);
+        upload.file       = file;
+        s_uploads[job_id] = std::move(upload);
     }
     wxGetApp().CallAfter([job_id, host]() {
         json        record;
         std::string png;
-        bool        ok = forca_academy_enabled();
+        bool        ok     = forca_academy_enabled();
+        bool        follow = false;
         if (ok) {
             try {
+                DynamicPrintConfig config;
+                follow = forca_find_host_config(host, config) && !forca_host_status_kind(config).empty();
                 record                    = snapshot(-1, "print_host");
                 record["printer"]["host"] = safe_host(host);
                 if (const std::string page = update_printer_page(forca_academy_dir(), record, nullptr); !page.empty())
@@ -1091,17 +1324,18 @@ void forca_academy_hold_upload(std::size_t job_id, const std::string& host)
             s_uploads.erase(it);
             return;
         }
+        it->second.follow = follow;
         if (!it->second.finished) {
             it->second.record  = std::move(record);
             it->second.png     = std::move(png);
             it->second.snapped = true;
             return;
         }
-        const bool finished_ok = it->second.ok; // the upload already ended
+        Upload upload = std::move(it->second); // the upload already ended
         s_uploads.erase(it);
         lock.unlock();
-        if (finished_ok)
-            write(record, png);
+        if (upload.ok)
+            commit_upload(std::move(record), png, upload);
     });
 }
 
@@ -1121,7 +1355,8 @@ void forca_academy_upload_done(std::size_t job_id, bool ok)
     lock.unlock();
     if (ok) {
         try {
-            write(upload.record, upload.png);
+            json record = std::move(upload.record);
+            commit_upload(std::move(record), upload.png, upload);
         } catch (const std::exception& e) {
             BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << e.what();
         }

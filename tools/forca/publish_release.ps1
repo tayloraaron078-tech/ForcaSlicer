@@ -204,11 +204,17 @@ if ($Release) {
     # GitHub's own digests must match ours.
     $sums = @{}
     Get-Content -LiteralPath (Join-Path $up 'SHA256SUMS.txt') | ForEach-Object { $h, $n = $_ -split '\s+', 2; $sums[$n] = $h }
-    $assets = & gh release view $tag --repo $publicRepo --json assets --jq '.assets[] | .name + " " + .digest'
-    foreach ($a in $assets) {
-        $n, $d = $a -split ' ', 2
-        if ($sums.ContainsKey($n) -and $d -ne "sha256:$($sums[$n])") { Fail "digest mismatch for $n" }
+    # Parse the JSON here: Windows PowerShell splits a --jq filter with spaces into several arguments.
+    $view = & gh release view $tag --repo $publicRepo --json assets
+    if ($LASTEXITCODE -ne 0) { Fail 'gh release view failed: the digests were NOT checked' }
+    $checked = 0
+    foreach ($a in ($view | Out-String | ConvertFrom-Json).assets) {
+        if (-not $sums.ContainsKey($a.name)) { continue }
+        if ($a.digest -ne "sha256:$($sums[$a.name])") { Fail "digest mismatch for $($a.name)" }
+        $checked++
     }
+    if ($checked -ne $sums.Count) { Fail "only $checked of $($sums.Count) files found on the release: the digests were NOT all checked" }
+    Say "GitHub's SHA-256 digests match ours ($checked files)."
     Say "released: https://github.com/$publicRepo/releases/tag/$tag"
     Say "Private archive: tag the source commit and advance safe/known-good (each push needs the maintainer's OK)."
 }

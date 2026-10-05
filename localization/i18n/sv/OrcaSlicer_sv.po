@@ -2318,6 +2318,10 @@ msgid "Supported files"
 msgstr "Filer som stöds"
 
 # AI Translated
+msgid "Model files without 3MF"
+msgstr "Modellfiler utan 3MF"
+
+# AI Translated
 msgid "ZIP files"
 msgstr "ZIP-filer"
 
@@ -28772,6 +28776,50 @@ msgstr "Skrivaren rapporterade: avslutad (inte sedd)"
 # AI Translated
 msgid "(%d min after sending)"
 msgstr "(%d min efter sändning)"
+
+# AI Translated
+msgid "Preparing"
+msgstr "Förbereder"
+
+# AI Translated
+msgid "Paused"
+msgstr "Pausad"
+
+# AI Translated
+msgid "No print running"
+msgstr "Ingen utskrift pågår"
+
+# AI Translated
+msgid "Elapsed"
+msgstr "Förfluten tid"
+
+# AI Translated
+msgid "Remaining"
+msgstr "Återstår"
+
+# AI Translated
+msgid "To show this printer's status, enter its access code (shown on the printer's screen) in the printer's network settings, under API Key / Password."
+msgstr "För att visa skrivarens status anger du dess behörighetskod (visas på skrivarens skärm) i skrivarens nätverksinställningar, under API Nyckel/Lösenord."
+
+# AI Translated
+msgid "Look for Fluidd or Mainsail on this printer and show it in the Device tab"
+msgstr "Sök efter Fluidd eller Mainsail på den här skrivaren och visa det på fliken Enhet"
+
+# AI Translated
+msgid "Enter the printer's address first."
+msgstr "Ange skrivarens adress först."
+
+# AI Translated
+msgid "No Fluidd or Mainsail page was found on this printer. You can still type its web address in Device UI."
+msgstr "Ingen Fluidd- eller Mainsail-sida hittades på den här skrivaren. Du kan fortfarande skriva in webbadressen under Enhetens gränssnitt."
+
+# AI Translated
+msgid "Show this web interface in the Device tab:"
+msgstr "Visa det här webbgränssnittet på fliken Enhet:"
+
+# AI Translated
+msgid "Plate is clear"
+msgstr "Plattan är tom"
 
 # AI Translated
 #~ msgid "Tab"

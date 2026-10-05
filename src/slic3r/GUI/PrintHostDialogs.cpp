@@ -1300,7 +1300,8 @@ void PrintHostQueueDialog::append_job(const PrintHostJob &job)
     // Forca Academy: an upload that prints gets a record when it completes (its job id is its row).
     if (job.upload_data.post_action == PrintHostPostUploadAction::StartPrint ||
         job.upload_data.post_action == PrintHostPostUploadAction::QueuePrint)
-        forca_academy_hold_upload(size_t(job_list->GetItemCount()), job.printhost->get_host());
+        forca_academy_hold_upload(size_t(job_list->GetItemCount()), job.printhost->get_host(),
+                                  job.upload_data.upload_path.string());
 
     wxVector<wxVariant> fields;
     fields.push_back(wxVariant(wxString::Format("%d", job_list->GetItemCount() + 1)));

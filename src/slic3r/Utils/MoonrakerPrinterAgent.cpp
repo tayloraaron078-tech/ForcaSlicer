@@ -582,25 +582,43 @@ void MoonrakerPrinterAgent::build_ams_payload(int ams_count, int max_lane_index,
 bool MoonrakerPrinterAgent::fetch_filament_info(std::string dev_id)
 {
     std::vector<AmsTrayData> trays;
+    std::vector<AmsTrayData> empty_lane_data_trays;
     int max_lane_index = 0;
+    int empty_lane_data_max_index = -1;
 
     // Try Moonraker filament data (more generic, supports any filament changer
     // software that reports lane data to Moonraker like AFC and recent Happy
     // Hare as of Feb 15, 2026)
-    if (fetch_moonraker_filament_data(trays, max_lane_index)) {
+    const bool has_lane_data = fetch_moonraker_filament_data(trays, max_lane_index);
+    if (has_lane_data &&
+        std::any_of(trays.begin(), trays.end(), [](const AmsTrayData& tray) { return tray.has_filament; })) {
         BOOST_LOG_TRIVIAL(info) << "MoonrakerPrinterAgent::fetch_filament_info: Detected Moonraker filament system with "
                                 << (max_lane_index + 1) << " lanes";
         int ams_count = (max_lane_index + 4) / 4;
         build_ams_payload(ams_count, max_lane_index, trays);
         return true;
     }
+    if (has_lane_data) {
+        BOOST_LOG_TRIVIAL(info) << "MoonrakerPrinterAgent::fetch_filament_info: lane_data present but all lanes empty, trying Happy Hare MMU";
+        empty_lane_data_trays = trays;
+        empty_lane_data_max_index = max_lane_index;
+    }
 
     // Attempt Happy Hare first (more widely adopted, supports more filament changers)
     if (fetch_hh_filament_info(trays, max_lane_index)) {
+        // Keep empty trailing lanes reported by lane_data.
+        max_lane_index = std::max(max_lane_index, empty_lane_data_max_index);
         BOOST_LOG_TRIVIAL(info) << "MoonrakerPrinterAgent::fetch_filament_info: Detected Happy Hare MMU with "
                                 << (max_lane_index + 1) << " gates";
         int ams_count = (max_lane_index + 4) / 4;
         build_ams_payload(ams_count, max_lane_index, trays);
+        return true;
+    }
+
+    // Preserve the original empty topology when Happy Hare did not provide loaded gates.
+    if (empty_lane_data_max_index >= 0) {
+        int ams_count = (empty_lane_data_max_index + 4) / 4;
+        build_ams_payload(ams_count, empty_lane_data_max_index, empty_lane_data_trays);
         return true;
     }
 
@@ -837,9 +855,20 @@ bool MoonrakerPrinterAgent::fetch_moonraker_filament_data(std::vector<AmsTrayDat
         tray.nozzle_temp = safe_json_int(lane_obj, "nozzle_temp");
         tray.has_filament = !tray.tray_type.empty();
         auto* bundle = GUI::wxGetApp().preset_bundle;
-        tray.tray_info_idx = bundle
-            ? bundle->filaments.filament_id_by_type(tray.tray_type)
-            : map_filament_type_to_generic_id(tray.tray_type);
+        // Try to match preset by filament_id, then setting_id from lane_data (spoolman-lane-sync
+        // stores the OrcaSlicer preset name/id in setting_id; filament_id may be a raw Spoolman DB id).
+        // Falls back to material-type matching if no preset found.
+        std::string lane_filament_id = safe_json_string(lane_obj, "filament_id");
+        std::string lane_setting_id  = safe_json_string(lane_obj, "setting_id");
+        tray.tray_info_idx = "";
+        if (!lane_filament_id.empty() && bundle)
+            tray.tray_info_idx = bundle->filaments.filament_id_by_id_or_name(lane_filament_id);
+        if (tray.tray_info_idx.empty() && !lane_setting_id.empty() && bundle)
+            tray.tray_info_idx = bundle->filaments.filament_id_by_id_or_name(lane_setting_id);
+        if (tray.tray_info_idx.empty())
+            tray.tray_info_idx = bundle
+                ? bundle->filaments.filament_id_by_type(tray.tray_type)
+                : map_filament_type_to_generic_id(tray.tray_type);
 
         max_lane_index = std::max(max_lane_index, lane_index);
         trays.push_back(tray);
