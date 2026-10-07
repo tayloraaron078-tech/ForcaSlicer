@@ -109,6 +109,20 @@ needed) and [Discussions](https://github.com/tayloraaron078-tech/ForcaSlicer/dis
 problems to OrcaSlicer** — if it's a Forca build, report it here even if you think the bug is Orca's; we'll
 forward it upstream if it is. The [tester guide](docs/forca/release/TESTING.md) explains what's most useful.
 
+# How Forca is developed
+Forca is developed in a private repository, and each release is published here as a single commit on top of
+OrcaSlicer's history. That's why you'll see one commit per release rather than the day-to-day work: experiments,
+features that don't pan out, and work in progress stay private until they're tested and ready.
+
+Every release is the complete source code of what you download (AGPL-3.0), and the [changelog](CHANGELOG.md)
+describes everything that changed.
+
+**Contributing:** bug reports, ideas and feedback are very welcome in
+[Issues](https://github.com/tayloraaron078-tech/ForcaSlicer/issues) and
+[Discussions](https://github.com/tayloraaron078-tech/ForcaSlicer/discussions). Pull requests are welcome too; since
+the public history is release-only, accepted changes are brought into the development repository and ship in the
+next release, with credit to you.
+
 # Built on OrcaSlicer
 Everything outside the three features above is OrcaSlicer, and Orca's documentation applies:
 <https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to late

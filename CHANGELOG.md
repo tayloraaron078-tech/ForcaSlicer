@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
-All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `8c03985818` on
-2026-09-26; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `78f74a6276` on
+2026-10-06; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -13,6 +13,35 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
 ## Unreleased
+
+### Changed
+- **Merged OrcaSlicer up to `78f74a6276` (2026-10-06).** Brings OrcaSlicer's latest 2.5 development work, including
+  its new section view on the 3D canvas. Forca's support-interface paint tool now uses that section view, like
+  OrcaSlicer's own paint tools, instead of its own "Section view" slider.
+- **Shorter travel moves.** Forca orders islands, infill and support so the nozzle travels less between them (up to
+  2.5% less travel on test models; print time never longer). G-code generation also prepares each layer's travel
+  data in parallel.
+- **More accurate minimum layer time.** The cooling slowdown now counts the time spent accelerating and braking, so
+  small layers get the cooling time they are set to without being slowed more than needed.
+
+### Added
+- **Forca Academy pictures from Flashforge printers with a built-in camera** (Adventurer 5M Pro and similar): the
+  progress and end pictures now also come from the camera the printer reports, like Klipper printers' webcams.
+
+### Fixed
+- **Filament sync from Klipper filament changers (Happy Hare, AFC, Anycubic ACE via KX-Bridge) put filaments in the
+  wrong slots**, skipped some, or labelled the unit as a Bambu AMS. Moonraker printers now sync their lanes directly,
+  without Bambu's slot-matching dialog, and Forca reads whichever of the printer's two filament lists has more loaded
+  slots (OrcaSlicer PR #13372). Experimental: not tested on our own hardware.
+- **Changing printer showed "Shared profiles may be available for this printer"** with a link to Orca Cloud, which
+  Forca has switched off. The notice and its Preferences checkbox are gone.
+- **A G4 pause in custom G-code (e.g. a dwell before a layer change) was not counted** in the layer time used for
+  cooling, so such layers could be slowed down more than needed.
+- **Opening a newer Bambu Studio project said "Found unrecognized settings:" without listing them.** The settings are
+  now listed.
+- **Bambu Lab printers retracted on nearly every infill travel**, making prints slower (one test model: about 2.5 hours
+  longer than OrcaSlicer 2.4.2). OrcaSlicer's sync of Bambu Studio's profiles replaced "Reduce infill retraction" with
+  a newer setting OrcaSlicer doesn't understand yet, which switched it off; Forca's Bambu profiles turn it back on.
 
 ## 0.1.0-alpha.3 — 2026-10-05
 

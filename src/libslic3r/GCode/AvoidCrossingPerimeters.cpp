@@ -6,12 +6,34 @@
 #include "../ExPolygon.hpp"
 #include "../Geometry.hpp"
 #include "../ClipperUtils.hpp"
-#include "../SVG.hpp"
+#include "libslic3r/Line.hpp"
+#include "libslic3r/libslic3r.h"
+#include "libslic3r/Point.hpp"
+#include "libslic3r/Utils.hpp"
+#include "libslic3r/Polyline.hpp"
+#include "libslic3r/BoundingBox.hpp"
+#include "libslic3r/Flow.hpp"
+#include "libslic3r/Surface.hpp"
+#include "libslic3r/Config.hpp"
 #include "AvoidCrossingPerimeters.hpp"
 
+#include <cstddef>
+#include <boost/container_hash/hash.hpp>
+#include <cassert>
+#include <limits>
+#include <algorithm>
+#include <iterator>
+#include <cmath>
+#include <math.h>
 #include <numeric>
 #include <unordered_set>
 #include <boost/range/adaptor/reversed.hpp>
+#include <vector>
+#include <utility>
+#include "libslic3r/Extruder.hpp"
+#include "libslic3r/GCodeWriter.hpp"
+#include "libslic3r/PrintConfig.hpp"
+#include "libslic3r/SurfaceCollection.hpp"
 
 namespace Slic3r {
 
@@ -1247,7 +1269,9 @@ Polyline AvoidCrossingPerimeters::travel_to(const GCode &gcodegen, const Point &
     const ExPolygons               &lslices          = gcodegen.layer()->lslices;
     const std::vector<BoundingBox> &lslices_bboxes   = gcodegen.layer()->lslices_bboxes;
     bool                            is_support_layer = (dynamic_cast<const SupportLayer *>(gcodegen.layer()) != nullptr);
-    if (!use_external && (is_support_layer || (!m_lslices_offset.empty() && !any_expolygon_contains(m_lslices_offset, m_lslices_offset_bboxes, m_grid_lslice, travel)))) {
+    static const LayerData          no_layer_data {};
+    const LayerData                &layer_data       = m_layer_data ? *m_layer_data : no_layer_data;
+    if (!use_external && (is_support_layer || (!layer_data.lslices_offset.empty() && !any_expolygon_contains(layer_data.lslices_offset, layer_data.lslices_offset_bboxes, layer_data.grid_lslice, travel)))) {
         // Initialize m_internal only when it is necessary.
         if (m_internal.boundaries.empty()) {
             init_boundary(&m_internal, to_polygons(get_boundary(*gcodegen.layer(), get_perimeter_spacing(*gcodegen.layer()))), {start, end});
@@ -1308,33 +1332,44 @@ Polyline AvoidCrossingPerimeters::travel_to(const GCode &gcodegen, const Point &
     } else if (max_detour_length_exceeded) {
         *could_be_wipe_disabled = false;
     } else
-        *could_be_wipe_disabled = !need_wipe(gcodegen, m_lslices_offset, m_lslices_offset_bboxes, m_grid_lslice, travel, result_pl, travel_intersection_count);
+        *could_be_wipe_disabled = !need_wipe(gcodegen, layer_data.lslices_offset, layer_data.lslices_offset_bboxes, layer_data.grid_lslice, travel, result_pl, travel_intersection_count);
 
     return result_pl;
 }
 
 // ************************************* AvoidCrossingPerimeters::init_layer() *****************************************
 
-void AvoidCrossingPerimeters::init_layer(const Layer &layer)
+std::shared_ptr<const AvoidCrossingPerimeters::LayerData> AvoidCrossingPerimeters::compute_layer_data(const Layer &layer)
 {
-    m_internal.clear();
-    m_external.clear();
-
-    m_lslices_offset.clear();
-    m_lslices_offset_bboxes.clear();
+    // Built in place: the grid keeps pointers to the polygons of lslices_offset.
+    auto data = std::make_shared<LayerData>();
     for (auto coeff : {0.6f, 0.5f, 0.45f}) {
-        m_lslices_offset = offset_ex(layer.lslices, -get_external_perimeter_width(layer) * coeff);
-        if (!m_lslices_offset.empty()) break;
-    }    
-    m_lslices_offset_bboxes.reserve(m_lslices_offset.size());
-    for (const auto &ex_polygon : m_lslices_offset) m_lslices_offset_bboxes.emplace_back(get_extents(ex_polygon));
+        data->lslices_offset = offset_ex(layer.lslices, -get_external_perimeter_width(layer) * coeff);
+        if (!data->lslices_offset.empty()) break;
+    }
+    data->lslices_offset_bboxes.reserve(data->lslices_offset.size());
+    for (const auto &ex_polygon : data->lslices_offset) data->lslices_offset_bboxes.emplace_back(get_extents(ex_polygon));
 
     BoundingBox bbox_slice(get_extents(layer.lslices));
     bbox_slice.offset(SCALED_EPSILON);
 
-    m_grid_lslice.set_bbox(bbox_slice);
+    data->grid_lslice.set_bbox(bbox_slice);
     //FIXME 1mm grid?
-    m_grid_lslice.create(m_lslices_offset, coord_t(scale_(1.)));
+    data->grid_lslice.create(data->lslices_offset, coord_t(scale_(1.)));
+    return data;
+}
+
+void AvoidCrossingPerimeters::init_layer(const Layer &layer)
+{
+    // The internal and external boundaries depend on the instance being printed, so they are always reset.
+    m_internal.clear();
+    m_external.clear();
+
+    if (m_layer_data_layer == &layer && m_layer_data)
+        return;
+    auto it = std::find_if(m_precomputed.begin(), m_precomputed.end(), [&layer](const auto &item) { return item.first == &layer; });
+    m_layer_data       = it == m_precomputed.end() ? compute_layer_data(layer) : it->second;
+    m_layer_data_layer = &layer;
 }
 
 #if 0

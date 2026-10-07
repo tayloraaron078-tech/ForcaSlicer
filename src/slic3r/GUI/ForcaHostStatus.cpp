@@ -98,6 +98,18 @@ bool http_get(const std::string& url, const std::string& api_key, std::string& b
     return ok;
 }
 
+// One still picture from a camera address; false unless it is a JPEG.
+bool fetch_jpeg(const std::string& url, std::string& jpeg, std::string& err)
+{
+    if (!http_get(url, {}, jpeg, err))
+        return false;
+    if (jpeg.size() < 4 || (unsigned char) jpeg[0] != 0xFF || (unsigned char) jpeg[1] != 0xD8) {
+        err = "the camera did not send a picture";
+        return false;
+    }
+    return true;
+}
+
 // POST to a Flashforge printer's local API with its serial number and access code; `body` gets a reply whose code is 0.
 bool flashforge_post(const DynamicPrintConfig& config, const std::string& path, const json& extra, std::string& body, std::string& err)
 {
@@ -307,17 +319,29 @@ bool forca_fetch_host_status(const DynamicPrintConfig& config, ForcaHostStatus& 
 
 bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jpeg, std::string& err)
 {
-    if (forca_host_status_kind(config) != "moonraker") {
+    const std::string kind = forca_host_status_kind(config);
+    if (kind != "moonraker" && kind != "flashforge") {
         err = "no camera";
         return false;
     }
     const std::string host = config.opt_string("print_host");
     std::string       body;
     try {
+        std::string snapshot;
+        if (kind == "flashforge") { // models with a camera (Adventurer 5M Pro ...) report its mjpg stream in 'detail'
+            if (!flashforge_post(config, "detail", json::object(), body, err))
+                return false;
+            const json reply = json::parse(body);
+            snapshot         = forca_camera_snapshot_url(str(reply.contains("detail") ? reply["detail"] : reply, "cameraStreamUrl"));
+            if (snapshot.empty()) {
+                err = "no camera";
+                return false;
+            }
+            return fetch_jpeg(snapshot, jpeg, err);
+        }
         if (!http_get(base_url(host) + "/server/webcams/list", config.opt_string("printhost_apikey"), body, err))
             return false;
         const json reply = json::parse(body);
-        std::string snapshot;
         const json& result = obj(reply, "result");
         const auto  cams   = result.find("webcams");
         for (const json& cam : cams != result.end() && cams->is_array() ? *cams : json::array())
@@ -356,13 +380,7 @@ bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jp
         // A relative snapshot address belongs to the printer's web server (port 80), not to Moonraker's own port.
         if (!boost::algorithm::istarts_with(snapshot, "http"))
             snapshot = "http://" + host_name(host) + (snapshot.front() == '/' ? "" : "/") + snapshot;
-        if (!http_get(snapshot, {}, jpeg, err))
-            return false;
-        if (jpeg.size() < 4 || (unsigned char) jpeg[0] != 0xFF || (unsigned char) jpeg[1] != 0xD8) {
-            err = "the camera did not send a picture";
-            return false;
-        }
-        return true;
+        return fetch_jpeg(snapshot, jpeg, err);
     } catch (const std::exception& e) {
         err = std::string("unexpected reply: ") + e.what();
     }

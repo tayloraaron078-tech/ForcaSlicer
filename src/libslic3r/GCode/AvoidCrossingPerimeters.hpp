@@ -1,9 +1,17 @@
 #ifndef slic3r_AvoidCrossingPerimeters_hpp_
 #define slic3r_AvoidCrossingPerimeters_hpp_
 
-#include "../libslic3r.h"
 #include "../ExPolygon.hpp"
 #include "../EdgeGrid.hpp"
+#include "libslic3r/Polyline.hpp"
+#include "libslic3r/Polygon.hpp"
+#include "libslic3r/BoundingBox.hpp"
+#include <vector>
+#include "libslic3r/MultiMaterialSegmentation.hpp"
+
+#include <memory>
+#include <utility>
+#include <vector>
 
 namespace Slic3r {
 
@@ -24,6 +32,20 @@ public:
     bool        disabled_once() const   { return m_disabled_once; }
     void        reset_once_modifiers()  { m_use_external_mp_once = false; m_disabled_once = false; }
 
+    // Per-layer geometry that depends only on the layer: lslices shrunk by about half an external perimeter
+    // width, with an edge grid, used to tell whether a travel stays inside an object. It is independent of
+    // the instance being printed, so it is shared by all instances and may be computed ahead on another thread.
+    struct LayerData {
+        ExPolygons               lslices_offset;
+        std::vector<BoundingBox> lslices_offset_bboxes;
+        EdgeGrid::Grid           grid_lslice;
+    };
+    static std::shared_ptr<const LayerData> compute_layer_data(const Layer &layer);
+    using PrecomputedLayerData = std::vector<std::pair<const Layer*, std::shared_ptr<const LayerData>>>;
+    // Hands over data computed ahead for the layers about to be printed.
+    void        set_precomputed_layer_data(PrecomputedLayerData &&data) { m_precomputed = std::move(data); }
+
+    // Takes the layer data from the precomputed set, reuses the data of the previous call for the same layer, or computes it.
     void        init_layer(const Layer &layer);
 
     Polyline    travel_to(const GCode& gcodegen, const Point& point)
@@ -59,11 +81,9 @@ private:
     // we enable it by default for the first travel move in print
     bool           m_disabled_once { true };
 
-    // Lslices offseted by half an external perimeter width. Used for detection if line or polyline is inside of any polygon.
-    ExPolygons               m_lslices_offset;
-    std::vector<BoundingBox> m_lslices_offset_bboxes;
-    // Used for detection of line or polyline is inside of any polygon.
-    EdgeGrid::Grid m_grid_lslice;
+    const Layer                      *m_layer_data_layer { nullptr };
+    std::shared_ptr<const LayerData>  m_layer_data;
+    PrecomputedLayerData              m_precomputed;
     // Store all needed data for travels inside object
     Boundary m_internal;
     // Store all needed data for travels outside object

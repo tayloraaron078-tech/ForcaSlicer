@@ -2,6 +2,12 @@
 #define _libslic3r_h_
 
 #include "libslic3r_version.h"
+#include <deque>
+#include <iterator>
+#include <functional>
+#include <initializer_list>
+#include <limits>
+#include <utility>
 // [regional-supports fork] Forca Slicer rebrand: these are DISPLAYED names. The *_KEY identities below stay
 // "OrcaSlicer*" so the G-code-viewer datadir/registration is unchanged (same rationale as SLIC3R_APP_KEY).
 #define SLIC3R_APP_FULL_NAME "Forca Slicer"
@@ -34,7 +40,6 @@
 #include <boost/container/deque.hpp>
 #endif // _WIN32
 
-#include "Technologies.hpp"
 #include "Semver.hpp"
 
 #if 0

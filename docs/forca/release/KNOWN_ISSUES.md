@@ -40,7 +40,7 @@ differently).
   [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3) whether "Synchronize filament list" works.
 - **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the
   printer's network settings (API Key / Password). Other Flashforge models with the same local API should work but
-  are untested. A Flashforge printer's own camera is not used for Forca Academy pictures yet.
+  are untested. Forca Academy pictures from a Flashforge printer's built-in camera are untested (no camera here).
 - **Klipper web interface search** looks in the usual places (the printer's address, ports 81 / 4408 / 4409, /fluidd,
   /mainsail); type the address in Device UI if yours is elsewhere.
 
