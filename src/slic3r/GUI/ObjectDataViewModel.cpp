@@ -1,5 +1,4 @@
 #include "ObjectDataViewModel.hpp"
-#include "slic3r/GUI/wxExtensions.hpp"
 #include "wxExtensions.hpp"
 #include "BitmapCache.hpp"
 #include "GUI_App.hpp"
@@ -10,8 +9,28 @@
 
 #include "libslic3r/Model.hpp"
 
+#include <string>
+#include <map>
+#include <cassert>
+#include <vector>
+#include "slic3r/GUI/ExtraRenderers.hpp"
+#include <cstdio>
+#include <cstddef>
+#include <cstdlib>
+#include <algorithm>
+#include "slic3r/GUI/GUI_ObjectSettings.hpp"
+#include <tuple>
 #include <wx/bmpcbox.h>
+#include <wx/chartype.h>
+#include <wx/dataview.h>
 #include <wx/dc.h>
+#include <wx/event.h>
+#include <wx/string.h>
+#include <wx/variant.h>
+#include <wx/gdicmn.h>
+#include <wx/strconv.h>
+#include <wx/debug.h>
+#include <wx/dynarray.h>
 
 
 namespace Slic3r {
@@ -117,13 +136,13 @@ ObjectDataViewModelNode::ObjectDataViewModelNode(ObjectDataViewModelNode* parent
         m_name = "Settings to modified";
     }
     else if (type == itInstanceRoot) {
-        m_name = _(_devL("Instances"));
+        m_name = _L("Instances");
         m_extruder = parent->m_extruder;
     }
     else if (type == itInstance)
     {
         m_idx = parent->GetChildCount();
-        m_name = wxString::Format(_(_devL("Instance %d")), m_idx + 1);
+        m_name = wxString::Format(_L("Instance %d"), m_idx + 1);
         m_extruder = parent->GetParent()->m_extruder;
         set_icons();
     }
@@ -382,10 +401,11 @@ void ObjectDataViewModelNode::SetIdx(const int &idx)
     // update name if this node is instance
     if (m_type == itInstance) {
         if (m_plate_idx > 0) {
-            m_name = wxString::Format(_(_devL("[P%d]Instance %d")), m_plate_idx, m_idx + 1);
+            // TRN Object list item: plate number, then instance number
+            m_name = wxString::Format(_L("[P%d]Instance %d"), m_plate_idx, m_idx + 1);
         }
         else {
-            m_name = wxString::Format(_(_devL("Instance %d")), m_idx + 1);
+            m_name = wxString::Format(_L("Instance %d"), m_idx + 1);
         }
     }
 }
@@ -551,9 +571,9 @@ void ObjectDataViewModel::UpdateBitmapForNode(ObjectDataViewModelNode *node)
 {
     bool is_volume_node = node->GetType() & itVolume;
     int  vol_type       = static_cast<int>(node->GetVolumeType());
-    // [regional-supports fork] upper bound raised to the new last enum value so the
-    // interface-modifier volume gets its real tree icon (m_volume_bmps is sized from
-    // ADD_VOLUME_MENU_ITEMS, which now has the matching 6th entry) instead of m_empty_bmp.
+    // [regional-supports fork] upper bound = the last enum value (Forca's SUPPORT_INTERFACE_MODIFIER, after
+    // upstream's Precise Seam range) so every volume type gets its real tree icon (m_volume_bmps is sized from
+    // ADD_VOLUME_MENU_ITEMS, which has one entry per type) instead of m_empty_bmp.
     is_volume_node &= (vol_type >= int(ModelVolumeType::MODEL_PART) && vol_type <= int(ModelVolumeType::SUPPORT_INTERFACE_MODIFIER));
 
     if (!node->has_warning_icon() && !node->has_lock()) {

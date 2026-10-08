@@ -16,6 +16,11 @@
 #   ... -Release    PUBLIC. Creates the GitHub release v<version> (pre-release unless -Stable) from release_upload.
 #
 # Common options: -Version (default: FORCA_VERSION in version.inc), -Source (default: Multi_Interface).
+#
+# Code signing (-Build): forca-slicer.exe and ForcaSlicer.dll are signed before packaging, the installer after, with
+# Azure Artifact Signing (account Forca, profile ForcaRelease, East US). Needs signtool (Windows SDK), the Artifact
+# Signing Client Tools (winget Microsoft.Azure.ArtifactSigningClientTools) and an `az login` with the Certificate
+# Profile Signer role. -NoSign skips it (test builds only).
 
 [CmdletBinding()]
 param(
@@ -28,7 +33,8 @@ param(
     [string]$WorkDir = (Join-Path $env:USERPROFILE 'Documents\GitHub\ForcaRelease'),
     [string]$DepsDir = (Join-Path $env:USERPROFILE 'Documents\GitHub\ForcaCleanBuildTest\deps\build'),
     [switch]$RebuildDeps,
-    [switch]$Stable
+    [switch]$Stable,
+    [switch]$NoSign
 )
 
 $ErrorActionPreference = 'Stop'
@@ -46,6 +52,43 @@ function GitOut {      # run git in the private repo; returns trimmed stdout, th
     if ($LASTEXITCODE -ne 0) { Fail "git $($args -join ' ') failed (exit $LASTEXITCODE)" }
     if ($out -is [array]) { return ($out -join "`n").Trim() } else { return "$out".Trim() }
 }
+# ---- Code signing (Azure Artifact Signing) ----------------------------------------------------------------------------
+$signEndpoint = 'https://eus.codesigning.azure.net'
+$signAccount  = 'Forca'
+$signProfile  = 'ForcaRelease'
+$signTsa      = 'http://timestamp.acs.microsoft.com'
+function Find-SignTool {
+    $kits = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
+    $tool = Get-ChildItem -LiteralPath $kits -Directory -Filter '10.*' -ErrorAction SilentlyContinue |
+            Sort-Object { [version]$_.Name } -Descending |
+            ForEach-Object { Join-Path $_.FullName 'x64\signtool.exe' } | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+    if (-not $tool) { Fail 'signtool.exe not found (install the Windows 10/11 SDK)' }
+    return $tool
+}
+function Sign-Files([string[]]$files) {
+    $dlib = Join-Path $env:LOCALAPPDATA 'Microsoft\MicrosoftArtifactSigningClientTools\Azure.CodeSigning.Dlib.dll'
+    if (-not (Test-Path -LiteralPath $dlib)) { Fail "Artifact Signing Client Tools not found ($dlib); winget install Microsoft.Azure.ArtifactSigningClientTools" }
+    $azBin = Join-Path $env:ProgramFiles 'Microsoft SDKs\Azure\CLI2\wbin'
+    if ((Test-Path -LiteralPath $azBin) -and ($env:PATH -notlike "*$azBin*")) { $env:PATH = "$azBin;$env:PATH" }
+    # Only the Azure CLI sign-in is used (az login).
+    $meta = Join-Path $env:TEMP 'forca-signing-metadata.json'
+    @{ Endpoint = $signEndpoint; CodeSigningAccountName = $signAccount; CertificateProfileName = $signProfile
+       ExcludeCredentials = @('ManagedIdentityCredential', 'EnvironmentCredential', 'WorkloadIdentityCredential',
+                              'SharedTokenCacheCredential', 'VisualStudioCredential', 'VisualStudioCodeCredential',
+                              'AzurePowerShellCredential', 'AzureDeveloperCliCredential', 'InteractiveBrowserCredential') } |
+        ConvertTo-Json | Set-Content -LiteralPath $meta -Encoding ascii
+    Say "signing $($files.Count) file(s) ..."
+    & (Find-SignTool) sign /fd SHA256 /tr $signTsa /td SHA256 /dlib $dlib /dmdf $meta @files
+    if ($LASTEXITCODE -ne 0) { Fail "signing failed (exit $LASTEXITCODE); is az login still valid?" }
+    foreach ($f in $files) { Test-Signed $f }
+}
+function Test-Signed([string]$file) {
+    $sig = Get-AuthenticodeSignature -LiteralPath $file
+    if ($sig.Status -ne 'Valid' -or -not $sig.TimeStamperCertificate -or $sig.SignerCertificate.Subject -notlike 'CN=Aaron Taylor*') {
+        Fail "$(Split-Path $file -Leaf) is not validly signed and timestamped ($($sig.Status), $($sig.SignerCertificate.Subject))"
+    }
+}
+
 function Public-Main {
     & git -C $repo fetch -q $publicUrl main
     if ($LASTEXITCODE -ne 0) { Fail "could not fetch the public main" }
@@ -137,17 +180,26 @@ if ($Build) {
     $t0 = Get-Date
     $bat = Join-Path $WorkDir 'build_win.bat'           # always by full path: build_win.bat cds to its own folder
     if ($RebuildDeps) {
-        Say "building dependencies into $DepsDir, then the slicer ..."
-        & cmd /c "$bat" -d -s --config release --deps-dir "$DepsDir"
-        if ($LASTEXITCODE -ne 0) { Fail "build failed (exit $LASTEXITCODE)" }
+        # The kept dependency tree's CMake cache is tied to the source folder it was configured from (the folder above
+        # -DepsDir's deps\build), so refresh that folder's sources from this clone and rebuild there; configuring it
+        # from the clone's deps\ fails ("does not match the source ... used to generate cache").
+        $depsRoot = Split-Path (Split-Path $DepsDir -Parent) -Parent
+        Say "refreshing the dependency sources in $depsRoot, then building the dependencies ..."
+        & robocopy $WorkDir $depsRoot /E /XD (Join-Path $WorkDir '.git') $DepsDir /NFL /NDL /NJH /NJS /NP | Out-Null
+        if ($LASTEXITCODE -ge 8) { Fail "copying the sources to $depsRoot failed (robocopy $LASTEXITCODE)" }
+        & cmd /c (Join-Path $depsRoot 'build_win.bat') -d --config release
+        if ($LASTEXITCODE -ne 0) { Fail "dependency build failed (exit $LASTEXITCODE)" }
         Set-Content -LiteralPath $marker -Value $depsKey -Encoding ascii -NoNewline
-    } else {
-        Say "building the slicer with the kept dependencies ..."
-        & cmd /c "$bat" -s --config release --deps-dir "$DepsDir"
-        if ($LASTEXITCODE -ne 0) { Fail "build failed (exit $LASTEXITCODE)" }
     }
+    Say "building the slicer with the kept dependencies ..."
+    & cmd /c "$bat" -s --config release --deps-dir "$DepsDir"
+    if ($LASTEXITCODE -ne 0) { Fail "build failed (exit $LASTEXITCODE)" }
+    # Sign the app before packaging: the zip and the installer copy these two files out of build\src\Release.
+    $release = Join-Path $WorkDir 'build\src\Release'
+    if (-not $NoSign) { Sign-Files @((Join-Path $release 'forca-slicer.exe'), (Join-Path $release 'ForcaSlicer.dll')) }
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $WorkDir 'build_forca_release.ps1') -Config Release -Installer
     if ($LASTEXITCODE -ne 0) { Fail "packaging failed (exit $LASTEXITCODE)" }
+    if (-not $NoSign) { Sign-Files @(Join-Path $WorkDir "build\ForcaSlicer_Windows_Installer_V${Version}_x64.exe") }
     Say ("build + packaging took {0:N0} min" -f ((Get-Date) - $t0).TotalMinutes)
 
     # The app must embed the public commit (Troubleshoot links to it).

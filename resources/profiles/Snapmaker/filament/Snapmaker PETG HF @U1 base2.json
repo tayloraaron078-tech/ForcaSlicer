@@ -248,7 +248,7 @@
 	"supertack_plate_temp_initial_layer": [
 		"70"
 	],
-	"no_slow_down_for_cooling_on_outwalls": [
+	"dont_slow_down_outer_wall": [
 		"0"
 	],
 	"slow_down_min_speed": [

@@ -1,4 +1,21 @@
 #include "Model.hpp"
+#include "calib.hpp"
+#include "Format/STEP.hpp"
+#include "TriangleMesh.hpp"
+#include "Semver.hpp"
+#include "Format/OBJ.hpp"
+#include "Config.hpp"
+#include "Format/STL.hpp"
+#include "Format/objparser.hpp"
+#include "CustomGCode.hpp"
+#include "PrintConfig.hpp"
+#include "ObjectID.hpp"
+#include "BoundingBox.hpp"
+#include "Point.hpp"
+#include "Utils.hpp"
+#include "Polygon.hpp"
+#include "SLA/SupportPoint.hpp"
+#include "TextureDisplacement.hpp"
 #include "libslic3r.h"
 #include "BuildVolume.hpp"
 #include "TexturePainting.hpp"
@@ -23,6 +40,17 @@
 
 #include "libslic3r/Geometry/ConvexHull.hpp"
 
+#include <Eigen/Core>
+#include <algorithm>
+#include <cstddef>
+#include <cassert>
+#include <cstdlib>
+#include <ctime>
+#include <boost/filesystem/operations.hpp>
+#include <boost/lexical_cast.hpp>
+#include <exception>
+#include <cmath>
+#include <array>
 #include <float.h>
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -34,6 +62,21 @@
 #include "SVG.hpp"
 #include <Eigen/Dense>
 #include <functional>
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
+#include <memory>
+#include <iterator>
+#include <limits>
+#include <sstream>
+#include <iomanip>
+#include <set>
+#include <optional>
+#include <iostream>
+#include <ios>
+#include <ostream>
+#include <initializer_list>
 #include "GCodeWriter.hpp"
 
 // BBS: for segment
@@ -42,6 +85,7 @@
 
 // Transtltion
 #include "I18N.hpp"
+#include "ExPolygon.hpp"
 
 // ModelIO support
 #ifdef __APPLE__
@@ -278,8 +322,7 @@ Model Model::read_from_file(const std::string&                                  
                             Import3mfProgressFn                                 proFn,
                             ImportstlProgressFn                                 stlFn,
                             BBLProject *                                        project,
-                            int                                                 plate_id,
-                            ObjImportColorFn                                    objFn)
+                            int                                                 plate_id)
 {
     Model model;
 
@@ -1449,6 +1492,20 @@ void ModelObject::sort_volumes(bool full_sort)
     // sort volumes inside the object to order "Model Part, Negative Volume, Modifier, Support Blocker and Support Enforcer. "
     if (full_sort)
         std::stable_sort(volumes.begin(), volumes.end(), [](ModelVolume* vl, ModelVolume* vr) {
+            // Special handling for Precise Seam modifiers: group-based sorting with user order preservation
+            if (vl->is_precise_seam() && vr->is_precise_seam()) {
+                // Strong (center/left/right) always before weak (enforced/blocked/neutral)
+                bool vl_strong = vl->is_precise_seam_strong();
+                bool vr_strong = vr->is_precise_seam_strong();
+                if (vl_strong != vr_strong)
+                    return vl_strong; // strong < weak → strong group appears first
+
+                // Within same group (both strong or both weak): preserve current order
+                // stable_sort will maintain relative positions when comparator returns false
+                return false;
+            }
+
+            // For non-Precise-Seam or mixed types: use standard enum-based ordering
             return vl->type() < vr->type();
         });
     // sort have to controll "place" of the support blockers/enforcers. But one of the model parts have to be on the first place.
@@ -1456,6 +1513,16 @@ void ModelObject::sort_volumes(bool full_sort)
         std::stable_sort(volumes.begin(), volumes.end(), [](ModelVolume* vl, ModelVolume* vr) {
             ModelVolumeType vl_type = vl->type() > ModelVolumeType::PARAMETER_MODIFIER ? vl->type() : ModelVolumeType::PARAMETER_MODIFIER;
             ModelVolumeType vr_type = vr->type() > ModelVolumeType::PARAMETER_MODIFIER ? vr->type() : ModelVolumeType::PARAMETER_MODIFIER;
+
+            // Apply same Precise Seam grouping logic for partial sort
+            if (vl->is_precise_seam() && vr->is_precise_seam()) {
+                bool vl_strong = vl->is_precise_seam_strong();
+                bool vr_strong = vr->is_precise_seam_strong();
+                if (vl_strong != vr_strong)
+                    return vl_strong;
+                return false; // preserve order within same group
+            }
+
             return vl_type < vr_type;
         });
 }
@@ -2061,6 +2128,11 @@ void ModelVolume::reset_extra_facets()
     this->mmu_segmentation_facets.reset();
     this->fuzzy_skin_facets.reset();
     this->support_interface_region_facets.reset();
+    // Texture-displacement paint data has no remap-across-topology-change support yet (see
+    // build_texture_displacement()'s documented limitation), so it must be dropped here rather
+    // than left referring to a mesh that no longer matches it.
+    for (int i = 0; i < int(TEXTURE_DISPLACEMENT_MAX_LAYERS); ++i)
+        this->texture_displacement_facet(i).reset();
 }
 
 std::optional<TriangleSelector::SavedPainting> ModelVolume::save_painting() const
@@ -2621,9 +2693,10 @@ std::vector<int> ModelVolume::get_extruders() const
         || m_type == ModelVolumeType::NEGATIVE_VOLUME
         || m_type == ModelVolumeType::SUPPORT_BLOCKER
         || m_type == ModelVolumeType::SUPPORT_ENFORCER
-        // [regional-supports fork] a control volume, not printed geometry — must not be
+        // [regional-supports fork] a control volume, not printed geometry -- must not be
         // counted as consuming an extruder/filament (keeps the type inert when unused)
-        || m_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
+        || m_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER
+        || this->is_precise_seam()) // Precise Seam is non-printing helper geometry
         return std::vector<int>();
 
     if (mmu_segmentation_facets.timestamp() != mmuseg_ts) {
@@ -2827,6 +2900,19 @@ ModelVolumeType ModelVolume::type_from_string(const std::string &s)
 		return ModelVolumeType::SUPPORT_ENFORCER;
     if (s == "support_blocker")
 		return ModelVolumeType::SUPPORT_BLOCKER;
+    // Precise Seam types
+    if (s == "precise_seam_center")
+		return ModelVolumeType::PRECISE_SEAM_CENTER;
+    if (s == "precise_seam_left")
+		return ModelVolumeType::PRECISE_SEAM_LEFT;
+    if (s == "precise_seam_right")
+		return ModelVolumeType::PRECISE_SEAM_RIGHT;
+    if (s == "precise_seam_enforced")
+		return ModelVolumeType::PRECISE_SEAM_ENFORCED;
+    if (s == "precise_seam_blocked")
+		return ModelVolumeType::PRECISE_SEAM_BLOCKED;
+    if (s == "precise_seam_neutral")
+		return ModelVolumeType::PRECISE_SEAM_NEUTRAL;
     // [regional-supports fork] appended type; keep in sync with type_to_string
     if (s == "support_interface_modifier")
 		return ModelVolumeType::SUPPORT_INTERFACE_MODIFIER;
@@ -2844,6 +2930,12 @@ std::string ModelVolume::type_to_string(const ModelVolumeType t)
 	case ModelVolumeType::PARAMETER_MODIFIER: return "modifier_part";
 	case ModelVolumeType::SUPPORT_ENFORCER:   return "support_enforcer";
 	case ModelVolumeType::SUPPORT_BLOCKER:    return "support_blocker";
+	case ModelVolumeType::PRECISE_SEAM_CENTER:   return "precise_seam_center";
+	case ModelVolumeType::PRECISE_SEAM_LEFT:     return "precise_seam_left";
+	case ModelVolumeType::PRECISE_SEAM_RIGHT:    return "precise_seam_right";
+	case ModelVolumeType::PRECISE_SEAM_ENFORCED: return "precise_seam_enforced";
+	case ModelVolumeType::PRECISE_SEAM_BLOCKED:  return "precise_seam_blocked";
+	case ModelVolumeType::PRECISE_SEAM_NEUTRAL:  return "precise_seam_neutral";
 	case ModelVolumeType::SUPPORT_INTERFACE_MODIFIER: return "support_interface_modifier"; // [regional-supports fork]
     default:
         assert(false);
@@ -2954,6 +3046,11 @@ void ModelVolume::assign_new_unique_ids_recursive()
     mmu_segmentation_facets.set_new_unique_id();
     fuzzy_skin_facets.set_new_unique_id();
     support_interface_region_facets.set_new_unique_id();
+    // As set_new_unique_id() already does: the undo/redo stack stores FacetsAnnotation contents keyed
+    // by ObjectID, so a clone left sharing these ids with its source can be handed the source's mask
+    // on an undo - after which a paint mask and the mesh it was recorded against no longer match.
+    for (int i = 0; i < int(TEXTURE_DISPLACEMENT_MAX_LAYERS); ++i)
+        texture_displacement_facet(i).set_new_unique_id();
 }
 
 void ModelVolume::rotate(double angle, Axis axis)
@@ -3715,7 +3812,11 @@ void FacetsAnnotation::set_triangle_from_string(int triangle_id, const std::stri
             m_data.bitstream.insert(m_data.bitstream.end(), bool(dec & (1 << i)));
     }
 
-    m_data.update_used_states(bitstream_start_idx);
+    if (!m_data.update_used_states(bitstream_start_idx)) {
+        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": dropping malformed paint data of triangle " << triangle_id;
+        m_data.bitstream.resize(bitstream_start_idx);
+        m_data.triangles_to_split.pop_back();
+    }
 }
 
 bool FacetsAnnotation::equals(const FacetsAnnotation &other) const

@@ -96,5 +96,6 @@
     ],
     "compatible_printers": [
         "Bambu Lab X2D 0.8 nozzle"
-    ]
+    ],
+	"wall_direction": "cw"
 }

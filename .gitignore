@@ -58,3 +58,4 @@ __pycache__/
 # Runtime log from the Bambu network plugin's IOTC (camera / device) SDK, dropped in the run dir
 /log_iotc.txt
 docs/superpowers/
+ctest_results.xml

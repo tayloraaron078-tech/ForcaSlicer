@@ -1,5 +1,6 @@
 // Forca AI -- Phase 1 tools: read-only "eyes". None of these writes a file or talks to a printer.
 #include "ForcaAI.hpp"
+#include "ForcaAIKeys.hpp"
 
 #include "GUI_App.hpp"
 #include "MainFrame.hpp"
@@ -40,16 +41,6 @@ json vec3(const Vec3d& v, int decimals = 3)
     return json::array({ std::round(v.x() * f) / f, std::round(v.y() * f) / f, std::round(v.z() * f) / f });
 }
 
-// Printer secrets are never returned to the AI (plan §3: access codes, API keys, passwords, tokens).
-bool is_secret_key(const std::string& key)
-{
-    std::string k = key;
-    std::transform(k.begin(), k.end(), k.begin(), [](unsigned char c) { return char(std::tolower(c)); });
-    for (const char* bad : { "password", "apikey", "api_key", "access_code", "token", "secret", "printhost_user", "cookie" })
-        if (k.find(bad) != std::string::npos)
-            return true;
-    return false;
-}
 
 PresetCollection* collection_for(const std::string& type)
 {
@@ -204,7 +195,7 @@ ForcaAIResult tool_scene(const json& args)
         if (with_overrides) {
             json overrides = json::object();
             for (const std::string& key : o->config.keys())
-                if (!is_secret_key(key))
+                if (!forca_ai_is_secret_key(key))
                     overrides[key] = o->config.opt_serialize(key);
             oj["setting_overrides"] = overrides;
         }
@@ -280,7 +271,7 @@ ForcaAIResult tool_get_settings(const json& args)
     json missing = json::array();
     json hidden  = json::array();
     for (const std::string& key : keys) {
-        if (is_secret_key(key)) {
+        if (forca_ai_is_secret_key(key)) {
             hidden.push_back(key);
             continue;
         }

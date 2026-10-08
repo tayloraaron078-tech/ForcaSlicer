@@ -1,13 +1,35 @@
 #include "PrintConfig.hpp"
+#include "CommonDefs.hpp"
+#include "Point.hpp"
+#include "Polygon.hpp"
 #include "PrintConfigConstants.hpp"
 #include "ClipperUtils.hpp"
 #include "Config.hpp"
 #include "FilamentMixer.hpp"
 #include "MaterialType.hpp"
 #include "I18N.hpp"
+#include "enum_bitmask.hpp"
 #include "format.hpp"
 
 #include "GCode/Thumbnails.hpp"
+#include <numeric>
+#include <cstddef>
+#include <algorithm>
+#include <cassert>
+#include <map>
+#include <boost/algorithm/string/classification.hpp>
+#include <iterator>
+#include <cstdlib>
+#include "libslic3r.h"
+#include <boost/algorithm/string/predicate.hpp>
+#include <cmath>
+#include <boost/algorithm/string/constants.hpp>
+#include <limits>
+#include <memory>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/tuple/to_seq.hpp>
+#include <cstdint>
 #include <set>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -18,6 +40,11 @@
 #include <boost/log/trivial.hpp>
 #include <boost/thread.hpp>
 #include <float.h>
+#include <string>
+#include <vector>
+#include <utility>
+#include <sstream>
+#include <unordered_map>
 
 namespace {
 std::set<std::string> SplitStringAndRemoveDuplicateElement(const std::string &str, const std::string &separator)
@@ -413,6 +440,27 @@ static t_config_enum_values s_keys_map_EnsureVerticalShellThickness{
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(EnsureVerticalShellThickness)
 
+static t_config_enum_values s_keys_map_ReduceInfillRetractionMode{
+    { "Disabled", rirDisabled },
+    { "Auto",     rirAuto },
+    { "Enabled",  rirEnabled }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(ReduceInfillRetractionMode)
+
+static t_config_enum_values s_keys_map_FilamentMetalStickiness{
+    { "None",   fmsNone },
+    { "Low",    fmsLow },
+    { "Medium", fmsMedium },
+    { "High",   fmsHigh }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(FilamentMetalStickiness)
+
+static t_config_enum_values s_keys_map_CoolingSlowdownLogicType{
+    { "uniform_cooling",    cslUniformCooling },
+    { "consistent_surface", cslConsistentSurface }
+};
+CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(CoolingSlowdownLogicType)
+
 // Orca
 static t_config_enum_values s_keys_map_InternalBridgeFilter {
     { "disabled",        ibfDisabled },
@@ -626,7 +674,9 @@ static const t_config_enum_values s_keys_map_NozzleVolumeType = {
     { "Standard",  nvtStandard },
     { "High Flow", nvtHighFlow },
     { "TPU High Flow", nvtTPUHighFlow },
-    { "Hybrid", nvtHybrid }
+    { "Hybrid", nvtHybrid },
+    { "E3D High Flow", nvtE3DHighFlow },
+    { "Extra High Flow", nvtExtraHighFlow }
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(NozzleVolumeType)
 
@@ -669,14 +719,66 @@ std::string get_extruder_variant_string(ExtruderType extruder_type, NozzleVolume
     return variant_string;
 }
 
+int find_variant_index(const std::string& variant, int variant_id_1based, const std::vector<std::string>& variant_list, const std::vector<int>& variant_ids_1based)
+{
+    const int count = int(variant_list.empty() ? variant_ids_1based.size() : variant_list.size());
+    if (count == 0)
+        return 0;
+    auto same_id = [&](int index) {
+        return variant_id_1based < 0 || variant_ids_1based.empty() || (index < int(variant_ids_1based.size()) && variant_ids_1based[index] == variant_id_1based);
+    };
+    for (int index = 0; index < int(variant_list.size()); ++index)
+        if (variant_list[index] == variant && same_id(index))
+            return index;
+    // Without this variant, use the id's own first variant (usually Standard), not variant index 0,
+    // which belongs to the first filament or extruder.
+    for (int index = 0; index < count; ++index)
+        if (same_id(index))
+            return index;
+    return -1;
+}
+
+std::vector<int> map_variant_indices(const std::vector<std::string>& variants, const std::vector<int>& ids,
+                                     const std::vector<std::string>& from_variants, const std::vector<int>& from_ids)
+{
+    const size_t count = variants.empty() ? ids.size() : variants.size();
+    std::vector<int> variant_index(count);
+    for (size_t index = 0; index < count; ++index) {
+        if (!ids.empty() && index >= ids.size()) {
+            variant_index[index] = -1;
+            continue;
+        }
+        variant_index[index] = find_variant_index(index < variants.size() ? variants[index] : std::string(),
+                                                  ids.empty() ? -1 : ids[index], from_variants, from_ids);
+    }
+    return variant_index;
+}
+
 int get_config_index_base(NozzleVolumeType volume_type, ExtruderType extruder_type, int variant_id_1based, const std::vector<std::string>& variant_list, const std::vector<int>& variant_ids_1based)
 {
     assert(variant_list.size() == variant_ids_1based.size());
-    std::string extruder_variant = get_extruder_variant_string(extruder_type, volume_type);
-    for (int index = 0; index < int(variant_list.size()); ++index) {
-        if (extruder_variant == variant_list[index] && variant_ids_1based[index] == variant_id_1based) { return index; }
+    const int index = find_variant_index(get_extruder_variant_string(extruder_type, volume_type), variant_id_1based, variant_list, variant_ids_1based);
+    return std::max(index, 0);
+}
+
+std::set<NozzleVolumeType> get_extruder_supported_nozzle_volume_types(const DynamicPrintConfig &printer_config, int extruder_id)
+{
+    std::set<NozzleVolumeType> supported_types;
+
+    auto *variant_list   = printer_config.option<ConfigOptionStrings>("extruder_variant_list");
+    auto *extruder_types = printer_config.option<ConfigOptionEnumsGeneric>("extruder_type");
+    if (!variant_list || !extruder_types || extruder_id < 0 ||
+        extruder_id >= (int) variant_list->values.size() || extruder_id >= (int) extruder_types->values.size())
+        return supported_types;
+
+    const ExtruderType extruder_type = ExtruderType(extruder_types->values[extruder_id]);
+    for (NozzleVolumeType volume_type : get_valid_nozzle_volume_type()) {
+        // An unsupported extruder type yields an empty name, which would match any list.
+        const std::string variant = get_extruder_variant_string(extruder_type, volume_type);
+        if (!variant.empty() && variant_list->values[extruder_id].find(variant) != std::string::npos)
+            supported_types.insert(volume_type);
     }
-    return 0;
+    return supported_types;
 }
 
 std::string get_nozzle_volume_type_string(NozzleVolumeType nozzle_volume_type)
@@ -1130,6 +1232,29 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(0., false));
 
+    // Ported from BambuStudio: switches on OrcaSlicer's compile-time INCLUDE_SUPPORTS_IN_BOUNDARY in
+    // AvoidCrossingPerimeters at run time.
+    def = this->add("avoid_crossing_wall_includes_support", coBool);
+    def->label = L("Avoid crossing walls - Includes support");
+    def->category = L("Quality");
+    def->tooltip = L("Also keep travel moves on support layers inside the support, so they don't cross it. Only used when "
+                     "\"Avoid crossing walls\" is on.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
+    // Ported from BambuStudio, with its type (an absolute width).
+    def = this->add("initial_layer_infill_line_width", coFloat);
+    def->label = L("First layer infill");
+    def->category = L("Quality");
+    def->tooltip = L("Line width of the first layer's infill: sparse infill, solid infill and top surface. Walls, support and "
+                     "everything else on the first layer keep the first layer line width. 0 means to use the first layer line width. "
+                     "Bambu Lab profiles set this to their own first layer line width, so if you change the first layer "
+                     "line width in a preset based on one, change this too or set it to 0.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
     // BBS
     def = this->add("supertack_plate_temp", coInts);
     def->label = L("Other layers");
@@ -1325,6 +1450,27 @@ void PrintConfigDef::init_fff_params()
     def->min = 0;
     def->set_default_value(new ConfigOptionInt(3));
 
+    // Ported from BambuStudio. 0 (Forca's default; BambuStudio has no 0) follows the shell layers, as before.
+    def = this->add("top_color_penetration_layers", coInt);
+    def->label = L("Top paint penetration layers");
+    def->category = L("Strength");
+    def->sidetext = L("layers");
+    def->tooltip = L("How many layers deep a color painted on a top surface goes into the part. 0 means the same as the "
+                     "top shell layers.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(0));
+
+    def = this->add("bottom_color_penetration_layers", coInt);
+    def->label = L("Bottom paint penetration layers");
+    def->category = L("Strength");
+    def->sidetext = L("layers");
+    def->tooltip = L("How many layers deep a color painted on a bottom surface goes into the part. 0 means the same as "
+                     "the bottom shell layers.");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInt(0));
+
     def = this->add("bottom_shell_thickness", coFloat);
     def->label = L("Bottom shell thickness");
     def->category = L("Strength");
@@ -1382,6 +1528,17 @@ void PrintConfigDef::init_fff_params()
     def->max = 100;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionInts { 100 });
+
+    // BBS
+    def = this->add("pre_start_fan_time", coFloats);
+    def->label = L("Pre start fan time");
+    def->tooltip = L("Starts the overhang fan this many seconds (0 to 5) before an overhang, because the fan needs time to "
+                     "speed up. If the printer's fan speed-up time is longer, that is used instead.");
+    def->sidetext = L_CONTEXT("s", "second");	// seconds, CIS languages need translation
+    def->min = 0.;
+    def->max = 5.;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloats{ 0. });
 
     def = this->add("overhang_fan_threshold", coEnums);
     def->label = L("Overhang cooling activation threshold");
@@ -1769,6 +1926,74 @@ void PrintConfigDef::init_fff_params()
     def->nullable = true;
     def->set_default_value(new ConfigOptionBoolsNullable{ false });
 
+    // BBS
+    def = this->add("enable_height_slowdown", coBools);
+    def->label = L("Slow down by height");
+    def->category = L("Speed");
+    def->tooltip = L("Caps the print and travel speed and acceleration of the object above the starting height. The caps "
+                     "change linearly from their starting to their ending values up to the ending height, and keep the "
+                     "ending values above it. Support, skirt, brim and the prime tower are not slowed down.");
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionBoolsNullable{ false });
+
+    def = this->add("slowdown_start_height", coFloats);
+    def->label = L("Starting height");
+    def->category = L("Speed");
+    def->tooltip = L("Height at which slowing down by height starts.");
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 0 });
+
+    def = this->add("slowdown_start_speed", coFloats);
+    def->label = L("Speed at starting height");
+    def->category = L("Speed");
+    def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 1000. });
+
+    def = this->add("slowdown_start_acc", coFloats);
+    def->label = L("Acceleration at starting height");
+    def->category = L("Speed");
+    def->sidetext = L(u8"mm/s²");	// millimeters per second per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 100000. });
+
+    def = this->add("slowdown_end_height", coFloats);
+    def->label = L("Ending height");
+    def->category = L("Speed");
+    def->tooltip = L("Height at which slowing down by height reaches its ending values. It must be larger than the "
+                     "starting height, otherwise nothing is slowed down.");
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 400 });
+
+    def = this->add("slowdown_end_speed", coFloats);
+    def->label = L("Speed at ending height");
+    def->category = L("Speed");
+    def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 1000. });
+
+    def = this->add("slowdown_end_acc", coFloats);
+    def->label = L("Acceleration at ending height");
+    def->category = L("Speed");
+    def->sidetext = L(u8"mm/s²");	// millimeters per second per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 100000. });
+
     def = this->add("overhang_1_4_speed", coFloatsOrPercents);
     def->label = "10%";
     def->category = L("Speed");
@@ -2065,6 +2290,20 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->nullable = true;
     def->set_default_value(new ConfigOptionFloatsNullable{10000.0});
+
+    // BBS
+    def           = this->add("travel_short_distance_acceleration", coFloats);
+    def->label    = L("Short travel");
+    def->category = L("Speed");
+    def->tooltip  = L("Acceleration of short travels to an outer wall or an overhang wall. Short travels are shorter than "
+                      "the retraction minimum travel. Low values (e.g. 250 to 500) reduce ringing at sharp corners "
+                      "without slowing the print much.\n"
+                      "0 means using the outer wall acceleration, or the bridge acceleration before an overhang wall.");
+    def->sidetext = L(u8"mm/s²");	// millimeters per second per second, CIS languages need translation
+    def->min      = 0;
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{0});
 
     def = this->add("initial_layer_travel_acceleration", coFloatsOrPercents);
     def->label = L("First layer travel");
@@ -2782,6 +3021,33 @@ void PrintConfigDef::init_fff_params()
                      "3. To avoid printing at speeds which cause VFAs (fine artifacts) on the external walls");
     def->set_default_value(new ConfigOptionBools { false });
 
+    // BBS (from PrusaSlicer 2.9.3)
+    def = this->add("cooling_slowdown_logic", coEnums);
+    def->label = L("Cooling slowdown logic");
+    def->tooltip = L("How the print slows down when a layer is printed faster than its minimum layer time.\n"
+                     "Uniform cooling: slows all features down together.\n"
+                     "Consistent surface: slows infill and inner walls down first, and the outer walls only if that is not "
+                     "enough. This keeps the outer wall speed, and with it the surface finish of glossy filaments, the same "
+                     "on every layer.");
+    def->enum_keys_map = &ConfigOptionEnum<CoolingSlowdownLogicType>::get_enum_values();
+    def->enum_values.push_back("uniform_cooling");
+    def->enum_values.push_back("consistent_surface");
+    def->enum_labels.push_back(L("Uniform cooling"));
+    def->enum_labels.push_back(L("Consistent surface"));
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->set_default_value(new ConfigOptionEnumsGeneric{ int(cslUniformCooling) });
+
+    def = this->add("cooling_perimeter_transition_distance", coFloats);
+    def->label = L("Transition distance");
+    def->tooltip = L("With \"Consistent surface\", the last moves of each slowed down extrusion within this distance keep "
+                     "their original speed, so the print is back up to speed when it reaches the next feature, such as an "
+                     "outer wall. 0 disables it.");
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
+    def->min = 0;
+    def->max = 50;
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->set_default_value(new ConfigOptionFloats{ 10. });
+
     def = this->add("fan_cooling_layer_time", coFloats);
     def->label = L("Layer time");
     def->tooltip = L("The part cooling fan will be enabled for layers where the estimated time is shorter than this value. Fan speed is interpolated between the minimum and maximum fan speeds according to layer printing time.");
@@ -3064,6 +3330,27 @@ void PrintConfigDef::init_fff_params()
     def->min      = 0;
     def->mode     = comDevelop;
     def->set_default_value(new ConfigOptionInts{0});
+
+    // Ported from BambuStudio. Used by reduce_infill_retraction_mode "Auto".
+    def = this->add("filament_metal_stickiness", coEnums);
+    def->label = L("Metal stickiness");
+    def->tooltip = L("How strongly the filament tends to stick to the metal nozzle and leave residue. Used when \"Reduce infill "
+                     "retraction\" is set to \"Auto\".\n"
+                     "None: untested or custom filament, behaves like Low.\n"
+                     "Low: e.g. PLA, retraction can safely be skipped in infill areas.\n"
+                     "Medium: moderate stickiness, retraction is kept.\n"
+                     "High: e.g. PETG, retraction is kept to avoid oozing artifacts on outer walls.");
+    def->enum_keys_map = &ConfigOptionEnum<FilamentMetalStickiness>::get_enum_values();
+    def->enum_values.push_back("None");
+    def->enum_values.push_back("Low");
+    def->enum_values.push_back("Medium");
+    def->enum_values.push_back("High");
+    def->enum_labels.push_back(L("None"));
+    def->enum_labels.push_back(L("Low"));
+    def->enum_labels.push_back(L("Medium"));
+    def->enum_labels.push_back(L("High"));
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionEnumsGeneric{ int(fmsNone) });
 
     def = this->add("filament_loading_speed", coFloats);
     def->label = L("Loading speed");
@@ -3908,6 +4195,58 @@ void PrintConfigDef::init_fff_params()
     def->nullable = true;
     def->set_default_value(new ConfigOptionFloatsNullable{ ConfigOptionFloatsNullable::nil_value() });
 
+    // BBS: a filament can replace the process overhang and bridge speeds.
+    def = this->add("override_process_overhang_speed", coBools);
+    def->label = L("Override overhang speed");
+    def->category = L("Speed");
+    def->tooltip = L("Print overhangs and bridges with this filament at the speeds below instead of the process "
+                     "overhang and bridge speeds.");
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionBoolsNullable{ false });
+
+    def = this->add("filament_enable_overhang_speed", coBools);
+    def->label = L("Slow down for overhangs");
+    def->category = L("Speed");
+    def->tooltip = L("Enable this option to slow down when printing overhangs. The speeds for different overhang percentages are set below.");
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionBoolsNullable{ true });
+
+    for (const char *percent : { "1_4", "2_4", "3_4", "4_4" }) {
+        def = this->add(std::string("filament_overhang_") + percent + "_speed", coFloats);
+        def->label = def->full_label = this->get(std::string("overhang_") + percent + "_speed")->label;
+        def->category = L("Speed");
+        def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+        def->min = 0;
+        def->mode = comAdvanced;
+        def->nullable = true;
+        def->set_default_value(new ConfigOptionFloatsNullable{ 0 });
+    }
+
+    def = this->add("filament_overhang_totally_speed", coFloats);
+    def->label = def->full_label = "100%";
+    def->category = L("Speed");
+    // xgettext:no-c-format, no-boost-format
+    def->tooltip = L("Speed of overhang walls with almost nothing below them (less than 13% of the line width). "
+                     "It replaces the external bridge speed for these walls. 0 means using the bridge speed.");
+    def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 10 });
+
+    def = this->add("filament_bridge_speed", coFloats);
+    def->label = L("Bridge");
+    def->category = L("Speed");
+    def->tooltip = L("Speed of the externally visible bridges with this filament, and of overhang walls when "
+                     "\"Slow down for overhangs\" is off.");
+    def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+    def->min = 1;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ 25 });
+
     def = this->add("fuzzy_skin", coEnum);
     def->label = L("Fuzzy skin");
     def->category = L("Others");
@@ -4493,6 +4832,13 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
+    def           = this->add("infill_complete_top", coBool);
+    def->label    = L("Fill pattern tops");
+    def->category = L("Strength");
+    def->tooltip  = L("Choose this option if you want to completely fill in the tops of the infill pattern");
+    def->mode     = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+    
     // Orca: max layer height for combined infill
     def = this->add("infill_combination_max_layer_height", coFloatOrPercent);
     def->label = L("Infill combination - Max layer height");
@@ -5220,7 +5566,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionEnum<InputShaperType>(InputShaperType::Default));
 
     def           = this->add("input_shaping_freq_x", coFloat);
-    def->label    = L("X");
+    def->label    = L_CONTEXT("X", "Axis");
     def->tooltip  = L("Resonant frequency for the X axis input shaper.\nZero will use the firmware frequency.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal.");
     def->sidetext = L("Hz");	// Hertz, CIS languages need translation
     def->min      = 0;
@@ -5229,7 +5575,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(0));
 
     def           = this->add("input_shaping_freq_y", coFloat);
-    def->label    = L("Y");
+    def->label    = L_CONTEXT("Y", "Axis");
     def->tooltip  = L("Resonant frequency for the Y axis input shaper.\nZero will use the firmware frequency.\nTo disable input shaping, use the Disable type.");
     def->sidetext = L("Hz");	// Hertz, CIS languages need translation
     def->min      = 0;
@@ -5238,7 +5584,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(0));
 
     def          = this->add("input_shaping_damp_x", coFloat);
-    def->label   = L("X");
+    def->label   = L_CONTEXT("X", "Axis");
     def->tooltip = L("Damping ratio for the X axis input shaper.\nZero will use the firmware damping ratio.\nTo disable input shaping, use the Disable type.\nRRF: X and Y values are equal.");
     def->min     = 0;
     def->max     = 1;
@@ -5246,7 +5592,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionFloat(0.1));
 
     def          = this->add("input_shaping_damp_y", coFloat);
-    def->label   = L("Y");
+    def->label   = L_CONTEXT("Y", "Axis");
     def->tooltip = L("Damping ratio for the Y axis input shaper.\nZero will use the firmware damping ratio.\nTo disable input shaping, use the Disable type.");
     def->min     = 0;
     def->max     = 1;
@@ -5496,11 +5842,27 @@ void PrintConfigDef::init_fff_params()
     // start and end point is from the change_filament_gcode
     def->set_default_value(new ConfigOptionPoints{Vec2d(30, -3), Vec2d(54, 245)});
 
-    def = this->add("reduce_infill_retraction", coBool);
+    // Ported from BambuStudio, replacing the bool reduce_infill_retraction (mapped in handle_legacy()).
+    // Unlike BambuStudio (default Auto), the default is Disabled, the old bool's default, so presets that set
+    // neither key keep their output.
+    def = this->add("reduce_infill_retraction_mode", coEnum);
     def->label = L("Reduce infill retraction");
-    def->tooltip = L("Don\'t retract when the travel is entirely within an infill area. That means the oozing can\'t been seen. This can reduce times of retraction for complex model and save printing time, but make slicing and G-code generating slower. Note that Z-hop is also not performed in areas where retraction is skipped.");
+    def->tooltip = L("Controls whether retraction is skipped when the travel stays entirely within an infill area, where oozing can't be "
+                     "seen. This reduces retractions and print time on complex models, but slicing and G-code generation get slower. "
+                     "Z-hop is also not performed where retraction is skipped.\n"
+                     "\"Auto\" skips retraction only for filaments with low or unknown metal stickiness (e.g. PLA), and keeps it for "
+                     "filaments with medium or high metal stickiness (e.g. PETG) to avoid oozing artifacts.\n"
+                     "\"Enabled\" always skips retraction in infill areas, whatever the filament.\n"
+                     "\"Disabled\" always retracts normally.");
+    def->enum_keys_map = &ConfigOptionEnum<ReduceInfillRetractionMode>::get_enum_values();
+    def->enum_values.push_back("Disabled");
+    def->enum_values.push_back("Auto");
+    def->enum_values.push_back("Enabled");
+    def->enum_labels.push_back(L("Disabled"));
+    def->enum_labels.push_back(L("Auto"));
+    def->enum_labels.push_back(L("Enabled"));
     def->mode = comAdvanced;
-    def->set_default_value(new ConfigOptionBool(false));
+    def->set_default_value(new ConfigOptionEnum<ReduceInfillRetractionMode>(rirDisabled));
 
     def = this->add("ooze_prevention", coBool);
     def->label = L("Enable");
@@ -5923,15 +6285,20 @@ void PrintConfigDef::init_fff_params()
     def->label = "Nozzle Volume Type";
     def->tooltip = "Nozzle volume type for extruders.";
     def->enum_keys_map = &ConfigOptionEnum<NozzleVolumeType>::get_enum_values();
-    // Order must match the NozzleVolumeType enum values (Standard=0, High Flow=1, Hybrid=2, TPU High Flow=3).
+    // Listed in display order. A position is not the enum value (E3D High Flow is 5, after the reserved 4),
+    // so map a position to its NozzleVolumeType through enum_keys_map.
     def->enum_values.push_back(L("Standard"));
     def->enum_values.push_back(L("High Flow"));
     def->enum_values.push_back(L("Hybrid"));
     def->enum_values.push_back(L("TPU High Flow"));
+    def->enum_values.push_back(L("E3D High Flow"));
+    def->enum_values.push_back(L("Extra High Flow"));
     def->enum_labels.push_back(L("Standard"));
     def->enum_labels.push_back(L("High Flow"));
     def->enum_labels.push_back(L("Hybrid"));
     def->enum_labels.push_back(L("TPU High Flow"));
+    def->enum_labels.push_back(L("E3D High Flow"));
+    def->enum_labels.push_back(L("Extra High Flow"));
     def->mode = comSimple;
     def->set_default_value(new ConfigOptionEnumsGeneric{ NozzleVolumeType::nvtStandard });
 
@@ -5944,10 +6311,14 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back(L("High Flow"));
     def->enum_values.push_back(L("Hybrid"));
     def->enum_values.push_back(L("TPU High Flow"));
+    def->enum_values.push_back(L("E3D High Flow"));
+    def->enum_values.push_back(L("Extra High Flow"));
     def->enum_labels.push_back(L("Standard"));
     def->enum_labels.push_back(L("High Flow"));
     def->enum_labels.push_back(L("Hybrid"));
     def->enum_labels.push_back(L("TPU High Flow"));
+    def->enum_labels.push_back(L("E3D High Flow"));
+    def->enum_labels.push_back(L("Extra High Flow"));
     def->mode = comDevelop;
     def->set_default_value(new ConfigOptionEnumsGeneric{ NozzleVolumeType::nvtStandard });
 
@@ -5986,7 +6357,7 @@ void PrintConfigDef::init_fff_params()
     // Per-nozzle volume type. Forward-compat-only registration with no slicing consumer — nothing in
     // src/ reads it; the engine resolves per-nozzle volume types from `extruder_nozzle_stats` tokens
     // instead. Kept registered so a project/config carrying it loads without an unknown-option
-    // substitution warning. Registers Standard/High Flow/TPU High Flow only (no Hybrid).
+    // substitution warning. Registers the physical types only (no Hybrid).
     // Internal use only, no translation.
     def = this->add("extruder_nozzle_volume_type", coEnums);
     def->label = "Extruder nozzle volume type";
@@ -5995,9 +6366,13 @@ void PrintConfigDef::init_fff_params()
     def->enum_values.push_back("Standard");
     def->enum_values.push_back("High Flow");
     def->enum_values.push_back("TPU High Flow");
+    def->enum_values.push_back("E3D High Flow");
+    def->enum_values.push_back("Extra High Flow");
     def->enum_labels.push_back("Standard");
     def->enum_labels.push_back("High Flow");
     def->enum_labels.push_back("TPU High Flow");
+    def->enum_labels.push_back("E3D High Flow");
+    def->enum_labels.push_back("Extra High Flow");
     def->mode = comDevelop;
     def->set_default_value(new ConfigOptionEnumsGeneric{ NozzleVolumeType::nvtStandard });
 
@@ -6705,6 +7080,20 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
+    def = this->add("wipe_tower_sparse_layers_combination", coBool);
+    def->label = L("Combine sparse layers");
+    def->tooltip = L("If enabled, consecutive layers on which the prime tower has no filament change are printed as a single "
+                     "thicker tower layer instead of one thin layer each, the same way infill combination merges sparse infill. "
+                     "The merged layer is printed at the top of the run, at the height of everything it covers.\n\n"
+                     "Only whole layers are merged, and never past the maximum layer height of the nozzle printing the tower "
+                     "(three quarters of the nozzle diameter when that is left at 0). Two or more layers therefore have to fit "
+                     "under that limit before anything changes at all: at a 0.2 mm layer height under a 0.3 mm maximum nothing "
+                     "is merged, while at 0.1 mm three layers become one.\n\n"
+                     "Unlike \"No sparse layers\" the tower keeps following the model, so the toolhead never has to reach down to it. "
+                     "Has no effect with \"No sparse layers\", smooth timelapse or clumping detection, which need a tower on every layer.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("single_extruder_multi_material_priming", coBool);
     def->label = L("Prime all printing extruders");
     def->tooltip = L("If enabled, all printing extruders will be primed at the front edge of the print bed at the start of the print.");
@@ -7330,6 +7719,36 @@ void PrintConfigDef::init_fff_params()
     def->max = 1;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.1));
+
+    // BBS
+    def = this->add("support_ironing_inset", coFloat);
+    def->label = L("Support ironing inset");
+    def->category = L("Support");
+    def->tooltip = L("Distance to keep from the edges of the ironed support interface. 0 means none.");
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
+    def->min = 0;
+    def->max = 100;
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("support_ironing_speed", coFloat);
+    def->label = L("Support ironing speed");
+    def->category = L("Support");
+    def->tooltip = L("Print speed of the support interface ironing. 0 means using the ironing speed.");
+    def->sidetext = L("mm/s");	// millimeters per second, CIS languages need translation
+    def->min = 0;
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("support_ironing_direction", coFloat);
+    def->label = L("Support ironing direction");
+    def->category = L("Support");
+    def->tooltip = L("Angle of the ironing lines relative to the support interface lines.");
+    def->sidetext = u8"°";	// degrees, don't need translation
+    def->min = 0;
+    def->max = 360;
+    def->mode = comDevelop; // BambuStudio shows it in Develop mode only
+    def->set_default_value(new ConfigOptionFloat(0));
 
     def = this->add("activate_chamber_temp_control",coBools);
     def->label = L("Activate temperature control");
@@ -8422,14 +8841,14 @@ void PrintConfigDef::init_sla_params()
 
     def = this->add("display_pixels_x", coInt);
     //def->full_label = L("");
-    def->label = ("X");
+    def->label = L_CONTEXT("X", "Axis");
     //def->tooltip = L("");
     def->min = 100;
     def->set_default_value(new ConfigOptionInt(2560));
 
     def = this->add("display_pixels_y", coInt);
     //def->full_label = L("");
-    def->label = ("Y");
+    def->label = L_CONTEXT("Y", "Axis");
     //def->tooltip = L("");
     def->min = 100;
     def->set_default_value(new ConfigOptionInt(1440));
@@ -9043,7 +9462,21 @@ void PrintConfigDef::init_sla_params()
 void PrintConfigDef::handle_legacy(t_config_option_key &opt_key, std::string &value)
 {
     //BBS: handle legacy options
-    if (opt_key == "curr_bed_type" && value == "SuperTack Plate") {
+    if (opt_key == "reduce_infill_retraction") {
+        // Bool replaced by reduce_infill_retraction_mode (BambuStudio). Off stays Disabled; on becomes Auto, which
+        // behaves the same for filaments without a metal stickiness and keeps retracting for sticky ones (e.g. PETG).
+        opt_key = "reduce_infill_retraction_mode";
+        value   = (value == "1" || value == "true") ? "Auto" : "Disabled";
+    } else if (opt_key == "role_base_wipe_speed") {
+        // BambuStudio's name for the same option.
+        opt_key = "role_based_wipe_speed";
+    } else if (opt_key == "no_slow_down_for_cooling_on_outwalls") {
+        opt_key = "dont_slow_down_outer_wall";
+    } else if (opt_key == "prime_tower_max_speed") {
+        opt_key = "wipe_tower_max_purge_speed";
+    } else if (opt_key == "enable_support_ironing") {
+        opt_key = "support_ironing";
+    } else if (opt_key == "curr_bed_type" && value == "SuperTack Plate") {
         value = "Supertack Plate";
     } else if (opt_key == "enable_wipe_tower") {
         opt_key = "enable_prime_tower";
@@ -9349,6 +9782,10 @@ void PrintConfigDef::handle_legacy_composite(DynamicPrintConfig &config)
         }
         config.set_key_value("wiping_volumes_use_custom_matrix", new ConfigOptionBool(custom));
     }
+
+    // Orca: a config saved before a key joined filament_options_with_variant stores it once per filament
+    // rather than once per filament variant, and one exported by an older CLI may store a single value.
+    normalize_filament_values_to_variants(config);
 }
 
 const PrintConfigDef print_config_def;
@@ -9365,6 +9802,13 @@ std::set<std::string> print_options_with_variant = {
     "internal_solid_infill_speed",
     "top_surface_speed",
     "enable_overhang_speed", //coBools
+    "enable_height_slowdown", //coBools
+    "slowdown_start_height", //coFloats
+    "slowdown_start_speed", //coFloats
+    "slowdown_start_acc", //coFloats
+    "slowdown_end_height", //coFloats
+    "slowdown_end_speed", //coFloats
+    "slowdown_end_acc", //coFloats
     "overhang_1_4_speed",
     "overhang_2_4_speed",
     "overhang_3_4_speed",
@@ -9381,6 +9825,7 @@ std::set<std::string> print_options_with_variant = {
     "default_acceleration",
     "bridge_acceleration",
     "travel_acceleration",
+    "travel_short_distance_acceleration",
     "initial_layer_travel_acceleration",
     "initial_layer_acceleration",
     "outer_wall_acceleration",
@@ -9451,6 +9896,32 @@ std::set<std::string> filament_options_with_variant = {
     "filament_ironing_spacing",
     "filament_ironing_inset",
     "filament_ironing_speed",
+    // BBS: filament overhang and bridge speeds
+    "override_process_overhang_speed",
+    "filament_enable_overhang_speed",
+    "filament_overhang_1_4_speed",
+    "filament_overhang_2_4_speed",
+    "filament_overhang_3_4_speed",
+    "filament_overhang_4_4_speed",
+    "filament_overhang_totally_speed",
+    "filament_bridge_speed",
+    // Orca: pressure advance
+    "enable_pressure_advance",
+    "pressure_advance",
+    "adaptive_pressure_advance",
+    "adaptive_pressure_advance_model",
+    "adaptive_pressure_advance_overhangs",
+    "adaptive_pressure_advance_bridges",
+    // Orca: cooling fans, multi-tool ramming and recommended nozzle temperature range
+    "fan_min_speed",
+    "fan_max_speed",
+    "additional_cooling_fan_speed",
+    "filament_minimal_purge_on_wipe_tower",
+    "filament_multitool_ramming",
+    "filament_multitool_ramming_volume",
+    "filament_multitool_ramming_flow",
+    "nozzle_temperature_range_low",
+    "nozzle_temperature_range_high",
     "activate_air_filtration",
     "activate_air_filtration_during_print",
     "activate_air_filtration_on_completion",
@@ -10056,6 +10527,13 @@ bool DynamicPrintConfig::is_using_different_extruders()
     return ret;
 }
 
+bool DynamicPrintConfig::has_multi_variant_filament() const
+{
+    auto variants  = dynamic_cast<const ConfigOptionStrings*>(this->option("filament_extruder_variant"));
+    auto diameters = dynamic_cast<const ConfigOptionFloats*>(this->option("filament_diameter"));
+    return variants && diameters && variants->size() > diameters->size();
+}
+
 bool DynamicPrintConfig::support_different_extruders(int& extruder_count) const
 {
     std::set<std::string> variant_set;
@@ -10651,6 +11129,34 @@ void set_variant_override(ConfigOptionVectorBase &target, const ConfigOptionVect
     target.set_to_index(&source, indices, stride);
 }
 
+void normalize_filament_values_to_variants(DynamicPrintConfig &config)
+{
+    const auto *self_index = config.option<ConfigOptionInts>("filament_self_index");
+    if (self_index == nullptr || self_index->empty())
+        return;
+    const int filament_count = *std::max_element(self_index->values.begin(), self_index->values.end());
+    if (filament_count <= 0 || size_t(filament_count) >= self_index->size())
+        return;
+    // The values are one per filament, without variant strings, or a single value for all of them. The
+    // variant strings do not change today's mapping; they are passed so a rule that reads them applies here too.
+    const auto *variants = config.option<ConfigOptionStrings>("filament_extruder_variant");
+    const std::vector<std::string> variant_list = variants && variants->size() == self_index->size() ? variants->values : std::vector<std::string>();
+    std::vector<int> filament_ids(filament_count);
+    std::iota(filament_ids.begin(), filament_ids.end(), 1);
+    const std::vector<int> from_filaments = map_variant_indices(variant_list, self_index->values, {}, filament_ids);
+    const std::vector<int> from_single    = map_variant_indices(variant_list, self_index->values, {}, {});
+    for (const std::string &key : filament_options_with_variant) {
+        auto *opt = dynamic_cast<ConfigOptionVectorBase *>(config.option(key));
+        if (opt == nullptr || (opt->size() != size_t(filament_count) && opt->size() != 1))
+            continue;
+        const std::vector<int> &variant_index = opt->size() == size_t(filament_count) ? from_filaments : from_single;
+        std::unique_ptr<ConfigOption> source(opt->clone());
+        // -1 and a single-value source both resolve to the first value through get_at()
+        for (size_t variant = 0; variant < self_index->size(); ++variant)
+            opt->set_at(source.get(), variant, variant_index[variant]);
+    }
+}
+
 
 //used for object/region config
 //use the smallest of multiple to single
@@ -11056,6 +11562,11 @@ void DynamicPrintConfig::update_values_to_printer_extruders_for_multiple_filamen
             return;
         }
         std::vector<int> filament_maps = opt_filament_map->values;
+        auto opt_ids = id_name.empty()? nullptr: dynamic_cast<const ConfigOptionInts*>(this->option(id_name));
+        // Orca: a map shorter than the filament count must not drop the filaments past its end;
+        // they take the first extruder.
+        if (opt_ids && !opt_ids->values.empty())
+            filament_maps.resize(std::max<size_t>(filament_maps.size(), *std::max_element(opt_ids->values.begin(), opt_ids->values.end())), 1);
         size_t filament_count = filament_maps.size();
         //apply process settings
         auto opt_extruder_type = dynamic_cast<const ConfigOptionEnumsGeneric*>(printer_config.option("extruder_type"));
@@ -11074,7 +11585,6 @@ void DynamicPrintConfig::update_values_to_printer_extruders_for_multiple_filamen
         // indexed out of bounds.
         if (opt_filament_volume_maps && opt_filament_volume_maps->values.size() == filament_count)
             filament_volume_maps = opt_filament_volume_maps->values;
-        auto opt_ids = id_name.empty()? nullptr: dynamic_cast<const ConfigOptionInts*>(this->option(id_name));
         std::vector<int> variant_index;
 
         variant_index.resize(filament_count, -1);
@@ -11091,9 +11601,10 @@ void DynamicPrintConfig::update_values_to_printer_extruders_for_multiple_filamen
             //variant index
             variant_index[f_index] = get_index_for_extruder(f_index+1, id_name, extruder_type, nozzle_volume_type, variant_name);
             if (variant_index[f_index] < 0) {
-                BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << boost::format(", Line %1%: could not found extruder_type %2%, nozzle_volume_type %3%, filament_index %4%, extruder index %5%")
+                // Orca: a filament need not define every extruder variant (a Direct Drive filament on a
+                // Bowden printer), so this is not an invalid state: the filament's first variant is used.
+                BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", Line %1%: could not found extruder_type %2%, nozzle_volume_type %3%, filament_index %4%, extruder index %5%")
                     %__LINE__ %s_keys_names_ExtruderType[extruder_type] % s_keys_names_NozzleVolumeType[nozzle_volume_type] % (f_index+1) %filament_maps[f_index];
-                assert(false);
                 //for some updates happens in a invalid state(caused by popup window)
                 //we need to avoid crash
                 variant_index[f_index] = 0;
@@ -11476,8 +11987,14 @@ void DynamicPrintConfig::update_diff_values_to_child_config(DynamicPrintConfig& 
     else
         variant_index.resize(1, 0);
 
+    // A parent variant the child does not list (the parent gained it after the child was saved, or the
+    // child lists none) takes the child's first variant of the same extruder, as slicing does.
+    // Left unmatched, the parent's value would silently replace the user's.
     if (target_variant_count == 0) {
-        variant_index[0] = 0;
+        // The child's one value belongs to the extruder of the parent's first variant.
+        if (cur_variant_count > 0)
+            variant_index = map_variant_indices(cur_extruder_variants, cur_extruder_ids, {},
+                                                cur_extruder_ids.empty() ? std::vector<int>() : std::vector<int>{cur_extruder_ids[0]});
     }
     else if ((cur_extruder_ids.size() > 0) && cur_variant_count != cur_extruder_ids.size()){
         //should not happen
@@ -11489,19 +12006,8 @@ void DynamicPrintConfig::update_diff_values_to_child_config(DynamicPrintConfig& 
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << boost::format(" size of %1% = %2%, not equal to size of %3% = %4%")
              %extruder_variant_name %target_variant_count %extruder_id_name %target_extruder_ids.size();
     }
-    else {
-        for (int i = 0; i < cur_variant_count; i++)
-        {
-            for (int j = 0; j < target_variant_count; j++)
-            {
-                if ((cur_extruder_variants[i] == target_extruder_variants[j])
-                    &&(cur_extruder_ids.empty() || (cur_extruder_ids[i] == target_extruder_ids[j])))
-                {
-                    variant_index[i] = j;
-                    break;
-                }
-            }
-        }
+    else if (cur_variant_count > 0) {
+        variant_index = map_variant_indices(cur_extruder_variants, cur_extruder_ids, target_extruder_variants, target_extruder_ids);
     }
 
     const t_config_option_keys &keys = new_config.keys();
@@ -11861,6 +12367,21 @@ PRINT_CONFIG_CACHE_INITIALIZE((
     PrintObjectConfig, PrintRegionConfig, MachineEnvelopeConfig, GCodeConfig, PrintConfig, FullPrintConfig,
     SLAMaterialConfig, SLAPrintConfig, SLAPrintObjectConfig, SLAPrinterConfig, SLAFullPrintConfig))
 static int print_config_static_initialized = print_config_static_initializer();
+
+// The same set() calls ConfigBase::apply_only() makes, without looking every key up by name. Out of line so the
+// option list is expanded for this once, not in every file that includes PrintConfig.hpp.
+#define PRINT_CONFIG_APPLY_TO_DEFINITION(r, data, CLASS_NAME) \
+    bool CLASS_NAME::apply_to(ConfigBase &target) const \
+    { \
+        auto *dst = dynamic_cast<CLASS_NAME*>(&target); \
+        if (dst == nullptr) \
+            return false; \
+        visit_option_pairs(*dst, *this, [](const char*, ConfigOption &a, const ConfigOption &b) { a.set(&b); return true; }); \
+        return true; \
+    }
+BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_APPLY_TO_DEFINITION, _, (PrintObjectConfig)(PrintRegionConfig)(MachineEnvelopeConfig)(GCodeConfig)
+    (SLAMaterialConfig)(SLAPrintConfig)(SLAPrintObjectConfig)(SLAPrinterConfig))
+#undef PRINT_CONFIG_APPLY_TO_DEFINITION
 
 //BBS: remove unused command currently
 CLIActionsConfigDef::CLIActionsConfigDef()
@@ -12499,6 +13020,7 @@ OtherSlicingStatesConfigDef::OtherSlicingStatesConfigDef()
 
     new_def("initial_no_support_extruder", coInt, "Initial no support extruder", "Zero-based index of the first extruder used for printing without support. Same as initial_no_support_tool.");
     new_def("in_head_wrap_detect_zone", coBool, "In head wrap detect zone", "Indicates if the first layer overlaps with the head wrap zone.");
+    new_def("curr_bed_type", coString, "Current bed type", "Name of the currently selected bed plate type (e.g. 'Textured PEI Plate', 'Smooth High Temp Plate').");
 }
 
 PrintStatisticsConfigDef::PrintStatisticsConfigDef()

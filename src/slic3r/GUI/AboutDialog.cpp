@@ -10,8 +10,26 @@
 #include "MainFrame.hpp"
 #include "format.hpp"
 #include "Widgets/Button.hpp"
+#include "libslic3r_version.h"
 
+#include "slic3r/GUI/GUI_Utils.hpp"
+#include "libslic3r/libslic3r.h"
+#include "slic3r/GUI/wxExtensions.hpp"
+#include "slic3r/GUI/Widgets/Label.hpp"
+#include <vector>
 #include <wx/clipbrd.h>
+#include <wx/panel.h>
+#include <wx/wx.h>
+#include <wx/gdicmn.h>
+#include <wx/event.h>
+#include <wx/dcclient.h>
+#include <wx/dialog.h>
+#include <wx/toplevel.h>
+#include <wx/sizer.h>
+#include <wx/html/htmlwin.h>
+#include <wx/string.h>
+#include <wx/colour.h>
+#include <wx/dataobj.h>
 
 namespace Slic3r {
 namespace GUI {
@@ -178,6 +196,11 @@ wxString CopyrightsDialog::get_html_text()
                                 "itself adapted from a generator developed by Sineos for Marlin (GPL-3.0)."),
                              _L("The Bambu network plug-in is based on non-free libraries from Bambu Lab. It is optional, downloaded "
                                 "separately, and provides extended functionality for Bambu Lab printers."));
+    // Forca: Open Bamboo Networking, the open-source plug-in Forca can download instead of Bambu's (ForcaObnChoice).
+    text += wxString::Format("%s <a href=\"%s\">%s</a><br/>",
+                             _L("Open Bamboo Networking, an optional open-source replacement for the Bambu network plug-in, is "
+                                "licensed under the GNU AGPL-3.0. Its source code is available at"),
+                             "https://github.com/ClusterM/open-bamboo-networking", "https://github.com/ClusterM/open-bamboo-networking");
 
     text += wxString(
                 "</font>"
@@ -261,7 +284,10 @@ AboutDialog::AboutDialog()
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
         auto          version_string = std::string(FORCA_VERSION); // Forca's own version (Orca: SoftFever_VERSION)
         wxStaticText* version = new wxStaticText(this, wxID_ANY, version_string.c_str(), wxDefaultPosition, wxDefaultSize);
-        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format("Build %s, based on OrcaSlicer %s", build_commit_label, SoftFever_VERSION), wxDefaultPosition, wxDefaultSize);
+        // TRN %s is the commit the application was built from
+        wxStaticText* credits_string = new wxStaticText(this, wxID_ANY, wxString::Format(_L("Build %s"), build_commit_label) +
+                                                        wxString::Format(", based on OrcaSlicer %s", SoftFever_VERSION), // Forca
+                                                        wxDefaultPosition, wxDefaultSize);
         credits_string->SetFont(_build_string_font);
         wxFont version_font = GetFont();
         version_font = version_font.Scaled(1.85f); // SetPointSize(20) not works on macOS because it uses a 72 PPI reference

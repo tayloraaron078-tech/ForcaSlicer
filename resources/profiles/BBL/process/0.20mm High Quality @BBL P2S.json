@@ -213,5 +213,6 @@
 	"monotonic_travel_into_wall": "45.0",
 	"compatible_printers": [
 		"Bambu Lab P2S 0.4 nozzle"
-	]
+	],
+	"wall_direction": "cw"
 }

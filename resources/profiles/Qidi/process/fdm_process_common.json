@@ -13,7 +13,7 @@
 	"bridge_no_support": "0",
 	"elefant_foot_compensation": "0.1",
 	"bottom_surface_density": "100",
-	"enable_support_ironing": "0",
+	"support_ironing": "0",
 	"support_ironing_pattern": "zig-zag",
 	"support_ironing_speed": "30",
 	"support_ironing_flow": "10%",

@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
-All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `8c03985818` on
-2026-09-26; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `78f74a6276` on
+2026-10-06; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -13,6 +13,114 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
 ## Unreleased
+
+### Changed
+- **Bambu Lab P2S and X2D profiles print outer walls clockwise**, as Bambu Studio does on these printers ("Wall
+  direction" is set to clockwise in their process profiles). Your own presets keep whatever you chose. Not yet
+  checked on a P2S or X2D.
+- **Merged OrcaSlicer up to `78f74a6276` (2026-10-06).** Brings OrcaSlicer's latest 2.5 development work, including
+  its new section view on the 3D canvas. Forca's support-interface paint tool now uses that section view, like
+  OrcaSlicer's own paint tools, instead of its own "Section view" slider.
+- **Shorter travel moves.** Forca orders islands, infill and support so the nozzle travels less between them (up to
+  2.5% less travel on test models; print time never longer). G-code generation also prepares each layer's travel
+  data in parallel.
+- **More accurate minimum layer time.** The cooling slowdown now counts the time spent accelerating and braking, so
+  small layers get the cooling time they are set to without being slowed more than needed.
+
+### Added
+- **Open Bamboo Networking as a one-click choice** (Preferences > Bambu network plug-in > "Network plug-in source"):
+  switch between Bambu Lab's network plug-in and Open Bamboo Networking, an open-source replacement that didn't crash
+  after sending prints in our tests. It needs printers in LAN-only mode with Developer Mode on, and loses cloud
+  features; Forca explains this before switching. Forca downloads OBN from its GitHub releases, checks the file, and
+  keeps the previous release for rolling back; a switch takes effect after closing and reopening Forca. If Bambu Lab's
+  plug-in crashes Forca, the Device tab offers OBN once.
+- **"Top / Bottom paint penetration layers"** (ported from Bambu Studio, Strength page): how many layers deep a
+  color painted on a top or bottom surface goes into the part. 0 (the default) follows the shell layers, as before.
+  Most Bambu Lab profiles set the same as their shell layers; 10 (H2D/H2DP/H2C fine, and H2S/H2C 0.6/0.8 nozzle)
+  set fewer, so painted colors there go 1 or 2 layers less deep, as in Bambu Studio.
+- **"Avoid crossing walls - Includes support"** (ported from Bambu Studio, Quality page, under "Avoid crossing
+  walls"): on support layers, travel moves also stay inside the support instead of crossing it. Off by default and in
+  Bambu Lab's profiles, so prints don't change unless you turn it on.
+- **"Reduce infill retraction" is now Disabled / Auto / Enabled, with a new filament setting "Metal stickiness"**
+  (ported from Bambu Studio). Auto skips the retraction on travels inside infill only for filaments that don't stick
+  to the nozzle (None or Low, e.g. PLA), and keeps it for Medium or High ones (e.g. PETG) to avoid oozing marks on the
+  walls. Bambu Lab printers use Auto, as in Bambu Studio: PLA-type filaments print as before, while Bambu's PETG, PCTG,
+  PA, PPA and TPU profiles (High) retract on infill travels again (on the test models up to 4% longer). Other
+  printers keep their setting: on stays on (as Auto, which behaves the same for filaments without a metal stickiness),
+  off stays off.
+- **Bambu Studio projects and profiles keep settings that Bambu Studio names differently**: "Role-based wipe speed"
+  (`role_base_wipe_speed`), "Don't slow down outer walls" (`no_slow_down_for_cooling_on_outwalls`), the prime
+  tower's maximum speed (`prime_tower_max_speed`) and support ironing (`enable_support_ironing`). Forca used to drop
+  them and use its own defaults instead.
+- **"First layer infill" line width** (ported from Bambu Studio): the first layer's sparse infill, solid infill and
+  top surface can have their own line width, while walls and support keep the first layer line width. 0 (the default)
+  uses the first layer line width, as before. Bambu Studio projects and profiles now keep the value; Bambu Lab's
+  profiles set it to their first layer line width, so their prints don't change. If you raise the first layer line
+  width in your own preset based on a Bambu Lab profile, the first layer's infill keeps the profile's width unless you
+  also change "First layer infill" (or set it to 0).
+- **Filaments can have their own overhang and bridge speeds** (ported from Bambu Studio): with "Override overhang
+  speed" on the Filament page, the filament's overhang speeds, its speed for walls with almost nothing below them and
+  its bridge speed replace the process ones. It is off by default. Some Bambu Lab filament profiles turn it on (PET-CF,
+  TPU on the TPU high-flow nozzle, and PETG and PLA-CF on the A2L), so these now print their overhangs and bridges
+  at the speeds Bambu set for them.
+- **"Short travel" acceleration** (ported from Bambu Studio, under Speed > Acceleration): sets the acceleration of
+  short travels to an outer wall, to reduce ringing at sharp corners. 0 (the default) keeps using the outer wall
+  acceleration, or the bridge acceleration before an overhang wall, as before. Bambu Lab's process profiles set it to
+  250 mm/s², as in Bambu Studio, which makes their prints slightly slower (up to 0.4% on the test models). Shown only
+  in Developer mode (Preferences), as in Bambu Studio.
+- **"Slow down by height"** (ported from Bambu Studio, Speed page and per object): above a starting height, caps the
+  object's print and travel speed and acceleration, changing linearly up to an ending height, to keep tall prints
+  steady. Off by default. Bambu Lab's A2L process profiles turn it on (acceleration from 8000 down to 1000 mm/s² at
+  225 mm), so tall prints on the A2L are slower, by design (a
+  200 mm tower: 0.5% longer).
+- **"Pre start fan time"** (ported from Bambu Studio, filament Cooling page): starts the overhang fan this many seconds
+  before an overhang, so it is up to speed in time. It uses the printer's fan speed-up mechanism; if the printer's
+  "Fan speed-up time" is longer, that wins. Off (0) by default. About a quarter of Bambu Lab's filament profiles
+  (mostly for the A2L and the H2 series) set 2 or 3 seconds, so with those the overhang fan now starts earlier, as in
+  Bambu Studio. Print times don't change.
+- **Support ironing inset, direction and speed** (ported from Bambu Studio, Support page): keep the support interface
+  ironing away from the interface edges, turn its lines relative to the interface lines, and give it its own speed (0
+  = the ironing speed, as before). Defaults leave support ironing as it was. Bambu Lab and Qidi profiles set the speed
+  to 30 mm/s; it applies only if you turn support ironing on, which their profiles leave off. Shown only in Developer
+  mode (Preferences), as in Bambu Studio.
+- **"Cooling slowdown logic"** (ported from Bambu Studio, which took it from PrusaSlicer; filament Cooling page): with
+  "Consistent surface", a layer that needs slowing down for cooling slows its infill and inner walls first and its
+  outer walls only if that is not enough, so outer walls of glossy filaments look the same on every layer. Its
+  "Transition distance" keeps the last moves of each slowed extrusion at their original speed. The default, "Uniform
+  cooling", slows down as before; Bambu Lab's profiles use it too. Shown only in Developer mode (Preferences), as in
+  Bambu Studio.
+- **Forca Academy pictures from Flashforge printers with a built-in camera** (Adventurer 5M Pro and similar): the
+  progress and end pictures now also come from the camera the printer reports, like Klipper printers' webcams.
+
+### Fixed
+- **A print could end paused because of a pause left over from a taller model.** A pause or colour change above
+  the top of the print is hidden in the layer slider, so it could not be seen or removed, but it still fired on the
+  last layer (a Happy Hare printer then ended the print PAUSED). It is now skipped, as the slider shows. (OrcaSlicer
+  still fires it.)
+- **Forca AI could be talked into changing settings that reach beyond the slicer.** The AI can no longer set
+  post-processing scripts (they run as commands on your computer when G-code is exported), G-code templates such as
+  the start G-code, the output file name, or the printer connection, at any control level. The AI bridge now also
+  accepts only this computer as a caller by exact name (a look-alike address such as `localhost.example.com` was let
+  through to the key check), and camera pictures are capped at 16 MB.
+- **The input shaping and cornering calibrations didn't switch off overhang slowdown**, so overhang slowdown could
+  skew those test prints.
+- **Filament sync from Klipper filament changers (Happy Hare, AFC, Anycubic ACE via KX-Bridge) put filaments in the
+  wrong slots**, skipped some, or labelled the unit as a Bambu AMS. Moonraker printers now sync their lanes directly,
+  without Bambu's slot-matching dialog, and Forca reads whichever of the printer's two filament lists has more loaded
+  slots (OrcaSlicer PR #13372). Experimental: not tested on our own hardware.
+- **Synced filaments came in as "Generic PLA" / "Generic PETG"** although the printer reports each spool's name and
+  brand. Forca now picks the preset with that name (your own presets included), then the brand's preset for the
+  material, and only then the generic one (after olak31's OrcaSlicer-KX).
+- **Changing printer showed "Shared profiles may be available for this printer"** with a link to Orca Cloud, which
+  Forca has switched off. The notice and its Preferences checkbox are gone.
+- **A G4 pause in custom G-code (e.g. a dwell before a layer change) was not counted** in the layer time used for
+  cooling, so such layers could be slowed down more than needed.
+- **Opening a newer Bambu Studio project said "Found unrecognized settings:" without listing them.** The settings are
+  now listed.
+- **Bambu Lab printers retracted on nearly every infill travel**, making prints slower (one test model: about 2.5 hours
+  longer than OrcaSlicer 2.4.2). OrcaSlicer's sync of Bambu Studio's profiles replaced "Reduce infill retraction" with
+  a newer setting OrcaSlicer didn't understand, which switched it off. Forca now understands it (see "Reduce infill
+  retraction" under Added).
 
 ## 0.1.0-alpha.3 — 2026-10-05
 

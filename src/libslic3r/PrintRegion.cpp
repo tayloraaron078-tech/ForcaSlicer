@@ -1,5 +1,13 @@
+#include "Config.hpp"
 #include "Exception.hpp"
+#include "Flow.hpp"
 #include "Print.hpp"
+#include <cstddef>
+#include "PrintConfig.hpp"
+#include "libslic3r.h"
+#include <cmath>
+#include <vector>
+#include <algorithm>
 
 namespace Slic3r {
 
@@ -28,7 +36,12 @@ Flow PrintRegion::flow(const PrintObject &object, FlowRole role, double layer_he
     ConfigOptionFloatOrPercent config_width;
     // Get extrusion width from configuration.
     // (might be an absolute value, or a percent value, or zero for auto)
-    if (first_layer && print_config.initial_layer_line_width.value > 0) {
+    // The first layer's infill can have its own width (initial_layer_infill_line_width, from BambuStudio);
+    // 0 keeps following initial_layer_line_width.
+    const bool infill_role = role == frInfill || role == frSolidInfill || role == frTopSolidInfill;
+    if (first_layer && infill_role && print_config.initial_layer_infill_line_width.value > 0) {
+        config_width = ConfigOptionFloatOrPercent(print_config.initial_layer_infill_line_width.value, false);
+    } else if (first_layer && print_config.initial_layer_line_width.value > 0) {
         config_width = print_config.initial_layer_line_width;
     } else if (role == frExternalPerimeter) {
         config_width = m_config.outer_wall_line_width;

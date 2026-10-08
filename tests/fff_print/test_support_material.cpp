@@ -1,12 +1,29 @@
+#include <algorithm>
 #include <catch2/catch_all.hpp>
 
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_message.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include "libslic3r/GCodeReader.hpp"
 #include "libslic3r/Layer.hpp"
 
 #include <cmath>
+#include <cstddef>
+#include "libslic3r/TriangleMesh.hpp"
+#include "libslic3r/PrintBase.hpp"
+#include "libslic3r/Model.hpp"
+#include "libslic3r/libslic3r.h"
+#include "libslic3r/PrintConfig.hpp"
 #include <map>
+#include <math.h>
 #include <mutex>
 #include <set>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <utility>
 #include <vector>
 
 #include "test_helpers.hpp" // get access to init_print, etc
@@ -14,6 +31,8 @@
 // Not self-contained: its inline constructor uses PrintObject, PrintRegion, SlicingParameters and
 // Geometry, so it must follow the headers (pulled in via test_helpers.hpp) that define them.
 #include "libslic3r/Support/SupportParameters.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/Print.hpp"
 
 using namespace Slic3r::Test;
 using namespace Slic3r;
@@ -509,3 +528,36 @@ TEST_CASE("Bottom-only support interface keeps the dense interface density", "[S
     REQUIRE(sp.bottom_interface_density > sp.support_density);
 }
 
+
+// Support ironing prints at its own speed when one is set, and its inset keeps it off the interface edges.
+TEST_CASE("Support ironing has its own speed and inset", "[SupportMaterial]")
+{
+    DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+    config.set_deserialize_strict({
+        { "enable_support",              1 },
+        { "support_ironing",             1 },
+        { "slow_down_for_layer_cooling", 0 },
+    });
+    // 7 mm/s is written as F420.
+    const auto has_feedrate = [](const std::string &gcode, const std::string &feedrate) {
+        std::istringstream input(gcode);
+        std::string word;
+        while (input >> word)
+            if (word == feedrate)
+                return true;
+        return false;
+    };
+
+    const std::string ironing_speed_gcode = slice({ TestMesh::overhang }, config);
+    REQUIRE(! layers_with_role(ironing_speed_gcode, "support ironing").empty());
+    CHECK_FALSE(has_feedrate(ironing_speed_gcode, "F420"));
+
+    config.set_deserialize_strict({ { "support_ironing_speed", 7 } });
+    const std::string own_speed_gcode = slice({ TestMesh::overhang }, config);
+    REQUIRE(! layers_with_role(own_speed_gcode, "support ironing").empty());
+    CHECK(has_feedrate(own_speed_gcode, "F420"));
+
+    // An inset wider than the interface leaves nothing to iron.
+    config.set_deserialize_strict({ { "support_ironing_inset", 100 } });
+    CHECK(layers_with_role(slice({ TestMesh::overhang }, config), "support ironing").empty());
+}

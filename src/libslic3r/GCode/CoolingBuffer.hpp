@@ -1,15 +1,18 @@
 #ifndef slic3r_CoolingBuffer_hpp_
 #define slic3r_CoolingBuffer_hpp_
 
-#include "../libslic3r.h"
+#include "../Point.hpp"
+#include <cstddef>
 #include <map>
 #include <string>
 #include <cfloat>
+#include <vector>
 
 namespace Slic3r {
 
 class GCode;
 class Layer;
+class PrintConfig;
 struct PerExtruderAdjustments;
 
 // A standalone G-code filter, to control cooling of the print.
@@ -30,7 +33,12 @@ public:
 
 private:
 	CoolingBuffer& operator=(const CoolingBuffer&) = delete;
-    std::vector<PerExtruderAdjustments> parse_layer_gcode(const std::string &gcode, std::vector<float> &current_pos) const;
+    // Acceleration in effect at the end of the G-code parsed so far, mm/s^2. 0 for travel = same as for printing.
+    struct Accelerations {
+        float print  { 0.f };
+        float travel { 0.f };
+    };
+    std::vector<PerExtruderAdjustments> parse_layer_gcode(const std::string &gcode, std::vector<float> &current_pos, Accelerations &accelerations) const;
     float       calculate_layer_slowdown(std::vector<PerExtruderAdjustments> &per_extruder_adjustments);
     // Apply slow down over G-code lines stored in per_extruder_adjustments, enable fan if needed.
     // Returns the adjusted G-code.
@@ -42,6 +50,7 @@ private:
     // BBS: X,Y,Z,E,F,I,J
     std::vector<char>           m_axis;
     std::vector<float>          m_current_pos;
+    Accelerations               m_accelerations;
     // Current known fan speed or -1 if not known yet.
     int                         m_fan_speed;
     int                         m_additional_fan_speed;
@@ -54,6 +63,8 @@ private:
     // Referencs GCode::m_config, which is FullPrintConfig. While the PrintObjectConfig slice of FullPrintConfig is being modified,
     // the PrintConfig slice of FullPrintConfig is constant, thus no thread synchronization is required.
     const PrintConfig          &m_config;
+    // Resolves the filament config index of the per-variant options.
+    const GCode                &m_gcodegen;
     unsigned int                m_current_extruder;
     unsigned int                m_current_nozzle;
     //BBS: current fan speed

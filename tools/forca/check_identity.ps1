@@ -56,7 +56,9 @@ $must = @(
     @('src/slic3r/GUI/WebGuideDialog.cpp',          'wxID_ANY, SLIC3R_APP_NAME, wxDefaultPosition'),
     @('src/slic3r/GUI/WebUserLoginDialog.cpp',      'wxID_ANY, SLIC3R_APP_NAME)'),
     @('src/slic3r/GUI/WebDownPluginDlg.cpp',        'wxID_ANY, SLIC3R_APP_NAME)'),
-    @('src/slic3r/GUI/HttpServer.cpp',              'You can return to Forca Slicer'),
+    # Upstream made the login-page text translatable (2026-10 merge): _u8L() goes through forca_brand(), which shows
+    # "Forca Slicer" -- so check that the translated path is still used rather than a hard-coded "OrcaSlicer".
+    @('src/slic3r/GUI/HttpServer.cpp',              '_u8L("You can return to OrcaSlicer'),
     @('src/slic3r/GUI/WipeTowerDialog.cpp',         'Forca would re-calculate'),
     @('resources/web/flush/WipingDialog.html',      'Forca would re-calculate'),
     @('src/slic3r/plugin/host/PluginHostUi.cpp',    'py::arg("title") = "Forca Slicer"'),
@@ -80,6 +82,8 @@ $must = @(
     @('src/slic3r/GUI/MainFrame.cpp',               'if (FORCA_ORCA_CLOUD_ENABLED) // Forca: Sync Presets is Orca Cloud only'),
     @('src/slic3r/GUI/Preferences.cpp',             'if (FORCA_ORCA_CLOUD_ENABLED) { // Forca: preset sync is Orca Cloud only'),
     @('src/slic3r/GUI/CreatePresetsDialog.cpp',     'FORCA_ORCA_CLOUD_ENABLED && // Forca: no Orca Cloud sync prompt'),
+    @('src/slic3r/GUI/Plater.cpp',                  'if (FORCA_ORCA_CLOUD_ENABLED && wxGetApp().app_config->get_bool("show_shared_profiles_notification"))'),
+    @('src/slic3r/GUI/Preferences.cpp',             'if (FORCA_ORCA_CLOUD_ENABLED) { // Forca: the shared profiles live on Orca Cloud'),
     @('resources/web/homepage/index.html',          '<div id="OrcaAccount" class="AccountRow" style="display:none"'),
     @('tests/libslic3r/CMakeLists.txt',             'test_forca_preset_merge.cpp'),
     # B2: no update or profile checks against Orca's servers

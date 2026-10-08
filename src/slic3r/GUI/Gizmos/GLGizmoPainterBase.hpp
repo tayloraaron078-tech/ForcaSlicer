@@ -9,10 +9,20 @@
 #include "libslic3r/TriangleSelector.hpp"
 #include "libslic3r/Model.hpp"
 
+#include <array>
+#include <cassert>
 #include <cereal/types/vector.hpp>
+#include <cstddef>
 #include <glad/gl.h>
 
+#include "libslic3r/Point.hpp"
+#include "libslic3r/Color.hpp"
 #include <memory>
+#include <vector>
+#include <set>
+#include <string>
+#include <wx/event.h>
+#include <wx/string.h>
 
 
 namespace Slic3r::GUI {
@@ -28,6 +38,7 @@ enum class PainterGizmoType {
     SEAM,
     MM_SEGMENTATION,
     FUZZY_SKIN,
+    TEXTURE_DISPLACEMENT,
     // [regional-supports fork]
     SUPPORT_INTERFACE_REGION
 };

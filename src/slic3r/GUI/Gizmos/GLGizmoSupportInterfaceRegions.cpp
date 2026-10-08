@@ -34,7 +34,6 @@ std::string GLGizmoSupportInterfaceRegions::on_get_name() const
 
 bool GLGizmoSupportInterfaceRegions::on_init()
 {
-    m_desc["clipping_of_view"] = _L("Section view");
     m_desc["cursor_size"]      = _L("Brush size");
     m_desc["remove_all"]       = _L("Erase all");
     m_desc["tool_type"]        = _L("Tool type");
@@ -45,27 +44,23 @@ bool GLGizmoSupportInterfaceRegions::on_init()
     m_desc["highlight_by_angle"]= _L("Highlight overhangs");
 
     const wxString ctrl  = GUI::shortkey_ctrl_prefix();
-    const wxString alt   = GUI::shortkey_alt_prefix();
     const wxString shift = GUI::shortkey_shift_prefix();
 
     std::pair<wxString, wxString> paint_shortcut    = {_L("Left mouse button"),         _L("Paint region")};
     std::pair<wxString, wxString> erase_shortcut    = {_L("Right mouse button"),        _L("Erase")};
     std::pair<wxString, wxString> remove_shortcut   = {shift + _L("Left mouse button"), _L("Erase")};
-    std::pair<wxString, wxString> clipping_shortcut = {alt + _L("Mouse wheel"),         m_desc["clipping_of_view"]};
 
     m_shortcuts_brush = {
         paint_shortcut,
         erase_shortcut,
         remove_shortcut,
-        {ctrl + _L("Mouse wheel"), m_desc["cursor_size"]},
-        clipping_shortcut
+        {ctrl + _L("Mouse wheel"), m_desc["cursor_size"]}
     };
     m_shortcuts_bucket_fill = {
         paint_shortcut,
         erase_shortcut,
         remove_shortcut,
-        {ctrl + _L("Mouse wheel"), m_desc["smart_fill_angle"]},
-        clipping_shortcut
+        {ctrl + _L("Mouse wheel"), m_desc["smart_fill_angle"]}
     };
     m_shortcuts_gap_fill = {
         {ctrl + _L("Mouse wheel"), m_desc["gap_area"]}
@@ -171,14 +166,13 @@ void GLGizmoSupportInterfaceRegions::on_render_input_window(float x, float y, fl
 
     GizmoImguiBegin(get_name(), ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
-    const float clipping_slider_left = m_imgui->calc_text_size(m_desc.at("clipping_of_view")).x + m_imgui->scaled(1.5f);
     const float cursor_slider_left   = m_imgui->calc_text_size(m_desc.at("cursor_size")).x + m_imgui->scaled(1.5f);
     const float smart_fill_left      = m_imgui->calc_text_size(m_desc.at("smart_fill_angle")).x + m_imgui->scaled(1.5f);
     const float gap_area_left        = m_imgui->calc_text_size(m_desc.at("gap_area")).x + m_imgui->scaled(1.5f);
     const float highlight_left       = m_imgui->calc_text_size(m_desc.at("highlight_by_angle")).x + m_imgui->scaled(1.5f);
     const float empty_button_width   = m_imgui->calc_button_size("").x;
 
-    const float sliders_left_width = std::max(highlight_left, std::max(cursor_slider_left, std::max(clipping_slider_left, std::max(smart_fill_left, gap_area_left))));
+    const float sliders_left_width = std::max(highlight_left, std::max(cursor_slider_left, std::max(smart_fill_left, gap_area_left)));
     const float slider_icon_width  = m_imgui->get_slider_icon_size().x;
     const float space_size         = m_imgui->get_style_scaling() * 8;
     const float sliders_width      = m_imgui->scaled(7.0f);
@@ -344,27 +338,6 @@ void GLGizmoSupportInterfaceRegions::on_render_input_window(float x, float y, fl
             m_parent.set_as_dirty();
         }
     }
-
-    ImGui::Separator();
-
-    // Section view (clipping) slider.
-    if (m_c->object_clipper()->get_position() == 0.f) {
-        ImGui::AlignTextToFramePadding();
-        m_imgui->text(m_desc.at("clipping_of_view"));
-    } else {
-        if (m_imgui->button(m_desc.at("clipping_of_view"))) {
-            wxGetApp().CallAfter([this]() { m_c->object_clipper()->set_position_by_ratio(-1., false); });
-        }
-    }
-    auto clp_dist = float(m_c->object_clipper()->get_position());
-    ImGui::SameLine(sliders_left_width);
-    ImGui::PushItemWidth(sliders_width);
-    bool slider_clp = m_imgui->bbl_slider_float_style("##clp_dist", &clp_dist, 0.f, 1.f, "%.2f", 1.0f, true);
-    ImGui::SameLine(drag_left_width + sliders_left_width);
-    ImGui::PushItemWidth(1.5f * slider_icon_width);
-    bool drag_clp = ImGui::BBLDragFloat("##clp_dist_input", &clp_dist, 0.05f, 0.0f, 0.0f, "%.2f");
-    if (slider_clp || drag_clp)
-        m_c->object_clipper()->set_position_by_ratio(clp_dist, true);
 
     ImGui::Separator();
 
