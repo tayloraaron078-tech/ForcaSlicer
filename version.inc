@@ -25,7 +25,7 @@ set(SLIC3R_VERSION "02.08.01.55")
 # installer, release zip) and what the update check compares against Forca's GitHub release tags (vX.Y.Z[-pre.N]).
 # SLIC3R_VERSION / SoftFever_VERSION above stay Orca's: profiles, .3mf files, config migration and the Bambu plugin
 # compare against them. Keep the G-code header's version one word (Moonraker/Klipper parse "<name> <version> on").
-set(FORCA_VERSION "0.1.0-alpha.3")
+set(FORCA_VERSION "0.1.0-alpha.4")
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" FORCA_VERSION_MATCH ${FORCA_VERSION})
 set(FORCA_VERSION_MAJOR ${CMAKE_MATCH_1})
 set(FORCA_VERSION_MINOR ${CMAKE_MATCH_2})

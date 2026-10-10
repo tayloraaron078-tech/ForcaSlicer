@@ -502,6 +502,41 @@ void ForcaAI::log(const std::string& action, const std::string& summary, bool ok
 
 // ---- HTTP / MCP (server thread) ---------------------------------------------------------------
 
+bool forca_ai_is_local_host(const std::string& host)
+{
+    // host[:port], where host is localhost, 127.0.0.1 or [::1].
+    std::string h = host;
+    if (!h.empty() && h.front() == '[') {
+        const size_t close = h.find(']');
+        if (close == std::string::npos)
+            return false;
+        const std::string rest = h.substr(close + 1);
+        if (!rest.empty() && (rest.front() != ':' || rest.find_first_not_of("0123456789", 1) != std::string::npos))
+            return false;
+        return h.substr(0, close + 1) == "[::1]";
+    }
+    if (const size_t colon = h.find(':'); colon != std::string::npos) {
+        if (h.find_first_not_of("0123456789", colon + 1) != std::string::npos)
+            return false;
+        h.erase(colon);
+    }
+    std::transform(h.begin(), h.end(), h.begin(), [](unsigned char c) { return char(std::tolower(c)); });
+    return h == "localhost" || h == "127.0.0.1";
+}
+
+bool forca_ai_is_local_origin(const std::string& origin)
+{
+    // scheme://host[:port], nothing after it.
+    std::string rest;
+    if (origin.rfind("http://", 0) == 0)
+        rest = origin.substr(7);
+    else if (origin.rfind("https://", 0) == 0)
+        rest = origin.substr(8);
+    else
+        return false;
+    return rest.find('/') == std::string::npos && forca_ai_is_local_host(rest);
+}
+
 ForcaAI::HttpReply ForcaAI::handle_http(const std::string& method, const std::string& target,
                                         const std::map<std::string, std::string>& headers, const std::string& body)
 {
@@ -516,13 +551,19 @@ ForcaAI::HttpReply ForcaAI::handle_http(const std::string& method, const std::st
     // Browsers send an Origin header: refuse any web page that is not local (DNS-rebinding protection).
     if (auto it = headers.find("origin"); it != headers.end() && !it->second.empty() && it->second != "null") {
         const std::string& o = it->second;
-        if (!(starts_with(o, "http://127.0.0.1") || starts_with(o, "http://localhost") ||
-              starts_with(o, "https://127.0.0.1") || starts_with(o, "https://localhost"))) {
+        if (!forca_ai_is_local_origin(o)) {
             reply.status = 403;
             reply.body   = R"({"error":"origin not allowed"})";
             log("connection", "Refused a request from a web page (" + o + ")", false);
             return reply;
         }
+    }
+    // A rebound domain still names itself in Host, even when no Origin is sent.
+    if (auto it = headers.find("host"); it != headers.end() && !it->second.empty() && !forca_ai_is_local_host(it->second)) {
+        reply.status = 403;
+        reply.body   = R"({"error":"host not allowed"})";
+        log("connection", "Refused a request for another host (" + it->second + ")", false);
+        return reply;
     }
 
     // The secret key.

@@ -1,5 +1,6 @@
 #include "TaskManager.hpp"
 
+#include "bambu_networking.hpp"
 #include "libslic3r/Thread.hpp"
 #include "libslic3r/LifecycleEvents.hpp"
 #include "nlohmann/json.hpp"
@@ -8,7 +9,21 @@
 #include "ForcaAcademy.hpp" // Forca Academy: records multi-machine sends
 #include "ForcaAI.hpp"      // Forca: forca_ai_printer_label
 
+#include "I18N.hpp"
+
+#include <cassert>
+#include <boost/log/trivial.hpp>
+#include <chrono>
+#include <boost/chrono/duration.hpp>
+#include <algorithm>
+#include <cstdint>
 #include <exception>
+#include <wx/event.h>
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include "slic3r/GUI/Printer/PrinterFileSystem.h"
 
 using namespace nlohmann;
 
@@ -90,7 +105,7 @@ TaskStateInfo::TaskStateInfo(PrintParams param)
             //wxCommandEvent event(EVT_MULTI_SEND_LIMIT);
             //wxPostEvent(this, event);
             GUI::wxGetApp().mainframe->CallAfter([]() {
-                GUI::wxGetApp().show_dialog("The printing task exceeds the limit, supporting a maximum of 6 printers.");
+                GUI::wxGetApp().show_dialog(_L("The printing task exceeds the limit, supporting a maximum of 6 printers."));
             });
         }
 

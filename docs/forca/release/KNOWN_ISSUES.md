@@ -4,12 +4,14 @@ Things we already know about. No need to report these (but do add a comment to t
 differently).
 
 ## General
-- **Windows 64-bit only.** No macOS or Linux builds yet.
-- **Not code-signed.** Windows SmartScreen warns on first run (More info → Run anyway).
+- **Windows 64-bit only.** No macOS or Linux builds are planned; the source builds on other systems for anyone who
+  wants to try.
+- **Code-signed since 0.1.0-alpha.4**, but SmartScreen may still warn for a while until the certificate builds a
+  reputation (More info → Run anyway). The publisher shown should be Aaron Taylor.
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
   Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to late September 2026), not a stable Orca release.
+- **Built on OrcaSlicer's 2.5.0 development line** (merged up to early October 2026), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
@@ -34,13 +36,14 @@ differently).
 - Journal files (AGENTS.md, notes) are written in English.
 
 ## Non-Bambu printers
-- **Happy Hare and Moonraker filament sync fixes are experimental and untested by us** (no Happy Hare, Spoolman lane
-  sync or ACE setup here). They come from two OrcaSlicer pull requests that are not merged upstream yet. If you use
-  Happy Hare or Moonraker filament data, please tell us on
-  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3) whether "Synchronize filament list" works.
+- **Filament sync from Klipper filament changers can put filaments in the wrong slots and pick "Generic" presets**
+  (seen with an Anycubic ACE through KX-Bridge). A fix is in testing on
+  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3); until then, check the filament list after
+  "Synchronize filament list". The two OrcaSlicer pull requests in this release (not merged upstream yet) are
+  untested on Happy Hare MMU hardware.
 - **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the
   printer's network settings (API Key / Password). Other Flashforge models with the same local API should work but
-  are untested. A Flashforge printer's own camera is not used for Forca Academy pictures yet.
+  are untested. Forca Academy pictures from a Flashforge printer's built-in camera are untested (no camera here).
 - **Klipper web interface search** looks in the usual places (the printer's address, ports 81 / 4408 / 4409, /fluidd,
   /mainsail); type the address in Device UI if yours is elsewhere.
 
@@ -57,10 +60,18 @@ differently).
 - **The camera bed check can't see the whole plate:** a Bambu H2S camera, for one, doesn't show the strip nearest the
   door. Turn on camera bed checks only if you are fine with that; your own "Bed is clear" click has no blind spot.
 
+## Bambu network plug-in and Open Bamboo Networking
+- **Open Bamboo Networking** (Preferences → Bambu network plug-in → "Network plug-in source") needs printers in
+  LAN-only mode with Developer Mode on, and cloud printing, the camera away from home, Go Live, HMS photos and
+  MakerWorld history don't work with it. Tested on an H2S. A switch takes effect after closing and reopening Forca.
+- **Use "Network plug-in source" to switch between the two**, not the "Network plug-in version" list next to it: that
+  list reloads the plug-in while Forca runs, and the camera live view can then crash Forca.
+
 ## Crashes we know about
-- **Shortly after sending a print to a Bambu printer** (about 15-30 seconds), Forca can close unexpectedly. The print
-  itself is already on the printer and carries on; restart Forca and, with the print journal on, it picks the print
-  up again. The crash is inside Bambu's network plugin, which Forca can't change.
+- **Shortly after sending a print to a Bambu printer** (about 15-30 seconds), Forca can close unexpectedly with Bambu
+  Lab's network plug-in. The print itself is already on the printer and carries on; restart Forca and, with the print
+  journal on, it picks the print up again. The crash is inside Bambu's plug-in, which Forca can't change; Open Bamboo
+  Networking didn't have it in our tests, and Forca offers it after such a crash.
 - **Rarely, when a print grant opens the print dialog**, Forca has closed unexpectedly before anything was sent.
   Seen twice, not since; Forca now logs each step so the next one can be found. If it happens to you, please report
   it and attach the newest `debug_*.log.0` from Help → Show Configuration Folder → `log`.

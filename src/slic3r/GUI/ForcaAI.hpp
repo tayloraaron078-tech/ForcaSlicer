@@ -144,6 +144,11 @@ private:
 };
 
 // ForcaAITools.cpp: the Phase-1 (read-only) tools; it also registers the Phase-2 tools.
+// DNS-rebinding guard for the bridge: a browser's Origin header, or the request's Host header, must name this computer
+// exactly (localhost, 127.0.0.1 or [::1], any port). A prefix match would let "localhost.evil.com" through.
+bool forca_ai_is_local_origin(const std::string& origin); // "http://localhost:1234"
+bool forca_ai_is_local_host(const std::string& host);     // "127.0.0.1:13630"
+
 void register_forca_ai_tools(ForcaAI& ai);
 // ForcaAIHands.cpp: the Phase-2 tools (models, presets, settings, modifiers, slicing, saving).
 void register_forca_ai_hand_tools(ForcaAI& ai);

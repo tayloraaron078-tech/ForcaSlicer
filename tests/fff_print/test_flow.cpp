@@ -1,14 +1,15 @@
 #include <catch2/catch_all.hpp>
 
+#include <cmath>
 #include <numeric>
 #include <sstream>
 
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "test_helpers.hpp" // get access to init_print, etc
 
 #include "libslic3r/Config.hpp"
-#include "libslic3r/Model.hpp"
-#include "libslic3r/Config.hpp"
-#include "libslic3r/GCodeReader.hpp"
 #include "libslic3r/Flow.hpp"
 #include "libslic3r/libslic3r.h"
 
@@ -93,4 +94,27 @@ SCENARIO("Flow math for bridges", "[Flow]") {
             }
         }
     }
+}
+
+// The first layer's infill takes initial_layer_infill_line_width when set; walls keep initial_layer_line_width and the
+// layers above keep their own widths.
+TEST_CASE("The first layer's infill can have its own line width", "[Flow]")
+{
+    const auto width = [](double infill_width, FlowRole role, bool first_layer) {
+        Print print;
+        init_and_process_print({ cube(20) }, print, {
+            { "initial_layer_line_width",        "0.5" },
+            { "initial_layer_infill_line_width", infill_width },
+            { "sparse_infill_line_width",        "0.45" },
+        });
+        const PrintObject &object = *print.objects().front();
+        return object.printing_region(0).flow(object, role, 0.2, first_layer).width();
+    };
+    using Catch::Matchers::WithinAbs;
+    CHECK_THAT(width(0.8, frInfill, true), WithinAbs(0.8, 1e-6));
+    CHECK_THAT(width(0.8, frSolidInfill, true), WithinAbs(0.8, 1e-6));
+    CHECK_THAT(width(0.8, frPerimeter, true), WithinAbs(0.5, 1e-6));
+    CHECK_THAT(width(0.8, frInfill, false), WithinAbs(0.45, 1e-6));
+    // 0 keeps following the first layer line width.
+    CHECK_THAT(width(0., frInfill, true), WithinAbs(0.5, 1e-6));
 }

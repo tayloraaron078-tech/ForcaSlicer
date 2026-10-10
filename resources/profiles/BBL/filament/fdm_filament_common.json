@@ -324,7 +324,7 @@
     "long_retractions_when_ec": [
         "0"
     ],
-    "no_slow_down_for_cooling_on_outwalls": [
+    "dont_slow_down_outer_wall": [
         "0"
     ],
     "nozzle_temperature": [

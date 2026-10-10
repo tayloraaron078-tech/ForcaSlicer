@@ -4,12 +4,19 @@
 #include "GUI.hpp"
 #include "GUI_Utils.hpp"
 
+#include <wx/chartype.h>
+#include <functional>
+#include <tuple>
 #include <wx/dialog.h>
+#include <wx/string.h>
+#include <wx/gdicmn.h>
+#include <wx/sizer.h>
 #include <wx/timer.h>
 #include <string>
 #include <vector>
 #include <list>
 #include <map>
+#include <wx/toplevel.h>
 #include "Widgets/ComboBox.hpp"
 #include "Widgets/CheckBox.hpp"
 #include "Widgets/TextInput.hpp"
@@ -110,6 +117,8 @@ public:
     wxBoxSizer *create_item_auto_reslice(wxString title, wxString checkbox_tooltip, wxString delay_tooltip);
     wxBoxSizer *create_item_bambu_cloud(wxString title, wxString tooltip);
     wxBoxSizer *create_item_network_plugin_version(wxString title, wxString tooltip);
+    wxBoxSizer *create_item_forca_obn(); // Forca: Bambu Lab or Open Bamboo Networking
+    void        refresh_network_version_combo(); // Forca: after an OBN switch
 #ifdef WIN32
     wxBoxSizer *create_item_link_association(wxString url_prefix, wxString website_name);
 #endif // WIN32

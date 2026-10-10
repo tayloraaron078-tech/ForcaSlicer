@@ -1,10 +1,15 @@
 #include "PluginHostUi.hpp"
 
+#include <pybind11/pytypes.h>
+#include <pybind11/gil.h>
+#include <pybind11/cast.h>
 #include "slic3r/plugin/PluginAuditManager.hpp"
 #include "slic3r/plugin/PythonInterpreter.hpp" // PythonGILState
 #include "libslic3r/libslic3r.h"               // Forca: SLIC3R_APP_NAME
 #include "slic3r/plugin/PluginFsUtils.hpp"   // json_to_py / py_to_json
 
+#include <functional>
+#include <exception>
 #include <slic3r/GUI/GUI_App.hpp>
 #include <slic3r/GUI/MainFrame.hpp>
 #include <slic3r/GUI/MsgDialog.hpp>
@@ -19,8 +24,14 @@
 
 #include <boost/log/trivial.hpp>
 
+#include <utility>
+#include <string>
 #include <wx/app.h>
 #include <wx/defs.h>
+#include <wx/thread.h>
+#include <wx/toplevel.h>
+#include <wx/event.h>
+#include <wx/progdlg.h>
 #include <wx/window.h>
 
 #include <algorithm>

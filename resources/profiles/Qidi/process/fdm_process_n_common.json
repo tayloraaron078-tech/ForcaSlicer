@@ -219,7 +219,7 @@
 	"prime_tower_enable_framework": "0",
 	"prime_tower_lift_speed": "90",
 	"prime_tower_lift_height": "-1",
-	"prime_tower_max_speed": "90",
+	"wipe_tower_max_purge_speed": "90",
 	"prime_tower_flat_ironing": "0",
 	"compatible_printers": [],
 	"gcode_label_objects": "0",

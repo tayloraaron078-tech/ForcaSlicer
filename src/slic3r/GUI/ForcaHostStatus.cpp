@@ -82,11 +82,13 @@ std::string job_stem(std::string file)
     return file;
 }
 
-bool http_get(const std::string& url, const std::string& api_key, std::string& body, std::string& err)
+bool http_get(const std::string& url, const std::string& api_key, std::string& body, std::string& err, size_t max_bytes = 0)
 {
     bool ok   = false;
     auto http = Http::get(url);
     http.timeout_connect(TIMEOUT_CONNECT_S).timeout_max(TIMEOUT_MAX_S);
+    if (max_bytes > 0)
+        http.size_limit(max_bytes);
     if (!api_key.empty())
         http.header("X-Api-Key", api_key);
     http.on_complete([&](std::string b, unsigned) {
@@ -96,6 +98,20 @@ bool http_get(const std::string& url, const std::string& api_key, std::string& b
         .on_error([&](std::string, std::string error, unsigned status) { err = error + " (HTTP " + std::to_string(status) + ")"; })
         .perform_sync();
     return ok;
+}
+
+// One still picture from a camera address; false unless it is a JPEG. The address may be any camera the printer's
+// owner set up, not only one on the printer itself (DECISIONS 2026-10-07), so the download is capped instead.
+bool fetch_jpeg(const std::string& url, std::string& jpeg, std::string& err)
+{
+    constexpr size_t max_picture_bytes = 16 * 1024 * 1024; // a 4K webcam frame is a few MB
+    if (!http_get(url, {}, jpeg, err, max_picture_bytes))
+        return false;
+    if (jpeg.size() < 4 || (unsigned char) jpeg[0] != 0xFF || (unsigned char) jpeg[1] != 0xD8) {
+        err = "the camera did not send a picture";
+        return false;
+    }
+    return true;
 }
 
 // POST to a Flashforge printer's local API with its serial number and access code; `body` gets a reply whose code is 0.
@@ -307,17 +323,29 @@ bool forca_fetch_host_status(const DynamicPrintConfig& config, ForcaHostStatus& 
 
 bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jpeg, std::string& err)
 {
-    if (forca_host_status_kind(config) != "moonraker") {
+    const std::string kind = forca_host_status_kind(config);
+    if (kind != "moonraker" && kind != "flashforge") {
         err = "no camera";
         return false;
     }
     const std::string host = config.opt_string("print_host");
     std::string       body;
     try {
+        std::string snapshot;
+        if (kind == "flashforge") { // models with a camera (Adventurer 5M Pro ...) report its mjpg stream in 'detail'
+            if (!flashforge_post(config, "detail", json::object(), body, err))
+                return false;
+            const json reply = json::parse(body);
+            snapshot         = forca_camera_snapshot_url(str(reply.contains("detail") ? reply["detail"] : reply, "cameraStreamUrl"));
+            if (snapshot.empty()) {
+                err = "no camera";
+                return false;
+            }
+            return fetch_jpeg(snapshot, jpeg, err);
+        }
         if (!http_get(base_url(host) + "/server/webcams/list", config.opt_string("printhost_apikey"), body, err))
             return false;
         const json reply = json::parse(body);
-        std::string snapshot;
         const json& result = obj(reply, "result");
         const auto  cams   = result.find("webcams");
         for (const json& cam : cams != result.end() && cams->is_array() ? *cams : json::array())
@@ -356,13 +384,7 @@ bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jp
         // A relative snapshot address belongs to the printer's web server (port 80), not to Moonraker's own port.
         if (!boost::algorithm::istarts_with(snapshot, "http"))
             snapshot = "http://" + host_name(host) + (snapshot.front() == '/' ? "" : "/") + snapshot;
-        if (!http_get(snapshot, {}, jpeg, err))
-            return false;
-        if (jpeg.size() < 4 || (unsigned char) jpeg[0] != 0xFF || (unsigned char) jpeg[1] != 0xD8) {
-            err = "the camera did not send a picture";
-            return false;
-        }
-        return true;
+        return fetch_jpeg(snapshot, jpeg, err);
     } catch (const std::exception& e) {
         err = std::string("unexpected reply: ") + e.what();
     }

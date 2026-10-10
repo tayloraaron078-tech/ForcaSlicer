@@ -1,10 +1,24 @@
+#include "ExtrusionEntity.hpp"
+#include <vector>
+#include <utility>
+#include <cstddef>
+#include "Point.hpp"
+#include <limits>
+#include <algorithm>
+#include <memory>
+#include "ExPolygon.hpp"
+#include "BoundingBox.hpp"
+#include <Eigen/Core>
+#include "Polyline.hpp"
+#include <iterator>
+#include "Line.hpp"
+#include "libslic3r.h"
 #if 0
 	#pragma optimize("", off)
 	#undef NDEBUG
 	#undef assert
 #endif
 
-#include "clipper.hpp"
 #include "ShortestPath.hpp"
 #include "ExtrusionEntityCollection.hpp"
 #include "KDTreeIndirect.hpp"
@@ -14,6 +28,7 @@
 
 #include <cmath>
 #include <cassert>
+#include "MultiMaterialSegmentation.hpp"
 
 namespace Slic3r {
 
@@ -1024,13 +1039,71 @@ std::vector<std::pair<size_t, bool>> chain_segments_greedy2(SegmentEndPointFunc 
 	return chain_segments_greedy_constrained_reversals2_<PointType, SegmentEndPointFunc, false, decltype(could_reverse_func)>(end_point_func, could_reverse_func, num_segments, start_near);
 }
 
-std::vector<std::pair<size_t, bool>> chain_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point *start_near)
+// Open-path 2-opt over a chain of segments: reverses a run of the chain, flipping each of its segments, whenever
+// that shortens the travels connecting them. Unlike tsp_2opt_improve(), the path does not return to its start,
+// the first travel runs from start_near when given, and a run is only reversed if all its segments may be reversed.
+// O(n^2) per pass, so long chains are left to the greedy result.
+template<typename SegmentEndPointFunc, typename CouldReverseFunc>
+static void improve_chain_2opt(std::vector<std::pair<size_t, bool>> &chain, SegmentEndPointFunc end_point_func, CouldReverseFunc could_reverse_func, const Point *start_near)
+{
+	static constexpr size_t max_segments = 500;
+	static constexpr int    max_passes   = 10;
+	const size_t n = chain.size();
+	if (n < 2 || n > max_segments)
+		return;
+
+	// Entry and exit point of each chain element in its current orientation.
+	std::vector<Vec2d> in(n), out(n);
+	// non_reversible[i] = number of segments that cannot be reversed among the first i chain elements.
+	std::vector<size_t> non_reversible(n + 1, 0);
+	for (size_t i = 0; i < n; ++ i) {
+		in[i]  = end_point_func(chain[i].first, ! chain[i].second).template cast<double>();
+		out[i] = end_point_func(chain[i].first, chain[i].second).template cast<double>();
+		non_reversible[i + 1] = non_reversible[i] + (could_reverse_func(chain[i].first) ? 0 : 1);
+	}
+	const Vec2d  start    = start_near ? Vec2d(start_near->cast<double>()) : Vec2d::Zero();
+	const double min_gain = scale_(0.01);
+	auto dist = [](const Vec2d &a, const Vec2d &b) { return (a - b).norm(); };
+
+	for (int pass = 0; pass < max_passes; ++ pass) {
+		bool improved = false;
+		for (size_t k = 0; k < n; ++ k) {
+			const bool   has_prev   = k > 0 || start_near != nullptr;
+			const Vec2d &prev       = k > 0 ? out[k - 1] : start;
+			double       d_prev_old = has_prev ? dist(prev, in[k]) : 0.;
+			// Reversing never changes which segments are reversible, so the prefix counts stay valid.
+			for (size_t m = k; m < n && non_reversible[m + 1] == non_reversible[k]; ++ m) {
+				const double d_next_old = m + 1 < n ? dist(out[m], in[m + 1]) : 0.;
+				const double d_prev_new = has_prev ? dist(prev, out[m]) : 0.;
+				const double d_next_new = m + 1 < n ? dist(in[k], in[m + 1]) : 0.;
+				if (d_prev_old + d_next_old - d_prev_new - d_next_new > min_gain) {
+					std::reverse(chain.begin() + k, chain.begin() + m + 1);
+					std::reverse(in.begin() + k, in.begin() + m + 1);
+					std::reverse(out.begin() + k, out.begin() + m + 1);
+					for (size_t i = k; i <= m; ++ i) {
+						chain[i].second = ! chain[i].second;
+						std::swap(in[i], out[i]);
+					}
+					d_prev_old = d_prev_new;
+					improved   = true;
+				}
+			}
+		}
+		if (! improved)
+			break;
+	}
+}
+
+template<typename EntityPtr>
+static std::vector<std::pair<size_t, bool>> chain_extrusion_entities_impl(const std::vector<EntityPtr> &entities, const Point *start_near, bool improve = false)
 {
 	auto segment_end_point = [&entities](size_t idx, bool first_point) -> Point { return first_point ? entities[idx]->first_point() : entities[idx]->last_point(); };
 	auto could_reverse = [&entities](size_t idx) { const ExtrusionEntity *ee = entities[idx]; return ee->is_loop() || ee->can_reverse(); };
 	std::vector<std::pair<size_t, bool>> out = chain_segments_greedy_constrained_reversals<Point, decltype(segment_end_point), decltype(could_reverse)>(segment_end_point, could_reverse, entities.size(), start_near);
+	if (improve)
+		improve_chain_2opt(out, segment_end_point, could_reverse, start_near);
 	for (std::pair<size_t, bool> &segment : out) {
-		ExtrusionEntity *ee = entities[segment.first];
+		const ExtrusionEntity *ee = entities[segment.first];
 		if (ee->is_loop())
 			// Ignore reversals for loops, as the start point equals the end point.
 			segment.second = false;
@@ -1038,6 +1111,20 @@ std::vector<std::pair<size_t, bool>> chain_extrusion_entities(std::vector<Extrus
 		assert(ee->can_reverse() || ! segment.second);
 	}
 	return out;
+}
+
+std::vector<std::pair<size_t, bool>> chain_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point *start_near)
+{
+	return chain_extrusion_entities_impl(entities, start_near);
+}
+
+// Orca: Reordering queries first_point() / last_point(); drop entities that cannot provide valid endpoints.
+template<typename EntityPtr>
+static void remove_entities_without_endpoints(std::vector<EntityPtr> &entities)
+{
+    entities.erase(std::remove_if(entities.begin(), entities.end(),
+                                  [](const ExtrusionEntity *entity) { return !extrusion_entity_has_endpoints(entity); }),
+                   entities.end());
 }
 
 void reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const std::vector<std::pair<size_t, bool>> &chain)
@@ -1061,12 +1148,37 @@ void chain_and_reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entitie
 
 void chain_and_reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point *start_near)
 {
-    // Orca: Reordering queries first_point() / last_point(); drop entities that cannot provide valid endpoints.
-    entities.erase(std::remove_if(entities.begin(), entities.end(), [](ExtrusionEntity *entity) {
-        return !extrusion_entity_has_endpoints(entity);
-    }),
-                   entities.end());
+    remove_entities_without_endpoints(entities);
 	reorder_extrusion_entities(entities, chain_extrusion_entities(entities, start_near));
+}
+
+static void chain_and_reorder_extrusion_entities(std::vector<const ExtrusionEntity*> &entities, const Point &start_near,
+                                                 std::vector<std::unique_ptr<ExtrusionEntity>> &reversed_clones, bool improve)
+{
+    remove_entities_without_endpoints(entities);
+    std::vector<const ExtrusionEntity*> out;
+    out.reserve(entities.size());
+    for (const auto &[idx, reverse] : chain_extrusion_entities_impl(entities, &start_near, improve)) {
+        if (reverse) {
+            ExtrusionEntity *clone = reversed_clones.emplace_back(entities[idx]->clone()).get();
+            clone->reverse();
+            out.emplace_back(clone);
+        } else
+            out.emplace_back(entities[idx]);
+    }
+    entities.swap(out);
+}
+
+void chain_and_reorder_extrusion_entities(std::vector<const ExtrusionEntity*> &entities, const Point &start_near,
+                                          std::vector<std::unique_ptr<ExtrusionEntity>> &reversed_clones)
+{
+    chain_and_reorder_extrusion_entities(entities, start_near, reversed_clones, false);
+}
+
+void chain_and_reorder_extrusion_entities_2opt(std::vector<const ExtrusionEntity*> &entities, const Point &start_near,
+                                               std::vector<std::unique_ptr<ExtrusionEntity>> &reversed_clones)
+{
+    chain_and_reorder_extrusion_entities(entities, start_near, reversed_clones, true);
 }
 
 std::vector<std::pair<size_t, bool>> chain_extrusion_paths(std::vector<ExtrusionPath> &extrusion_paths, const Point *start_near)
@@ -1113,6 +1225,21 @@ std::vector<size_t> chain_points(const Points &points, const Point *start_near)
 	for (auto &segment_and_reversal : ordered)
 		out.emplace_back(segment_and_reversal.first);
 
+	return out;
+}
+
+std::vector<size_t> chain_points_2opt(const Points &points, const Point *start_near)
+{
+	std::vector<std::pair<size_t, bool>> chain;
+	chain.reserve(points.size());
+	for (size_t idx : chain_points(points, start_near))
+		chain.emplace_back(idx, false);
+	auto end_point = [&points](size_t idx, bool /* first_point */) -> const Point& { return points[idx]; };
+	improve_chain_2opt(chain, end_point, [](size_t) { return true; }, start_near);
+	std::vector<size_t> out;
+	out.reserve(chain.size());
+	for (const std::pair<size_t, bool> &item : chain)
+		out.emplace_back(item.first);
 	return out;
 }
 
@@ -2011,22 +2138,6 @@ Polylines chain_polylines(Polylines &&polylines, const Point *start_near)
 	svg_draw_polyline_chain("chain_polylines-final", iRun, out);
 #endif /* DEBUG_SVG_OUTPUT */
 	return out;
-}
-
-template<class T> static inline T chain_path_items(const Points &points, const T &items)
-{
-	auto segment_end_point = [&points](size_t idx, bool /* first_point */) -> const Point& { return points[idx]; };
-	std::vector<std::pair<size_t, bool>> ordered = chain_segments_greedy<Point, decltype(segment_end_point)>(segment_end_point, points.size(), nullptr);
-	T out;
-	out.reserve(items.size());
-	for (auto &segment_and_reversal : ordered)
-		out.emplace_back(items[segment_and_reversal.first]);
-	return out;
-}
-
-ClipperLib::PolyNodes chain_clipper_polynodes(const Points &points, const ClipperLib::PolyNodes &items)
-{
-	return chain_path_items(points, items);
 }
 
 // BBS

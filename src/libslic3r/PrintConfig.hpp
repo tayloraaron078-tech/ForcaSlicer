@@ -16,10 +16,13 @@
 #ifndef slic3r_PrintConfig_hpp_
 #define slic3r_PrintConfig_hpp_
 
+#include "Point.hpp"
 #include "libslic3r.h"
 #include "CommonDefs.hpp"
 #include "Config.hpp"
 #include "Polygon.hpp"
+#include <boost/container_hash/hash.hpp>
+#include <algorithm>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
@@ -27,8 +30,24 @@
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/to_seq.hpp>
+#include <optional>
+#include <set>
+#include <unordered_map>
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include <cstddef>
+#include <cassert>
+#include <cstdint>
+#include <cereal/access.hpp>
+#include <cmath>
+#include <cereal/specialize.hpp>
+#include <stdexcept>
 
 namespace Slic3r {
+
+class DynamicPrintConfig;
 
 enum GCodeFlavor : unsigned char {
     gcfMarlinLegacy, 
@@ -178,6 +197,10 @@ enum class IroningType {
     Count,
 };
 
+// Smallest usable ironing line spacing. Anything tighter yields an unprintable number of lines,
+// and zero stops the fillers from making progress.
+constexpr double IRONING_SPACING_MIN = 0.05;
+
 //BBS
 enum class WallInfillOrder {
     InnerOuterInfill,
@@ -245,9 +268,9 @@ enum class PrintOrder
 
 enum class SlicingMode
 {
-    // Regular, applying ClipperLib::pftNonZero rule when creating ExPolygons.
+    // Regular, applying pftNonZero rule when creating ExPolygons.
     Regular,
-    // Compatible with 3DLabPrint models, applying ClipperLib::pftEvenOdd rule when creating ExPolygons.
+    // Compatible with 3DLabPrint models, applying pftEvenOdd rule when creating ExPolygons.
     EvenOdd,
     // Orienting all contours CCW, thus closing all holes.
     CloseHoles,
@@ -301,6 +324,29 @@ enum class SeamScarfType {
     None,
     External,
     All,
+};
+
+// Ported from BambuStudio: whether retraction is skipped on travels inside infill.
+// Disabled: always retract. Auto: skip only for filaments with low metal stickiness. Enabled: always skip.
+enum ReduceInfillRetractionMode {
+    rirDisabled = 0,
+    rirAuto     = 1,
+    rirEnabled  = 2
+};
+
+// Ported from BambuStudio (which took it from PrusaSlicer 2.9.3): how the cooling slowdown reaches the minimum layer time.
+enum CoolingSlowdownLogicType {
+    cslUniformCooling = 0,    // Slows all adjustable features down together.
+    cslConsistentSurface = 1, // Slows the outer walls only if slowing everything else is not enough.
+};
+
+// Ported from BambuStudio: how strongly a filament sticks to the metal nozzle and leaves residue.
+// None (untested or custom filament) behaves like Low.
+enum FilamentMetalStickiness {
+    fmsNone = 0,
+    fmsLow,
+    fmsMedium,
+    fmsHigh
 };
 
 // Orca
@@ -519,8 +565,11 @@ enum NozzleVolumeType {
                      // with more than one sub-nozzle (extruder_max_nozzle_count > 1); matched as Standard for
                      // preset lookup and never emitted in profile variant strings
     nvtTPUHighFlow,  // physical variant, used on H2D/H2DP 0.4 nozzles only
+    // 4 is reserved: E3D High Flow is 5 in BambuStudio's slice_info and device numbering.
+    nvtE3DHighFlow = 5, // physical variant, E3D high-flow hotend on 0.4/0.6 nozzles
+    nvtExtraHighFlow = 6, // Orca: physical variant with no BambuStudio or device counterpart; only profiles name it
     // Integer values are serialized as raw ints in 3mf plate metadata and device MQTT, so they MUST stay stable.
-    nvtMaxNozzleVolumeType = nvtTPUHighFlow
+    nvtMaxNozzleVolumeType = nvtExtraHighFlow
 };
 
 enum FilamentMapMode {
@@ -547,8 +596,19 @@ enum PrimeVolumeMode {
 
 extern std::string get_extruder_variant_string(ExtruderType extruder_type, NozzleVolumeType nozzle_volume_type);
 
-// Base slot lookup: scans a variant list (paired with its 1-based extruder/filament ids) for the
-// entry matching the given extruder/volume type and id. Returns 0 when no entry matches.
+// The variant index a value is taken from: in a variant list paired with its 1-based extruder or
+// filament ids, the variant with the same variant string and id, else that id's first variant, else -1.
+// variant_id_1based < 0 or empty variant_ids_1based match any id. A list without variant strings has
+// one variant per id, and one with neither variant strings nor ids has a single variant.
+extern int find_variant_index(const std::string& variant, int variant_id_1based, const std::vector<std::string>& variant_list, const std::vector<int>& variant_ids_1based);
+// find_variant_index for every variant of a list paired with its ids, into from_variants/from_ids.
+// A variant past the end of a shorter id list has no id and gets -1.
+extern std::vector<int> map_variant_indices(const std::vector<std::string>& variants, const std::vector<int>& ids,
+                                            const std::vector<std::string>& from_variants, const std::vector<int>& from_ids);
+
+// Variant index lookup: scans a variant list (paired with its 1-based extruder/filament ids) for the
+// entry matching the given extruder/volume type and id, as find_variant_index. Returns 0 when the id
+// has no variant.
 extern int get_config_index_base(NozzleVolumeType volume_type, ExtruderType extruder_type, int variant_id_1based, const std::vector<std::string>& variant_list, const std::vector<int>& variant_ids_1based);
 
 static std::set<NozzleVolumeType> get_valid_nozzle_volume_type() {
@@ -558,10 +618,18 @@ static std::set<NozzleVolumeType> get_valid_nozzle_volume_type() {
         // Hybrid is not a physical nozzle variant: presets never define it, so it must not
         // produce a variant string.
         if (t == nvtHybrid) continue;
+        // Skip the reserved gap between nvtTPUHighFlow (3) and nvtE3DHighFlow (5).
+        if (i > nvtTPUHighFlow && i < nvtE3DHighFlow) continue;
         type.insert(t);
     }
     return type;
 }
+
+// The nozzle volume types the given extruder physically provides, as declared by the printer
+// profile's extruder_variant_list. An empty set means the profile could not be read and must be
+// treated as "unknown", not as "none". nvtHybrid is never reported: it describes an extruder
+// holding a mix of nozzles, not a nozzle the profile can offer.
+extern std::set<NozzleVolumeType> get_extruder_supported_nozzle_volume_types(const DynamicPrintConfig &printer_config, int extruder_id);
 
 std::string get_nozzle_volume_type_string(NozzleVolumeType nozzle_volume_type);
 
@@ -678,6 +746,9 @@ CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportMaterialInterfacePattern)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SupportType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SeamPosition)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SeamScarfType)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(ReduceInfillRetractionMode)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(FilamentMetalStickiness)
+CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(CoolingSlowdownLogicType)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SLADisplayOrientation)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SLAPillarConnectionMode)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(BrimType)
@@ -698,8 +769,6 @@ CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(PowerLossRecoveryMode)
 CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS(SurfaceFillOrder)
 
 #undef CONFIG_OPTION_ENUM_DECLARE_STATIC_MAPS
-
-class DynamicPrintConfig;
 
 // Defines each and every configuration option of Slic3r, including the properties of the GUI dialogs.
 // Does not store the actual values, but defines default values.
@@ -746,6 +815,12 @@ class StaticPrintConfig;
 
 // Minimum object distance for arrangement, based on printer technology.
 double min_object_distance(const ConfigBase &cfg);
+
+// Whether any value is set, a nil value included.
+template<bool NULLABLE> bool any_enabled(const ConfigOptionBoolsTempl<NULLABLE> &option)
+{
+    return std::any_of(option.values.begin(), option.values.end(), [](unsigned char enabled) { return enabled != 0; });
+}
 
 // One (extruder type x nozzle volume type) parameter variant a filament prints through, plus a
 // representative physical extruder observed using it. Ordering (and set-dedup identity) covers
@@ -821,6 +896,10 @@ public:
     //BBS
     bool is_using_different_extruders();
     bool support_different_extruders(int& extruder_count) const;
+    // Whether any filament defines more than one variant (filament_extruder_variant longer than
+    // filament_diameter). Its variants then have to be resolved even on a printer with a single
+    // extruder variant, which picks the filament's variant of the same variant string.
+    bool has_multi_variant_filament() const;
     // Counts the config slots of a printer: one per (extruder x nozzle volume type) as described by
     // extruder_nozzle_stats, or simply one per extruder when the stats are absent/mismatched.
     // Fills nozzle_volume_types with each extruder's volume types in ascending enum order.
@@ -868,6 +947,11 @@ extern std::set<std::string> empty_options;
 
 void set_variant_override(ConfigOptionVectorBase &target, const ConfigOptionVectorBase &source,
                           const std::vector<int> &variant_index, int stride = 1);
+
+// Orca: lays every filament_options_with_variant option out one value per filament variant, as
+// filament_self_index maps the variants to filaments. An option holding one value per filament, or a
+// single value, gives every variant of a filament that filament's value; other lengths are left alone.
+void normalize_filament_values_to_variants(DynamicPrintConfig &config);
 
 extern std::set<std::string> filament_dev_options;
 
@@ -958,6 +1042,14 @@ protected:
                 assert(def != nullptr);
                 if (def->default_value)
                     opt->set(def->default_value.get());
+                // Generic enum options are constructed without the names they (de)serialize; take them from the
+                // definition, so the defaults and every config copied from them can read and write names.
+                if (auto *enum_opt = dynamic_cast<ConfigOptionEnumGeneric*>(opt))
+                    enum_opt->keys_map = def->enum_keys_map;
+                else if (auto *enums_opt = dynamic_cast<ConfigOptionEnumsGeneric*>(opt))
+                    enums_opt->keys_map = def->enum_keys_map;
+                else if (auto *nullable_enums_opt = dynamic_cast<ConfigOptionEnumsGenericNullable*>(opt))
+                    nullable_enums_opt->keys_map = def->enum_keys_map;
             }
         }
 
@@ -1013,9 +1105,10 @@ public: \
 
 #define PRINT_CONFIG_CLASS_ELEMENT_DEFINITION(r, data, elem) BOOST_PP_TUPLE_ELEM(0, elem) BOOST_PP_TUPLE_ELEM(1, elem);
 #define PRINT_CONFIG_CLASS_ELEMENT_VISIT(r, data, elem) if (! f(BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(1, elem)), this->BOOST_PP_TUPLE_ELEM(1, elem), rhs.BOOST_PP_TUPLE_ELEM(1, elem))) return;
+#define PRINT_CONFIG_CLASS_ELEMENT_VISIT_SELF(r, data, elem) if (! f(BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(1, elem)), self.BOOST_PP_TUPLE_ELEM(1, elem), rhs.BOOST_PP_TUPLE_ELEM(1, elem))) return;
 // Each option list is expanded into the members and again into for_each_option_pair(), which calls
 // f(key, this->option, rhs.option) in declaration order and stops when f returns false. hash(),
-// operator==, operator< and initialize() iterate the options through that visitor.
+// operator==, operator<, initialize() and apply_to() iterate the options through that visitor.
 #define PRINT_CONFIG_CLASS_COMMON_BODY(CLASS_NAME) \
     size_t hash() const throw() \
     { \
@@ -1047,11 +1140,16 @@ class CLASS_NAME : public StaticPrintConfig { \
     STATIC_PRINT_CONFIG_CACHE(CLASS_NAME) \
 public: \
     BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_DEFINITION, _, PARAMETER_DEFINITION_SEQ) \
-    template<typename F> void for_each_option_pair(const CLASS_NAME &rhs, F &&f) const \
-    { \
-        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_VISIT, _, PARAMETER_DEFINITION_SEQ) \
-    } \
+    template<typename F> void for_each_option_pair(const CLASS_NAME &rhs, F &&f) const { visit_option_pairs(*this, rhs, f); } \
+    /* Defined in PrintConfig.cpp. */ \
+    bool apply_to(ConfigBase &target) const override; \
     PRINT_CONFIG_CLASS_COMMON_BODY(CLASS_NAME) \
+private: \
+    /* The one expansion of the option list, for a const self and for apply_to()'s mutable target. */ \
+    template<typename Self, typename F> static void visit_option_pairs(Self &self, const CLASS_NAME &rhs, F &&f) \
+    { \
+        BOOST_PP_SEQ_FOR_EACH(PRINT_CONFIG_CLASS_ELEMENT_VISIT_SELF, _, PARAMETER_DEFINITION_SEQ) \
+    } \
 };
 
 #define PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST_ITEM(r, data, i, elem) BOOST_PP_COMMA_IF(i) public elem
@@ -1072,6 +1170,8 @@ class CLASS_NAME : PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST(CLASSES_PARENTS_TUPLE) 
 public: \
     PARAMETER_DEFINITION \
     template<typename F> void for_each_option_pair(const CLASS_NAME &rhs, F &&f) const { PARAMETER_VISIT } \
+    /* Its parents each apply themselves to a target member by member, so this one keeps the lookup by name. */ \
+    bool apply_to(ConfigBase &/*target*/) const override { return false; } \
     size_t hash() const throw() \
     { \
         size_t seed = 0; \
@@ -1189,6 +1289,9 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionEnum<InfillPattern>, support_ironing_pattern))
     ((ConfigOptionPercent,             support_ironing_flow))
     ((ConfigOptionFloat,               support_ironing_spacing))
+    ((ConfigOptionFloat,               support_ironing_inset))
+    ((ConfigOptionFloat,               support_ironing_speed))
+    ((ConfigOptionFloat,               support_ironing_direction))
     ((ConfigOptionFloat,               xy_hole_compensation))
     ((ConfigOptionFloat,               xy_contour_compensation))
     ((ConfigOptionBool,                flush_into_objects))
@@ -1237,6 +1340,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatsNullable,           initial_layer_acceleration))
     ((ConfigOptionFloatsOrPercentsNullable, bridge_acceleration))
     ((ConfigOptionFloatsNullable,           travel_acceleration))
+    ((ConfigOptionFloatsNullable,           travel_short_distance_acceleration))
     ((ConfigOptionFloatsOrPercentsNullable, sparse_infill_acceleration))
     ((ConfigOptionFloatsOrPercentsNullable, internal_solid_infill_acceleration))
 
@@ -1268,6 +1372,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionInts,  print_extruder_id))
     ((ConfigOptionStrings,  print_extruder_variant))
     ((ConfigOptionInt,                  bottom_shell_layers))
+    ((ConfigOptionInt,                  top_color_penetration_layers))
+    ((ConfigOptionInt,                  bottom_color_penetration_layers))
     ((ConfigOptionFloat,                bottom_shell_thickness))
     ((ConfigOptionFloat,                bridge_angle))
     ((ConfigOptionFloat,                internal_bridge_angle)) // ORCA: Internal bridge angle override
@@ -1293,6 +1399,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,                bottom_layer_direction))
     ((ConfigOptionString,               solid_infill_rotate_template))
     ((ConfigOptionBool,                 symmetric_infill_y_axis))
+    ((ConfigOptionBool,                 infill_complete_top))
     ((ConfigOptionFloat,                infill_shift_step))
     ((ConfigOptionString,               sparse_infill_rotate_template))
     ((ConfigOptionPercent,              sparse_infill_density))
@@ -1379,6 +1486,13 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatsNullable, top_surface_speed))
     //BBS
     ((ConfigOptionBoolsNullable,            enable_overhang_speed))
+    ((ConfigOptionBoolsNullable,            enable_height_slowdown))
+    ((ConfigOptionFloatsNullable,           slowdown_start_height))
+    ((ConfigOptionFloatsNullable,           slowdown_start_speed))
+    ((ConfigOptionFloatsNullable,           slowdown_start_acc))
+    ((ConfigOptionFloatsNullable,           slowdown_end_height))
+    ((ConfigOptionFloatsNullable,           slowdown_end_speed))
+    ((ConfigOptionFloatsNullable,           slowdown_end_acc))
     ((ConfigOptionFloatsOrPercentsNullable, overhang_1_4_speed))
     ((ConfigOptionFloatsOrPercentsNullable, overhang_2_4_speed))
     ((ConfigOptionFloatsOrPercentsNullable, overhang_3_4_speed))
@@ -1540,6 +1654,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBoolsNullable,       filament_adaptive_volumetric_speed))
     ((ConfigOptionStrings,             volumetric_speed_coefficients))
     ((ConfigOptionInts,              filament_adhesiveness_category))
+    ((ConfigOptionEnumsGeneric,       filament_metal_stickiness))
     ((ConfigOptionFloats,              filament_density))
     ((ConfigOptionStrings,             filament_type))
     ((ConfigOptionBools,               filament_soluble))
@@ -1632,6 +1747,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionString,              toolchange_cyclic_order))
     ((ConfigOptionBool,                toolchange_cyclic_first_layer))
     ((ConfigOptionBool,                wipe_tower_no_sparse_layers))
+    ((ConfigOptionBool,                wipe_tower_sparse_layers_combination))
     ((ConfigOptionString,              change_filament_gcode))
     ((ConfigOptionString,              change_extrusion_role_gcode))
     ((ConfigOptionString,              process_change_extrusion_role_gcode))
@@ -1757,6 +1873,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloats,             first_x_layer_fan_speed))
     ((ConfigOptionBool,               reduce_crossing_wall))
     ((ConfigOptionFloatOrPercent,     max_travel_detour_distance))
+    ((ConfigOptionBool,               avoid_crossing_wall_includes_support))
     ((ConfigOptionPoints,             printable_area))
     ((ConfigOptionPointsGroups,       extruder_printable_area))
     ((ConfigOptionBool,               support_parallel_printheads))
@@ -1783,7 +1900,16 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionInts,               textured_plate_temp_initial_layer))
     ((ConfigOptionBools,              enable_overhang_bridge_fan))
     ((ConfigOptionInts,               overhang_fan_speed))
+    ((ConfigOptionFloats,             pre_start_fan_time))
     ((ConfigOptionEnumsGeneric,       overhang_fan_threshold))
+    ((ConfigOptionBoolsNullable,      override_process_overhang_speed))
+    ((ConfigOptionBoolsNullable,      filament_enable_overhang_speed))
+    ((ConfigOptionFloatsNullable,     filament_overhang_1_4_speed))
+    ((ConfigOptionFloatsNullable,     filament_overhang_2_4_speed))
+    ((ConfigOptionFloatsNullable,     filament_overhang_3_4_speed))
+    ((ConfigOptionFloatsNullable,     filament_overhang_4_4_speed))
+    ((ConfigOptionFloatsNullable,     filament_overhang_totally_speed))
+    ((ConfigOptionFloatsNullable,     filament_bridge_speed))
     ((ConfigOptionEnum<PrintSequence>,print_sequence))
     ((ConfigOptionEnum<PrintOrder>,   print_order))
     ((ConfigOptionInts,               first_layer_print_sequence))
@@ -1801,6 +1927,8 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionPoints,             extruder_offset))
     ((ConfigOptionBools,              reduce_fan_stop_start_freq))
     ((ConfigOptionBools,              dont_slow_down_outer_wall))
+    ((ConfigOptionEnumsGeneric,       cooling_slowdown_logic))
+    ((ConfigOptionFloats,             cooling_perimeter_transition_distance))
     ((ConfigOptionFloats,             fan_cooling_layer_time))
     ((ConfigOptionBools,              activate_air_filtration))
     ((ConfigOptionBools,              activate_air_filtration_during_print))
@@ -1808,6 +1936,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionInts,               during_print_exhaust_fan_speed))
     ((ConfigOptionInts,               complete_print_exhaust_fan_speed))
     ((ConfigOptionFloatOrPercent,     initial_layer_line_width))
+    ((ConfigOptionFloat,              initial_layer_infill_line_width))
     ((ConfigOptionFloat,              initial_layer_print_height))
     ((ConfigOptionFloatsNullable,     initial_layer_speed))
 
@@ -1826,7 +1955,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionPoint,              best_object_pos))
     ((ConfigOptionFloats,             slow_down_min_speed))
     ((ConfigOptionFloats,             nozzle_diameter))
-    ((ConfigOptionBool,               reduce_infill_retraction))
+    ((ConfigOptionEnum<ReduceInfillRetractionMode>, reduce_infill_retraction_mode))
     ((ConfigOptionBool,               ooze_prevention))
     ((ConfigOptionString,             filename_format))
     ((ConfigOptionStrings,            post_process))
@@ -1945,6 +2074,37 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
 
 
 )
+
+// BBS: whether the filament config `filament_config_idx` overrides the process overhang speeds (else nullopt), and
+// if it does, whether it slows down for overhangs.
+inline std::optional<bool> filament_overhang_speed_override(const PrintConfig &config, size_t filament_config_idx)
+{
+    const ConfigOptionBoolsNullable &override_speed = config.override_process_overhang_speed;
+    if (filament_config_idx >= override_speed.size() || override_speed.is_nil(filament_config_idx) || !override_speed.get_at(filament_config_idx))
+        return std::nullopt;
+    return config.filament_enable_overhang_speed.get_at(filament_config_idx);
+}
+
+// Whether some filament overrides the process overhang speeds and slows down for overhangs.
+inline bool any_filament_overhang_speed(const PrintConfig &config)
+{
+    for (size_t i = 0; i < config.override_process_overhang_speed.size(); ++i)
+        if (filament_overhang_speed_override(config, i).value_or(false))
+            return true;
+    return false;
+}
+
+// How deep a color painted on a top / bottom surface goes into the part (BambuStudio's paint penetration layers);
+// 0 follows the shell layers, as OrcaSlicer always did.
+inline int top_paint_penetration_layers(const PrintRegionConfig &config)
+{
+    return config.top_color_penetration_layers.value > 0 ? config.top_color_penetration_layers.value : config.top_shell_layers.value;
+}
+inline int bottom_paint_penetration_layers(const PrintRegionConfig &config)
+{
+    return config.bottom_color_penetration_layers.value > 0 ? config.bottom_color_penetration_layers.value :
+                                                              config.bottom_shell_layers.value;
+}
 
 // This object is mapped to Perl as Slic3r::Config::Full.
 PRINT_CONFIG_CLASS_DERIVED_DEFINE0(
@@ -2161,6 +2321,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE0(
 #undef STATIC_PRINT_CONFIG_CACHE_DERIVED
 #undef PRINT_CONFIG_CLASS_ELEMENT_DEFINITION
 #undef PRINT_CONFIG_CLASS_ELEMENT_VISIT
+#undef PRINT_CONFIG_CLASS_ELEMENT_VISIT_SELF
 #undef PRINT_CONFIG_CLASS_COMMON_BODY
 #undef PRINT_CONFIG_CLASS_DEFINE
 #undef PRINT_CONFIG_CLASS_DERIVED_CLASS_LIST

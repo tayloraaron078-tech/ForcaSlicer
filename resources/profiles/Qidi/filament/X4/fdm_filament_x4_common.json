@@ -39,7 +39,7 @@
 	"cool_plate_temp": [
 		"60"
 	],
-	"no_slow_down_for_cooling_on_outwalls": [
+	"dont_slow_down_outer_wall": [
 		"0"
 	],
 	"during_print_exhaust_fan_speed": [

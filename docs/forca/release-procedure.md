@@ -28,6 +28,11 @@ is its own command. Every push and every public action needs the maintainer's ex
       previous release's notes; the download table must name `Forca_Slicer_<version>_win64_setup.exe` and
       `Forca_Slicer_<version>_win64_portable.zip`.
 - [ ] `docs/forca/release/KNOWN_ISSUES.md` is current.
+- [ ] **Code signing:** `-Build` signs `forca-slicer.exe` and `ForcaSlicer.dll` before packaging and the installer
+      after it, with Azure Artifact Signing (account `Forca`, certificate profile `ForcaRelease`, East US), and refuses
+      to continue unless each file is validly signed and timestamped. Needs signtool (Windows SDK), the Artifact
+      Signing Client Tools (`winget install Microsoft.Azure.ArtifactSigningClientTools`), and `az login` with the
+      Certificate Profile Signer role. `-NoSign` skips it (test builds only).
 
 ## 2. Build the release commit (local)
 
@@ -59,7 +64,9 @@ Troubleshoot Center links to it). It reuses the kept Release dependencies in
 `%USERPROFILE%\Documents\GitHub\ForcaCleanBuildTest\deps\build` when `deps/` is unchanged since they were built
 (`forca_deps_source.txt` in that folder records the `deps/` tree they came from); otherwise it stops — rerun with
 `-RebuildDeps` to rebuild them into that folder first. Times seen: about 30 minutes with the kept dependencies, about
-an hour with `-RebuildDeps`. Needs NSIS for the installer (CPack finds it even when it isn't on PATH).
+an hour with `-RebuildDeps`. Needs NSIS for the installer (CPack finds it even when it isn't on PATH). The kept dependency build is tied to the source folder it was configured from
+(`ForcaCleanBuildTest`, which holds `depsuild`), so `-RebuildDeps` first copies the release sources into that folder
+and builds the dependencies there; configuring it from another folder fails.
 
 It stages the upload set in `ForcaRelease\release_upload`: the two renamed files, `SHA256SUMS.txt` and
 `release_notes.md`.

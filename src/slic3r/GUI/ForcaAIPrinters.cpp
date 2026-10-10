@@ -323,15 +323,15 @@ std::string camera_url(MachineObject* obj, std::string& err)
         return {};
     }
     const std::string ip = obj->get_dev_ip(), code = obj->get_access_code();
-    if (ip.empty() || code.empty() || obj->liveview_local <= MachineObject::LVL_Disable) {
+    if (ip.empty() || code.empty() || obj->liveview_local <= LiveviewLocal::LVL_Disable) {
         err = "This printer's camera is not reachable over the local network from Forca (LAN live view is off or "
               "unsupported). Forca AI uses the LAN only.";
         return {};
     }
     std::string url;
-    if (obj->liveview_local == MachineObject::LVL_Local)
+    if (obj->liveview_local == LiveviewLocal::LVL_Local)
         url = "bambu:///local/" + ip + ".?port=6000&user=bblp&passwd=" + code;
-    else if (obj->liveview_local == MachineObject::LVL_Rtsps)
+    else if (obj->liveview_local == LiveviewLocal::LVL_Rtsps)
         url = "bambu:///rtsps___bblp:" + code + "@" + ip + "/streaming/live/1?proto=rtsps";
     else
         url = "bambu:///rtsp___bblp:" + code + "@" + ip + "/streaming/live/1?proto=rtsp";

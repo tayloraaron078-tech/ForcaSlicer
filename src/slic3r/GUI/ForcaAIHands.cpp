@@ -3,6 +3,7 @@
 // Nothing here talks to a printer (R2 is Phase 3).
 #include "ForcaAI.hpp"
 #include "ForcaAIFiles.hpp"
+#include "ForcaAIKeys.hpp"
 
 #include "GUI.hpp"
 #include "GUI_App.hpp"
@@ -61,16 +62,6 @@ json round3(const Vec3d& v)
     return json::array({ std::round(v.x() * 100) / 100, std::round(v.y() * 100) / 100, std::round(v.z() * 100) / 100 });
 }
 
-// Same list as the read tools: printer secrets are never read or written by the AI.
-bool is_secret_key(const std::string& key)
-{
-    std::string k = key;
-    std::transform(k.begin(), k.end(), k.begin(), [](unsigned char c) { return char(std::tolower(c)); });
-    for (const char* bad : { "password", "apikey", "api_key", "access_code", "token", "secret", "printhost_user", "cookie" })
-        if (k.find(bad) != std::string::npos)
-            return true;
-    return false;
-}
 
 std::string json_to_setting(const json& v)
 {
@@ -92,6 +83,11 @@ std::string json_to_setting(const json& v)
 // makes Forca throw -- see the calibration wizard's note).
 bool set_setting(DynamicPrintConfig& config, const std::string& key, const std::string& value, std::string& err)
 {
+    // Every AI write passes here, so the write rule holds for any tool (ForcaAIKeys.hpp).
+    if (forca_ai_may_not_write(key)) {
+        err = "The AI may not set '" + key + "'.";
+        return false;
+    }
     const ConfigOptionDef* def = print_config_def.get(key);
     if (!def) {
         err = "unknown setting '" + key + "'";
@@ -627,11 +623,9 @@ ForcaAIResult tool_create_preset(const json& args)
 
     Preset temp = *base;
     json   applied = json::object();
-    static const std::set<std::string> identity = { "inherits", "print_settings_id", "filament_settings_id", "printer_settings_id",
-                                                    "compatible_printers", "compatible_prints", "setting_id", "name" };
     for (const auto& item : args["settings"].items()) {
         const std::string& key = item.key();
-        if (is_secret_key(key) || identity.count(key))
+        if (forca_ai_may_not_write(key)) // secrets, identity, scripts, G-code templates, connection (ForcaAIKeys.hpp)
             return ForcaAIResult::error("The AI may not set '" + key + "'.");
         if (!temp.config.has(key))
             return ForcaAIResult::error("'" + key + "' is not a " + type + " setting.");
@@ -694,7 +688,7 @@ bool apply_settings(ModelConfig& config, const json& settings, json& applied, st
     DynamicPrintConfig tmp = config.get();
     for (const auto& item : settings.items()) {
         const std::string& key = item.key();
-        if (is_secret_key(key) || !allowed(key)) {
+        if (forca_ai_may_not_write(key) || !allowed(key)) {
             err = "'" + key + "' cannot be set here.";
             return false;
         }
@@ -1252,7 +1246,9 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
         "put it in use (for filaments: in filament_slot). 'update' changes a preset the AI created earlier, if the user "
         "has not edited it since; at the Advanced control level it may change any user preset (Forca backs up its "
         "file first). System presets are never changed. Values use Forca's text format "
-        "(see forca_get_settings); one value for a per-extruder setting is applied to every extruder variant.",
+        "(see forca_get_settings); one value for a per-extruder setting is applied to every extruder variant. "
+        "Never settable by the AI: post-processing scripts, G-code templates (*_gcode), the output file name, the "
+        "printer connection and secrets.",
         object_schema({ { "type", preset_type },
                         { "settings", settings },
                         { "base", prop("string", "Preset to start from (default: the one in use / in the slot).") },
