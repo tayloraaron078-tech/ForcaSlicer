@@ -68,7 +68,7 @@ $must = @(
     @('src/slic3r/GUI/UpdateDialogs.cpp',           'create_scaled_bitmap("OrcaSlicer_192px.png"'),
     @('src/slic3r/GUI/SysInfoDialog.cpp',           'ScalableBitmap(this, "OrcaSlicer_192px.png", 192)'),
     @('src/slic3r/GUI/TroubleshootDialog.cpp',      '"ForcaSlicer_Logs_"'),
-    @('src/slic3r/GUI/AboutDialog.cpp',             'wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0. "'),
+    @('src/slic3r/GUI/AboutDialog.cpp',             'wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0.\n"'),
     @('src/slic3r/GUI/AboutDialog.cpp',             '_u8L("Source code") + ": <a style=\"color:#009789\" href=\"" + FORCA_REPO_URL'),
     @('src/slic3r/GUI/AboutDialog.cpp',             '_L("The complete source code of this version of Forca Slicer is available at")'),
     # B9: Orca Cloud switched off

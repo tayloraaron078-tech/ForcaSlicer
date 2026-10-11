@@ -494,7 +494,9 @@ void GLGizmosManager::set_hover_id(int id)
 
 void GLGizmosManager::update_section_view()
 {
-    if (m_current != FdmSupports && m_current != Seam && m_current != MmSegmentation && m_current != FuzzySkin && m_current != BrimEars)
+    // Forca: the support-interface region paint gizmo has no section slider of its own either.
+    if (m_current != FdmSupports && m_current != Seam && m_current != MmSegmentation && m_current != FuzzySkin && m_current != BrimEars &&
+        m_current != SupportInterfaceRegions)
         return;
 
     CommonGizmosDataObjects::ObjectClipper* clipper = m_common_gizmos_data ? m_common_gizmos_data->object_clipper() : nullptr;
@@ -720,7 +722,8 @@ bool GLGizmosManager::on_mouse_wheel(const wxMouseEvent &evt)
 {
     bool processed = false;
 
-    if (/*m_current == SlaSupports || m_current == Hollow ||*/ m_current == FdmSupports || m_current == Seam || m_current == MmSegmentation || m_current == FuzzySkin || m_current == BrimEars) {
+    if (/*m_current == SlaSupports || m_current == Hollow ||*/ m_current == FdmSupports || m_current == Seam || m_current == MmSegmentation || m_current == FuzzySkin || m_current == BrimEars ||
+        m_current == SupportInterfaceRegions) { // Forca: Ctrl + wheel = brush size, as in the other paint gizmos
         float rot = (float)evt.GetWheelRotation() / (float)evt.GetWheelDelta();
         if (gizmo_event((rot > 0.f ? SLAGizmoEventType::MouseWheelUp : SLAGizmoEventType::MouseWheelDown), Vec2d::Zero(), evt.ShiftDown(), evt.AltDown()
             // BBS

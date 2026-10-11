@@ -12,6 +12,20 @@ Commit hashes in entries up to `0.1.0-alpha.1` refer to Forca's private developm
 repository; the public repository starts with Forca `0.1.0-alpha.1` as one commit on top of OrcaSlicer's history.
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
+## 0.1.0-alpha.5 — 2026-10-10
+
+### Fixed
+- **The support-interface paint tool had no section view in 0.1.0-alpha.4.** Its own "Section view" slider went
+  away with the OrcaSlicer merge, but the canvas section view didn't reach it. It now follows the canvas section
+  (and Alt + mouse wheel) like OrcaSlicer's paint tools, and Ctrl + mouse wheel changes the brush size, as its
+  shortcut list says.
+- **The About dialog was stretched wide by its copyright line**, leaving an empty half next to the text. The
+  notice now takes two lines, the logo and the version sit side by side, and the text fills the dialog's width.
+
+### Added
+- **"Launch Forca Slicer" on the installer's last page.** Forca starts as your normal user, not with the
+  installer's administrator rights (which would block dragging files in from Explorer).
+
 ## 0.1.0-alpha.4 — 2026-10-10
 
 ### Changed
@@ -19,8 +33,9 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
   direction" is set to clockwise in their process profiles). Your own presets keep whatever you chose. Not yet
   checked on a P2S or X2D.
 - **Merged OrcaSlicer up to `78f74a6276` (2026-10-06).** Brings OrcaSlicer's latest 2.5 development work, including
-  its new section view on the 3D canvas. Forca's support-interface paint tool now uses that section view, like
-  OrcaSlicer's own paint tools, instead of its own "Section view" slider. It also fixes a crash on every slice with
+  its new section view on the 3D canvas, which replaces the paint tools' own "Section view" slider (Forca's
+  support-interface paint tool lost its slider without getting the canvas section; fixed in the next release).
+  It also fixes a crash on every slice with
   the Snapmaker U1 profiles (ForcaSlicer issue #6: their file-name template used a value alpha.3 didn't provide yet),
   and a mistake in "Filename format" now shows an error instead of closing Forca.
 - **Shorter travel moves.** Forca orders islands, infill and support so the nozzle travels less between them (up to

@@ -253,17 +253,16 @@ AboutDialog::AboutDialog()
     SetFont(wxGetApp().normal_font());
 	SetBackgroundColour(*wxWHITE);
 
-    wxPanel* m_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(FromDIP(560), FromDIP(125)), wxTAB_TRAVERSAL);
-
-    wxBoxSizer *panel_versizer = new wxBoxSizer(wxVERTICAL);
+    // Forca: the logo and the version block sit side by side. Orca draws its full-width banner with the version
+    // laid over its right end; Forca's logo is narrower, so an overlay would need a dialog wide enough to keep the
+    // text clear of it.
+    wxBoxSizer *header_sizer = new wxBoxSizer(wxHORIZONTAL);
     wxBoxSizer *vesizer  = new wxBoxSizer(wxVERTICAL);
-
-    m_panel->SetSizer(panel_versizer);
 
     wxBoxSizer *ver_sizer = new wxBoxSizer(wxVERTICAL);
 
 	auto main_sizer = new wxBoxSizer(wxVERTICAL);
-    main_sizer->Add(m_panel, 1, wxEXPAND | wxALL, 0);
+    main_sizer->Add(header_sizer, 0, wxEXPAND | wxTOP, FromDIP(10));
     main_sizer->Add(ver_sizer, 0, wxEXPAND | wxALL, 0);
 
 	bool is_dark = wxGetApp().app_config->get("dark_color_mode") == "1";
@@ -271,9 +270,10 @@ AboutDialog::AboutDialog()
     // logo
     m_logo_bitmap = ScalableBitmap(this, is_dark ? "OrcaSlicer_about_dark" : "OrcaSlicer_about", 125);
     m_logo = new wxStaticBitmap(this, wxID_ANY, m_logo_bitmap.bmp(), wxDefaultPosition,wxDefaultSize, 0);
-    m_logo->SetSizer(vesizer);
 
-    panel_versizer->Add(m_logo, 1, wxALL | wxEXPAND, 0);
+    header_sizer->Add(m_logo, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, FromDIP(20));
+    header_sizer->AddStretchSpacer(1);
+    header_sizer->Add(vesizer, 0, wxEXPAND | wxLEFT, FromDIP(20));
 
     // version
     {
@@ -328,19 +328,20 @@ AboutDialog::AboutDialog()
 
     text_sizer->Add( 0, 0, 0, wxTOP, FromDIP(33));
     bool is_zh = wxGetApp().app_config->get("language") == "zh_CN";
+    const int text_width = FromDIP(640); // Forca: as wide as the logo + version header, so the dialog isn't lopsided
     for (int i = 0; i < text_list.size(); i++)
     {
-        auto staticText = new wxStaticText( this, wxID_ANY, wxEmptyString,wxDefaultPosition,wxSize(FromDIP(520), -1), wxALIGN_LEFT );
+        auto staticText = new wxStaticText( this, wxID_ANY, wxEmptyString,wxDefaultPosition,wxSize(text_width, -1), wxALIGN_LEFT );
         staticText->SetForegroundColour(wxColour(107, 107, 107));
         staticText->SetBackgroundColour(*wxWHITE);
-        staticText->SetMinSize(wxSize(FromDIP(520), -1));
+        staticText->SetMinSize(wxSize(text_width, -1));
         staticText->SetFont(Label::Body_12);
         if (is_zh) {
             wxString find_txt = "";
             wxString count_txt = "";
             for (auto  o = 0; o < text_list[i].length(); o++) {
                 auto size = staticText->GetTextExtent(count_txt);
-                if (size.x < FromDIP(506)) {
+                if (size.x < text_width - FromDIP(14)) {
                     find_txt += text_list[i][o];
                     count_txt += text_list[i][o];
                 } else {
@@ -352,7 +353,7 @@ AboutDialog::AboutDialog()
             staticText->SetLabel(find_txt);
         } else {
             staticText->SetLabel(text_list[i]);
-            staticText->Wrap(FromDIP(520));
+            staticText->Wrap(text_width);
         }
 
         text_sizer->Add( staticText, 0, wxUP | wxDOWN, FromDIP(3));
@@ -368,7 +369,8 @@ AboutDialog::AboutDialog()
     copyright_hor_sizer->Add(copyright_ver_sizer, 0, wxLEFT, FromDIP(20));
 
     // Forca (B7): Forca's own notice first; OrcaSlicer's copyright notice is kept (AGPL: preserve existing notices).
-    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0. "
+    // One sentence per line: on one line the notice alone set the dialog's width.
+    wxStaticText *html_text = new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0.\n"
                                                                                   "A fork of OrcaSlicer, © 2026 OrcaSlicer Pte Ltd."), /* Forca: UTF-8 literal */ wxDefaultPosition, wxDefaultSize);
     html_text->SetForegroundColour(wxColour(107, 107, 107));
 
@@ -413,11 +415,9 @@ AboutDialog::AboutDialog()
     ver_sizer->Add( 0, 0, 0, wxTOP, FromDIP(30));
     button_portions->Bind(wxEVT_BUTTON, &AboutDialog::onCopyrightBtn, this);
 
-    wxGetApp().UpdateDlgDarkUI(this);
-	SetSizer(main_sizer);
-    Layout();
-    Fit();
+    SetSizerAndFit(main_sizer);
     CenterOnParent();
+    wxGetApp().UpdateDlgDarkUI(this);
 }
 
 void AboutDialog::on_dpi_changed(const wxRect &suggested_rect)

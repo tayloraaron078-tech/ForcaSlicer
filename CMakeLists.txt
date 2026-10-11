@@ -1398,6 +1398,16 @@ set (CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 set (CPACK_NSIS_MODIFY_PATH "ON")
 set(CPACK_PACKAGE_EXECUTABLES "forca-slicer;Forca Slicer")
 set(CPACK_CREATE_DESKTOP_LINKS "forca-slicer")
+# Forca: a "Launch Forca Slicer" checkbox on the installer's finish page. The installer runs elevated, so the app is
+# started through Explorer, which runs it as the signed-in user (an elevated Forca would refuse drag and drop from
+# Explorer windows). CPack copies the value into CPackConfig.cmake unescaped, so quotes and backslashes are escaped
+# twice here (like CPACK_PACKAGE_ICON).
+set(CPACK_NSIS_MUI_FINISHPAGE_RUN "forca-slicer.exe")
+set(CPACK_NSIS_DEFINES "!define MUI_FINISHPAGE_RUN_TEXT 'Launch Forca Slicer'
+!define MUI_FINISHPAGE_RUN_FUNCTION ForcaLaunchApp
+Function ForcaLaunchApp
+  Exec '\\\"$WINDIR\\\\explorer.exe\\\" \\\"$INSTDIR\\\\forca-slicer.exe\\\"'
+FunctionEnd")
 set (CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt) # must also include in install command
 
 set(CPACK_WIX_UPGRADE_GUID "6b1f3c2e-8d4a-4f7e-9c51-2a7e0d9b4f13")

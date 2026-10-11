@@ -195,8 +195,8 @@ if ($Build) {
     & cmd /c "$bat" -s --config release --deps-dir "$DepsDir"
     if ($LASTEXITCODE -ne 0) { Fail "build failed (exit $LASTEXITCODE)" }
     # Sign the app before packaging: the zip and the installer copy these two files out of build\src\Release.
-    $release = Join-Path $WorkDir 'build\src\Release'
-    if (-not $NoSign) { Sign-Files @((Join-Path $release 'forca-slicer.exe'), (Join-Path $release 'ForcaSlicer.dll')) }
+    $releaseDir = Join-Path $WorkDir 'build\src\Release'   # not $release: that is the -Release switch (names ignore case)
+    if (-not $NoSign) { Sign-Files @((Join-Path $releaseDir 'forca-slicer.exe'), (Join-Path $releaseDir 'ForcaSlicer.dll')) }
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $WorkDir 'build_forca_release.ps1') -Config Release -Installer
     if ($LASTEXITCODE -ne 0) { Fail "packaging failed (exit $LASTEXITCODE)" }
     if (-not $NoSign) { Sign-Files @(Join-Path $WorkDir "build\ForcaSlicer_Windows_Installer_V${Version}_x64.exe") }
