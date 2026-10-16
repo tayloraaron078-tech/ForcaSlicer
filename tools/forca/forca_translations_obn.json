@@ -648,6 +648,87 @@
         "zh_CN": "关闭并重新打开 Forca 以完成切换。",
         "zh_TW": "關閉並重新開啟 Forca 以完成切換。"
       }
+    },
+    {
+      "msgid": "You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences.",
+      "translations": {
+        "ca": "Feu servir Open Bamboo Networking (OBN). Aquesta versió de Forca fa servir el connector de xarxa de Bambu Lab %s, i els fitxers d'OBN d'aquest ordinador són per a un d'anterior.\n\nVoleu baixar ara la darrera versió d'OBN per a %s? Si no ho feu, Forca farà servir el connector de xarxa de Bambu Lab i podreu tornar a triar OBN a les Preferències.",
+        "cs": "Používáte Open Bamboo Networking (OBN). Tato verze Forca používá síťový plug-in Bambu Lab %s a soubory OBN v tomto počítači jsou pro starší verzi.\n\nStáhnout nyní nejnovější vydání OBN pro %s? Pokud ne, Forca použije síťový plug-in Bambu Lab a OBN můžete znovu zvolit v Předvolbách.",
+        "de": "Du verwendest Open Bamboo Networking (OBN). Diese Forca-Version verwendet das Netzwerk-Plugin %s von Bambu Lab, und die OBN-Dateien auf diesem Computer sind für ein älteres.\n\nJetzt die neueste OBN-Version für %s herunterladen? Andernfalls verwendet Forca das Netzwerk-Plugin von Bambu Lab, und du kannst OBN in den Einstellungen wieder auswählen.",
+        "es": "Usas Open Bamboo Networking (OBN). Esta versión de Forca usa el plug-in de red de Bambu Lab %s, y los archivos de OBN de este equipo son para uno anterior.\n\n¿Descargar ahora la última versión de OBN para %s? Si no, Forca usará el plug-in de red de Bambu Lab y podrás volver a elegir OBN en Preferencias.",
+        "eu": "Open Bamboo Networking (OBN) erabiltzen duzu. Forcaren bertsio honek Bambu Lab-en %s sareko plugina erabiltzen du, eta ordenagailu honetako OBN fitxategiak aurreko baterako dira.\n\nOBNren azken bertsioa deskargatu nahi duzu orain %s-rako? Bestela, Forcak Bambu Lab-en sareko plugina erabiliko du, eta OBN berriro aukera dezakezu Hobespenetan.",
+        "fr": "Vous utilisez Open Bamboo Networking (OBN). Cette version de Forca utilise le plug-in réseau %s de Bambu Lab, et les fichiers OBN de cet ordinateur sont prévus pour une version antérieure.\n\nTélécharger maintenant la dernière version d'OBN pour %s ? Sinon, Forca utilise le plug-in réseau de Bambu Lab, et vous pourrez de nouveau choisir OBN dans les Préférences.",
+        "hu": "Az Open Bamboo Networkinget (OBN) használod. A Forca ezen verziója a Bambu Lab %s hálózati bővítményét használja, a számítógépen lévő OBN-fájlok pedig egy korábbihoz készültek.\n\nLetöltöd most a legújabb OBN-kiadást a(z) %s verzióhoz? Ha nem, a Forca a Bambu Lab hálózati bővítményét használja, és az OBN-t a Beállításokban újra kiválaszthatod.",
+        "it": "Stai usando Open Bamboo Networking (OBN). Questa versione di Forca usa il plug-in di rete di Bambu Lab %s, e i file OBN su questo computer sono per uno precedente.\n\nScaricare ora l'ultima versione di OBN per %s? In caso contrario, Forca userà il plug-in di rete di Bambu Lab e potrai scegliere di nuovo OBN nelle Preferenze.",
+        "ja": "Open Bamboo Networking (OBN) を使用しています。このバージョンの Forca は Bambu Lab のネットワークプラグイン %s を使用しますが、このコンピューターにある OBN のファイルは以前のバージョン用です。\n\n%s 用の最新の OBN リリースを今すぐダウンロードしますか？ダウンロードしない場合、Forca は Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。",
+        "ko": "Open Bamboo Networking(OBN)을 사용 중입니다. 이 버전의 Forca는 Bambu Lab 네트워크 플러그인 %s을(를) 사용하며, 이 컴퓨터의 OBN 파일은 이전 버전용입니다.\n\n지금 %s용 최신 OBN 릴리스를 내려받을까요? 내려받지 않으면 Forca는 Bambu Lab 네트워크 플러그인을 사용하며, 환경 설정에서 OBN을 다시 선택할 수 있습니다.",
+        "lt": "Naudojate Open Bamboo Networking (OBN). Ši Forca versija naudoja „Bambu Lab“ tinklo įskiepį %s, o šiame kompiuteryje esantys OBN failai skirti ankstesniam.\n\nAtsisiųsti naujausią OBN leidimą, skirtą %s, dabar? Jei ne, Forca naudos „Bambu Lab“ tinklo įskiepį, o OBN vėl galėsite pasirinkti nuostatose.",
+        "nl": "Je gebruikt Open Bamboo Networking (OBN). Deze versie van Forca gebruikt netwerkplug-in %s van Bambu Lab, en de OBN-bestanden op deze computer zijn voor een eerdere.\n\nNu de nieuwste OBN-release voor %s downloaden? Zo niet, dan gebruikt Forca de netwerkplug-in van Bambu Lab en kun je OBN later weer kiezen in Voorkeuren.",
+        "pl": "Używasz Open Bamboo Networking (OBN). Ta wersja Forca używa wtyczki sieciowej Bambu Lab %s, a pliki OBN na tym komputerze są przeznaczone dla wcześniejszej.\n\nPobrać teraz najnowsze wydanie OBN dla %s? Jeśli nie, Forca użyje wtyczki sieciowej Bambu Lab, a OBN możesz ponownie wybrać w Preferencjach.",
+        "pt_BR": "Você usa o Open Bamboo Networking (OBN). Esta versão do Forca usa o plug-in de rede %s da Bambu Lab, e os arquivos do OBN neste computador são para uma versão anterior.\n\nBaixar agora a versão mais recente do OBN para %s? Se não, o Forca usa o plug-in de rede da Bambu Lab, e você pode escolher o OBN novamente nas Preferências.",
+        "ru": "Вы используете Open Bamboo Networking (OBN). Эта версия Forca использует сетевой плагин Bambu Lab %s, а файлы OBN на этом компьютере предназначены для более раннего.\n\nЗагрузить сейчас последний выпуск OBN для %s? Если нет, Forca будет использовать сетевой плагин Bambu Lab, а OBN можно снова выбрать в настройках.",
+        "sv": "Du använder Open Bamboo Networking (OBN). Den här versionen av Forca använder Bambu Labs nätverksinsticksmodul %s, och OBN-filerna på den här datorn är för en tidigare.\n\nLadda ner den senaste OBN-versionen för %s nu? Annars använder Forca Bambu Labs nätverksinsticksmodul, och du kan välja OBN igen i Inställningar.",
+        "th": "คุณใช้ Open Bamboo Networking (OBN) อยู่ Forca เวอร์ชันนี้ใช้ปลั๊กอินเครือข่ายของ Bambu Lab %s และไฟล์ OBN ในคอมพิวเตอร์นี้เป็นของเวอร์ชันก่อนหน้า\n\nดาวน์โหลด OBN รุ่นล่าสุดสำหรับ %s ตอนนี้หรือไม่ หากไม่ดาวน์โหลด Forca จะใช้ปลั๊กอินเครือข่ายของ Bambu Lab และคุณเลือก OBN ได้อีกครั้งในการตั้งค่า",
+        "tr": "Open Bamboo Networking (OBN) kullanıyorsunuz. Forca'nın bu sürümü Bambu Lab ağ eklentisi %s sürümünü kullanıyor ve bu bilgisayardaki OBN dosyaları daha eski bir sürüm için.\n\n%s için en son OBN sürümü şimdi indirilsin mi? İndirmezseniz Forca, Bambu Lab ağ eklentisini kullanır ve OBN'yi Tercihler'den yeniden seçebilirsiniz.",
+        "uk": "Ви використовуєте Open Bamboo Networking (OBN). Ця версія Forca використовує мережевий плагін Bambu Lab %s, а файли OBN на цьому комп’ютері призначені для попереднього.\n\nЗавантажити зараз останній випуск OBN для %s? Якщо ні, Forca використовуватиме мережевий плагін Bambu Lab, а OBN можна знову вибрати в налаштуваннях.",
+        "vi": "Bạn đang dùng Open Bamboo Networking (OBN). Phiên bản Forca này dùng plug-in mạng %s của Bambu Lab, còn các tệp OBN trên máy tính này dành cho phiên bản trước.\n\nTải bản phát hành OBN mới nhất cho %s ngay bây giờ? Nếu không, Forca sẽ dùng plug-in mạng của Bambu Lab và bạn có thể chọn lại OBN trong Tùy chọn.",
+        "zh_CN": "你正在使用 Open Bamboo Networking (OBN)。此版本的 Forca 使用 Bambu Lab 网络插件 %s，而这台计算机上的 OBN 文件适用于较早的版本。\n\n现在下载适用于 %s 的最新 OBN 版本吗？如果不下载，Forca 将使用 Bambu Lab 的网络插件，你可以在偏好设置中再次选择 OBN。",
+        "zh_TW": "你正在使用 Open Bamboo Networking (OBN)。此版本的 Forca 使用 Bambu Lab 網路外掛程式 %s，而這台電腦上的 OBN 檔案適用於較早的版本。\n\n現在下載適用於 %s 的最新 OBN 版本嗎？如果不下載，Forca 將使用 Bambu Lab 的網路外掛程式，你可以在偏好設定中再次選擇 OBN。"
+      }
+    },
+    {
+      "msgid": "Could not get Open Bamboo Networking for this plug-in:",
+      "translations": {
+        "ca": "No s'ha pogut obtenir Open Bamboo Networking per a aquest connector:",
+        "cs": "Open Bamboo Networking pro tento plug-in se nepodařilo získat:",
+        "de": "Open Bamboo Networking für dieses Plugin konnte nicht geladen werden:",
+        "es": "No se pudo obtener Open Bamboo Networking para este plug-in:",
+        "eu": "Ezin izan da plugin honetarako Open Bamboo Networking lortu:",
+        "fr": "Impossible d'obtenir Open Bamboo Networking pour ce plug-in :",
+        "hu": "Az Open Bamboo Networking nem szerezhető be ehhez a bővítményhez:",
+        "it": "Impossibile ottenere Open Bamboo Networking per questo plug-in:",
+        "ja": "このプラグイン用の Open Bamboo Networking を取得できませんでした:",
+        "ko": "이 플러그인용 Open Bamboo Networking을 가져올 수 없습니다:",
+        "lt": "Nepavyko gauti Open Bamboo Networking šiam įskiepiui:",
+        "nl": "Kan Open Bamboo Networking voor deze plug-in niet ophalen:",
+        "pl": "Nie można pobrać Open Bamboo Networking dla tej wtyczki:",
+        "pt_BR": "Não foi possível obter o Open Bamboo Networking para este plug-in:",
+        "ru": "Не удалось получить Open Bamboo Networking для этого плагина:",
+        "sv": "Det gick inte att hämta Open Bamboo Networking för den här insticksmodulen:",
+        "th": "ไม่สามารถรับ Open Bamboo Networking สำหรับปลั๊กอินนี้:",
+        "tr": "Bu eklenti için Open Bamboo Networking alınamadı:",
+        "uk": "Не вдалося отримати Open Bamboo Networking для цього плагіна:",
+        "vi": "Không thể lấy Open Bamboo Networking cho plug-in này:",
+        "zh_CN": "无法获取适用于此插件的 Open Bamboo Networking：",
+        "zh_TW": "無法取得適用於此外掛程式的 Open Bamboo Networking："
+      }
+    },
+    {
+      "msgid": "Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences.",
+      "translations": {
+        "ca": "De moment, Forca fa servir el connector de xarxa de Bambu Lab. Podeu tornar a triar OBN a les Preferències.",
+        "cs": "Forca zatím používá síťový plug-in Bambu Lab. OBN můžete znovu zvolit v Předvolbách.",
+        "de": "Forca verwendet vorerst das Netzwerk-Plugin von Bambu Lab. Du kannst OBN in den Einstellungen wieder auswählen.",
+        "es": "Por ahora Forca usa el plug-in de red de Bambu Lab. Puedes volver a elegir OBN en Preferencias.",
+        "eu": "Oraingoz, Forcak Bambu Lab-en sareko plugina erabiltzen du. OBN berriro aukera dezakezu Hobespenetan.",
+        "fr": "Pour l'instant, Forca utilise le plug-in réseau de Bambu Lab. Vous pouvez de nouveau choisir OBN dans les Préférences.",
+        "hu": "A Forca egyelőre a Bambu Lab hálózati bővítményét használja. Az OBN-t a Beállításokban újra kiválaszthatod.",
+        "it": "Per ora Forca usa il plug-in di rete di Bambu Lab. Puoi scegliere di nuovo OBN nelle Preferenze.",
+        "ja": "Forca は当面 Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。",
+        "ko": "Forca는 당분간 Bambu Lab 네트워크 플러그인을 사용합니다. 환경 설정에서 OBN을 다시 선택할 수 있습니다.",
+        "lt": "Kol kas Forca naudoja „Bambu Lab“ tinklo įskiepį. OBN vėl galite pasirinkti nuostatose.",
+        "nl": "Forca gebruikt voorlopig de netwerkplug-in van Bambu Lab. Je kunt OBN weer kiezen in Voorkeuren.",
+        "pl": "Na razie Forca używa wtyczki sieciowej Bambu Lab. OBN możesz ponownie wybrać w Preferencjach.",
+        "pt_BR": "Por enquanto, o Forca usa o plug-in de rede da Bambu Lab. Você pode escolher o OBN novamente nas Preferências.",
+        "ru": "Пока Forca использует сетевой плагин Bambu Lab. OBN можно снова выбрать в настройках.",
+        "sv": "Forca använder Bambu Labs nätverksinsticksmodul tills vidare. Du kan välja OBN igen i Inställningar.",
+        "th": "ขณะนี้ Forca ใช้ปลั๊กอินเครือข่ายของ Bambu Lab คุณเลือก OBN ได้อีกครั้งในการตั้งค่า",
+        "tr": "Forca şimdilik Bambu Lab ağ eklentisini kullanıyor. OBN'yi Tercihler'den yeniden seçebilirsiniz.",
+        "uk": "Поки що Forca використовує мережевий плагін Bambu Lab. OBN можна знову вибрати в налаштуваннях.",
+        "vi": "Hiện Forca dùng plug-in mạng của Bambu Lab. Bạn có thể chọn lại OBN trong Tùy chọn.",
+        "zh_CN": "Forca 暂时使用 Bambu Lab 的网络插件。你可以在偏好设置中再次选择 OBN。",
+        "zh_TW": "Forca 暫時使用 Bambu Lab 的網路外掛程式。你可以在偏好設定中再次選擇 OBN。"
+      }
     }
   ]
 }

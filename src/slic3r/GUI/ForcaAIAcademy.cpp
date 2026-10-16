@@ -123,7 +123,8 @@ ForcaAIResult tool_status(const json&)
     bool truncated    = false;
     j["index_md"]     = fs::exists(dir / "INDEX.md") ? read_file(dir / "INDEX.md", 16 * 1024, truncated) : std::string();
     j["next"] = "Read AGENTS.md (forca_academy_read) for how this journal is organised and how to record in it. Then "
-                "forca_academy_list_prints for recent prints, forca_academy_search to find anything.";
+                "forca_academy_list_prints for recent prints, forca_academy_insights for how they went (and possible "
+                "patterns), forca_academy_compare for two prints side by side, forca_academy_search to find anything.";
     return ForcaAIResult::json(j);
 }
 
@@ -266,6 +267,7 @@ ForcaAIResult tool_record_outcome(const json& args)
     std::string e;
     if (!forca_academy_set_outcome(folder, outcome, e))
         return ForcaAIResult::error(e);
+    forca_academy_refresh_index();
     return ForcaAIResult::text("Recorded " + result + " for " + forca_academy_relative(dir, folder) + ". The user can change it in "
                                "File > Print Journal.");
 }
@@ -317,6 +319,107 @@ ForcaAIResult tool_write_note(const json& args)
     return ForcaAIResult::text((append ? "Added to " : exists ? "Replaced " : "Created ") + rel + ".");
 }
 
+// The journal's Insights, as the user sees them: per printer / filament preset / process, the possible patterns
+// (by the user's rule, without the dismissed ones) and the experiments.
+ForcaAIResult tool_insights(const json& args)
+{
+    fs::path      dir;
+    ForcaAIResult err;
+    if (!academy(dir, err))
+        return err;
+    const auto prints = forca_academy_list_prints(dir, 100000);
+    auto       groups = [&](ForcaAcademyGroup by) {
+        json list = json::array();
+        for (const ForcaAcademyInsight& g : forca_academy_insights(prints, by)) {
+            json tags = json::object();
+            for (const auto& [tag, n] : g.history.tags)
+                tags[tag] = n;
+            json on_success = json::object();
+            for (const auto& [tag, n] : g.history.tags_on_success)
+                on_success[tag] = n;
+            list.push_back({ { "name", g.name },
+                             { "prints", g.history.folders.size() },
+                             { "success", g.history.success },
+                             { "partial", g.history.partial },
+                             { "failed", g.history.failed },
+                             { "not_recorded", g.history.not_recorded },
+                             { "problems", tags },
+                             { "problems_on_successful_prints", on_success },
+                             { "last_failure", g.last_failure.empty() ? json(nullptr) : json(g.last_failure) } });
+        }
+        return list;
+    };
+    const std::string by = args.value("by", std::string());
+    json              j  = json::object();
+    if (by.empty() || by == "printer")
+        j["by_printer"] = groups(ForcaAcademyGroup::Printer);
+    if (by.empty() || by == "filament")
+        j["by_filament"] = groups(ForcaAcademyGroup::Filament);
+    if (by.empty() || by == "process")
+        j["by_process"] = groups(ForcaAcademyGroup::Process);
+
+    const auto [count, window] = forca_academy_pattern_rule();
+    json patterns              = json::array();
+    for (const ForcaAcademyPattern& p : forca_academy_open_patterns(prints)) {
+        json evidence = json::array();
+        for (const fs::path& f : p.folders)
+            evidence.push_back(forca_academy_relative(dir, f));
+        patterns.push_back({ { "problem", p.tag }, { "printer", p.printer }, { "filament", p.filament }, { "count", p.count },
+                             { "on_successful_prints", p.on_success },
+                             { "of_last", p.window }, { "prints", evidence } });
+    }
+    j["possible_patterns"] = { { "rule", std::to_string(count) + " of the last " + std::to_string(window) +
+                                             " prints with an outcome, per printer and filament preset" },
+                               { "patterns", patterns } };
+    json experiments = json::array();
+    for (const ForcaAcademyExperiment& e : forca_academy_list_experiments(dir))
+        experiments.push_back({ { "path", forca_academy_relative(dir, e.file) }, { "title", e.title }, { "date", e.date },
+                                { "result_written", e.has_result } });
+    j["experiments"] = experiments;
+    j["note"] = "Counts use only prints with a recorded outcome. Problems count on every such print; the *_successful_prints "
+                "figures say how many of those were otherwise successful (a minor flaw, not a failed print). A possible "
+                "pattern is a hint, not a cause: read the prints' records and playbooks/<problem>.md before proposing a "
+                "lesson, and let the user confirm it.";
+    return ForcaAIResult::json(j);
+}
+
+// "Compare two prints", as the journal shows it (setting keys, values as stored).
+ForcaAIResult tool_compare(const json& args)
+{
+    fs::path      dir;
+    ForcaAIResult err;
+    if (!academy(dir, err))
+        return err;
+    fs::path a, b;
+    if (!print_folder(dir, { { "print", args.value("a", std::string()) } }, a, err) ||
+        !print_folder(dir, { { "print", args.value("b", std::string()) } }, b, err))
+        return err;
+    json ra, rb, sa, sb;
+    forca_academy_read_record(a, ra);
+    forca_academy_read_record(b, rb);
+    forca_academy_read_settings(a, sa);
+    forca_academy_read_settings(b, sb);
+    const ForcaAcademyComparison c = forca_academy_compare(ra, sa, rb, sb);
+    json facts = json::object(), settings = json::array();
+    for (const ForcaAcademyDiff& d : c.rows) {
+        if (d.section == "print")
+            facts[d.key] = { { "a", d.a }, { "b", d.b }, { "differs", d.differs } };
+        else
+            settings.push_back({ { "section", d.section }, { "key", d.key }, { "a", d.a }, { "b", d.b } });
+    }
+    return ForcaAIResult::json(
+        { { "a", forca_academy_relative(dir, a) },
+          { "b", forca_academy_relative(dir, b) },
+          { "facts", facts },
+          { "settings_compared", c.full ? "all settings (both prints have settings.json)"
+                                        : "only the settings each print changed from its presets (an empty value = the "
+                                          "preset's value; the presets themselves may have changed since)" },
+          { "differing_settings", settings },
+          { "hint", "To record this as an A/B experiment, write experiments/<YYYY-MM-DD>_<name>.md with forca_academy_write_note "
+                    "(both prints linked, what differed, a Result section), or ask the user to use Compare > Save as experiment "
+                    "in the Print Journal." } });
+}
+
 } // namespace
 
 void register_forca_ai_academy_tools(ForcaAI& ai)
@@ -344,6 +447,24 @@ void register_forca_ai_academy_tools(ForcaAI& ai)
           { "properties", { { "path", { { "type", "string" }, { "description", "e.g. AGENTS.md, prints/2026/<print>/record.json, playbooks" } } } } },
           { "required", { "path" } } },
         tool_read });
+    ai.register_tool({ "forca_academy_insights", "Print Journal insights",
+        "How the recorded prints went, as the Print Journal's Insights show the user: per printer, filament preset and "
+        "process -- prints, success / partial / failed / not recorded, problem tags, last failure; the possible "
+        "patterns (the same problem on several recent prints with one printer and filament, by the user's rule; "
+        "dismissed ones left out) with their evidence prints; and the experiments. Read-only.",
+        { { "type", "object" },
+          { "properties", { { "by", { { "type", "string" }, { "enum", { "printer", "filament", "process" } },
+                                      { "description", "Only this grouping (default: all three)." } } } } } },
+        tool_insights });
+    ai.register_tool({ "forca_academy_compare", "Compare two prints",
+        "What differed between two recorded prints: printer, process and filament presets, estimates, outcome and tags, "
+        "and the settings that differed (every setting when both prints saved one, else the settings each changed from "
+        "its presets). Read-only.",
+        { { "type", "object" },
+          { "properties", { { "a", { { "type", "string" }, { "description", "A print's path from forca_academy_list_prints (the earlier one)." } } },
+                            { "b", { { "type", "string" }, { "description", "The other print's path." } } } } },
+          { "required", { "a", "b" } } },
+        tool_compare });
     ai.register_tool({ "forca_academy_search", "Search Forca Academy",
         "Case-insensitive text search over the Academy's Markdown, JSON and text files. Returns matching lines with "
         "their file and line number. Read-only.",
@@ -368,8 +489,9 @@ void register_forca_ai_academy_tools(ForcaAI& ai)
         "Write Markdown in the Academy: a lesson, a playbook (playbooks/<symptom>.md), a printer or material page, "
         "an experiment, or notes on a print (<print>/notes.md). mode create: a new file. mode append: add to the end of "
         "any note (the user's text is kept). mode replace: rewrite a file you created that nobody changed since, or an "
-        "untouched starter file (INDEX.md, lessons.md). You can't delete files, edit AGENTS.md or a record.json. Follow "
-        "AGENTS.md: link evidence prints, give lessons a confidence, keep INDEX.md short.",
+        "untouched starter file (INDEX.md, lessons.md, Forca's starter playbooks). You can't delete files, edit AGENTS.md "
+        "or a record.json. Follow AGENTS.md: link evidence prints, give lessons a confidence, keep INDEX.md short and "
+        "keep its <!-- forca:facts --> block (Forca refreshes it).",
         { { "type", "object" },
           { "properties", { { "path", { { "type", "string" }, { "description", "Relative .md path, e.g. playbooks/stringing.md" } } },
                             { "content", { { "type", "string" } } },

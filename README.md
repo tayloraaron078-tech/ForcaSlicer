@@ -10,7 +10,9 @@
 
 **Alpha** · Windows 64-bit · Free and open source (AGPL-3.0) · Based on [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer)
 
-[Download the latest alpha](https://github.com/tayloraaron078-tech/ForcaSlicer/releases) · [How to test and report](docs/forca/release/TESTING.md) · [Known issues](docs/forca/release/KNOWN_ISSUES.md)
+[![Latest Release](https://img.shields.io/github/v/release/tayloraaron078-tech/ForcaSlicer?include_prereleases&filter=v*&label=Download%20Latest&style=for-the-badge)](https://github.com/tayloraaron078-tech/ForcaSlicer/releases/latest)
+
+[All releases](https://github.com/tayloraaron078-tech/ForcaSlicer/releases) · [How to test and report](docs/forca/release/TESTING.md) · [Known issues](docs/forca/release/KNOWN_ISSUES.md)
 
 </div>
 
@@ -72,7 +74,7 @@ A per-filament guided flow in its own tab: **Temperature → Max Volumetric Spee
   
 ## Forca Academy (print journal, off by default)
 Turn it on in **Preferences → Forca Academy** and every print Forca sends gets its own folder in
-`Documents\Forca Academy` (or a folder you choose): the printer, presets and filaments (on Bambu printers, the AMS
+`Documents\Forca Academy` (or a "Forca Academy" folder in a place you choose): the printer, presets and filaments (on Bambu printers, the AMS
 tray each one came from), the settings you changed, the estimates and a picture of the plate. While the print runs,
 Forca follows it to the end — on Bambu, Klipper (Moonraker) and stock Flashforge printers — and records how it ended,
 with pictures from the printer's camera along the way and at the end. **File → Print Journal** lists your prints:
@@ -80,6 +82,19 @@ mark each one Success / Partial / Failed with quick tags (stringing, warping, la
 your own photos. "Add a print" records prints Forca didn't send, such as SD-card prints. Everything is plain JSON and
 Markdown on your computer, readable by you or an AI you choose; nothing is uploaded, and printer keys and access codes
 are never stored.
+
+**Insights** in the Print Journal group your prints by printer, filament or process (how many went well, partly or
+failed, the most common problem, the last failure). And when you send a print, **"Before you print"** shows how
+earlier prints with the same printer and filament went, the settings you changed and didn't save, and the values that
+most often decide a print (layer height, infill, supports, brim, temperatures, max flow). It works without the
+journal too (then without the history), and it never stops a print from being sent.
+
+Select two prints and press **Compare** to see what differed between them (presets, every setting, estimates,
+outcome), and save the pair as an **experiment** to record which change worked. When the same problem keeps coming
+back with one printer and filament, Insights point it out as a **possible pattern** and help you turn it into a
+**lesson**. Forca also writes a starter **playbook** for each problem (likely causes, checks, and the Forca settings
+and calibration tests for it) and keeps a summary block on the folder's INDEX page. Forca proposes; you decide what
+goes into your lessons.
 
 ## Bambu Studio settings
 Bambu Lab's profiles and Bambu Studio projects use settings OrcaSlicer doesn't know, so Orca quietly drops them.
@@ -93,7 +108,7 @@ use the new settings.
   down by height**, **pre-start fan time**, **support ironing inset / direction / speed**, **cooling slowdown logic**,
   **top / bottom paint penetration layers** and **"Avoid crossing walls - Includes support"**.
 - Four settings Bambu Studio names differently are kept when you open its projects and profiles, and opening a newer
-  Bambu Studio project lists any settings Forca still doesn't know instead of just saying there are some.
+  Bambu Studio project lists any settings Forca still doesn't know (OrcaSlicer only writes them to its log).
 - **P2S and X2D** print outer walls clockwise, as Bambu Studio does on those printers.
 
 ## Open Bamboo Networking (optional)
@@ -102,8 +117,9 @@ use the new settings.
 our tests, didn't have the crash Bambu's plug-in sometimes has after sending a print. It needs your printers in
 **LAN-only mode with Developer Mode on**, and you lose Bambu's cloud features; Forca explains this before switching,
 downloads it from its GitHub releases, checks the file, and keeps the previous version so you can roll back. A switch
-takes effect after you close and reopen Forca. Bambu Lab's plug-in stays the default, and if it ever crashes Forca,
-the Device tab offers Open Bamboo Networking once.
+takes effect after you close and reopen Forca. Once chosen, it stays chosen when Forca moves to a newer Bambu plug-in
+version: Forca puts the matching Open Bamboo Networking build in place at start-up (or asks to download it). Bambu
+Lab's plug-in stays the default, and if it ever crashes Forca, the Device tab offers Open Bamboo Networking once.
 
 ## Faster toolpaths
 - **Shorter travel moves:** Forca orders islands, infill and support so the nozzle travels less between them (up to
@@ -145,6 +161,10 @@ a number of prints, on printers you tick, for a few hours. Within it Forca sends
 printer whose bed you marked clear, after a 10-second countdown you can cancel. A grant can name the files to print
 (with copies and a note), so the AI does the whole job and prints nothing else.
 
+With the print journal on, the AI can also read it, including the Insights and a comparison of two prints, so it sees
+the same patterns you do. One key works for every Forca you run on your computer, and the Forca AI window is
+translated into all 22 languages.
+
 See [SECURITY.md](SECURITY.md) for how it's protected.
 
 <table>
@@ -168,7 +188,15 @@ See [SECURITY.md](SECURITY.md) for how it's protected.
 - **The input shaping and cornering calibrations switch off overhang slowdown**, so it can't skew those tests.
 - **The Max Volumetric Speed test stays on the bed:** its first layer is a thin-walled outline, as in Bambu Studio.
 - **A print the printer refused ("Printer is busy") no longer counts as sent.**
-- **The installer can create a desktop icon.**
+- **The installer can create a desktop icon** and start Forca when it's done ("Launch Forca Slicer").
+- **When a filament uses its own overhang speeds** ("Override overhang speed"), the process Speed page says so under
+  "Overhang speed", naming those filaments.
+- **Web sites opened in the Home tab can't control Forca:** only Forca's own home page can send it requests.
+- **Reset Forca data** (Preferences, the Forca AI window or the Print Journal): start again with a fresh print
+  journal, Forca AI, AI-saved projects, Calibration Wizard history, or all of Forca as on a fresh install. Nothing is
+  deleted: it all moves to `Documents\Forca reset backups`.
+- **Clearer logs for Klipper (Moonraker) connection problems:** a failed server, lane data or Happy Hare query logs
+  the address, which server answered and the start of its reply (never the API key).
 
 
 # Install (Windows)
@@ -209,9 +237,9 @@ the public history is release-only, accepted changes are brought into the develo
 next release, with credit to you.
 
 # Built on OrcaSlicer
-Everything outside the three features above is OrcaSlicer, and Orca's documentation applies:
-<https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to late
-September 2026) and merges newer Orca occasionally, not continuously. That includes OrcaSlicer's own experimental
+Everything not listed above is OrcaSlicer, and Orca's documentation applies:
+<https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to mid-October
+2026, the code OrcaSlicer is releasing as 2.5.0-alpha) and merges newer Orca occasionally, not continuously. That includes OrcaSlicer's own experimental
 **Design (CAD) tab**, which stays off until you enable it in Preferences.
 
 Open-source slicing is built on a tradition of collaboration and attribution: [Slic3r](https://github.com/Slic3r/Slic3r)
@@ -222,10 +250,13 @@ SoftFever and the OrcaSlicer community, and to everyone upstream of them. Forca 
 by OrcaSlicer or Bambu Lab.
 
 # Building from source
-See [OrcaSlicer — How to build](https://www.orcaslicer.com/wiki/how_to_build); it applies unchanged. Windows quick
-reference: `build_win.bat -d` once for dependencies, then `build_win.bat -s` (together about an hour on a recent
-PC). `build_forca_release.ps1 -Config Release` packages a portable zip; add `-Installer` for the installer (needs
-[NSIS](https://nsis.sourceforge.io/)). Maintenance notes (upstream merges, the blue retint) are in [`docs/forca/`](docs/forca/README.md).
+See [OrcaSlicer — How to build](https://www.orcaslicer.com/wiki/how_to_build); it applies unchanged. Forca's own
+code builds as part of the normal build (its GUI files are a separate `forca_gui` library inside the same CMake
+project), so there are no extra steps. Windows quick reference: `build_win.bat -d` once for dependencies, then
+`build_win.bat -s` (together about an hour on a recent PC; add `--tests` for the unit tests, `build_win.bat -h` lists
+every option). `build_forca_release.ps1 -Config Release` packages a portable zip; add `-Installer` for the installer
+(needs [NSIS](https://nsis.sourceforge.io/)). Maintenance notes (upstream merges, the blue retint) are in
+[`docs/forca/`](docs/forca/README.md).
 
 # License
 - Forca Slicer is licensed under the **GNU Affero General Public License v3.0**, the same as OrcaSlicer. The complete

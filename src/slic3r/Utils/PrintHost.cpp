@@ -1,6 +1,5 @@
 #include "PrintHost.hpp"
 
-#include <boost/optional/optional.hpp>
 #include "libslic3r/Config.hpp"
 #include <string>
 #include <boost/algorithm/string/predicate.hpp>
@@ -17,7 +16,6 @@
 #include <exception>
 #include <algorithm>
 #include <sstream>
-#include <boost/optional.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 #include <nlohmann/json.hpp>
@@ -52,7 +50,6 @@
 #include "../GUI/ForcaFlashforgePanel.hpp" // Forca: Flashforge status page
 
 namespace fs = boost::filesystem;
-using boost::optional;
 using Slic3r::GUI::PrintHostQueueDialog;
 
 namespace Slic3r {

@@ -24,7 +24,7 @@
 #include <wx/filename.h>
 #include <sstream>
 #include <string>
-#include "slic3r/GUI/Printer/PrinterFileSystem.h"
+#include <nlohmann/json.hpp>
 #include <functional>
 #include <cstddef>
 #include <wx/dialog.h>
@@ -38,12 +38,14 @@
 #include <wx/url.h>
 
 #include <slic3r/GUI/Widgets/WebView.hpp>
+#include <slic3r/GUI/Widgets/WebViewHostDialog.hpp>
 #include <wx/webview.h>
 #include <wx/utils.h>
 #include <wx/window.h>
 #include <wx/infobar.h>
 
 namespace pt = boost::property_tree;
+using json = nlohmann::json;
 
 namespace Slic3r {
 namespace GUI {
@@ -53,9 +55,35 @@ namespace GUI {
 
     #define LOGIN_INFO_UPDATE_TIMER_ID 10002
 
+// The home page's strings (resources/web/homepage), keyed by their data-i18n and T() ids.
+static json home_page_strings()
+{
+    return {
+        {"login", _u8L("Login")},
+        // TRN Short badge on a recent project that was published (a published 3MF). Keep it about three letters long.
+        {"published_badge", _u8L("PUB")},
+        {"not_signed_in", _u8L("Not signed in")},
+        {"plugin_not_detected", _u8L("Bambu Network plug-in not detected. Click <a>here</a> to install it.")},
+        {"log_out", _u8L("Log Out")},
+        {"recent", _u8L("Recent")},
+        {"new_project", _u8L("New Project")},
+        {"create_new_project", _u8L("Create new project")},
+        {"open_project", _u8L("Open Project")},
+        {"recently_opened", _u8L("Recently opened")},
+        {"clear_all", _u8L("Clear all")},
+        {"remove", _u8L("Remove")},
+        {"open_containing_folder", _u8L("Open Containing Folder")},
+    };
+}
+
     BEGIN_EVENT_TABLE(WebViewPanel, wxPanel)
     EVT_TIMER(LOGIN_INFO_UPDATE_TIMER_ID, WebViewPanel::OnFreshLoginStatus)
     END_EVENT_TABLE()
+
+bool is_local_file_url(const wxString& url)
+{
+    return url.Strip(wxString::both).Lower().StartsWith("file:");
+}
 
 
 
@@ -262,7 +290,10 @@ WebViewPanel::~WebViewPanel()
 
 void WebViewPanel::create_browser()
 {
-    m_browser = WebView::CreateWebView(this, m_home_url);
+    // Created empty and loaded after the strings are added, so the first load already has them.
+    m_browser = WebView::CreateWebView(this, wxEmptyString);
+    m_browser->AddUserScript(wxString::FromUTF8(WebViewHostDialog::localized_strings_script(home_page_strings())));
+    WebView::LoadUrl(m_browser, m_home_url);
     m_browser->Hide();
 }
 
@@ -723,6 +754,13 @@ void WebViewPanel::OnNewWindow(wxWebViewEvent& evt)
 void WebViewPanel::OnScriptMessage(wxWebViewEvent& evt)
 {
     BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << ": " << evt.GetString().ToUTF8().data();
+    // Forca: only Forca's own pages (local files under resources/web) may send requests to the app. Links and new
+    // windows can load a web site into this panel, and such a page must not open files or change settings through
+    // handle_web_request.
+    if (!is_local_file_url(m_browser->GetCurrentURL())) {
+        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": ignored a script message from " << m_browser->GetCurrentURL().ToUTF8().data();
+        return;
+    }
     // update login status
     if (m_LoginUpdateTimer == nullptr) {
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " Create Timer";

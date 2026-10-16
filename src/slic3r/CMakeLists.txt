@@ -67,37 +67,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/CrealityDiscoveryDialog.hpp
     GUI/calib_dlg.cpp
     GUI/calib_dlg.hpp
-    GUI/ForcaCalibrationWizard.cpp
-    GUI/ForcaCalibrationWizard.hpp
-    GUI/ForcaPrinterCalibration.cpp
-    GUI/ForcaPrinterCalibration.hpp
-    GUI/ForcaCalibrationTab.cpp
-    GUI/ForcaCalibrationTab.hpp
-    GUI/ForcaCalibrationStore.cpp
-    GUI/ForcaCalibrationStore.hpp
-    GUI/ForcaAI.cpp
-    GUI/ForcaAI.hpp
-    GUI/ForcaAcademy.cpp
-    GUI/ForcaAIAcademy.cpp
-    GUI/ForcaAcademy.hpp
-    GUI/ForcaFlashforgePanel.cpp
-    GUI/ForcaFlashforgePanel.hpp
-    GUI/ForcaHostStatus.cpp
-    GUI/ForcaHostStatus.hpp
-    GUI/ForcaObnChoice.cpp
-    GUI/ForcaObnChoice.hpp
-    GUI/ForcaPrintJournal.cpp
-    GUI/ForcaPrintJournal.hpp
-    GUI/ForcaAITools.cpp
-    GUI/ForcaAIDialog.cpp
-    GUI/ForcaAIDialog.hpp
-    GUI/ForcaAIFiles.cpp
-    GUI/ForcaAIFiles.hpp
-    GUI/ForcaAIHands.cpp
-    GUI/ForcaAIKeys.hpp
-    GUI/ForcaAIPrint.cpp
-    GUI/ForcaAIAutonomy.cpp
-    GUI/ForcaAIPrinters.cpp
     GUI/Calibration.cpp
     GUI/Calibration.hpp
     GUI/CalibrationPanel.cpp
@@ -213,8 +182,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/Gizmos/GLGizmoEmboss.hpp
     GUI/Gizmos/GLGizmoFdmSupports.cpp
     GUI/Gizmos/GLGizmoFdmSupports.hpp
-    GUI/Gizmos/GLGizmoSupportInterfaceRegions.cpp
-    GUI/Gizmos/GLGizmoSupportInterfaceRegions.hpp
     GUI/Gizmos/GLGizmoFlatten.cpp
     GUI/Gizmos/GLGizmoFlatten.hpp
     GUI/Gizmos/GLGizmoFuzzySkin.cpp
@@ -316,6 +283,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/FilamentMapDialog.hpp
     GUI/IconManager.cpp
     GUI/IconManager.hpp
+    GUI/IMEXFilamentPickerPopover.cpp
+    GUI/IMEXFilamentPickerPopover.hpp
+    GUI/IMEXModesCtrl.cpp
+    GUI/IMEXModesCtrl.hpp
     GUI/IdleScheduler.cpp
     GUI/IdleScheduler.hpp
     GUI/ImageGrid.cpp
@@ -445,8 +416,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/MultiSendMachineModel.hpp
     GUI/MultiTaskManagerPage.cpp
     GUI/MultiTaskManagerPage.hpp
-    GUI/MultiTaskModel.cpp
-    GUI/MultiTaskModel.hpp
     GUI/NetworkTestDialog.cpp
     GUI/NetworkTestDialog.hpp
     GUI/Notebook.cpp
@@ -469,6 +438,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/ParamsPanel.hpp
     GUI/PartPlate.cpp
     GUI/PartPlate.hpp
+    GUI/BeltPurgeTower.cpp
+    GUI/BeltPurgeTower.hpp
     GUI/FilamentGroupPopup.hpp
     GUI/FilamentGroupPopup.cpp
     GUI/PhysicalPrinterDialog.cpp
@@ -598,8 +569,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/UserNotification.hpp
     GUI/UVEditorCanvas.cpp
     GUI/UVEditorCanvas.hpp
-    GUI/WebDownPluginDlg.cpp
-    GUI/WebDownPluginDlg.hpp
     GUI/WebGuideDialog.cpp
     GUI/WebGuideDialog.hpp
     GUI/WebUserLoginDialog.cpp
@@ -786,8 +755,6 @@ set(SLIC3R_GUI_SOURCES
     Utils/FontConfigHelp.hpp
     Utils/HexFile.cpp
     Utils/HexFile.hpp
-    Utils/ForcaOBN.cpp
-    Utils/ForcaOBN.hpp
     Utils/Http.cpp
     Utils/Http.hpp
     Utils/InstanceID.cpp
@@ -833,7 +800,6 @@ set(SLIC3R_GUI_SOURCES
     Utils/PrintHost.hpp
     Utils/Process.cpp
     Utils/Process.hpp
-    Utils/Profile.hpp
     Utils/RaycastManager.cpp
     Utils/RaycastManager.hpp
     Utils/Repetier.cpp
@@ -884,11 +850,6 @@ if (SLIC3R_CAD)
         GUI/CAD/SketchInlineEditor.hpp
         GUI/CAD/McpControl.cpp
         GUI/CAD/McpControl.hpp
-        GUI/Gizmos/GLGizmoSketch.cpp
-        GUI/Gizmos/GLGizmoSketch.hpp
-        # Needs GeometryEngine (make_primitive / apply_fillet / tessellate).
-        GUI/Gizmos/GLGizmoPrimitive.cpp
-        GUI/Gizmos/GLGizmoPrimitive.hpp
     )
 endif ()
 
@@ -1093,6 +1054,63 @@ endif ()
 
 # Add a definition so that we can tell we are compiling slic3r.
 target_compile_definitions(libslic3r_gui PRIVATE SLIC3R_CURRENTLY_COMPILING_GUI_MODULE)
+
+# Forca: Forca's own GUI code is its own static library, linked into libslic3r_gui. With Orca's files and Forca's in one
+# library the RelWithDebInfo libslic3r_gui.lib reached the 4 GB limit of a static library (LNK1248, 2026-10 merge).
+# The two libraries call each other (Orca hooks into Forca and back); the linker resolves that between static
+# libraries. forca_gui takes libslic3r_gui's include paths, definitions and options, so it builds exactly like it.
+set(FORCA_GUI_SOURCES
+    GUI/ForcaCalibrationWizard.cpp
+    GUI/ForcaCalibrationWizard.hpp
+    GUI/ForcaPrinterCalibration.cpp
+    GUI/ForcaPrinterCalibration.hpp
+    GUI/ForcaCalibrationTab.cpp
+    GUI/ForcaCalibrationTab.hpp
+    GUI/ForcaCalibrationStore.cpp
+    GUI/ForcaCalibrationStore.hpp
+    GUI/ForcaAI.cpp
+    GUI/ForcaAI.hpp
+    GUI/ForcaAcademy.cpp
+    GUI/ForcaAIAcademy.cpp
+    GUI/ForcaAcademy.hpp
+    GUI/ForcaBeforeYouPrint.cpp
+    GUI/ForcaBeforeYouPrint.hpp
+    GUI/ForcaFlashforgePanel.cpp
+    GUI/ForcaFlashforgePanel.hpp
+    GUI/ForcaHostStatus.cpp
+    GUI/ForcaHostStatus.hpp
+    GUI/ForcaObnChoice.cpp
+    GUI/ForcaObnChoice.hpp
+    GUI/ForcaPrintJournal.cpp
+    GUI/ForcaPrintJournal.hpp
+    GUI/ForcaReset.cpp
+    GUI/ForcaReset.hpp
+    GUI/ForcaAITools.cpp
+    GUI/ForcaAIDialog.cpp
+    GUI/ForcaAIDialog.hpp
+    GUI/ForcaAIFiles.cpp
+    GUI/ForcaAIFiles.hpp
+    GUI/ForcaAIHands.cpp
+    GUI/ForcaAIKeys.hpp
+    GUI/ForcaAIPrint.cpp
+    GUI/ForcaAIAutonomy.cpp
+    GUI/ForcaAIPrinters.cpp
+    GUI/Gizmos/GLGizmoSupportInterfaceRegions.cpp
+    GUI/Gizmos/GLGizmoSupportInterfaceRegions.hpp
+    Utils/ForcaOBN.cpp
+    Utils/ForcaOBN.hpp
+)
+add_library(forca_gui STATIC ${FORCA_GUI_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${FORCA_GUI_SOURCES})
+target_include_directories(forca_gui PRIVATE $<TARGET_PROPERTY:libslic3r_gui,INCLUDE_DIRECTORIES>)
+target_compile_definitions(forca_gui PRIVATE $<TARGET_PROPERTY:libslic3r_gui,COMPILE_DEFINITIONS>)
+target_compile_options(forca_gui PRIVATE $<TARGET_PROPERTY:libslic3r_gui,COMPILE_OPTIONS>)
+target_link_libraries(forca_gui libslic3r_gui)
+target_link_libraries(libslic3r_gui forca_gui)
+encoding_check(forca_gui)
+if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)
+    add_precompiled_header(forca_gui pchheader.hpp FORCEINCLUDE)
+endif ()
 
 if (ORCA_BUILD_PYTHON_STUBGEN_MODULE)
     add_library(orca_stubgen MODULE

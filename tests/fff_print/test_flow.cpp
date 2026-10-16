@@ -13,7 +13,6 @@
 #include "libslic3r/Flow.hpp"
 #include "libslic3r/libslic3r.h"
 
-using namespace Slic3r::Test;
 using namespace Slic3r;
 
 /// Test the expected behavior for auto-width,
@@ -102,7 +101,7 @@ TEST_CASE("The first layer's infill can have its own line width", "[Flow]")
 {
     const auto width = [](double infill_width, FlowRole role, bool first_layer) {
         Print print;
-        init_and_process_print({ cube(20) }, print, {
+        Test::init_and_process_print({ Test::cube(20) }, print, {
             { "initial_layer_line_width",        "0.5" },
             { "initial_layer_infill_line_width", infill_width },
             { "sparse_infill_line_width",        "0.45" },

@@ -51,6 +51,9 @@ public:
     virtual std::map<std::string, std::string> extendedInfo() const { return {}; }
 
 protected:
+    // Forca: the "Before you print" block (ForcaBeforeYouPrint.hpp), added to content_sizer above the buttons.
+    void add_forca_before_you_print();
+
     wxTextCtrl *txt_filename;
     wxComboBox *combo_groups;
     wxComboBox* combo_storage;

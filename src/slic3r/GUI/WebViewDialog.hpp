@@ -40,6 +40,9 @@ class NetworkAgent;
 
 namespace GUI {
 
+// Forca: true for a local file:// page (Forca's own pages under resources/web), false for web sites and empty URLs.
+// WebViewPanel answers script messages only from such pages.
+bool is_local_file_url(const wxString& url);
 
 class WebViewPanel : public wxPanel, public LazyInstance<WebViewPanel>
 {

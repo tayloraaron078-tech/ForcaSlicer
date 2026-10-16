@@ -6,6 +6,7 @@
 #include "libslic3r/Preset.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "slic3r/GUI/GUI_App.hpp"
+#include "slic3r/GUI/I18N.hpp"
 #include "slic3r/GUI/DeviceManager.hpp"
 #include "slic3r/GUI/DeviceCore/DevFilaSystem.h"
 #include "slic3r/GUI/DeviceCore/DevManager.h"
@@ -122,6 +123,25 @@ std::string map_moonraker_state(std::string state)
 } // namespace
 
 namespace Slic3r {
+
+// Forca: a failed request in the log with the URL, who answered (the Server header) and the start of the reply, so
+// a report shows whether the printer or something in between answered (ForcaSlicer issue #3: a KX-Bridge answered
+// curl, yet Forca's requests to the same URL got 404). The API key itself is never logged.
+std::string moonraker_describe_failed_request(const std::string& url, const std::string& error, const std::string& headers,
+                                              const std::string& body, bool api_key_sent)
+{
+    std::string        server;
+    std::istringstream lines(headers);
+    for (std::string line; std::getline(lines, line);)
+        if (boost::istarts_with(line, "server:"))
+            server = boost::trim_copy(line.substr(7)); // the last one wins (redirects)
+
+    std::string reply = body.substr(0, 200);
+    std::replace_if(reply.begin(), reply.end(), [](char c) { return c == '\r' || c == '\n'; }, ' ');
+
+    return error + " [url=" + url + " server=" + (server.empty() ? "-" : server) +
+           " api_key_header=" + (api_key_sent ? "yes" : "no") + " reply=" + (reply.empty() ? "-" : reply) + "]";
+}
 
 const std::string MoonrakerPrinterAgent_VERSION = "1.0.0";
 
@@ -294,7 +314,7 @@ int MoonrakerPrinterAgent::start_send_gcode_to_sdcard(PrintParams      params,
     (void) wait_fn;
 
     if (update_fn)
-        update_fn(PrintingStageCreate, 0, "Preparing...");
+        update_fn(PrintingStageCreate, 0, _u8L("Preparing..."));
 
     std::string filename = params.filename;
     if (filename.empty()) {
@@ -313,14 +333,14 @@ int MoonrakerPrinterAgent::start_send_gcode_to_sdcard(PrintParams      params,
     }
 
     if (update_fn)
-        update_fn(PrintingStageFinished, 100, "File uploaded");
+        update_fn(PrintingStageFinished, 100, _u8L("File uploaded"));
     return BAMBU_NETWORK_SUCCESS;
 }
 
 int MoonrakerPrinterAgent::start_local_print(PrintParams params, OnUpdateStatusFn update_fn, WasCancelledFn cancel_fn)
 {
     if (update_fn)
-        update_fn(PrintingStageCreate, 0, "Preparing...");
+        update_fn(PrintingStageCreate, 0, _u8L("Preparing..."));
 
     // Check cancellation
     if (cancel_fn && cancel_fn()) {
@@ -351,7 +371,7 @@ int MoonrakerPrinterAgent::start_local_print(PrintParams params, OnUpdateStatusF
 
     // Upload file
     if (update_fn)
-        update_fn(PrintingStageUpload, 0, "Uploading G-code...");
+        update_fn(PrintingStageUpload, 0, _u8L("Uploading G-code..."));
     if (!upload_gcode(gcode_path, upload_filename, device_info.base_url, device_info.api_key, update_fn, cancel_fn)) {
         return BAMBU_NETWORK_ERR_PRINT_LP_UPLOAD_FTP_FAILED;
     }
@@ -363,14 +383,14 @@ int MoonrakerPrinterAgent::start_local_print(PrintParams params, OnUpdateStatusF
 
     // Start print via gcode script (simpler than JSON-RPC)
     if (update_fn)
-        update_fn(PrintingStageSending, 0, "Starting print...");
+        update_fn(PrintingStageSending, 0, _u8L("Starting print..."));
     std::string gcode = "SDCARD_PRINT_FILE FILENAME=" + upload_filename;
     if (!send_gcode_sync(device_info.dev_id, gcode)) {
         return BAMBU_NETWORK_ERR_PRINT_LP_PUBLISH_MSG_FAILED;
     }
 
     if (update_fn)
-        update_fn(PrintingStageFinished, 100, "Print started");
+        update_fn(PrintingStageFinished, 100, _u8L("Print started"));
     return BAMBU_NETWORK_SUCCESS;
 }
 
@@ -761,6 +781,8 @@ bool MoonrakerPrinterAgent::fetch_moonraker_filament_data(std::vector<AmsTrayDat
     std::string response_body;
     bool success = false;
     std::string http_error;
+    std::string response_headers; // Forca: for the failure log
+    std::string error_body;
 
     auto http = Http::get(url);
     if (!device_info.api_key.empty()) {
@@ -768,12 +790,14 @@ bool MoonrakerPrinterAgent::fetch_moonraker_filament_data(std::vector<AmsTrayDat
     }
     http.timeout_connect(5)
         .timeout_max(10)
+        .on_header_callback([&](std::string headers) { response_headers = std::move(headers); })
         .on_complete([&](std::string body, unsigned status) {
             if (status == 200) {
                 response_body = body;
                 success = true;
             } else {
                 http_error = "HTTP error: " + std::to_string(status);
+                error_body = body;
             }
         })
         .on_error([&](std::string body, std::string err, unsigned status) {
@@ -781,11 +805,14 @@ bool MoonrakerPrinterAgent::fetch_moonraker_filament_data(std::vector<AmsTrayDat
             if (status > 0) {
                 http_error += " (HTTP " + std::to_string(status) + ")";
             }
+            error_body = body;
         })
         .perform_sync();
 
     if (!success) {
-        BOOST_LOG_TRIVIAL(warning) << "MoonrakerPrinterAgent::fetch_moonraker_filament_data: Failed to fetch lane data: " << http_error;
+        BOOST_LOG_TRIVIAL(warning) << "MoonrakerPrinterAgent::fetch_moonraker_filament_data: Failed to fetch lane data: "
+                                   << moonraker_describe_failed_request(url, http_error, response_headers, error_body,
+                                                                        !device_info.api_key.empty());
         return false;
     }
 
@@ -870,6 +897,8 @@ bool MoonrakerPrinterAgent::fetch_hh_filament_info(std::vector<AmsTrayData>& tra
     std::string response_body;
     bool success = false;
     std::string http_error;
+    std::string response_headers; // Forca: for the failure log
+    std::string error_body;
 
     auto http = Http::get(url);
     if (!device_info.api_key.empty()) {
@@ -877,12 +906,14 @@ bool MoonrakerPrinterAgent::fetch_hh_filament_info(std::vector<AmsTrayData>& tra
     }
     http.timeout_connect(5)
         .timeout_max(10)
+        .on_header_callback([&](std::string headers) { response_headers = std::move(headers); })
         .on_complete([&](std::string body, unsigned status) {
             if (status == 200) {
                 response_body = body;
                 success = true;
             } else {
                 http_error = "HTTP error: " + std::to_string(status);
+                error_body = body;
             }
         })
         .on_error([&](std::string body, std::string err, unsigned status) {
@@ -890,11 +921,14 @@ bool MoonrakerPrinterAgent::fetch_hh_filament_info(std::vector<AmsTrayData>& tra
             if (status > 0) {
                 http_error += " (HTTP " + std::to_string(status) + ")";
             }
+            error_body = body;
         })
         .perform_sync();
 
     if (!success) {
-        BOOST_LOG_TRIVIAL(debug) << "MoonrakerPrinterAgent::fetch_hh_filament_info: Failed to fetch HH data: " << http_error;
+        BOOST_LOG_TRIVIAL(debug) << "MoonrakerPrinterAgent::fetch_hh_filament_info: Failed to fetch HH data: "
+                                 << moonraker_describe_failed_request(url, http_error, response_headers, error_body,
+                                                                      !device_info.api_key.empty());
         return false;
     }
 
@@ -1128,6 +1162,8 @@ bool MoonrakerPrinterAgent::fetch_device_info(const std::string&   base_url,
         std::string response_body;
         bool        success = false;
         std::string http_error;
+        std::string response_headers; // Forca: for the failure log
+        std::string error_body;
 
         auto http = Http::get(url);
         if (!api_key.empty()) {
@@ -1135,12 +1171,14 @@ bool MoonrakerPrinterAgent::fetch_device_info(const std::string&   base_url,
         }
         http.timeout_connect(5)
             .timeout_max(10)
+            .on_header_callback([&](std::string headers) { response_headers = std::move(headers); })
             .on_complete([&](std::string body, unsigned status) {
                 if (status == 200) {
                     response_body = body;
                     success       = true;
                 } else {
                     http_error = "HTTP error: " + std::to_string(status);
+                    error_body = body;
                 }
             })
             .on_error([&](std::string body, std::string err, unsigned status) {
@@ -1148,11 +1186,13 @@ bool MoonrakerPrinterAgent::fetch_device_info(const std::string&   base_url,
                 if (status > 0) {
                     http_error += " (HTTP " + std::to_string(status) + ")";
                 }
+                error_body = body;
             })
             .perform_sync();
 
         if (!success) {
-            error = http_error.empty() ? "Connection failed" : http_error;
+            error = moonraker_describe_failed_request(url, http_error.empty() ? "Connection failed" : http_error,
+                                                      response_headers, error_body, !api_key.empty());
             return false;
         }
 
@@ -2059,7 +2099,7 @@ bool MoonrakerPrinterAgent::upload_gcode(const std::string& local_path,
             // Report progress via OnUpdateStatusFn
             if (update_fn && progress.ultotal > 0) {
                 int percent = static_cast<int>((progress.ulnow * 100) / progress.ultotal);
-                update_fn(PrintingStageUpload, percent, "Uploading...");
+                update_fn(PrintingStageUpload, percent, _u8L("Uploading..."));
             }
         })
         .perform_sync();

@@ -79,8 +79,8 @@
 #include "libslic3r_version.h"
 #include "wxExtensions.hpp"
 #include "ForcaAcademy.hpp"
+#include "ForcaBeforeYouPrint.hpp"
 
-#include <nlohmann/json.hpp>
 #include "libslic3r/Preset.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "slic3r/GUI/Widgets/Button.hpp"
@@ -486,6 +486,20 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
     txt_filename->OSXDisableAllSmartSubstitutions();
 #endif
 }
+void PrintHostSendDialog::add_forca_before_you_print()
+{
+    auto* block = new ForcaBeforeYouPrintPanel(this, 480);
+    if (!block->refresh()) {
+        block->Destroy(); // switched off in Preferences
+        return;
+    }
+    block->on_layout_changed = [this] {
+        Layout();
+        Fit();
+    };
+    content_sizer->Add(block, 0, wxEXPAND | wxBOTTOM, VERT_SPACING);
+}
+
 void PrintHostSendDialog::init()
 {
     const auto& path = m_path;
@@ -568,6 +582,7 @@ void PrintHostSendDialog::init()
         return true;
     };
 
+    add_forca_before_you_print(); // Forca
     auto* btn_ok = add_button(wxID_OK, true, _L("Upload"));
     btn_ok->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
         if (validate_path(txt_filename->GetValue())) {
@@ -819,7 +834,8 @@ void FlashforgePrintHostSendDialog::init()
     content_sizer->Add(m_flashforge_options_sizer, 0, wxEXPAND);
 
     if (m_supports_material_station)
-        m_status_text->SetLabel(wxString::Format(_L("Detected %d IFS slots on printer."), static_cast<int>(m_slots.size())));
+        m_status_text->SetLabel(wxString::Format(_L_PLURAL("Detected %d IFS slot on printer.", "Detected %d IFS slots on printer.", m_slots.size()),
+                                                 static_cast<int>(m_slots.size())));
     else
         m_status_text->SetLabel(_L("This printer does not report a material station."));
 
@@ -839,6 +855,7 @@ void FlashforgePrintHostSendDialog::init()
         return validate_before_close();
     };
 
+    add_forca_before_you_print(); // Forca
     auto* btn_ok = add_button(wxID_OK, true, _L("Upload"));
     btn_ok->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
         if (validate_path(txt_filename->GetValue())) {
@@ -951,7 +968,8 @@ void FlashforgePrintHostSendDialog::load_slots()
     m_use_material_station = m_supports_material_station;
 
     if (m_supports_material_station)
-        m_status_text->SetLabel(wxString::Format(_L("Detected %d IFS slots on printer."), static_cast<int>(m_slots.size())));
+        m_status_text->SetLabel(wxString::Format(_L_PLURAL("Detected %d IFS slot on printer.", "Detected %d IFS slots on printer.", m_slots.size()),
+                                                 static_cast<int>(m_slots.size())));
     else
         m_status_text->SetLabel(_L("This printer does not report a material station."));
 }
@@ -1761,8 +1779,8 @@ void ElegooPrintHostSendDialog::init() {
     }
 
     {
-        auto radioBoxA = new ::RadioBox(this);
-        auto radioBoxB = new ::RadioBox(this);
+        auto radioBoxA = new RadioBox(this);
+        auto radioBoxB = new RadioBox(this);
         if (m_BedType == BedType::btPC)
             radioBoxB->SetValue(true);
         else
@@ -1840,6 +1858,7 @@ void ElegooPrintHostSendDialog::init() {
         return true;
     };
 
+    add_forca_before_you_print(); // Forca
     auto* btn_ok = add_button(wxID_OK, true, _L("Upload"));
     btn_ok->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
         if (validate_path(txt_filename->GetValue())) {

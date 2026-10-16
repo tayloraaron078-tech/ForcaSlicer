@@ -29,10 +29,19 @@ settings.
   refused). Forca follows OBN's releases instead of pinning one, so the user decides when to update; it never updates
   silently. Only the `obn-windows-x64.zip` asset is used, and only when GitHub publishes a SHA-256 digest for it; the
   download must match that digest. From the zip Forca takes just `lib/v<series>/bambu_networking.dll` and
-  `BambuSource.dll` for the plug-in series it loads; OBN's own install scripts are never run.
-- **Where it lives.** Each release is kept in `<data_dir>/plugins/obn/<tag>/`. The one in use is copied to
-  `plugins/bambu_networking_<series>-obn.dll`: a custom-named build, which OrcaSlicer's plug-in housekeeping never
-  renames or removes, and which its version picker lists and loads like any other build of that series.
+  `BambuSource.dll`, for every plug-in series the release ships; OBN's own install scripts are never run.
+- **Where it lives.** Each release is kept in `<data_dir>/plugins/obn/<tag>/v<series>/`, one folder per plug-in
+  series. The build for the series Forca loads is copied to `plugins/bambu_networking_<series>-obn.dll`: a
+  custom-named build, which OrcaSlicer's plug-in housekeeping never renames or removes, and which its version picker
+  lists and loads like any other build of that series.
+- **Following the plug-in series.** The series Forca loads is OrcaSlicer's latest whitelisted one, so it changes at an
+  upstream merge (02.08.01 -> 02.08.04 in 2026-10), and OrcaSlicer drops a version outside its whitelist at start-up.
+  So the choice is stored on its own (`forca_obn_chosen`), not only in the `<series>-obn` name, and before the plug-in
+  loads (`forca_obn_follow_series`, from `GUI_App::on_init_network`) Forca puts OBN in place for the current series:
+  from the cached release when it has that series (no download, no question), otherwise after asking to download the
+  latest release. If the user says no, or OBN has no build for that series yet, Forca uses Bambu Lab's plug-in and
+  says so; the user can choose OBN again in Preferences. Forca's older single-series cache (`<tag>/` without `v`)
+  is moved into its series folder on the way.
 - **The camera DLL.** `plugins/BambuSource.dll` must match the plug-in in use. Switching to OBN keeps Bambu Lab's copy
   in `plugins/obn/bambu-camera/` first (unless the file there is already OBN's); switching back restores it, or the
   copy from Bambu Lab's last plug-in download. A DLL that is loaded is renamed aside (`.old`, swept before the plug-in

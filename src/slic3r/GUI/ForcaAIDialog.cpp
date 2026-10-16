@@ -1,6 +1,7 @@
 #include "ForcaAIDialog.hpp"
 
 #include "ForcaAI.hpp"
+#include "ForcaReset.hpp"
 #include "GUI.hpp"
 #include "GUI_App.hpp"
 #include "I18N.hpp"
@@ -16,6 +17,7 @@
 #include <wx/filedlg.h>
 #include <wx/numdlg.h>
 #include <wx/textdlg.h>
+#include <wx/weakref.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
@@ -284,6 +286,12 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
         }
     });
     buttons->Add(key_btn, 0);
+    // Forca: "Reset Forca data" (ForcaReset.hpp), also in Preferences and the Print Journal.
+    auto* reset_btn = new wxButton(this, wxID_ANY, _L("Reset Forca data") + dots);
+    reset_btn->SetToolTip(_L("Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration "
+                             "Wizard history or all of Forca. Everything moves to a backup folder first."));
+    reset_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { forca_reset_show_dialog(this); });
+    buttons->Add(reset_btn, 0, wxLEFT, FromDIP(8));
     root->Add(buttons, 0, wxALL, pad);
 
     // Per-printer opt-in: nothing is shared until the user ticks it (HQ PLAN_forca_ai.md §3a).
@@ -385,7 +393,11 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
     Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { Hide(); }, wxID_CANCEL);
 
     SetSizerAndFit(root);
-    ForcaAI::instance().add_listener([this]() { if (IsShown()) refresh(); });
+    // The window is destroyed when Forca closes (MainFrame::shutdown), and listeners can't be removed.
+    ForcaAI::instance().add_listener([self = wxWeakRef<ForcaAIDialog>(this)]() {
+        if (self && self->IsShown())
+            self->refresh();
+    });
     refresh();
     CenterOnParent();
 }

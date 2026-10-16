@@ -1080,6 +1080,33 @@
         "zh_CN": "涂在底面上的颜色渗入零件的层数。0 表示与底部壳体层数相同。",
         "zh_TW": "塗在底面上的顏色滲入零件的層數。0 表示與底部外殼層數相同。"
       }
+    },
+    {
+      "msgid": "The overhang and bridge speeds above don't apply to %1%, which use their own (filament settings, Filament page, Overhang speed).",
+      "translations": {
+        "ca": "Les velocitats de voladís i de pont anteriors no s'apliquen a %1%, que fan servir les seves pròpies (ajustos del filament, pàgina Filament, Velocitat de voladís).",
+        "cs": "Výše uvedené rychlosti převisů a mostů neplatí pro %1%, které používají vlastní (nastavení filamentu, stránka Filament, Rychlost převisů).",
+        "de": "Die Überhang- und Brückengeschwindigkeiten oben gelten nicht für %1%; diese Filamente verwenden ihre eigenen (Filamenteinstellungen, Seite Filament, Überhanggeschwindigkeit).",
+        "es": "Las velocidades de voladizo y de puente de arriba no se aplican a %1%, que usan las suyas propias (ajustes del filamento, página Filamento, Velocidad del voladizo).",
+        "eu": "Goiko irtengune- eta zubi-abiadurak ez zaizkio %1%-(r)i aplikatzen; horiek beren abiadurak erabiltzen dituzte (filamentuaren ezarpenak, Filamentua orria, Irtenguneetako abiadura).",
+        "fr": "Les vitesses de surplomb et de pont ci-dessus ne s'appliquent pas à %1%, qui utilisent les leurs (réglages du filament, page Filament, Vitesse de surplomb).",
+        "hu": "A fenti túlnyúlási és hídsebességek nem vonatkoznak erre: %1%; ezek a saját sebességeiket használják (filamentbeállítások, Filament oldal, Sebesség túlnyúlásnál).",
+        "it": "Le velocità sulle sporgenze e sui ponti qui sopra non si applicano a %1%, che usano le proprie (impostazioni del filamento, pagina Filamento, Velocità sulle sporgenze).",
+        "ja": "上記のオーバーハング速度とブリッジ速度は %1% には適用されません。これらのフィラメントは独自の速度を使用します（フィラメント設定、フィラメントページ、オーバーハング速度）。",
+        "ko": "위의 오버행 및 브리지 속도는 %1%에는 적용되지 않습니다. 이 필라멘트는 자체 속도를 사용합니다(필라멘트 설정, 필라멘트 페이지, 오버행 속도).",
+        "lt": "Aukščiau nurodyti iškyšų ir tiltų greičiai netaikomi %1%; šios gijos naudoja savo greičius (gijos nustatymai, puslapis Gija, Iškyšų greitis).",
+        "nl": "De overhang- en brugsnelheden hierboven gelden niet voor %1%, die hun eigen snelheden gebruiken (filamentinstellingen, pagina Filament, Snelheid voor overhangende gebieden).",
+        "pl": "Powyższe prędkości nawisów i mostów nie dotyczą %1%, które używają własnych (ustawienia filamentu, strona Filament, Szybkość drukowania nawisów).",
+        "pt_BR": "As velocidades em saliências e pontes acima não se aplicam a %1%, que usam as suas próprias (configurações do filamento, página Filamento, Velocidade em saliências).",
+        "ru": "Указанные выше скорости нависаний и мостов не применяются к %1%: эти материалы используют собственные (настройки материала, страница «Материал», «Ограничения скоростей на нависаниях»).",
+        "sv": "Överhängs- och brohastigheterna ovan gäller inte för %1%, som använder sina egna (filamentinställningar, sidan Filament, Hastighet vid överhäng).",
+        "th": "ความเร็วส่วนยื่นและสะพานด้านบนไม่ใช้กับ %1% ซึ่งใช้ความเร็วของตัวเอง (การตั้งค่าเส้นพลาสติก หน้าเส้นพลาสติก ความเร็วส่วนยื่น)",
+        "tr": "Yukarıdaki çıkıntı ve köprü hızları %1% için geçerli değildir; bunlar kendi hızlarını kullanır (filament ayarları, Filament sayfası, Çıkıntı Hızı).",
+        "uk": "Наведені вище швидкості нависань і мостів не застосовуються до %1%: ці філаменти використовують власні (налаштування філаменту, сторінка «Філамент», «Швидкість нависань»).",
+        "vi": "Tốc độ phần nhô và cầu ở trên không áp dụng cho %1%; các filament này dùng tốc độ riêng (cài đặt filament, trang Filament, Tốc độ phần nhô).",
+        "zh_CN": "上方的悬垂和桥接速度不适用于 %1%，这些耗材丝使用各自的速度（耗材丝设置 > 耗材丝页 > 悬垂速度）。",
+        "zh_TW": "上方的懸空和橋接速度不適用於 %1%，這些線材使用各自的速度（線材設定 > 線材頁 > 懸空列印速度）。"
+      }
     }
   ]
 }

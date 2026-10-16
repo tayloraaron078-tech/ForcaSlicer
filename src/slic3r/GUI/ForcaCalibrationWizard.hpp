@@ -64,6 +64,8 @@ public:
 
     // Light/dark mode switched: re-apply the palette to this panel and to every child still using its colours.
     void sys_color_changed();
+    // Back in light mode, after GUI_App's generic pass: undo what that pass did to colours in dark mode.
+    void restore_light_colours();
 
     // Jump to a calibration (progress-bar step click); start_flow_recheck() = the optional recheck marker.
     void select_calibration(Cal cal);
@@ -179,6 +181,9 @@ private:
     bool build_params_for_current_cal(Calib_Params& out, wxString& err);
     void launch_calib(const Calib_Params& params, bool skip_confirm);
     void launch_current_test(bool send_after);
+    // "Slice & send": run the printer's send once the current plate's G-code is ready. A completion that leaves the
+    // plate without G-code (an earlier, superseded slice) re-arms the hook up to `waits` times instead of sending.
+    void arm_send_after_slice(bool has_result, int waits);
     void show_result_page();
 
     // Temperature.

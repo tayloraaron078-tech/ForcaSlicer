@@ -60,6 +60,13 @@ struct ForcaAITool
                                                                           // such a tool uses ForcaAI::on_gui for GUI state
 };
 
+// Forca AI's key is shared by every Forca on this user account (the installed app and dev builds, any --datadir), so
+// an AI client set up once keeps working whichever one is running. `shared` is that key file. When it holds no key
+// yet, the key an older Forca kept in its data folder (`legacy`) is adopted into it, so AI clients set up with that
+// version keep working after an update; otherwise make_key() makes a new one. A key that can't be stored in `shared`
+// is kept in `legacy` instead. Returns the key.
+std::string forca_ai_load_key(const std::string& shared, const std::string& legacy, const std::function<std::string()>& make_key);
+
 struct ForcaAIActivity
 {
     std::string time;    // HH:MM:SS
@@ -81,7 +88,7 @@ public:
     void        start_if_enabled();       // app start
     void        shutdown();               // app exit
     int         port() const;
-    std::string token();                  // the secret key (created on first use, kept in the data folder)
+    std::string token();                  // the secret key (created on first use; one per user account, see forca_ai_load_key)
     void        regenerate_token();
     std::string url() const;
     std::string claude_code_command();    // ready to paste into a terminal
@@ -127,7 +134,8 @@ private:
     ForcaAIResult  call_tool_on_gui(const ForcaAITool& tool, const nlohmann::json& args);
     void           set_state(State s, const std::string& error = {});
     void           notify();
-    std::string    token_path() const;
+    std::string    token_path() const;        // the key file an older Forca kept in the data folder
+    std::string    shared_token_path() const; // the key file shared by every Forca of this user
 
     std::vector<ForcaAITool>            m_tools;
     std::vector<std::function<void()>>  m_listeners;

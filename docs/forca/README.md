@@ -15,7 +15,7 @@ If you're looking for what Forca *is*, see the top-level [`README.md`](../../REA
 
 ## How Forca diverges from upstream (the maintenance-relevant map)
 
-Forca sits on a **pinned OrcaSlicer base** (`c0c2cc5068`, the `2.5.0-dev` line) plus the fork's own commits. The changes fall into six buckets, and each is resolved differently during an upstream merge:
+Forca sits on an **OrcaSlicer base merged in occasionally** (the `2.5.0-dev` line, merged up to `008ee792f6`, the base of upstream's `release/v2.5.0`; originally pinned at `c0c2cc5068`) plus the fork's own commits. Forca's own GUI files build as a separate static library, `forca_gui` (`FORCA_GUI_SOURCES` at the end of `src/slic3r/CMakeLists.txt`); new Forca GUI files go there. The changes fall into six buckets, and each is resolved differently during an upstream merge:
 
 1. **Feature — the regional support-interface engine + gizmo.** The crown jewels. Deep edits in the slicing engine and a paint gizmo. Merge conflicts here are rare but dangerous; resolve by hand and re-validate on hardware.
 2. **Feature — the Calibration Wizard tab.** Mostly Forca-only files (`src/slic3r/GUI/ForcaCalibration*.{cpp,hpp}`, the banner image), plus small, commented hooks in `Plater.{cpp,hpp}` and `MainFrame.{cpp,hpp}` (default-off `skip_confirm` parameters on the `calib_*` launchers, the tab page, and the stay-on-tab redirects). It drives Orca's own calibration generators, so upstream changes to those (`Plater::calib_*`, `calib.hpp`) are what to watch.

@@ -11,6 +11,7 @@ class wxWindow;
 namespace Slic3r { namespace GUI {
 
 bool        forca_obn_active();      // the configured plug-in is OBN
+bool        forca_obn_chosen();      // the user chose OBN (app config "forca_obn_chosen"; outlives a series change)
 std::string forca_obn_tag();         // the OBN release in use or last used ("v2.2.0"), empty if never
 std::string forca_obn_previous_tag(); // the release before it, kept for rolling back; empty if none
 
@@ -20,6 +21,11 @@ bool forca_obn_switch(wxWindow* parent, bool to_obn);
 bool forca_obn_update(wxWindow* parent);   // newer OBN release -> download, keep the current one, switch
 bool forca_obn_rollback(wxWindow* parent); // back to the previous OBN release
 
+// Start-up, before the network plug-in loads (GUI_App::on_init_network): when the user chose OBN, select OBN for this
+// Forca's plug-in series -- from the cached release when it has that series, otherwise after asking to download the
+// latest release. Declined or not possible: Bambu Lab's plug-in, with a message. Older configs ("02.08.01-obn")
+// become the chosen flag here.
+void forca_obn_follow_series();
 // Start-up: OBN selected but not loaded -> back to Bambu's plug-in, with a message.
 void forca_obn_check_loaded(wxWindow* parent);
 // Start-up: remember when the last crash happened inside Bambu's network plug-in (Forca's crash logs).

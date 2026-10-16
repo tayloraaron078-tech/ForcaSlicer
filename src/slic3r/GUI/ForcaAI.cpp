@@ -13,6 +13,7 @@
 #include <boost/log/trivial.hpp>
 
 #include <wx/app.h>
+#include <wx/stdpaths.h>
 #include <wx/thread.h>
 
 #include <algorithm>
@@ -278,6 +279,51 @@ std::string ForcaAI::token_path() const
     return (fs::path(data_dir()) / "forca" / "ai" / "key.txt").string();
 }
 
+std::string ForcaAI::shared_token_path() const
+{
+    // Per user, not per data folder: %LOCALAPPDATA%\ForcaSlicer on Windows.
+    return (fs::path(wxStandardPaths::Get().GetUserLocalDataDir().ToUTF8().data()) / "forca-ai-key.txt").string();
+}
+
+namespace {
+
+std::string read_key(const std::string& path)
+{
+    std::string key;
+    try {
+        std::ifstream in(path);
+        std::getline(in, key);
+    } catch (...) {}
+    key.erase(std::remove_if(key.begin(), key.end(), [](unsigned char c) { return std::isspace(c); }), key.end());
+    return key.size() >= 32 ? key : std::string();
+}
+
+bool write_key(const std::string& path, const std::string& key)
+{
+    try {
+        fs::create_directories(fs::path(path).parent_path());
+        std::ofstream out(path, std::ios::trunc);
+        out << key << "\n";
+        return bool(out);
+    } catch (...) {
+        return false;
+    }
+}
+
+} // namespace
+
+std::string forca_ai_load_key(const std::string& shared, const std::string& legacy, const std::function<std::string()>& make_key)
+{
+    if (std::string key = read_key(shared); !key.empty())
+        return key;
+    std::string key = read_key(legacy);
+    if (key.empty())
+        key = make_key();
+    if (!write_key(shared, key))
+        write_key(legacy, key);
+    return key;
+}
+
 std::string ForcaAI::token()
 {
     {
@@ -285,20 +331,7 @@ std::string ForcaAI::token()
         if (!m_token.empty())
             return m_token;
     }
-    std::string key;
-    try {
-        std::ifstream in(token_path());
-        std::getline(in, key);
-    } catch (...) {}
-    key.erase(std::remove_if(key.begin(), key.end(), [](unsigned char c) { return std::isspace(c); }), key.end());
-    if (key.size() < 32) {
-        key = random_hex(32);
-        try {
-            fs::create_directories(fs::path(token_path()).parent_path());
-            std::ofstream out(token_path(), std::ios::trunc);
-            out << key << "\n";
-        } catch (...) {}
-    }
+    const std::string key = forca_ai_load_key(shared_token_path(), token_path(), [] { return random_hex(32); });
     std::lock_guard<std::mutex> lock(m_mutex);
     m_token = key;
     return m_token;
@@ -311,10 +344,11 @@ void ForcaAI::regenerate_token()
         m_token.clear();
     }
     try {
-        fs::remove(token_path());
+        fs::remove(shared_token_path());
+        fs::remove(token_path()); // or the old key would be adopted again
     } catch (...) {}
     token();
-    log("connection", "A new Forca AI key was created; AI clients must be updated with it.", true);
+    log("connection", "A new Forca AI key was created for every Forca on this computer; AI clients must be updated with it.", true);
 }
 
 std::string ForcaAI::claude_code_command()

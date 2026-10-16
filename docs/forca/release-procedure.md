@@ -77,12 +77,15 @@ something; start the portable zip once).
 ## 5. Publish the release (public)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools/forca/publish_release.ps1 -Release
+powershell -ExecutionPolicy Bypass -File tools/forca/publish_release.ps1 -Release -Stable
 ```
 
-Creates the GitHub release `v<version>` on the public commit — a **pre-release** unless you add `-Stable` — with the
-three files and the notes, then checks that GitHub's SHA-256 digests match ours. Forca's update check lists the new
-release right away.
+Creates the GitHub release `v<version>` on the public commit with the three files and the notes, then checks that
+GitHub's SHA-256 digests match ours. Forca's update check lists the new release right away.
+
+Numbered releases (`v<version>`, alphas included) are published with `-Stable`, so GitHub marks them "Latest" and
+the README's download badge (`/releases/latest`) opens them. On Porpoise test builds stay pre-releases (without
+`-Stable`), so `/releases/latest` and the badge skip them. Up to `0.1.0-alpha.5` every release was a pre-release.
 
 ## 6. Afterwards
 

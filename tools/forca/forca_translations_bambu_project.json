@@ -1,0 +1,59 @@
+{
+  "_comment": "The dialog listing the settings of a newer Bambu Studio project that Forca ignores (src/slic3r/GUI/Plater.cpp; OrcaSlicer only logs them since 2.5.0-alpha). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Bambu Studio project",
+      "translations": {
+        "ca": "Projecte de Bambu Studio",
+        "cs": "Projekt Bambu Studio",
+        "de": "Bambu Studio-Projekt",
+        "es": "Proyecto de Bambu Studio",
+        "eu": "Bambu Studio proiektua",
+        "fr": "Projet Bambu Studio",
+        "hu": "Bambu Studio-projekt",
+        "it": "Progetto Bambu Studio",
+        "ja": "Bambu Studio プロジェクト",
+        "ko": "Bambu Studio 프로젝트",
+        "lt": "Bambu Studio projektas",
+        "nl": "Bambu Studio-project",
+        "pl": "Projekt Bambu Studio",
+        "pt_BR": "Projeto do Bambu Studio",
+        "ru": "Проект Bambu Studio",
+        "sv": "Bambu Studio-projekt",
+        "th": "โปรเจกต์ Bambu Studio",
+        "tr": "Bambu Studio projesi",
+        "uk": "Проєкт Bambu Studio",
+        "vi": "Dự án Bambu Studio",
+        "zh_CN": "Bambu Studio 项目",
+        "zh_TW": "Bambu Studio 專案"
+      }
+    },
+    {
+      "msgid": "This project was made with Bambu Studio %s. Forca doesn't know the following settings from it and ignores them:",
+      "translations": {
+        "ca": "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajustos següents i els ignora:",
+        "cs": "Tento projekt byl vytvořen v Bambu Studio %s. Forca nezná následující nastavení z něj a ignoruje je:",
+        "de": "Dieses Projekt wurde mit Bambu Studio %s erstellt. Forca kennt die folgenden Einstellungen daraus nicht und ignoriert sie:",
+        "es": "Este proyecto se hizo con Bambu Studio %s. Forca no conoce los siguientes ajustes y los ignora:",
+        "eu": "Proiektu hau Bambu Studio %s bertsioarekin egin zen. Forcak ez ditu ezagutzen honako ezarpen hauek, eta ez ikusi egiten die:",
+        "fr": "Ce projet a été créé avec Bambu Studio %s. Forca ne connaît pas les réglages suivants et les ignore :",
+        "hu": "Ez a projekt a Bambu Studio %s verziójával készült. A Forca nem ismeri a következő beállításait, ezért figyelmen kívül hagyja őket:",
+        "it": "Questo progetto è stato creato con Bambu Studio %s. Forca non conosce le seguenti impostazioni e le ignora:",
+        "ja": "このプロジェクトは Bambu Studio %s で作成されました。Forca は次の設定を認識できないため無視します:",
+        "ko": "이 프로젝트는 Bambu Studio %s(으)로 만들어졌습니다. Forca는 다음 설정을 알지 못하므로 무시합니다:",
+        "lt": "Šis projektas sukurtas su Bambu Studio %s. Forca nežino šių jo nustatymų ir jų nepaiso:",
+        "nl": "Dit project is gemaakt met Bambu Studio %s. Forca kent de volgende instellingen ervan niet en negeert ze:",
+        "pl": "Ten projekt utworzono w Bambu Studio %s. Forca nie zna następujących ustawień z niego i je pomija:",
+        "pt_BR": "Este projeto foi feito com o Bambu Studio %s. O Forca não conhece as configurações a seguir e as ignora:",
+        "ru": "Этот проект создан в Bambu Studio %s. Forca не знает следующих его настроек и пропускает их:",
+        "sv": "Det här projektet gjordes med Bambu Studio %s. Forca känner inte till följande inställningar i det och ignorerar dem:",
+        "th": "โปรเจกต์นี้สร้างด้วย Bambu Studio %s Forca ไม่รู้จักการตั้งค่าต่อไปนี้จึงละเว้นไว้:",
+        "tr": "Bu proje Bambu Studio %s ile yapıldı. Forca aşağıdaki ayarları tanımıyor ve yok sayıyor:",
+        "uk": "Цей проєкт створено в Bambu Studio %s. Forca не знає таких його налаштувань і пропускає їх:",
+        "vi": "Dự án này được tạo bằng Bambu Studio %s. Forca không biết các cài đặt sau đây và bỏ qua chúng:",
+        "zh_CN": "此项目由 Bambu Studio %s 创建。Forca 不认识以下设置，将忽略它们：",
+        "zh_TW": "此專案由 Bambu Studio %s 建立。Forca 不認識以下設定，將忽略它們："
+      }
+    }
+  ]
+}

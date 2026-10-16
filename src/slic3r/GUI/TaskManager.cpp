@@ -23,7 +23,6 @@
 #include <vector>
 #include <map>
 #include <utility>
-#include "slic3r/GUI/Printer/PrinterFileSystem.h"
 
 using namespace nlohmann;
 
@@ -187,7 +186,7 @@ int TaskManager::start_print(const std::vector<PrintParams>& params, TaskSetting
     for (auto it = params.begin(); it != params.end(); it++) {
         TaskStateInfo* new_item = new TaskStateInfo(*it);
         task_group.append(new_item);
-        forca_academy_hold_task(new_item->task_info_id, it->plate_index - 1, it->dev_id, forca_ai_printer_label(it->dev_id));
+        GUI::forca_academy_hold_task(new_item->task_info_id, it->plate_index - 1, it->dev_id, GUI::forca_ai_printer_label(it->dev_id));
     }
     m_cache_map.push_back(task_group);
     m_map_mutex.unlock();
@@ -276,7 +275,7 @@ int TaskManager::schedule(TaskStateInfo* task)
                 }
             }
 
-            forca_academy_task_done(task->task_info_id, result == 0);
+            GUI::forca_academy_task_done(task->task_info_id, result == 0);
 
             LifecycleEventContext finish_ctx;
             finish_ctx.name = task->params().project_name;

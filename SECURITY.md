@@ -12,8 +12,9 @@ misuse it) can't cost you files or start a print.
 
 - **Off by default.** Nothing listens until you tick "Let an AI connect to Forca" in the Forca AI window.
 - **This computer only.** The server listens on `127.0.0.1` (port 13630) — not on your network.
-- **A secret key.** Every request needs the key shown in the Forca AI window (stored in Forca's settings folder,
-  `forca/ai/key.txt`). "Make a new key" invalidates the old one. Requests from web pages (a browser `Origin` header
+- **A secret key.** Every request needs the key shown in the Forca AI window (stored once per Windows user in
+  `%LOCALAPPDATA%\ForcaSlicer\forca-ai-key.txt`, shared by every Forca on the computer; older versions kept it in
+  Forca's settings folder, `forca/ai/key.txt`, and it carries over). "Make a new key" invalidates the old one. Requests from web pages (a browser `Origin` header
   that isn't local) are refused, so a website can't drive Forca.
 - **Your files are never overwritten.** Every file the AI saves gets a new "(Claude <date>)" name. It may only update
   files it created itself and you haven't changed since (tracked in `forca/ai/ledger.json`). It can't delete files and

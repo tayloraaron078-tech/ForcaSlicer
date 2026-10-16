@@ -1,6 +1,8 @@
 #include "ForcaAcademy.hpp"
 
 #include "ForcaAI.hpp" // forca_ai_plate_report
+#include "ForcaAIFiles.hpp" // forca_ai_may_write / forca_ai_record_write (INDEX.md facts)
+#include "ForcaAIKeys.hpp"  // forca_ai_is_secret_key (settings.json keeps no secrets)
 #include "ForcaHostStatus.hpp" // Klipper / Flashforge print status
 #include "GUI.hpp"     // from_u8 / into_path
 #include "GUI_App.hpp"
@@ -18,6 +20,7 @@
 #include "HMS.hpp"
 #include "libslic3r/GCode/ThumbnailData.hpp"
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/convert.hpp>
@@ -28,6 +31,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstdio>
 #include <ctime>
 #include <iterator>
 #include <map>
@@ -47,7 +51,7 @@ fs::path forca_academy_default_dir() { return into_path(wxStandardPaths::Get().G
 fs::path forca_academy_dir()
 {
     const std::string dir = wxGetApp().app_config ? wxGetApp().app_config->get("forca_academy_dir") : std::string();
-    return dir.empty() ? forca_academy_default_dir() : into_path(from_u8(dir));
+    return dir.empty() ? forca_academy_default_dir() : forca_academy_folder_in(into_path(from_u8(dir)));
 }
 
 // ---- file side --------------------------------------------------------------------------------
@@ -103,7 +107,8 @@ AI assistants). Everything is plain Markdown and JSON, so any AI can read it wit
 ## Recording
 - A lesson is promoted when a pattern repeats, and corrected when a later print contradicts it. Say how sure it is
   (low / medium / high) and link the prints it rests on.
-- Keep `INDEX.md` to two screens at most; move detail into the other pages.
+- Keep `INDEX.md` to two screens at most; move detail into the other pages. Leave its `<!-- forca:facts -->` block
+  in place: Forca rewrites it after every print (counts, success rates, open patterns, latest lessons).
 - Don't change the fields Forca wrote in `record.json`; add to `outcome` and `notes.md` instead.
 
 ## Rules for AI assistants
@@ -183,6 +188,23 @@ std::string forca_academy_slug(const std::string& name)
     return out.empty() ? std::string("print") : boost::nowide::narrow(out);
 }
 
+fs::path forca_academy_folder_in(const fs::path& chosen)
+{
+    if (chosen.filename() == "Forca Academy")
+        return chosen;
+    boost::system::error_code ec;
+    if (fs::is_regular_file(chosen / "AGENTS.md", ec) && fs::is_directory(chosen / "prints", ec))
+        return chosen; // a journal kept here directly, from before this rule: keep using it
+    return chosen / "Forca Academy";
+}
+
+const std::vector<std::string>& forca_academy_own_entries()
+{
+    static const std::vector<std::string> entries = { "AGENTS.md", "INDEX.md",    "lessons.md",  "prints", "printers",
+                                                      "materials", "playbooks",   "experiments", "forca" };
+    return entries;
+}
+
 bool forca_academy_ensure_skeleton(const fs::path& dir, std::string& err)
 {
     boost::system::error_code ec;
@@ -198,8 +220,12 @@ bool forca_academy_ensure_skeleton(const fs::path& dir, std::string& err)
     for (const auto& [name, text] : files)
         if (!fs::exists(dir / name) && !write_text(dir / name, text, err))
             return false;
-    return true;
+    return forca_academy_write_starter_playbooks(dir, err);
 }
+
+namespace {
+json without_private_settings(json settings); // settings.json sections without secrets (below)
+} // namespace
 
 fs::path forca_academy_write_record(const fs::path& dir, const json& record, const std::string& thumbnail_png, std::string& err)
 {
@@ -218,7 +244,13 @@ fs::path forca_academy_write_record(const fs::path& dir, const json& record, con
         err = "Could not create " + folder.string() + ": " + ec.message();
         return {};
     }
-    if (!write_text(folder / "record.json", record.dump(2) + "\n", err))
+    if (record.contains("settings")) {
+        json rest = record;
+        rest.erase("settings");
+        if (!write_text(folder / "record.json", rest.dump(2) + "\n", err) ||
+            !write_text(folder / "settings.json", without_private_settings(record["settings"]).dump(1) + "\n", err))
+            return {};
+    } else if (!write_text(folder / "record.json", record.dump(2) + "\n", err))
         return {};
 
     std::string printer = record.contains("printer") ? record["printer"].value("device", std::string()) : std::string();
@@ -258,6 +290,8 @@ std::string read_all(const fs::path& p)
     boost::nowide::ifstream f(p.string(), std::ios::binary);
     return std::string(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
 }
+
+bool is_untouched_playbook(const fs::path& file); // a starter playbook still exactly as Forca wrote it (below)
 
 std::string outcome_block(const json& o)
 {
@@ -349,8 +383,17 @@ std::string forca_academy_relative(const fs::path& dir, const fs::path& path)
 bool forca_academy_is_untouched_starter(const fs::path& file)
 {
     const std::string name = file.filename().string();
+    if (file.parent_path().filename() == "playbooks")
+        return is_untouched_playbook(file);
     const char*       text = name == "INDEX.md" ? INDEX_MD : name == "lessons.md" ? LESSONS_MD : nullptr;
-    return text && fs::exists(file) && read_all(file) == text;
+    if (!text || !fs::exists(file))
+        return false;
+    std::string content = read_all(file);
+    // Forca's own INDEX.md facts block (forca_academy_write_index_facts) doesn't make the page the user's.
+    const size_t open = content.find("\n<!-- forca:facts -->"), close = content.find("<!-- /forca:facts -->\n");
+    if (open != std::string::npos && close != std::string::npos && close > open)
+        content.erase(open, close + std::string("<!-- /forca:facts -->\n").size() - open);
+    return content == text;
 }
 
 std::vector<ForcaAcademyPrint> forca_academy_list_prints(const fs::path& dir, size_t max)
@@ -376,10 +419,25 @@ std::vector<ForcaAcademyPrint> forca_academy_list_prints(const fs::path& dir, si
                     if (p.printer.empty())
                         p.printer = r["printer"].value(k, std::string());
             }
-            if (r.contains("outcome") && r["outcome"].is_object())
+            if (r.contains("outcome") && r["outcome"].is_object()) {
                 p.result = r["outcome"].value("result", std::string());
+                if (r["outcome"].contains("tags") && r["outcome"]["tags"].is_array())
+                    for (const json& t : r["outcome"]["tags"])
+                        if (t.is_string())
+                            p.tags.push_back(t.get<std::string>());
+            }
             if (r.contains("print_end") && r["print_end"].is_object())
                 p.ended = r["print_end"].value("state", std::string());
+            p.process = r.value("process", std::string());
+            if (r.contains("filaments") && r["filaments"].is_array())
+                for (const json& f : r["filaments"]) {
+                    // A slot with a recorded use of 0 g didn't print; older records have no use figures.
+                    if (!f.is_object() || (f.contains("used_g") && f["used_g"].is_number() && f["used_g"].get<double>() <= 0.))
+                        continue;
+                    const std::string preset = f.value("preset", std::string());
+                    if (!preset.empty() && std::find(p.filaments.begin(), p.filaments.end(), preset) == p.filaments.end())
+                        p.filaments.push_back(preset);
+                }
             out.push_back(std::move(p));
         }
     }
@@ -388,6 +446,83 @@ std::vector<ForcaAcademyPrint> forca_academy_list_prints(const fs::path& dir, si
     });
     if (out.size() > max)
         out.resize(max);
+    return out;
+}
+
+namespace {
+
+// Counts one print into a history; `tag_counts` collects the tags of every print with an outcome (a successful print
+// with a tag still had that problem, so it counts; h.tags_on_success says how many of them were successful).
+void count_print(ForcaAcademyHistory& h, std::map<std::string, int>& tag_counts, const ForcaAcademyPrint& p)
+{
+    h.folders.push_back(p.folder);
+    if (p.result == "success" || p.result == "partial" || p.result == "failed") {
+        ++(p.result == "success" ? h.success : p.result == "partial" ? h.partial : h.failed);
+        for (const std::string& t : p.tags) {
+            ++tag_counts[t];
+            if (p.result == "success")
+                ++h.tags_on_success[t];
+        }
+    } else
+        ++h.not_recorded;
+}
+
+// Most common first; equal counts keep the tags' alphabetical order.
+void set_tags(ForcaAcademyHistory& h, const std::map<std::string, int>& tag_counts)
+{
+    h.tags.assign(tag_counts.begin(), tag_counts.end());
+    std::stable_sort(h.tags.begin(), h.tags.end(), [](const auto& a, const auto& b) { return a.second > b.second; });
+}
+
+} // namespace
+
+ForcaAcademyHistory forca_academy_history(const std::vector<ForcaAcademyPrint>& prints, const std::string& printer,
+                                          const std::string& filament)
+{
+    ForcaAcademyHistory        h;
+    std::map<std::string, int> tag_counts;
+    for (const ForcaAcademyPrint& p : prints) {
+        if (!printer.empty() && p.printer != printer)
+            continue;
+        if (std::find(p.filaments.begin(), p.filaments.end(), filament) == p.filaments.end())
+            continue;
+        count_print(h, tag_counts, p);
+    }
+    set_tags(h, tag_counts);
+    return h;
+}
+
+std::vector<ForcaAcademyInsight> forca_academy_insights(const std::vector<ForcaAcademyPrint>& prints, ForcaAcademyGroup by)
+{
+    std::map<std::string, ForcaAcademyInsight>        groups;
+    std::map<std::string, std::map<std::string, int>> tag_counts;
+    auto add = [&](const std::string& name, const ForcaAcademyPrint& p) {
+        if (name.empty())
+            return;
+        ForcaAcademyInsight& g = groups[name];
+        g.name                 = name;
+        count_print(g.history, tag_counts[name], p);
+        if ((p.result == "partial" || p.result == "failed") && p.time > g.last_failure)
+            g.last_failure = p.time;
+    };
+    for (const ForcaAcademyPrint& p : prints) {
+        switch (by) {
+        case ForcaAcademyGroup::Printer: add(p.printer, p); break;
+        case ForcaAcademyGroup::Process: add(p.process, p); break;
+        case ForcaAcademyGroup::Filament:
+            for (const std::string& f : p.filaments)
+                add(f, p);
+            break;
+        }
+    }
+    std::vector<ForcaAcademyInsight> out;
+    for (auto& [name, g] : groups) {
+        set_tags(g.history, tag_counts[name]);
+        out.push_back(std::move(g));
+    }
+    std::stable_sort(out.begin(), out.end(), [](const ForcaAcademyInsight& a, const ForcaAcademyInsight& b) {
+        return a.history.folders.size() > b.history.folders.size(); // the map already ordered them by name
+    });
     return out;
 }
 
@@ -484,6 +619,515 @@ bool forca_academy_write_printer_facts(const fs::path& page, const std::string& 
     return write_text(page, text, err);
 }
 
+// ---- part 2: compare, experiments, patterns, lessons, INDEX facts, playbooks ----
+
+namespace {
+
+const json& member(const json& j, const char* key)
+{
+    static const json empty = json::object();
+    return j.is_object() && j.contains(key) && j[key].is_object() ? j[key] : empty;
+}
+
+std::string as_text(const json& obj, const std::string& key)
+{
+    if (!obj.is_object() || !obj.contains(key) || obj[key].is_null())
+        return {};
+    return obj[key].is_string() ? obj[key].get<std::string>() : obj[key].dump();
+}
+
+std::string record_printer(const json& r)
+{
+    for (const char* k : { "device", "physical_printer", "preset" })
+        if (std::string v = as_text(member(r, "printer"), k); !v.empty())
+            return v;
+    return {};
+}
+
+// The filament presets a print used, as the journal lists them (slots with a recorded use of 0 g skipped).
+std::string record_filaments(const json& r)
+{
+    std::vector<std::string> names;
+    if (r.contains("filaments") && r["filaments"].is_array())
+        for (const json& f : r["filaments"]) {
+            if (!f.is_object() || (f.contains("used_g") && f["used_g"].is_number() && f["used_g"].get<double>() <= 0.))
+                continue;
+            const std::string preset = as_text(f, "preset");
+            if (!preset.empty() && std::find(names.begin(), names.end(), preset) == names.end())
+                names.push_back(preset);
+        }
+    std::string out;
+    for (const std::string& n : names)
+        out += (out.empty() ? "" : ", ") + n;
+    return out;
+}
+
+std::string record_grams(const json& r)
+{
+    const json& e = member(r, "estimate");
+    if (!e.contains("filament_total_g") || !e["filament_total_g"].is_number())
+        return {};
+    char buf[32];
+    std::snprintf(buf, sizeof(buf), "%.1f g", e["filament_total_g"].get<double>());
+    return buf;
+}
+
+std::string record_tags(const json& r)
+{
+    std::string out;
+    const json& o = member(r, "outcome");
+    if (o.contains("tags") && o["tags"].is_array())
+        for (const json& t : o["tags"])
+            if (t.is_string())
+                out += (out.empty() ? "" : ", ") + t.get<std::string>();
+    return out;
+}
+
+fs::path insights_file(const fs::path& dir) { return dir / "forca" / "insights.json"; }
+
+json load_insights(const fs::path& dir)
+{
+    json j;
+    return read_json(insights_file(dir), j) ? j : json::object();
+}
+
+bool save_insights(const fs::path& dir, const json& j, std::string& err)
+{
+    boost::system::error_code ec;
+    fs::create_directories(insights_file(dir).parent_path(), ec);
+    return write_text(insights_file(dir), j.dump(2) + "\n", err);
+}
+
+std::string when_text(const std::string& iso) { return iso.size() >= 16 ? iso.substr(0, 10) + " " + iso.substr(11, 5) : iso; }
+
+// "layer_shift" -> "Layer shift"
+std::string tag_text(std::string tag)
+{
+    std::replace(tag.begin(), tag.end(), '_', ' ');
+    if (!tag.empty())
+        tag[0] = char(std::toupper(static_cast<unsigned char>(tag[0])));
+    return tag;
+}
+
+const char* const EXPERIMENT_RESULT_UNWRITTEN = "Not written yet: which print came out better, and what you will keep.";
+
+} // namespace
+
+bool forca_academy_private_setting(const std::string& key)
+{
+    return forca_ai_is_secret_key(key) || key.rfind("printhost_", 0) == 0 || key == "print_host" || key == "print_host_webui" ||
+           key.find("serial_number") != std::string::npos;
+}
+
+namespace {
+
+// settings.json sections without private settings.
+json without_private_settings(json settings)
+{
+    if (!settings.is_object())
+        return settings;
+    for (auto& [section, values] : settings.items())
+        if (values.is_object())
+            for (auto it = values.begin(); it != values.end();)
+                it = forca_academy_private_setting(it.key()) ? values.erase(it) : std::next(it);
+    return settings;
+}
+
+} // namespace
+
+bool forca_academy_read_settings(const fs::path& folder, json& settings)
+{
+    if (!read_json(folder / "settings.json", settings))
+        return false;
+    settings = without_private_settings(std::move(settings));
+    return true;
+}
+
+ForcaAcademyComparison forca_academy_compare(const json& ra, const json& sa, const json& rb, const json& sb)
+{
+    ForcaAcademyComparison c;
+    auto add = [&c](const char* section, const std::string& key, const std::string& a, const std::string& b) {
+        c.rows.push_back({ section, key, a, b, a != b });
+    };
+    add("print", "printer", record_printer(ra), record_printer(rb));
+    add("print", "process", as_text(ra, "process"), as_text(rb, "process"));
+    add("print", "filaments", record_filaments(ra), record_filaments(rb));
+    add("print", "print_time", as_text(member(ra, "estimate"), "print_time"), as_text(member(rb, "estimate"), "print_time"));
+    add("print", "filament_g", record_grams(ra), record_grams(rb));
+    add("print", "result", as_text(member(ra, "outcome"), "result"), as_text(member(rb, "outcome"), "result"));
+    add("print", "tags", record_tags(ra), record_tags(rb));
+
+    c.full = !member(sa, "process").empty() && !member(sb, "process").empty();
+    for (const char* section : { "process", "filament", "printer" }) {
+        const json& a = c.full ? member(sa, section) : member(member(ra, "unsaved_changes"), section);
+        const json& b = c.full ? member(sb, section) : member(member(rb, "unsaved_changes"), section);
+        std::set<std::string> keys;
+        for (const auto& [k, v] : a.items())
+            keys.insert(k);
+        for (const auto& [k, v] : b.items())
+            keys.insert(k);
+        for (const std::string& k : keys)
+            if (const std::string va = as_text(a, k), vb = as_text(b, k); va != vb)
+                add(section, k, va, vb);
+    }
+    return c;
+}
+
+fs::path forca_academy_write_experiment(const fs::path& dir, const std::string& title, const std::string& date,
+                                        const ForcaAcademyPrint& a, const ForcaAcademyPrint& b,
+                                        const std::vector<std::string>& differences, std::string& err)
+{
+    if (!forca_academy_ensure_skeleton(dir, err))
+        return {};
+    const std::string base = (dir / "experiments" / (date + "_" + forca_academy_slug(title))).string();
+    fs::path          file = base + ".md";
+    for (int n = 2; fs::exists(file); ++n)
+        file = base + "-" + std::to_string(n) + ".md";
+
+    auto print_line = [&dir](const char* label, const ForcaAcademyPrint& p) {
+        std::string line = std::string("- ") + label + ": [" + p.title + "](../" + forca_academy_relative(dir, p.folder) + ") -- " +
+                           when_text(p.time) + ", " + (p.result.empty() ? std::string("no outcome recorded") : p.result);
+        std::string tags;
+        for (const std::string& t : p.tags)
+            tags += (tags.empty() ? "" : ", ") + t;
+        return line + (tags.empty() ? "" : " (" + tags + ")") + "\n";
+    };
+    std::string text = "# " + title + "\n\nStarted: " + date + "\n\n## Prints\n\n" + print_line("A", a) + print_line("B", b) +
+                       "\n## What differed\n\n";
+    for (const std::string& d : differences)
+        text += "- " + d + "\n";
+    if (differences.empty())
+        text += "- (no setting differences were recorded)\n";
+    text += "\n## Result\n\n" + std::string(EXPERIMENT_RESULT_UNWRITTEN) + "\n";
+    return write_text(file, text, err) ? file : fs::path();
+}
+
+std::vector<ForcaAcademyExperiment> forca_academy_list_experiments(const fs::path& dir)
+{
+    std::vector<ForcaAcademyExperiment> out;
+    boost::system::error_code           ec;
+    for (fs::directory_iterator it(dir / "experiments", ec), end; !ec && it != end; it.increment(ec)) {
+        if (it->path().extension() != ".md" || !fs::is_regular_file(it->path(), ec))
+            continue;
+        ForcaAcademyExperiment e;
+        e.file                 = it->path();
+        const std::string stem = it->path().stem().string();
+        e.date                 = stem.size() >= 10 && stem[4] == '-' && stem[7] == '-' ? stem.substr(0, 10) : std::string();
+        e.title                = stem;
+        const std::string text = read_all(it->path());
+        if (text.rfind("# ", 0) == 0)
+            e.title = text.substr(2, text.find_first_of("\r\n") - 2);
+        if (const size_t r = text.find("## Result"); r != std::string::npos) {
+            std::string rest = text.substr(r + 9);
+            if (const size_t next = rest.find("\n## "); next != std::string::npos)
+                rest.resize(next);
+            rest.erase(0, rest.find_first_not_of(" \t\r\n"));
+            rest.erase(rest.find_last_not_of(" \t\r\n") + 1);
+            e.has_result = !rest.empty() && rest != EXPERIMENT_RESULT_UNWRITTEN;
+        }
+        out.push_back(std::move(e));
+    }
+    std::sort(out.begin(), out.end(), [](const auto& x, const auto& y) { return x.file.stem().string() > y.file.stem().string(); });
+    return out;
+}
+
+std::vector<ForcaAcademyPattern> forca_academy_patterns(const std::vector<ForcaAcademyPrint>& prints, int count, int window)
+{
+    count  = std::max(1, count);
+    window = std::max(count, window);
+    // The newest `window` prints with an outcome for each printer + filament preset (`prints` is newest first).
+    std::map<std::pair<std::string, std::string>, std::vector<const ForcaAcademyPrint*>> groups;
+    for (const ForcaAcademyPrint& p : prints) {
+        if (p.result.empty() || p.printer.empty())
+            continue;
+        for (const std::string& f : p.filaments)
+            if (auto& g = groups[{ p.printer, f }]; int(g.size()) < window)
+                g.push_back(&p);
+    }
+    std::vector<ForcaAcademyPattern> out;
+    for (const auto& [key, group] : groups) {
+        std::map<std::string, std::vector<fs::path>> tagged;
+        std::map<std::string, int>                   on_success;
+        for (const ForcaAcademyPrint* p : group)
+            for (const std::string& t : std::set<std::string>(p->tags.begin(), p->tags.end())) {
+                tagged[t].push_back(p->folder);
+                if (p->result == "success")
+                    ++on_success[t];
+            }
+        for (auto& [tag, folders] : tagged)
+            if (int(folders.size()) >= count)
+                out.push_back({ key.first, key.second, tag, key.first + "|" + key.second + "|" + tag, int(folders.size()),
+                                int(group.size()), on_success[tag], std::move(folders) });
+    }
+    std::stable_sort(out.begin(), out.end(), [](const auto& a, const auto& b) { return a.count > b.count; });
+    return out;
+}
+
+std::vector<std::string> forca_academy_dismissed(const fs::path& dir)
+{
+    std::vector<std::string> out;
+    const json               j = load_insights(dir);
+    if (j.contains("dismissed") && j["dismissed"].is_array())
+        for (const json& id : j["dismissed"])
+            if (id.is_string())
+                out.push_back(id.get<std::string>());
+    return out;
+}
+
+bool forca_academy_dismiss(const fs::path& dir, const std::string& pattern_id, std::string& err)
+{
+    json j = load_insights(dir);
+    if (!j.contains("dismissed") || !j["dismissed"].is_array())
+        j["dismissed"] = json::array();
+    for (const json& id : j["dismissed"])
+        if (id == pattern_id)
+            return true;
+    j["dismissed"].push_back(pattern_id);
+    return save_insights(dir, j, err);
+}
+
+std::string forca_academy_lesson_draft(const fs::path& dir, const ForcaAcademyPattern& p, const std::string& confidence,
+                                       const std::string& date)
+{
+    std::string evidence;
+    for (const fs::path& f : p.folders)
+        evidence += std::string(evidence.empty() ? "" : ", ") + "[" + f.filename().string() + "](" + forca_academy_relative(dir, f) + ")";
+    return "## " + tag_text(p.tag) + " with " + p.filament + " on " + p.printer + "\n\n" +
+           "- Rule: (what to change or check next time)\n" +
+           "- Confidence: " + confidence + "\n" +
+           "- Evidence: " + evidence + "\n" +
+           "- Seen: " + std::to_string(p.count) + " of the last " + std::to_string(p.window) + " prints with an outcome" +
+           (p.on_success > 0 ? ", " + std::to_string(p.on_success) + " of them successful" : std::string()) + " (" + date + ")\n" +
+           "- Playbook: [playbooks/" + p.tag + ".md](playbooks/" + p.tag + ".md)\n";
+}
+
+bool forca_academy_append_lesson(const fs::path& dir, const std::string& entry, std::string& err)
+{
+    const fs::path file = dir / "lessons.md";
+    std::string    text = fs::exists(file) ? read_all(file) : std::string(LESSONS_MD);
+    while (!text.empty() && (text.back() == '\n' || text.back() == '\r'))
+        text.pop_back();
+    text += "\n\n" + entry;
+    if (text.back() != '\n')
+        text += "\n";
+    return write_text(file, text, err);
+}
+
+std::string forca_academy_index_facts(const fs::path& dir, const std::vector<ForcaAcademyPrint>& prints,
+                                      const std::vector<ForcaAcademyPattern>& open_patterns)
+{
+    int success = 0, partial = 0, failed = 0;
+    for (const ForcaAcademyPrint& p : prints) {
+        if (p.result == "success")
+            ++success;
+        else if (p.result == "partial")
+            ++partial;
+        else if (p.result == "failed")
+            ++failed;
+    }
+    std::string md = "Kept by Forca from the print journal and refreshed after each print and outcome; write your own notes "
+                     "outside this block.\n\n" +
+                     std::string("**Prints:** ") + std::to_string(prints.size()) + " recorded, " +
+                     std::to_string(success + partial + failed) + " with an outcome: " + std::to_string(success) + " success, " +
+                     std::to_string(partial) + " partial, " + std::to_string(failed) + " failed.\n";
+
+    auto group_lines = [&](ForcaAcademyGroup by, const char* heading, bool printer_pages) {
+        const auto groups = forca_academy_insights(prints, by);
+        if (groups.empty())
+            return;
+        md += std::string("\n**") + heading + ":**\n";
+        for (size_t i = 0; i < groups.size() && i < 10; ++i) {
+            const ForcaAcademyHistory& h = groups[i].history;
+            md += "- " + groups[i].name + " -- " + std::to_string(h.folders.size()) + " prints";
+            if (h.recorded() > 0)
+                md += ", " + std::to_string(h.success) + " of " + std::to_string(h.recorded()) + " with an outcome succeeded";
+            if (!h.tags.empty()) {
+                const auto& [tag, n] = h.tags.front();
+                const auto  ok       = h.tags_on_success.find(tag);
+                md += ", most often " + tag + " (" + std::to_string(n) + " prints" +
+                      (ok == h.tags_on_success.end() ? std::string() : ", " + std::to_string(ok->second) + " of them successful") + ")";
+            }
+            const std::string page = "printers/" + forca_academy_slug(groups[i].name) + ".md";
+            if (printer_pages && fs::exists(dir / page))
+                md += " -- [" + page + "](" + page + ")";
+            md += "\n";
+        }
+    };
+    group_lines(ForcaAcademyGroup::Printer, "Printers", true);
+    group_lines(ForcaAcademyGroup::Filament, "Filaments", false);
+
+    if (!open_patterns.empty()) {
+        md += "\n**Open patterns** (the same problem on several recent prints):\n";
+        for (size_t i = 0; i < open_patterns.size() && i < 5; ++i) {
+            const ForcaAcademyPattern& p = open_patterns[i];
+            md += "- " + tag_text(p.tag) + " with " + p.filament + " on " + p.printer + " (" + std::to_string(p.count) + " of the last " +
+                  std::to_string(p.window) + (p.on_success > 0 ? ", " + std::to_string(p.on_success) + " of them successful" : std::string()) +
+                  ") -- [playbooks/" + p.tag + ".md](playbooks/" + p.tag + ".md)\n";
+        }
+    }
+
+    std::vector<std::string> lessons;
+    std::string              text = read_all(dir / "lessons.md");
+    for (size_t at = 0; (at = text.find("\n## ", at)) != std::string::npos; ++at)
+        lessons.push_back(text.substr(at + 4, text.find_first_of("\r\n", at + 4) - (at + 4)));
+    if (!lessons.empty()) {
+        md += "\n**Latest lessons** (lessons.md):\n";
+        for (size_t i = 0; i < lessons.size() && i < 5; ++i)
+            md += "- " + lessons[lessons.size() - 1 - i] + "\n";
+    }
+    return md;
+}
+
+bool forca_academy_write_index_facts(const fs::path& dir, const std::string& facts_md, std::string& err)
+{
+    static const std::string open = "<!-- forca:facts -->", close = "<!-- /forca:facts -->";
+    const fs::path           page = dir / "INDEX.md";
+    if (!fs::exists(page))
+        return true; // nothing to write into (ensure_skeleton creates it)
+    const std::string block = open + "\n" + facts_md + (facts_md.empty() || facts_md.back() == '\n' ? "" : "\n") + close;
+    std::string       text  = read_all(page);
+    if (replace_block(text, open, close, block))
+        return write_text(page, text, err);
+    json insights = load_insights(dir);
+    if (insights.value("index_facts_added", false) || text.find(open) != std::string::npos)
+        return true; // the user removed the block (or its end marker): leave the page alone
+    // First time: under the title line (or at the top when there is none).
+    const size_t eol = text.rfind("# ", 0) == 0 ? text.find('\n') : std::string::npos;
+    if (eol == std::string::npos)
+        text = block + "\n\n" + text;
+    else
+        text.insert(eol + 1, "\n" + block + "\n");
+    insights["index_facts_added"] = true;
+    return write_text(page, text, err) && save_insights(dir, insights, err);
+}
+
+const std::vector<std::string>& forca_academy_tag_keys()
+{
+    static const std::vector<std::string> keys = { "stringing",       "warping",        "layer_shift", "spaghetti",
+                                                   "bed_adhesion",    "supports",       "under_extrusion",
+                                                   "over_extrusion",  "ringing",        "layer_separation" };
+    return keys;
+}
+
+namespace {
+
+struct Playbook
+{
+    const char* tag;
+    const char* title;
+    const char* causes;
+    const char* checks;
+    const char* in_forca;
+};
+
+// Generic starters: the usual causes, quick checks, and where Forca can help. Written once; the user owns them after.
+const Playbook PLAYBOOKS[] = {
+    { "stringing", "Stringing",
+      "1. Wet filament (PETG, TPU and nylon above all).\n2. Nozzle temperature too high for this filament.\n"
+      "3. Retraction too short or too slow.\n4. Long travel moves over open space.\n",
+      "- Does a freshly dried spool string less?\n- Did a temperature tower show less stringing at a lower temperature?\n"
+      "- Is the stringing between parts (travel) or on one part (oozing)?\n",
+      "- Calibration Wizard: Temperature, then Retraction.\n- Filament settings: nozzle temperature, retraction length and "
+      "speed (filament overrides).\n- Process settings: Avoid crossing walls, Wipe while retracting.\n" },
+    { "warping", "Warping",
+      "1. Weak first-layer grip (dirty plate, wrong plate type or bed temperature).\n2. Drafts or a cold room (ABS, ASA, "
+      "nylon need an enclosure).\n3. Too much cooling on the first layers.\n4. Large flat parts with sharp corners.\n",
+      "- Clean the plate (soap and water for PEI) and check the plate type in Forca matches the plate on the printer.\n"
+      "- Does it lift at the corners only, or along whole edges?\n",
+      "- Calibration Wizard: Shrinkage (dimensions) and Flow rate (first-layer squish).\n- Filament settings: bed "
+      "temperature for your plate type, No cooling for the first N layers.\n- Process settings: Brim type and width.\n" },
+    { "layer_shift", "Layer shift",
+      "1. The nozzle hit a curled-up edge or a loose part.\n2. Speed or acceleration too high for the printer.\n"
+      "3. Loose belts or pulleys, or a motor running hot.\n",
+      "- Did the shift happen at a height where something curled up?\n- Is it always on the same axis?\n"
+      "- Do the belts have even tension?\n",
+      "- Process settings: Z hop when retracting, Avoid crossing walls, lower outer wall and travel accelerations.\n"
+      "- Printer calibration: input shaping (shaper frequency and damping).\n" },
+    { "spaghetti", "Spaghetti",
+      "1. The part came loose from the plate.\n2. An overhang or island printed in the air (missing supports).\n"
+      "3. A clog or filament tangle stopped extrusion part way.\n",
+      "- Where did it start: at the plate, at an overhang, or mid-print with a good part below?\n"
+      "- Was the spool tangled or the filament ground down?\n",
+      "- The Bed adhesion and Supports playbooks.\n- Process settings: supports (type, threshold angle), brim.\n"
+      "- Forca's support-interface regions modifier for one area that needs a different interface.\n" },
+    { "bed_adhesion", "Bed adhesion",
+      "1. Dirty or greasy plate.\n2. First layer too high (no squish) or too fast.\n3. Bed temperature wrong for this "
+      "filament and plate.\n4. Plate type in Forca doesn't match the printer.\n",
+      "- Wash the plate; don't touch the print surface.\n- Look at the first layer: round lines (too high) or "
+      "flattened lines touching each other (good)?\n",
+      "- Calibration Wizard: Flow rate.\n- Process settings: initial layer height and speed, brim.\n"
+      "- Filament settings: bed temperature for your plate type.\n" },
+    { "supports", "Supports",
+      "1. Supports too hard to remove (top Z distance too small, too many interface layers).\n2. Surfaces above supports "
+      "sag (gap too big, interface too sparse).\n3. Supports fell over (too thin, too tall).\n",
+      "- Was the trouble removing them, or the surface above them?\n- Normal or tree supports?\n",
+      "- Process settings: support type, top Z distance, top interface layers and spacing, threshold angle.\n"
+      "- Forca's support-interface regions modifier: a different interface (or material) for one area only.\n" },
+    { "under_extrusion", "Under-extrusion",
+      "1. Asking for more flow than the hotend melts (max volumetric speed).\n2. Partial clog or wet filament.\n"
+      "3. Flow ratio too low.\n4. Nozzle temperature too low.\n",
+      "- Thin or gappy walls only at high speed? Then it's the volumetric limit.\n- Does it improve after a cold pull or a "
+      "new nozzle?\n",
+      "- Calibration Wizard: Max volumetric speed, Flow rate, Temperature.\n- Filament settings: Max volumetric speed, Flow "
+      "ratio.\n" },
+    { "over_extrusion", "Over-extrusion",
+      "1. Flow ratio too high.\n2. Pressure advance too low (blobs at corners and seams).\n3. Filament diameter set "
+      "wrong.\n",
+      "- Rough top surfaces or blobs on every corner?\n- Do parts come out oversized?\n",
+      "- Calibration Wizard: Flow rate, Pressure advance.\n- Filament settings: Flow ratio, pressure advance.\n" },
+    { "ringing", "Ringing",
+      "1. Outer walls printed too fast or with high acceleration.\n2. Input shaping not tuned for this printer.\n"
+      "3. Loose frame, belts or a wobbly table.\n",
+      "- Are the ripples after sharp corners, fading with distance?\n- Same on X and Y?\n",
+      "- Printer calibration: input shaping (shaper frequency and damping), cornering.\n- Process settings: outer wall "
+      "speed and acceleration.\n" },
+    { "layer_separation", "Layer separation",
+      "1. Nozzle temperature too low for this speed.\n2. Too much part cooling (ABS, ASA, PETG, nylon).\n"
+      "3. Under-extrusion (see that playbook).\n4. Drafts on a large part.\n",
+      "- Do the layers split at the same height every time?\n- Did it happen on thin walls or thick ones?\n",
+      "- Calibration Wizard: Temperature, Max volumetric speed.\n- Filament settings: nozzle temperature, fan speeds.\n" },
+};
+
+std::string playbook_text(const Playbook& p)
+{
+    return std::string("# ") + p.title +
+           "\n\nA starter playbook from Forca: general advice, not yet about your printers. Edit it freely; Forca never "
+           "overwrites it.\n\n## Likely causes (most likely first)\n\n" +
+           p.causes + "\n## Checks\n\n" + p.checks + "\n## In Forca\n\n" + p.in_forca +
+           "\n## What worked here\n\n(the fixes that worked, with links to the prints that prove them)\n";
+}
+
+bool is_untouched_playbook(const fs::path& file)
+{
+    for (const Playbook& p : PLAYBOOKS)
+        if (file.stem() == p.tag)
+            return fs::exists(file) && read_all(file) == playbook_text(p);
+    return false;
+}
+
+} // namespace
+
+bool forca_academy_write_starter_playbooks(const fs::path& dir, std::string& err)
+{
+    json insights = load_insights(dir);
+    json written  = insights.contains("playbooks_written") && insights["playbooks_written"].is_array() ? insights["playbooks_written"]
+                                                                                                        : json::array();
+    bool changed = false;
+    for (const Playbook& p : PLAYBOOKS) {
+        if (std::find(written.begin(), written.end(), json(p.tag)) != written.end())
+            continue;
+        const fs::path file = dir / "playbooks" / (std::string(p.tag) + ".md");
+        if (!fs::exists(file) && !write_text(file, playbook_text(p), err))
+            return false;
+        written.push_back(p.tag);
+        changed = true;
+    }
+    if (!changed)
+        return true;
+    insights["playbooks_written"] = written;
+    return save_insights(dir, insights, err);
+}
+
 std::vector<fs::path> forca_academy_add_photos(const fs::path& folder, const std::vector<fs::path>& files, std::string& err)
 {
     std::vector<fs::path>     added;
@@ -566,6 +1210,28 @@ json unsaved_changes(PresetCollection& c)
         j[key] = v;
     }
     return j;
+}
+
+// Every setting the print used, per preset type, for "Compare two prints" (written to settings.json). Values come from
+// the full config, so filament options hold one value per filament slot. Preset bookkeeping keys are left out.
+json all_settings(PresetBundle& b, const DynamicPrintConfig& full)
+{
+    auto section = [&full](const DynamicPrintConfig& preset_config) {
+        json j = json::object();
+        for (const std::string& key : preset_config.keys()) {
+            if (!full.has(key) || key == "inherits" || key == "version" || key == "from" || key == "setting_id" ||
+                key.rfind("compatible_", 0) == 0 || boost::algorithm::ends_with(key, "_settings_id"))
+                continue;
+            std::string v = full.opt_serialize(key);
+            if (v.size() > 200)
+                v = v.substr(0, 200) + "...";
+            j[key] = v;
+        }
+        return j;
+    };
+    return { { "process", section(b.prints.get_edited_preset().config) },
+             { "printer", section(b.printers.get_edited_preset().config) },
+             { "filament", section(b.filaments.get_edited_preset().config) } };
 }
 
 std::string plate_png(int plate_idx)
@@ -656,7 +1322,8 @@ json snapshot(int plate_idx, const std::string& route)
              { "plate", { { "number", plate_idx + 1 }, { "name", plate->get_plate_name() }, { "objects", objects } } },
              { "estimate", estimate },
              { "project_file", project_file },
-             { "outcome", nullptr } };
+             { "outcome", nullptr },
+             { "settings", all_settings(b, full) } }; // -> settings.json (forca_academy_write_record)
 }
 
 fs::path write(const json& record, const std::string& png)
@@ -665,12 +1332,54 @@ fs::path write(const json& record, const std::string& png)
     const fs::path folder = forca_academy_write_record(forca_academy_dir(), record, png, err);
     if (folder.empty())
         BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << err;
-    else
+    else {
         BOOST_LOG_TRIVIAL(info) << "Forca Academy: recorded " << folder.string();
+        forca_academy_refresh_index();
+    }
     return folder;
 }
 
 } // namespace
+
+std::pair<int, int> forca_academy_pattern_rule()
+{
+    auto get = [](const char* key, int def) {
+        try {
+            return std::max(1, std::stoi(wxGetApp().app_config->get(key)));
+        } catch (...) {
+            return def;
+        }
+    };
+    return { get("forca_academy_pattern_count", 3), get("forca_academy_pattern_window", 10) };
+}
+
+std::vector<ForcaAcademyPattern> forca_academy_open_patterns(const std::vector<ForcaAcademyPrint>& prints)
+{
+    const auto [count, window]  = forca_academy_pattern_rule();
+    auto                     out = forca_academy_patterns(prints, count, window);
+    const auto               dismissed = forca_academy_dismissed(forca_academy_dir());
+    out.erase(std::remove_if(out.begin(), out.end(),
+                             [&](const ForcaAcademyPattern& p) {
+                                 return std::find(dismissed.begin(), dismissed.end(), p.id) != dismissed.end();
+                             }),
+              out.end());
+    return out;
+}
+
+void forca_academy_refresh_index()
+{
+    if (!forca_academy_enabled())
+        return;
+    const fs::path dir    = forca_academy_dir();
+    const auto     prints = forca_academy_list_prints(dir);
+    std::string    err;
+    // An INDEX.md an AI wrote stays the AI's: Forca refreshing its own block doesn't count as the user's edit.
+    const bool ai_owned = forca_ai_may_write(dir / "INDEX.md");
+    if (!forca_academy_write_index_facts(dir, forca_academy_index_facts(dir, prints, forca_academy_open_patterns(prints)), err))
+        BOOST_LOG_TRIVIAL(error) << "Forca Academy: " << err;
+    else if (ai_owned)
+        forca_ai_record_write(dir / "INDEX.md");
+}
 
 fs::path forca_academy_record_current_plate(std::string& err)
 {
@@ -679,6 +1388,8 @@ fs::path forca_academy_record_current_plate(std::string& err)
         record["source"] = "user: added in the Print Journal";
         const fs::path folder = forca_academy_write_record(forca_academy_dir(), record,
                                                            plate_png(record["plate"]["number"].get<int>() - 1), err);
+        if (!folder.empty())
+            forca_academy_refresh_index();
         return folder;
     } catch (const std::exception& e) {
         err = e.what();
@@ -1112,6 +1823,10 @@ void forca_academy_start()
         cfg->set_bool("forca_academy_end_photo", true);
     if (cfg && cfg->get("forca_academy_photo_minutes").empty())
         cfg->set("forca_academy_photo_minutes", "0");
+    if (cfg && cfg->get("forca_academy_pattern_count").empty())
+        cfg->set("forca_academy_pattern_count", "3");
+    if (cfg && cfg->get("forca_academy_pattern_window").empty())
+        cfg->set("forca_academy_pattern_window", "10");
     load_tracking();
     if (!s_tracked.empty())
         start_timer();

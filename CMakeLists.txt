@@ -497,47 +497,6 @@ endif()
 # Once we get rid of Perl and libslic3r is linked statically, we can get rid of -fPIC
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# WIN10SDK_PATH is used to point CMake to the WIN10 SDK installation directory.
-# We pick it from environment if it is not defined in another way
-# ORCA: Removed Netfabb STL fixing service support in favor of CGAL.
-# if(WIN32)
-#     if(NOT DEFINED WIN10SDK_PATH)
-#         if(DEFINED ENV{WIN10SDK_PATH})
-#                 set(WIN10SDK_PATH "$ENV{WIN10SDK_PATH}")
-#         endif()
-#     endif()
-#     if(DEFINED WIN10SDK_PATH)
-#         #BBS: modify win10sdk_path
-#         if (EXISTS "${WIN10SDK_PATH}/winrt/windows.graphics.printing3d.h")
-#             set(WIN10SDK_INCLUDE_PATH "${WIN10SDK_PATH}")
-#         else()
-#             message("WIN10SDK_PATH is invalid: ${WIN10SDK_PATH}")
-#             message("${WIN10SDK_PATH}/winrt/windows.graphics.printing3d.h was not found")
-#             message("STL fixing by the Netfabb service will not be compiled")
-#             unset(WIN10SDK_PATH)
-#         endif()
-#     else()
-#         # Try to use the default Windows 10 SDK path.
-#         if (DEFINED ENV{WindowsSdkDir} AND DEFINED ENV{WindowsSDKVersion})
-#             set(WIN10SDK_INCLUDE_PATH "$ENV{WindowsSdkDir}/Include/$ENV{WindowsSDKVersion}")
-#         else ()
-#             set(WIN10SDK_INCLUDE_PATH "C:/Program Files (x86)/Windows Kits/10/Include/10.0.26100.0")
-#         endif ()
-#         if (NOT EXISTS "${WIN10SDK_INCLUDE_PATH}/winrt/windows.graphics.printing3d.h")
-#             message("${WIN10SDK_INCLUDE_PATH}/winrt/windows.graphics.printing3d.h was not found")
-#             message("STL fixing by the Netfabb service will not be compiled")
-#             unset(WIN10SDK_INCLUDE_PATH)
-#         endif()
-#     endif()
-#     if(WIN10SDK_INCLUDE_PATH)
-#         message("Building with Win10 Netfabb STL fixing service support")
-#         add_definitions(-DHAS_WIN10SDK)
-#         include_directories(SYSTEM "${WIN10SDK_INCLUDE_PATH}")
-#     else()
-#         message("Building without Win10 Netfabb STL fixing service support")
-#     endif()
-# endif()
-
 if (APPLE)
     message("OS X SDK Path: ${CMAKE_OSX_SYSROOT}")
     if (CMAKE_OSX_DEPLOYMENT_TARGET)
@@ -735,6 +694,11 @@ if (SLIC3R_PROFILE)
     add_definitions(-DSLIC3R_PROFILE)
 endif ()
 
+# Forca: RelWithDebInfo (the Windows dev build) stays optimised (/O2 /Ob1, with PDBs). Orca's unoptimised
+# /Od /Ob0 /RTC1 objects made libslic3r_gui.lib pass the 4 GB limit of a static library (LNK1248) at the 2026-10
+# upstream merge. -DFORCA_OPTIMIZED_RELWITHDEBINFO=OFF restores Orca's flags for step-by-step debugging.
+option(FORCA_OPTIMIZED_RELWITHDEBINFO "Forca: keep RelWithDebInfo optimised (Orca builds it unoptimised)" ON)
+if (NOT FORCA_OPTIMIZED_RELWITHDEBINFO)
 # Disable optimization for RelWithDebInfo
 if(CMAKE_C_FLAGS_RELWITHDEBINFO MATCHES "/O2")
     string(REGEX REPLACE "/O2" "/Od" CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO}")
@@ -765,6 +729,7 @@ if(MSVC)
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} /RTC1")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /RTC1")
 endif()
+endif () # FORCA_OPTIMIZED_RELWITHDEBINFO
 
 list(REMOVE_DUPLICATES CMAKE_C_FLAGS_RELWITHDEBINFO)
 list(REMOVE_DUPLICATES CMAKE_CXX_FLAGS_RELWITHDEBINFO)
@@ -1084,10 +1049,10 @@ endif ()
 
 find_path(SPNAV_INCLUDE_DIR spnav.h)
 if (SPNAV_INCLUDE_DIR)
-    find_library(SPNAV_LIB NAMES libspnav.a) # Force linking libspnav statically
+    find_library(SPNAV_LIB NAMES libspnav.a spnav)
     if (SPNAV_LIB)
         add_definitions(-DHAVE_SPNAV)
-        message(STATUS "SPNAV library found")
+        message(STATUS "SPNAV library found: ${SPNAV_LIB}")
     else()
         message(STATUS "SPNAV library NOT found, Spacenavd not supported")
     endif()

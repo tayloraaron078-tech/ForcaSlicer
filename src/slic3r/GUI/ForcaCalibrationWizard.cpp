@@ -11,6 +11,7 @@
 #include "Tab.hpp"
 #include "MsgDialog.hpp"
 #include "Widgets/Label.hpp"
+#include "Widgets/StateColor.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Print.hpp"
@@ -18,6 +19,7 @@
 #include "libslic3r/Utils.hpp" // resources_dir()
 
 #include <boost/filesystem/path.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <wx/sizer.h>
 #include <wx/panel.h>
@@ -1409,29 +1411,8 @@ void ForcaCalibrationWizard::launch_current_test(bool send_after)
 
     if (send_after) {
         // Fully automated: put the test on the plate, slice it, then run the printer's Print action, then
-        // land on the result page. The one-shot hook fires when slicing+gcode finishes.
-        m_plater->set_one_shot_slice_completed_callback([this, has_result](bool ok) {
-            // Defer to the next idle so the slice-completed event fully unwinds before we open the
-            // (modal) send dialog. Opening it inline mis-set focus/z-order (dialog appeared only after
-            // a stray click, with the "blocked window" ding).
-            if (ok) {
-                CallAfter([this, has_result]() {
-                    forca_academy_mark_source("calibration_wizard: " + cal_id(m_cal));
-                    m_plater->print_current_plate(); // printer-specific send dialog (modal)
-                    if (has_result)
-                        show_result_page();
-                    else
-                        notify_state_changed(); // final check: nothing to enter, stay on its page
-                });
-            } else {
-                CallAfter([this]() {
-                    MessageDialog dlg(this,
-                        _L("Slicing did not finish, so nothing was sent. Fix the error and try again."),
-                        cal_display(), wxICON_WARNING | wxOK);
-                    dlg.ShowModal();
-                });
-            }
-        });
+        // land on the result page. The hook fires when slicing+gcode finishes.
+        arm_send_after_slice(has_result, 3);
         launch_calib(params, skip_confirm);
         m_plater->reslice();
         // Like the Slice button: show the Preview (in the tab's plate area) while it slices. no_slice: the
@@ -1446,6 +1427,43 @@ void ForcaCalibrationWizard::launch_current_test(bool send_after)
         update_status_label();
         notify_state_changed();
     }
+}
+
+void ForcaCalibrationWizard::arm_send_after_slice(bool has_result, int waits)
+{
+    m_plater->set_one_shot_slice_completed_callback([this, has_result, waits](bool ok) {
+        // A completion can arrive for an earlier slice that the test's own slice replaced (seen with the final
+        // check: the send dialog opened at ~80% of the real slice and saw an empty plate). Send only once the
+        // current plate has its G-code; otherwise wait for the next completion.
+        PartPlate* plate = m_plater->get_partplate_list().get_curr_plate();
+        const bool ready = plate && plate->is_valid_gcode_file();
+        BOOST_LOG_TRIVIAL(info) << "forca_wizard: slice completed for " << cal_id(m_cal) << ", ok " << ok << ", plate G-code ready " << ready
+                                << ", waits left " << waits;
+        if (ok && !ready && waits > 0) {
+            arm_send_after_slice(has_result, waits - 1);
+            return;
+        }
+        // Defer to the next idle so the slice-completed event fully unwinds before we open the
+        // (modal) send dialog. Opening it inline mis-set focus/z-order (dialog appeared only after
+        // a stray click, with the "blocked window" ding).
+        if (ok) {
+            CallAfter([this, has_result]() {
+                forca_academy_mark_source("calibration_wizard: " + cal_id(m_cal));
+                m_plater->print_current_plate(); // printer-specific send dialog (modal)
+                if (has_result)
+                    show_result_page();
+                else
+                    notify_state_changed(); // final check: nothing to enter, stay on its page
+            });
+        } else {
+            CallAfter([this]() {
+                MessageDialog dlg(this,
+                    _L("Slicing did not finish, so nothing was sent. Fix the error and try again."),
+                    cal_display(), wxICON_WARNING | wxOK);
+                dlg.ShowModal();
+            });
+        }
+    });
 }
 
 // ---- Shrinkage / final check (plain models, not Orca calib modes) ------------------------------
@@ -1964,6 +1982,36 @@ void ForcaCalibrationWizard::sys_color_changed()
     SetForegroundColour(fg);
     for (wxWindow* child : GetChildren())
         recolor(child);
+    Refresh();
+    // Back to light: finish after the generic pass, which runs after this and can't undo its own dark-mode changes.
+    if (!dark)
+        CallAfter([this]() { restore_light_colours(); });
+}
+
+void ForcaCalibrationWizard::restore_light_colours()
+{
+    if (wxGetApp().dark_mode())
+        return; // switched back to dark meanwhile
+    // In dark mode GUI_App's generic pass raises the lightness of colours its table doesn't know (notes, native
+    // buttons and choices, the printer track); its light-mode pass maps only table colours back, so those stayed light
+    // on white. Put the light palette back, and darken text that is still too light to read on a light background
+    // (text on a coloured button keeps its colour).
+    std::function<void(wxWindow*)> fix = [&](wxWindow* w) {
+        const wxColour bg = w->GetBackgroundColour();
+        if (bg == wizard_bg(true) || bg == wxColour("#2D2D31") || (bg.IsOk() && StateColor::GetLightness(bg) < 35))
+            w->SetBackgroundColour(wizard_bg(false));
+        const wxColour fg = w->GetForegroundColour();
+        if (fg == wizard_fg(true) || fg == wxColour("#B2B3B5"))
+            w->SetForegroundColour(wizard_fg(false));
+        else if (fg.IsOk() && StateColor::GetLightness(fg) > 60 && StateColor::GetLightness(w->GetBackgroundColour()) > 70)
+            w->SetForegroundColour(StateColor::SetLightness(fg, 40));
+        for (wxWindow* child : w->GetChildren())
+            fix(child);
+    };
+    fix(this);
+    m_warn_panel->SetBackgroundColour(wxColour("#FFF3E0"));
+    m_warn_text->SetForegroundColour(wxColour("#8A4B00"));
+    update_status_label(); // sets the status line's own colour
     Refresh();
 }
 

@@ -2,6 +2,7 @@
 #include "slic3r/Utils/ForcaFeatures.hpp"
 #include "ForcaAcademy.hpp"
 #include "ForcaObnChoice.hpp"
+#include "ForcaReset.hpp"
 #include "CloudProvider.hpp"
 #include "OptionsGroup.hpp"
 #include "GUI_App.hpp"
@@ -381,7 +382,7 @@ wxBoxSizer *PreferencesDialog::create_item_combobox(wxString title, wxString too
 
     auto current_setting = app_config->get(param);
     if (!current_setting.empty()) {
-        auto compare  = [current_setting](string possible_setting) { return current_setting == possible_setting; };
+        auto compare  = [current_setting](std::string possible_setting) { return current_setting == possible_setting; };
         auto iterator = find_if(config_name_index.begin(), config_name_index.end(), compare);
         if (iterator != config_name_index.end())
             current_index = static_cast<unsigned int>(iterator - config_name_index.begin());
@@ -590,7 +591,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
 wxBoxSizer *PreferencesDialog::create_item_region_combobox(wxString title, wxString tooltip)
 {
 
-    std::vector<wxString> Regions         = {_L("Asia-Pacific"), _L("China"), _L("Europe"), _L("North America"), _L("Others")};
+    std::vector<wxString> Regions         = {_L("Asia-Pacific"), _L("China"), _L("Europe"), _L("North America"), _L_CONTEXT("Others", "Region")};
     std::vector<wxString> local_regions = {"Asia-Pacific", "China", "Europe", "North America", "Others"};
 
     auto vlist = Regions;
@@ -1492,8 +1493,10 @@ void PreferencesDialog::refresh_network_version_combo()
 #ifdef WIN32
 wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
 {
-    wxString title = _L("Associate") + (boost::format(" %1%://") % url_prefix.c_str()).str();
-    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with OrcaSlicer so that Orca can open models from") + " " + website_name;
+    // TRN %s is a URL scheme, for example "prusaslicer".
+    wxString title = wxString::Format(_L("Associate %s://"), url_prefix);
+    // TRN The first %s is a URL scheme, for example "prusaslicer"; the second is a website name.
+    wxString tooltip = wxString::Format(_L("Associate %s:// with OrcaSlicer so that Orca can open models from %s"), url_prefix, website_name);
 
     std::wstring registered_bin; // not used, just here to provide a ref to check fn
     bool reg_to_current_instance = wxGetApp().check_url_association(url_prefix.ToStdWstring(), registered_bin);
@@ -1771,7 +1774,7 @@ void PreferencesDialog::create_items()
     g_sizer->Add(create_item_title(_L("Project")), 1, wxEXPAND);
 
     std::vector<wxString> projectLoadSettingsBehaviourOptions = {_L("Load All"), _L("Ask When Relevant"), _L("Always Ask"), _L("Load Geometry Only")};
-    std::vector<string>   projectLoadSettingsConfigOptions    = { OPTION_PROJECT_LOAD_BEHAVIOUR_LOAD_ALL, OPTION_PROJECT_LOAD_BEHAVIOUR_ASK_WHEN_RELEVANT, OPTION_PROJECT_LOAD_BEHAVIOUR_ALWAYS_ASK, OPTION_PROJECT_LOAD_BEHAVIOUR_LOAD_GEOMETRY };
+    std::vector<std::string> projectLoadSettingsConfigOptions    = { OPTION_PROJECT_LOAD_BEHAVIOUR_LOAD_ALL, OPTION_PROJECT_LOAD_BEHAVIOUR_ASK_WHEN_RELEVANT, OPTION_PROJECT_LOAD_BEHAVIOUR_ALWAYS_ASK, OPTION_PROJECT_LOAD_BEHAVIOUR_LOAD_GEOMETRY };
     auto item_project_load     = create_item_combobox(_L("Load behavior"), _L("Should printer/filament/process settings be loaded when opening a 3MF file?"), SETTING_PROJECT_LOAD_BEHAVIOUR, projectLoadSettingsBehaviourOptions, projectLoadSettingsConfigOptions);
     g_sizer->Add(item_project_load);
 
@@ -1900,9 +1903,34 @@ void PreferencesDialog::create_items()
            "be skipped while another app is watching."),
         "forca_academy_photo_minutes", 0, 120);
     g_sizer->Add(item_academy_photos);
+    // Forca: the journal Insights' "Possible pattern" rule (forca_academy_pattern_rule): N of the last M prints.
+    if (app_config->get("forca_academy_pattern_count").empty())
+        app_config->set("forca_academy_pattern_count", "3");
+    if (app_config->get("forca_academy_pattern_window").empty())
+        app_config->set("forca_academy_pattern_window", "10");
+    auto item_pattern_count = create_item_spinctrl(_L("Possible pattern after"), "", _L("prints"),
+        _L("The journal's Insights point out a possible pattern when the same problem tag is on this many of the recent "
+           "prints with one printer and filament."),
+        "forca_academy_pattern_count", 2, 50);
+    g_sizer->Add(item_pattern_count);
+    auto item_pattern_window = create_item_spinctrl(_L("Recent prints to look at"), "", _L("prints"),
+        _L("How many of the latest prints with an outcome, per printer and filament, the pattern rule looks at."),
+        "forca_academy_pattern_window", 2, 100);
+    g_sizer->Add(item_pattern_window);
+    // Forca: the send dialogs' "Before you print" block (ForcaBeforeYouPrint.hpp); on by default, works without the
+    // journal (the history line then simply isn't there).
+    if (app_config->get("forca_before_you_print").empty())
+        app_config->set_bool("forca_before_you_print", true);
+    auto item_before_you_print = create_item_checkbox(_L("Show \"Before you print\" when sending"),
+        _L("The send dialog lists the settings you changed and didn't save, the values that most often decide a print "
+           "and, with the print journal on, how earlier prints with the same printer and filament went. It never stops "
+           "a print from being sent."),
+        "forca_before_you_print");
+    g_sizer->Add(item_before_you_print);
     {
         wxBoxSizer*    row  = create_item_label(_L("Forca Academy folder"),
-            _L("Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."));
+            _L("Where the print journal is kept: a Forca Academy folder in the place you choose, with plain Markdown and "
+               "JSON files. An AI reading it starts with AGENTS.md."));
         const wxString dir     = from_path(forca_academy_dir());
         const wxSize   path_sz(FromDIP(380), -1);
         auto*          path    = new wxStaticText(m_parent, wxID_ANY, dir, wxDefaultPosition, path_sz, wxST_ELLIPSIZE_MIDDLE);
@@ -1914,12 +1942,14 @@ void PreferencesDialog::create_items()
         auto* browse = new Button(m_parent, _L("Browse") + dots);
         browse->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
         browse->Bind(wxEVT_BUTTON, [this, path](wxCommandEvent&) {
-            wxDirDialog dlg(this, _L("Choose the Forca Academy folder"), from_path(forca_academy_dir()), wxDD_NEW_DIR_BUTTON);
+            wxDirDialog dlg(this, _L("Choose where to keep the Forca Academy folder"), from_path(forca_academy_dir().parent_path()),
+                            wxDD_NEW_DIR_BUTTON);
             if (dlg.ShowModal() != wxID_OK)
                 return;
             app_config->set("forca_academy_dir", into_u8(dlg.GetPath()));
-            path->SetLabelText(dlg.GetPath());
-            path->SetToolTip(dlg.GetPath());
+            const wxString dir = from_path(forca_academy_dir()); // a Forca Academy folder inside the chosen one
+            path->SetLabelText(dir);
+            path->SetToolTip(dir);
         });
         auto* open = new Button(m_parent, _L("Open"));
         open->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
@@ -1938,6 +1968,17 @@ void PreferencesDialog::create_items()
         path_row->AddSpacer(FromDIP(DESIGN_LEFT_MARGIN) + DESIGN_TITLE_SIZE.GetWidth() + FromDIP(5));
         path_row->Add(path, 0, wxALIGN_CENTER_VERTICAL | wxBOTTOM, FromDIP(3));
         g_sizer->Add(path_row);
+    }
+    {
+        // Forca: "Reset Forca data" (ForcaReset.hpp), also in the Forca AI window and the Print Journal.
+        wxBoxSizer* row   = create_item_label(_L("Reset Forca data"),
+            _L("Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration Wizard history or all "
+               "of Forca. Everything moves to a backup folder first."));
+        auto*       reset = new Button(m_parent, _L("Reset") + dots);
+        reset->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        reset->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { forca_reset_show_dialog(this); });
+        row->Add(reset, 0, wxALIGN_CENTER_VERTICAL);
+        g_sizer->Add(row);
     }
 
 #if 0

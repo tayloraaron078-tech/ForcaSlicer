@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     Forca renames itself in many small places: its own settings folder, exe/DLL and installer names, file
-    associations, the product name in the interface (forca_brand / ForcaBrand), dialog titles, and icon/logo
+    associations, the product name in the interface (forca_brand), dialog titles, and icon/logo
     files. An upstream merge can silently undo any of them. This script is the executable list of those
     changes: every FAIL is something the merge lost and must be restored (see docs/forca/upstream-merge.md).
 
@@ -41,7 +41,7 @@ $must = @(
     @('src/slic3r/GUI/I18N.hpp',                    'return forca_brand(s, wxGetTranslation(s)); }'),
     @('src/slic3r/GUI/I18N.cpp',                    'wxString forca_brand(const wxString &source, const wxString &translated)'),
     @('tests/slic3rutils/CMakeLists.txt',           'test_forca_brand.cpp'),
-    @('resources/web/data/text.js',                 'function ForcaBrand(s)'),
+    @('src/slic3r/GUI/WebGuideDialog.cpp',          'This disables all cloud features, such as Bambu Cloud.'), # web pages translate through _u8L -> forca_brand
     @('src/CMakeLists.txt',                         'OUTPUT_NAME "forca-slicer"'),
     @('src/CMakeLists.txt',                         'set_target_properties(OrcaSlicer PROPERTIES OUTPUT_NAME "ForcaSlicer")'),
     @('src/OrcaSlicer_app_msvc.cpp',                'L"ForcaSlicer.dll"'),
@@ -55,7 +55,6 @@ $must = @(
     @('src/slic3r/GUI/MainFrame.cpp',               'wxBITMAP_TYPE_ICO), SLIC3R_APP_NAME)'),
     @('src/slic3r/GUI/WebGuideDialog.cpp',          'wxID_ANY, SLIC3R_APP_NAME, wxDefaultPosition'),
     @('src/slic3r/GUI/WebUserLoginDialog.cpp',      'wxID_ANY, SLIC3R_APP_NAME)'),
-    @('src/slic3r/GUI/WebDownPluginDlg.cpp',        'wxID_ANY, SLIC3R_APP_NAME)'),
     # Upstream made the login-page text translatable (2026-10 merge): _u8L() goes through forca_brand(), which shows
     # "Forca Slicer" -- so check that the translated path is still used rather than a hard-coded "OrcaSlicer".
     @('src/slic3r/GUI/HttpServer.cpp',              '_u8L("You can return to OrcaSlicer'),
@@ -66,7 +65,6 @@ $must = @(
     @('src/slic3r/GUI/MsgDialog.cpp',               '"OrcaSlicer_192px.png" /* Forca logo'),
     @('src/slic3r/GUI/ReleaseNote.cpp',             'create_scaled_bitmap("OrcaSlicer_192px.png"'),
     @('src/slic3r/GUI/UpdateDialogs.cpp',           'create_scaled_bitmap("OrcaSlicer_192px.png"'),
-    @('src/slic3r/GUI/SysInfoDialog.cpp',           'ScalableBitmap(this, "OrcaSlicer_192px.png", 192)'),
     @('src/slic3r/GUI/TroubleshootDialog.cpp',      '"ForcaSlicer_Logs_"'),
     @('src/slic3r/GUI/AboutDialog.cpp',             'wxString::FromUTF8("Forca Slicer © 2026 A.T. Creations, licensed under the GNU AGPL-3.0.\n"'),
     @('src/slic3r/GUI/AboutDialog.cpp',             '_u8L("Source code") + ": <a style=\"color:#009789\" href=\"" + FORCA_REPO_URL'),

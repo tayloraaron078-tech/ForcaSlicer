@@ -20,6 +20,11 @@ namespace Slic3r { class ICloudServiceAgent; }
 
 namespace Slic3r {
 
+// Forca: one log line for a failed Moonraker request: the error plus the URL, the answering server (from the
+// response headers), whether an X-Api-Key header was sent and the start of the reply. Never includes the key.
+std::string moonraker_describe_failed_request(const std::string& url, const std::string& error, const std::string& headers,
+                                              const std::string& body, bool api_key_sent);
+
 class MoonrakerPrinterAgent : public IPrinterAgent
 {
 public:

@@ -20,12 +20,17 @@ namespace Slic3r { namespace GUI {
 
 // Forca Academy's Print Journal (HQ PLAN_forca_academy.md §4): the recorded prints, newest first; for the selected
 // one its picture and details, the outcome (result, quick tags, a note) and its photos. "Add a print" records the
-// current plate for prints Forca did not send (e.g. from an SD card). When the journal is off it offers to turn it on.
+// current plate for prints Forca did not send (e.g. from an SD card). Two selected prints can be compared (and saved
+// as an experiment); Insights show groups, possible patterns and experiments. When the journal is off it offers to
+// turn it on.
 // Changes to a print are saved when you press Save, pick another print or close the window.
 class ForcaPrintJournalDialog : public wxDialog
 {
 public:
     explicit ForcaPrintJournalDialog(wxWindow* parent);
+    // Forca: opens on just the prints in `only` (a "Show all" button lifts the filter), e.g. the earlier prints the
+    // send dialog's "Before you print" line counted. `filter_label` says what the filter is.
+    ForcaPrintJournalDialog(wxWindow* parent, std::vector<boost::filesystem::path> only, const wxString& filter_label);
 
     void add_photos(const std::vector<boost::filesystem::path>& files); // to the selected print (also drag & drop)
 
@@ -36,8 +41,10 @@ private:
     void save();
     void update_photos();
     void update_state();
+    void update_compare(); // "Compare" needs exactly two selected prints
 
-    std::vector<ForcaAcademyPrint> m_prints;
+    std::vector<ForcaAcademyPrint>       m_prints;
+    std::vector<boost::filesystem::path> m_only; // when not empty, the list shows only these prints
     long                           m_row     = -1;
     bool                           m_dirty   = false;
     bool                           m_loading = false;
@@ -55,6 +62,10 @@ private:
     wxStaticText*            m_photos     = nullptr;
     wxButton*                m_save       = nullptr;
     wxButton*                m_add_print  = nullptr;
+    wxButton*                m_compare    = nullptr;
 };
+
+// The journal's label for an outcome tag key ("stringing" -> "Stringing", translated); the key itself if unknown.
+wxString forca_journal_tag_label(const std::string& key);
 
 }} // namespace Slic3r::GUI

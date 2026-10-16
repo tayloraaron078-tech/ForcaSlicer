@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
-All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `78f74a6276` on
-2026-10-06; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `008ee792f6` on
+2026-10-14; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -11,6 +11,80 @@ newest first. Keep this file up to date with every change that ships (see
 Commit hashes in entries up to `0.1.0-alpha.1` refer to Forca's private development history, from before the public
 repository; the public repository starts with Forca `0.1.0-alpha.1` as one commit on top of OrcaSlicer's history.
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
+
+## Unreleased
+
+## 0.1.0-alpha.6 — 2026-10-16
+
+### Added
+- **"Before you print" in the send dialogs** (Bambu's print dialog and the Klipper, Flashforge, Elegoo, Creality and
+  other print-host upload dialogs). It lists the settings you changed and didn't save, with the preset's value, and
+  under "Details" the values that most often decide a print: layer height, infill pattern and density, supports,
+  brim, nozzle, and per filament its temperatures, bed temperature and max volumetric speed. With the print journal
+  on, it also says how earlier prints with the same printer and filament went, with a link to them. It never stops
+  a print from being sent; switch it off in Preferences > Forca Academy.
+- **Print Journal Insights** (File > Print Journal > Insights): your prints grouped by printer, filament or process,
+  with how many went well, partly or failed, the most common problem (and how many of those prints still came out
+  fine) and the last failure. Double-click a group to see its prints.
+- **Compare two prints** in the Print Journal: select two prints (Ctrl+click) and press Compare to see the printer,
+  presets, estimates and outcome side by side, then every setting that differed. Prints recorded from now on keep all
+  their settings (a `settings.json` next to the record); for older prints only the settings changed from the presets
+  are compared. "Save as experiment" writes a page with both prints and what differed, for you to add the result.
+- **Possible patterns and lessons.** Insights point out when the same problem keeps coming back with one printer and
+  filament (3 of the last 10 prints by default; change it there or in Preferences). A problem counts on every print
+  with a result, also a successful one, and the pattern says how many of those were successful. "Write a lesson"
+  opens a draft for your lessons page, with links to the prints, that you edit and rate before saving; "Don't show
+  again" hides one. Insights also list your experiments.
+- **Starter playbooks and a summary page in the Academy folder.** One playbook per problem tag (stringing, warping,
+  ...) with likely causes, checks and the Forca settings and Calibration Wizard tests for it, written once and never
+  overwritten; the journal's Playbooks button opens them. The folder's INDEX page gets a block Forca keeps current:
+  prints and success rates per printer and filament, open patterns and the latest lessons.
+- **Forca AI can see the Insights and compare prints** (two new read-only tools), so an AI sees the same patterns and
+  differences you do.
+- **Reset Forca data** (Preferences, the Forca AI window and the Print Journal): start again from scratch with the
+  print journal, Forca AI, the projects the AI saved, the Calibration Wizard history, or all of Forca as on a fresh
+  install. Nothing is deleted: everything moves to `Documents/Forca reset backups/<date time>`. Forca closes, and the
+  reset happens when you open it again.
+- **The Forca Academy folder is always a folder of its own.** The folder you pick in Preferences now gets a "Forca
+  Academy" folder inside it, so the journal never mixes with your other files. A journal you already keep directly
+  in a folder you picked stays where it is.
+- **The process Speed page says when a filament uses its own overhang speeds.** A filament with "Override overhang
+  speed" replaces the process overhang and bridge speeds, which the process page didn't show. A note under
+  "Overhang speed" now names those filaments.
+
+### Changed
+- **Merged OrcaSlicer up to `008ee792f6` (2026-10-14)**, the code OrcaSlicer is releasing as 2.5.0-alpha (815
+  commits): belt printers, texture displacement painting, Adaptive TPMS infill, centre-of-mass markers, mixed nozzle
+  sizes on the H2D and X2D, a rewritten Fix Model, web pages translated like the rest of the app, the 02.08.04 Bambu
+  network plug-in series, and many fixes. Opening a BambuStudio project no longer shows OrcaSlicer's general
+  "settings may differ" messages (they go to the log); a project from a newer BambuStudio still lists the settings
+  Forca doesn't know, as before.
+- **The Forca AI window and its print cards are translated** into all of OrcaSlicer's 22 languages (by machine for
+  now; corrections welcome).
+- **Clearer logs for Klipper (Moonraker) connection problems.** When the server info, lane data or Happy Hare query
+  fails, the log line now shows the address, which server answered, whether an API key header was sent (never the
+  key) and the start of the reply, so a log tells whether the printer or something in between answered.
+
+### Fixed
+- **Open Bamboo Networking stays chosen when Forca's Bambu network plug-in moves to a new version.** This update moves
+  to Bambu's 02.08.04 plug-in; Forca now puts OBN in place for it at start-up (from files it already has, or after
+  asking to download the latest OBN release) instead of quietly switching back to Bambu Lab's plug-in.
+- **Calibration Wizard: text stayed light after switching dark mode off.** Labels, buttons and choices now take
+  their light-mode colours again.
+- **Forca AI keeps the same key for every Forca on your computer**, so an AI client you connected once keeps
+  working with any Forca you run (for example a test build next to the installed one). Your current key carries over
+  when you update; nothing needs to be reconnected.
+- **Calibration Wizard: "Slice & send" no longer opens the send dialog before slicing has finished.** On the final
+  check it opened at about 80% and reported an empty plate; the wizard now sends only once the plate's G-code is ready.
+- **G-code made by stock OrcaSlicer opens in Forca** (the G-code viewer refused it), so a good G-code file you kept
+  from OrcaSlicer still works.
+- **Slicing from the command line failed for every Bambu Lab printer** ("Vendor bundle contains invalid presets").
+  Bambu's shared process profile still carried "pre-start fan time", which Forca reads from the filament; the app
+  ignored the stray copy, but the command line rejected the whole Bambu profile set. The stray copy is removed
+  (Bambu profiles version 02.08.00.19); prints are unchanged.
+- **A web site opened in the Home tab could send requests to Forca.** Links and new windows can load a site into
+  the Home tab, and its scripts could use the same channel as Forca's own home page (to open files, among other
+  things). Forca now answers only its own local pages.
 
 ## 0.1.0-alpha.5 — 2026-10-10
 

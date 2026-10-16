@@ -6,6 +6,7 @@
 #include "MsgDialog.hpp"
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Utils.hpp"
+#include "slic3r/Utils/BBLNetworkPlugin.hpp"
 #include "slic3r/Utils/ForcaOBN.hpp"
 #include "slic3r/Utils/NetworkAgent.hpp"
 #include "slic3r/Utils/bambu_networking.hpp"
@@ -23,7 +24,7 @@ namespace Slic3r { namespace GUI {
 
 namespace {
 
-// OBN publishes builds for the current plug-in series only (lib/v02.08.01 in 2.2.0).
+// OBN always runs as the plug-in series this Forca build loads (OrcaSlicer's latest whitelisted series).
 std::string obn_series() { return get_latest_network_version(); }
 
 AppConfig* cfg() { return wxGetApp().app_config; }
@@ -40,7 +41,17 @@ void set_tags(const std::string& tag, const std::string& previous)
 void select_for_restart(const std::string& version)
 {
     cfg()->set_network_plugin_version(version);
+    cfg()->set_bool("forca_obn_chosen", forca_obn_is_obn_version(version));
     cfg()->save();
+}
+
+// Bambu Lab's plug-in for this series, or the normal download when it isn't on disk (start-up, before it loads).
+void fall_back_to_bambu()
+{
+    std::string err;
+    if (!forca_obn_restore_bambu_camera(err))
+        BOOST_LOG_TRIVIAL(warning) << "forca_obn: " << err;
+    select_for_restart(BBLNetworkPlugin::versioned_library_exists(obn_series()) ? obn_series() : std::string());
 }
 
 wxString obn_warning()
@@ -62,9 +73,7 @@ bool install_and_select(wxWindow* parent, const ForcaObnRelease* release, const 
     {
         wxBusyCursor busy;
         wxBusyInfo   info(_L("Getting Open Bamboo Networking..."), parent);
-        const auto   cached = forca_obn_cached_tags();
-        if (release && std::find(cached.begin(), cached.end(), tag) == cached.end() &&
-            !forca_obn_download(*release, obn_series(), err)) {
+        if (release && !forca_obn_has_series(tag, obn_series()) && !forca_obn_download(*release, err)) {
             MessageDialog(parent, _L("Could not download Open Bamboo Networking:") + "\n" + from_u8(err), _L("Network plug-in"),
                           wxOK | wxICON_ERROR).ShowModal();
             return false;
@@ -82,6 +91,7 @@ bool install_and_select(wxWindow* parent, const ForcaObnRelease* release, const 
 } // namespace
 
 bool forca_obn_active() { return forca_obn_is_obn_version(cfg()->get_network_plugin_version()); }
+bool forca_obn_chosen() { return cfg()->get_bool("forca_obn_chosen") || forca_obn_active(); }
 std::string forca_obn_tag() { return cfg()->get("forca_obn_tag"); }
 std::string forca_obn_previous_tag() { return cfg()->get("forca_obn_previous_tag"); }
 
@@ -102,11 +112,10 @@ bool forca_obn_switch(wxWindow* parent, bool to_obn)
     if (MessageDialog(parent, obn_warning(), _L("Switch to Open Bamboo Networking?"), wxYES_NO | wxICON_WARNING).ShowModal() != wxID_YES)
         return false;
 
-    // Reuse the build used before; otherwise get the latest release.
+    // Reuse the build used before when it has this plug-in series; otherwise get the latest release.
     std::string tag = forca_obn_tag();
-    const auto  cached = forca_obn_cached_tags();
     ForcaObnRelease release;
-    if (tag.empty() || std::find(cached.begin(), cached.end(), tag) == cached.end()) {
+    if (!forca_obn_has_series(tag, obn_series())) {
         std::string err;
         wxBusyCursor busy;
         if (!forca_obn_fetch_latest(release, err)) {
@@ -162,8 +171,7 @@ bool forca_obn_rollback(wxWindow* parent)
 {
     const std::string current  = forca_obn_tag();
     const std::string previous = forca_obn_previous_tag();
-    const auto        cached   = forca_obn_cached_tags();
-    if (previous.empty() || std::find(cached.begin(), cached.end(), previous) == cached.end()) {
+    if (!forca_obn_has_series(previous, obn_series())) { // not on disk, or no build for this plug-in series
         MessageDialog(parent, _L("There is no earlier Open Bamboo Networking release to go back to."), _L("Network plug-in"),
                       wxOK | wxICON_INFORMATION).ShowModal();
         return false;
@@ -206,6 +214,65 @@ void forca_obn_note_last_crash()
         BOOST_LOG_TRIVIAL(info) << "forca_obn: the last crash (" << newest.filename().string() << ") was in Bambu's network plug-in";
         cfg()->set_bool("forca_obn_offer_pending", true);
     }
+}
+
+void forca_obn_follow_series()
+{
+    const std::string configured = cfg()->get_network_plugin_version();
+    if (!forca_obn_chosen())
+        return;
+    cfg()->set_bool("forca_obn_chosen", true); // an older config said so only through the version name
+    const std::string series = obn_series();
+    std::string       tag    = forca_obn_tag();
+    // An older Forca kept the build flat in the cache; it was for the series it ran.
+    if (!tag.empty() && forca_obn_is_obn_version(configured))
+        forca_obn_adopt_flat_cache(tag, network_plugin_series(configured));
+    const std::vector<std::string> cached = tag.empty() ? std::vector<std::string>() : forca_obn_cached_series(tag);
+    std::string err;
+    switch (forca_obn_startup(true, configured, series, cached, forca_obn_plugin_present(series))) {
+    case ForcaObnStartup::NotChosen:
+    case ForcaObnStartup::Ready: return;
+    case ForcaObnStartup::Activate:
+        if (forca_obn_activate(tag, series, err)) {
+            BOOST_LOG_TRIVIAL(info) << "forca_obn: following the plug-in series " << series << " with cached OBN " << tag;
+            select_for_restart(forca_obn_version(series));
+            return;
+        }
+        BOOST_LOG_TRIVIAL(warning) << "forca_obn: " << err;
+        break;
+    case ForcaObnStartup::Download: break;
+    }
+
+    // Nothing for this series on disk: ask before downloading (the window isn't up yet, so no parent).
+    BOOST_LOG_TRIVIAL(info) << "forca_obn: OBN chosen, no build on disk for the plug-in series " << series << " (configured " << configured << ")";
+    const wxString question = wxString::Format(
+        _L("You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN "
+           "files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, "
+           "Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences."),
+        from_u8(series), from_u8(series));
+    if (MessageDialog(nullptr, question, _L("Network plug-in"), wxYES_NO | wxICON_QUESTION).ShowModal() == wxID_YES) {
+        ForcaObnRelease release;
+        bool            ok = false;
+        {
+            wxBusyCursor busy;
+            wxBusyInfo   info(_L("Getting Open Bamboo Networking..."));
+            ok = forca_obn_fetch_latest(release, err) &&
+                 (forca_obn_has_series(release.tag, series) || forca_obn_download(release, err)) &&
+                 forca_obn_activate(release.tag, series, err);
+        }
+        if (ok) {
+            if (release.tag != tag)
+                set_tags(release.tag, tag);
+            select_for_restart(forca_obn_version(series));
+            BOOST_LOG_TRIVIAL(info) << "forca_obn: OBN " << release.tag << " now runs as plug-in " << series;
+            return;
+        }
+        BOOST_LOG_TRIVIAL(warning) << "forca_obn: could not get OBN for " << series << ": " << err;
+        MessageDialog(nullptr, _L("Could not get Open Bamboo Networking for this plug-in:") + "\n" + from_u8(err) + "\n\n" +
+                                   _L("Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences."),
+                      _L("Network plug-in"), wxOK | wxICON_WARNING).ShowModal();
+    }
+    fall_back_to_bambu();
 }
 
 void forca_obn_check_loaded(wxWindow* parent)

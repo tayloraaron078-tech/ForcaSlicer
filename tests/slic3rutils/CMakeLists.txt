@@ -40,9 +40,16 @@ add_executable(${_TEST_NAME}_tests
     test_forca_academy.cpp
     test_forca_host_status.cpp
     test_forca_ai_autonomy.cpp
+    test_forca_ai_connection.cpp
+    test_forca_reset.cpp
     test_forca_ai_keys.cpp
     test_forca_obn.cpp
+    test_forca_moonraker_agent.cpp
+    test_forca_webview.cpp
+    test_plugin_json_depth.cpp
     test_shortcuts.cpp
+    test_texture_color_palette.cpp
+    test_texture_island_view.cpp
     test_file_url.cpp
     test_user_manager.cpp
     ../fff_print/test_helpers.cpp

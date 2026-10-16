@@ -25,7 +25,6 @@
 #include <wx/dataview.h>
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/dataview.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
@@ -38,7 +37,6 @@
 #include <wx/dialog.h>
 #include <wx/popupwin.h>
 #include <wx/spinctrl.h>
-#include <wx/artprov.h>
 #include <wx/wrapsizer.h>
 #include <wx/srchctrl.h>
 
@@ -310,6 +308,7 @@ private:
 };
 
 class PrinterInfoBox;
+class ForcaBeforeYouPrintPanel;
 class SelectMachineDialog : public DPIDialog
 {
 private:
@@ -337,7 +336,7 @@ private:
     wxColour                            m_colour_bold_color{wxColour(38, 46, 48)};
     StateColor                          m_btn_bg_enable;
 
-    std::unordered_map<string, PrintOption*> m_checkbox_list;
+    std::unordered_map<std::string, PrintOption*> m_checkbox_list;
     std::list<PrintOption*>                  m_checkbox_list_order;
 
     std::shared_ptr<int>                m_token = std::make_shared<int>(0);
@@ -389,6 +388,7 @@ protected:
     wxBoxSizer*                         m_mapping_sugs_sizer{ nullptr };
     wxBoxSizer*                         m_change_filament_times_sizer{ nullptr };
     wxBoxSizer*                         m_warn_when_drying_sizer{ nullptr };
+    ForcaBeforeYouPrintPanel*           m_forca_before_you_print{ nullptr }; // Forca: "Before you print"
     Button*                             m_button_ensure{ nullptr };
     wxStaticBitmap *                    m_rename_button{nullptr};
     wxStaticBitmap*                     m_staticbitmap{ nullptr };
@@ -617,6 +617,7 @@ public:
 
     PrintFromType get_print_type() {return m_print_type;};
     int         get_print_plate_idx() const { return m_print_plate_idx; } // Forca Academy: the plate that was sent
+    void        refresh_forca_before_you_print(); // Forca: for the plate and printer now selected
     const std::vector<FilamentInfo>& get_ams_mapping_list() const { return m_ams_mapping_result; } // Forca Academy: trays used
     wxString    format_steel_name(NozzleType type);
     PrintDialogStatus  get_status() { return m_print_status; }

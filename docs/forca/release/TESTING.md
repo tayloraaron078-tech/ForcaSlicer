@@ -17,7 +17,9 @@ report what happens** — good or bad. A report of "it worked on my Prusa MK4 wi
    choose a different interface filament (for example PETG under PLA). Slice, check the preview colors, print.
 3. **Calibration Wizard:** calibrate one filament end to end (Calibration Wizard tab). Did each step make sense?
    Did the result improve your prints?
-4. **Forca AI (only if you use an AI assistant like Claude Code):** turn it on in the Forca AI window, connect your
+4. **Forca Academy:** turn on the print journal (Preferences → Forca Academy), send a few prints and mark how they
+   went. Do "Before you print", Insights and Compare tell you something useful?
+5. **Forca AI (only if you use an AI assistant like Claude Code):** turn it on in the Forca AI window, connect your
    assistant, and ask it to prepare a print. Tell us what it got right and wrong.
 
 ## How to report

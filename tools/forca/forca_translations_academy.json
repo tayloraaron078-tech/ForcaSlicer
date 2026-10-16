@@ -893,60 +893,6 @@
       }
     },
     {
-      "msgid": "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md.",
-      "translations": {
-        "ca": "On es guarda el diari d'impressió: fitxers Markdown i JSON senzills. Una IA comença per AGENTS.md.",
-        "cs": "Kde je deník tisku uložen: obyčejné soubory Markdown a JSON. AI začíná souborem AGENTS.md.",
-        "de": "Wo das Druckjournal liegt: einfache Markdown- und JSON-Dateien. Eine KI beginnt mit AGENTS.md.",
-        "es": "Dónde se guarda el diario de impresión: archivos Markdown y JSON sencillos. Una IA empieza por AGENTS.md.",
-        "eu": "Inprimaketa-egunkaria non gordetzen den: Markdown eta JSON fitxategi soilak. AA batek AGENTS.md-tik hasten du.",
-        "fr": "Où le journal d'impression est conservé : de simples fichiers Markdown et JSON. Une IA commence par AGENTS.md.",
-        "hu": "Hol tárolódik a nyomtatási napló: egyszerű Markdown és JSON fájlok. Egy MI az AGENTS.md-vel kezd.",
-        "it": "Dove viene tenuto il diario di stampa: semplici file Markdown e JSON. Un'IA inizia da AGENTS.md.",
-        "ja": "プリントジャーナルの保存先: シンプルな Markdown と JSON ファイルです。AI は AGENTS.md から読み始めます。",
-        "ko": "출력 일지가 저장되는 곳: 일반 Markdown 및 JSON 파일입니다. AI는 AGENTS.md부터 읽습니다.",
-        "lt": "Kur laikomas spaudinių žurnalas: paprasti Markdown ir JSON failai. DI pradeda nuo AGENTS.md.",
-        "nl": "Waar het printlogboek staat: gewone Markdown- en JSON-bestanden. Een AI begint met AGENTS.md.",
-        "pl": "Gdzie przechowywany jest dziennik wydruków: zwykłe pliki Markdown i JSON. AI zaczyna od AGENTS.md.",
-        "pt_BR": "Onde o diário de impressão fica: arquivos Markdown e JSON simples. Uma IA começa pelo AGENTS.md.",
-        "ru": "Где хранится журнал печати: обычные файлы Markdown и JSON. ИИ начинает с AGENTS.md.",
-        "sv": "Var utskriftsjournalen sparas: vanliga Markdown- och JSON-filer. En AI börjar med AGENTS.md.",
-        "th": "ที่เก็บบันทึกการพิมพ์: ไฟล์ Markdown และ JSON ธรรมดา AI จะเริ่มอ่านจาก AGENTS.md",
-        "tr": "Baskı günlüğünün tutulduğu yer: sade Markdown ve JSON dosyaları. Bir yapay zekâ AGENTS.md ile başlar.",
-        "uk": "Де зберігається журнал друку: звичайні файли Markdown і JSON. ШІ починає з AGENTS.md.",
-        "vi": "Nơi lưu nhật ký in: các tệp Markdown và JSON thuần. AI bắt đầu bằng AGENTS.md.",
-        "zh_CN": "打印日志的存放位置：普通的 Markdown 和 JSON 文件。AI 从 AGENTS.md 开始读取。",
-        "zh_TW": "列印日誌的存放位置：一般的 Markdown 和 JSON 檔案。AI 從 AGENTS.md 開始讀取。"
-      }
-    },
-    {
-      "msgid": "Choose the Forca Academy folder",
-      "translations": {
-        "ca": "Tria la carpeta de Forca Academy",
-        "cs": "Vybrat složku Forca Academy",
-        "de": "Forca Academy-Ordner wählen",
-        "es": "Elegir la carpeta de Forca Academy",
-        "eu": "Aukeratu Forca Academy karpeta",
-        "fr": "Choisir le dossier Forca Academy",
-        "hu": "Forca Academy mappa kiválasztása",
-        "it": "Scegli la cartella Forca Academy",
-        "ja": "Forca Academy フォルダーを選択",
-        "ko": "Forca Academy 폴더 선택",
-        "lt": "Pasirinkti Forca Academy aplanką",
-        "nl": "Forca Academy-map kiezen",
-        "pl": "Wybierz folder Forca Academy",
-        "pt_BR": "Escolher a pasta do Forca Academy",
-        "ru": "Выбрать папку Forca Academy",
-        "sv": "Välj Forca Academy-mappen",
-        "th": "เลือกโฟลเดอร์ Forca Academy",
-        "tr": "Forca Academy klasörünü seçin",
-        "uk": "Вибрати папку Forca Academy",
-        "vi": "Chọn thư mục Forca Academy",
-        "zh_CN": "选择 Forca Academy 文件夹",
-        "zh_TW": "選擇 Forca Academy 資料夾"
-      }
-    },
-    {
       "msgid": "Open the Forca Academy folder (creating it and its starter files if needed).",
       "translations": {
         "ca": "Obre la carpeta de Forca Academy (i la crea amb els fitxers inicials si cal).",

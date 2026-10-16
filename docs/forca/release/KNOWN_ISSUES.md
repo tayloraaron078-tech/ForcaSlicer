@@ -11,13 +11,14 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
   Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to early October 2026), not a stable Orca release.
+- **Built on OrcaSlicer's 2.5.0 development line** (merged up to mid-October 2026, the code OrcaSlicer is releasing
+  as 2.5.0-alpha), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
   enable it in Preferences). Forca hasn't changed it.
-- **Some of Forca's own screens are English only** (Forca AI window, support-region tools). The Calibration Wizard
-  is translated into all of OrcaSlicer's languages, by machine for now -- corrections welcome. The rest of the app
+- **Some of Forca's own text is English only** (parts of the support-region tools). The Calibration Wizard and the
+  Forca AI window are translated into all of OrcaSlicer's languages, by machine for now -- corrections welcome. The rest of the app
   keeps OrcaSlicer's translations.
 
 ## Regional support interfaces
