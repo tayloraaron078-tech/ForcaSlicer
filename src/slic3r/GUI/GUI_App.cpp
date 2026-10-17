@@ -4437,6 +4437,12 @@ void GUI_App::select_machine(const std::string& agent_id)
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": created new machine dev_id=" << dev_id;
     }
     existing->local_use_ssl = boost::istarts_with(print_host, "https://");
+    // Forca: the address (dev_ip) is the full "host:port" (dev_id). Earlier versions let the Moonraker agent overwrite
+    // it with the bare host, and the saved entry then sent every request to port 80 (ForcaSlicer issue #3).
+    if (existing->get_dev_ip() != dev_id) {
+        BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": machine address " << existing->get_dev_ip() << " repaired to " << dev_id;
+        existing->set_dev_ip(dev_id);
+    }
 
     // Use MonitorPanel::select_machine() to trigger full selection flow
     // This reuses existing logic for machine switching (UI updates, callbacks, etc.)

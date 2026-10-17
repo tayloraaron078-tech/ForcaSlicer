@@ -14,6 +14,12 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+### Fixed
+- **Klipper printers on a port other than 80 (for example a KX-Bridge on 7125) lost their port after the first
+  connection**, so filament sync and status requests went to port 80 and failed ("404 Not Found"). The saved printer
+  address now keeps its port, and an address that already lost it is repaired. (An OrcaSlicer bug; ForcaSlicer
+  issue #3.)
+
 ## 0.1.0-alpha.6 — 2026-10-16
 
 ### Added

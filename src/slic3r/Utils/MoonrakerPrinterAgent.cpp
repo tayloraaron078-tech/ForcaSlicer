@@ -124,6 +124,20 @@ std::string map_moonraker_state(std::string state)
 
 namespace Slic3r {
 
+// Forca: the machine entry stores its address as "host:port" (GUI_App creates it from print_host + port), and the
+// next connection splits it again (DeviceManager::connect_printer). Reporting the bare host back made the device
+// manager overwrite the stored address without the port, so every later connection went to port 80 (ForcaSlicer
+// issue #3: the KX-Bridge on :7125 never saw the requests; the printer's own web server answered 404).
+std::string moonraker_device_address(const std::string& host, const std::string& port)
+{
+    if (port.empty())
+        return host;
+    const std::string suffix = ":" + port;
+    if (host.size() >= suffix.size() && host.compare(host.size() - suffix.size(), suffix.size(), suffix) == 0)
+        return host;
+    return host + suffix;
+}
+
 // Forca: a failed request in the log with the URL, who answered (the Server header) and the start of the reply, so
 // a report shows whether the printer or something in between answered (ForcaSlicer issue #3: a KX-Bridge answered
 // curl, yet Forca's requests to the same URL got 404). The API key itself is never logged.
@@ -1141,7 +1155,7 @@ bool MoonrakerPrinterAgent::init_device_info(const std::string& dev_id, const st
     auto&       preset      = preset_bundle->printers.get_edited_preset();
     const auto& printer_cfg = preset.config;
 
-    device_info.dev_ip     = dev_ip;
+    device_info.dev_ip     = moonraker_device_address(dev_ip, port); // Forca: keep the port (see moonraker_device_address)
     device_info.api_key    = password;
     device_info.model_name = printer_cfg.opt_string("printer_model");
     device_info.model_id   = preset.get_printer_type(preset_bundle);

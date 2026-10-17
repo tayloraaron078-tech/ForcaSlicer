@@ -61,3 +61,12 @@ TEST_CASE("The last Server header wins after a redirect", "[ForcaMoonrakerAgent]
 
     CHECK_THAT(line, ContainsSubstring("server=aiohttp"));
 }
+
+TEST_CASE("The printer address the agent reports keeps the port", "[ForcaMoonrakerAgent]")
+{
+    // A KX-Bridge on port 7125: reporting the bare host sent every later request to port 80.
+    CHECK(moonraker_device_address("192.168.1.12", "7125") == "192.168.1.12:7125");
+    CHECK(moonraker_device_address("192.168.1.12", "") == "192.168.1.12");
+    CHECK(moonraker_device_address("192.168.1.12:7125", "7125") == "192.168.1.12:7125");
+    CHECK(moonraker_device_address("[fe80::1]", "7125") == "[fe80::1]:7125");
+}

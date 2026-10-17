@@ -25,6 +25,10 @@ namespace Slic3r {
 std::string moonraker_describe_failed_request(const std::string& url, const std::string& error, const std::string& headers,
                                               const std::string& body, bool api_key_sent);
 
+// Forca: the printer address the agent reports for a host and port: "host:port", or the host alone when there is no
+// port (or the host already ends with it).
+std::string moonraker_device_address(const std::string& host, const std::string& port);
+
 class MoonrakerPrinterAgent : public IPrinterAgent
 {
 public:
