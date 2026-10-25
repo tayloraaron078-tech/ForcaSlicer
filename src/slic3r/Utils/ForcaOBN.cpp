@@ -5,8 +5,14 @@
 #include "libslic3r/miniz_extension.hpp"
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/directory.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <ios>
+#include <iterator>
+#include <miniz.h>
 #include <nlohmann/json.hpp>
 #include <openssl/evp.h>
 
@@ -14,7 +20,9 @@
 #include <cctype>
 #include <cstdio>
 #include <map>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace fs = boost::filesystem;
 using nlohmann::json;

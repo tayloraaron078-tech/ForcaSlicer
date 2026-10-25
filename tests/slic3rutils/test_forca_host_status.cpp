@@ -1,6 +1,10 @@
 // Forca: reading Klipper (Moonraker) and stock Flashforge printer status (src/slic3r/GUI/ForcaHostStatus.cpp) -- the
 // reply parsers and job matching; no network.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include "catch2/matchers/catch_matchers_floating_point.hpp"
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/matchers/catch_matchers.hpp"
+#include <libslic3r/Config.hpp>
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

@@ -1,13 +1,24 @@
 #include "ForcaCalibModel.hpp"
 
+#include "BoundingBox.hpp"
 #include "ClipperUtils.hpp"
 #include "Emboss.hpp"
+#include "ExtrusionEntity.hpp"
+#include "LocalesUtils.hpp"
 #include "Model.hpp"
+#include "Point.hpp"
 #include "TriangleMesh.hpp"
 #include "TriangleMeshSlicer.hpp"
+#include "libslic3r.h"
 
+#include <Eigen/Geometry>
 #include <algorithm>
+#include <cmath>
+#include <cstddef>
 #include <memory>
+#include <string>
+#include <vector>
+#include <utility>
 
 namespace Slic3r {
 
@@ -52,6 +63,94 @@ bool forca_hollow_to_outline(ModelObject& object, double wall_width, double heig
     ModelVolume* v = object.add_volume(TriangleMesh(std::move(hole)), ModelVolumeType::NEGATIVE_VOLUME, false);
     v->name        = "Forca: hollow (thin-walled test)";
     return true;
+}
+
+// Hole plate geometry (mm): holes HOLE_GAP apart edge to edge, HOLE_MARGIN from the bar's edges; the notch is a slot
+// in the middle of the left (small-hole) end.
+static constexpr double HOLE_PLATE_H = 5.;
+static constexpr double HOLE_MARGIN  = 6.;
+static constexpr double HOLE_GAP     = 5.;
+static constexpr double NOTCH_W      = 3.;
+static constexpr double NOTCH_D      = 3.;
+
+const std::vector<double>& forca_hole_plate_sizes()
+{
+    static const std::vector<double> sizes{ 3., 5., 8., 12., 20. };
+    return sizes;
+}
+
+void forca_build_hole_plate(ModelObject& object)
+{
+    const std::vector<double>& sizes = forca_hole_plate_sizes();
+    double length = 2. * HOLE_MARGIN + HOLE_GAP * double(sizes.size() - 1);
+    for (double d : sizes)
+        length += d;
+    const double width = 2. * HOLE_MARGIN + sizes.back();
+
+    ModelVolume* bar = object.add_volume(make_cube(length, width, HOLE_PLATE_H), ModelVolumeType::MODEL_PART, false);
+    bar->name        = "Forca hole plate";
+
+    // Cutters reach past the bar's top and bottom so the holes go cleanly through.
+    double x = HOLE_MARGIN;
+    for (double d : sizes) {
+        TriangleMesh cutter(its_make_cylinder(d / 2., HOLE_PLATE_H + 2., PI / 180.)); // 1 degree facets
+        cutter.translate(float(x + d / 2.), float(width / 2.), -1.f);
+        ModelVolume* hole = object.add_volume(std::move(cutter), ModelVolumeType::NEGATIVE_VOLUME, false);
+        hole->name        = "Forca hole " + float_to_string_decimal_point(d) + " mm";
+        x += d + HOLE_GAP;
+    }
+    TriangleMesh notch = make_cube(NOTCH_D + 1., NOTCH_W, HOLE_PLATE_H + 2.);
+    notch.translate(-1.f, float((width - NOTCH_W) / 2.), -1.f);
+    object.add_volume(std::move(notch), ModelVolumeType::NEGATIVE_VOLUME, false)->name = "Forca notch (small holes)";
+}
+
+ForcaHoleFit forca_hole_fit(const std::vector<double>& designed, const std::vector<double>& measured)
+{
+    ForcaHoleFit fit;
+    std::vector<std::pair<double, double>> points; // (designed, measured)
+    for (size_t i = 0; i < designed.size() && i < measured.size(); ++i) {
+        const double d = designed[i], m = measured[i];
+        if (!(m > 0.) || !(d > 0.))
+            continue;
+        if (std::abs(m - d) > std::max(1., 0.2 * d)) {
+            fit.error = ForcaHoleFit::Error::Implausible;
+            return fit;
+        }
+        points.emplace_back(d, m);
+    }
+    fit.used = points.size();
+    double d_mean = 0., m_mean = 0.;
+    for (const auto& [d, m] : points) {
+        d_mean += d;
+        m_mean += m;
+    }
+    if (points.size() < 2)
+        return fit;
+    d_mean /= double(points.size());
+    m_mean /= double(points.size());
+    double sdd = 0., sdm = 0.;
+    for (const auto& [d, m] : points) {
+        sdd += (d - d_mean) * (d - d_mean);
+        sdm += (d - d_mean) * (m - m_mean);
+    }
+    if (sdd < 1e-9) // all the same size: no slope
+        return fit;
+    const double k = sdm / sdd;
+    const double e = m_mean - k * d_mean;
+    if (k <= 0.5) { // not a plausible print of these holes
+        fit.error = ForcaHoleFit::Error::Implausible;
+        return fit;
+    }
+    for (const auto& [d, m] : points)
+        fit.worst_error = std::max(fit.worst_error, std::abs(m - (k * d + e)));
+
+    const double percent = (1. / k - 1.) * 100.;
+    const double mm      = -e / (2. * k);
+    fit.percent = std::clamp(percent, -5., 5.);
+    fit.mm      = std::clamp(mm, -2., 2.);
+    fit.clamped = fit.percent != percent || fit.mm != mm;
+    fit.error   = ForcaHoleFit::Error::None;
+    return fit;
 }
 
 } // namespace Slic3r

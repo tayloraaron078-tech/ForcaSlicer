@@ -16,10 +16,19 @@
 #include "libslic3r/GCode/ThumbnailData.hpp"
 #include "libslic3r_version.h"
 
+#include <libslic3r/Point.hpp>
+#include <libslic3r/Preset.hpp>
+#include <cstddef>
+#include <libslic3r/Config.hpp>
+#include <map>
 #include <miniz.h>
 
+#include <string>
+#include <utility>
+#include <vector>
 #include <wx/dcmemory.h>
 #include <wx/dcscreen.h>
+#include <wx/gdicmn.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
 

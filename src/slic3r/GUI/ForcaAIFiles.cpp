@@ -9,6 +9,7 @@
 
 #include <boost/filesystem/operations.hpp>
 
+#include <string>
 #include <wx/stdpaths.h>
 
 #include <ctime>

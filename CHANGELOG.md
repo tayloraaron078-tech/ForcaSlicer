@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
-All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `008ee792f6` on
-2026-10-14; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `main`
+`a26501c0ed` on 2026-10-24; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -13,6 +13,65 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
 ## Unreleased
+
+## 0.1.0-alpha.7 — 2026-10-25
+
+### Added
+- **X-Y hole compensation (% of size)** (Quality > Precision, also per object): holes grow or shrink by a percentage
+  of their own diameter, on top of the fixed X-Y hole compensation. Holes that shrink with their size (cooling
+  shrinkage) can now come out right at every size: 1% makes a 10 mm hole 0.1 mm wider and a 3 mm hole 0.03 mm wider.
+  At 0% (the default) nothing changes. Like the fixed value, it isn't used on colour-painted or fuzzy-skin-painted
+  objects. Requested in issue #10.
+- **Hole size step in the Calibration Wizard** (optional, after Shrinkage): prints a bar with 3, 5, 8, 12 and 20 mm
+  holes, with hole compensation off for the test. Enter the diameters you measure (at least two) and Forca suggests
+  both X-Y hole compensation values (mm and % of size), says how close the holes should then come out, and puts them
+  into your process preset as an unsaved change.
+- **Filament overrides per object** (right-click an object > Edit Process Settings > Others > Filament overrides): an object can have its own
+  retraction length, retraction speed, deretraction speed, z-hop, pressure advance and max volumetric speed, in place
+  of the filament's. When printing by object, it can also have its own nozzle temperatures (first layer and other
+  layers; Forca waits for them before the object starts) and fan speeds (min, max, overhang).
+  Two copies on one plate can now be printed with different retraction or pressure advance and compared side by side.
+  Left at -1 (the default) they change nothing.
+- **Plan an experiment** (Print Journal > Insights, on a possible pattern; or in the journal next to Playbooks): test
+  one setting for a print problem. Pick the setting (Forca lists the ones that suit the problem), up to three values to
+  try against the current one, a hypothesis and a test model: a built-in bridge, overhang or stringing test, or any
+  object in your project. Forca builds the test plate in a new project with one named copy per value ("A baseline",
+  "B - ...") laid out side by side; temperature, fan, retraction and stringing experiments print by object, so each
+  copy prints on its own. The plan is saved in the Academy's
+  `experiments` folder. When you send that plate, the print is linked to the experiment. Afterwards, **Compare the
+  copies** (Insights > Experiments) asks how each copy came out compared with A, proposes the winner and takes photos;
+  from there you can write a lesson, put the winning value into the preset you're editing (unsaved, so you decide) or
+  plan the next experiment.
+- **A "Bridging" problem tag in the Print Journal, with its own starter playbook.** The playbook points first to
+  "Thick external bridges" (Quality > Bridging, off by default in OrcaSlicer), which made the biggest difference to
+  sagging and torn bridge lines in our tests on a Bambu Lab H2S and a Flashforge AD5M. An existing Academy folder gets
+  the new playbook too; the playbooks you already have are left alone.
+- **"Before you print" suggests Thick external bridges** when earlier prints with the same printer and filament were
+  tagged Bridging and the setting is off in your process preset.
+- **A "Did you know" tip about Thick external bridges**, among the app's start-up tips.
+
+### Changed
+- **Merged OrcaSlicer up to `main` `a26501c0ed` (2026-10-23)**, a week past OrcaSlicer's 2.5.0-alpha: crash
+  fixes (slicing painted objects, the Russian interface, the send dialog on two-extruder printers), Moonraker fixes,
+  faster slicing of painted objects, Orca's new travel optimisation, bed exclusion volumes and more. Forca's own
+  paint penetration layers and travel 2-opt were replaced by OrcaSlicer's versions of the same.
+- **The support-interface region tools are translated** into all of OrcaSlicer's 22 languages (by machine;
+  corrections welcome), so no Forca screen is English-only any more.
+
+### Fixed
+- **Klipper printers on a port other than 80 (for example a KX-Bridge on 7125) lost their port after the first
+  connection**, so filament sync and status requests went to port 80 and failed ("404 Not Found"). The saved printer
+  address now keeps its port, and an address that already lost it is repaired. (An OrcaSlicer bug; ForcaSlicer
+  issue #3.)
+- **A 3MF with a height range that has no layer height of its own** (some tools write only the settings they change)
+  crashed command-line slicing. Such a range now uses the object's layer height. (An OrcaSlicer bug.)
+- **Regional support interfaces with grid (normal) supports printed one interface layer in the region's filament
+  across the whole plate.** The lower of the interface layers is a support-only layer, and its "default" interface
+  took the region's filament because it was the only one planned there. It now keeps the object's filament outside the
+  region, as the layer touching the part always did. Tree and organic supports were not affected.
+- **A settings folder with a long path (about 100 characters or more) broke the Bambu network plug-in's camera**,
+  and the app kept asking to reinstall the plug-in, which never helped. The plug-in and camera now load from any path.
+  (An OrcaSlicer bug.)
 
 ## 0.1.0-alpha.6 — 2026-10-16
 
@@ -86,7 +145,7 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
   the Home tab, and its scripts could use the same channel as Forca's own home page (to open files, among other
   things). Forca now answers only its own local pages.
 
-## 0.1.0-alpha.5 — 2026-10-10
+## 0.1.0-alpha.5 — 2026-10-11
 
 ### Fixed
 - **The support-interface paint tool had no section view in 0.1.0-alpha.4.** Its own "Section view" slider went

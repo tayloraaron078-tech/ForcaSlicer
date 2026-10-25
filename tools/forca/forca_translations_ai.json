@@ -1190,7 +1190,7 @@
       }
     },
     {
-      "msgid": "Print grant #%d: %d print(s) left, until %s, each up to %d h. Camera bed check: %s.",
+      "msgid": "Print grant #%d - prints left: %d, until %s, each up to %d h. Camera bed check: %s.",
       "translations": {
         "ca": "Permís d'impressió #%d: impressions restants: %d, fins a les %s, cadascuna fins a %d h. Comprovació del llit per càmera: %s.",
         "cs": "Oprávnění k tisku #%d: zbývající tisky: %d, do %s, každý nejvýše %d h. Kontrola podložky kamerou: %s.",

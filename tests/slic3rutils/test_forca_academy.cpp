@@ -1,6 +1,11 @@
 // Forca: Forca Academy's file side (src/slic3r/GUI/ForcaAcademy.cpp) -- folder names, the starter files, and the
 // per-print record folders it writes when a print is sent.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <ios>
+#include "catch2/catch_test_macros.hpp"
+#include <cstddef>
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN
@@ -19,6 +24,7 @@
 #include <boost/nowide/fstream.hpp>
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -696,6 +702,54 @@ TEST_CASE("Starter playbooks are written once per tag and never recreated", "[Fo
     CHECK(read_file(tmp.dir / "playbooks" / "warping.md") == "my warping notes");
     CHECK_FALSE(forca_academy_is_untouched_starter(tmp.dir / "playbooks" / "warping.md"));
     CHECK_FALSE(fs::exists(tmp.dir / "playbooks" / "ringing.md"));
+}
+
+TEST_CASE("A journal made before a tag existed gets that tag's playbook, and only that one", "[ForcaAcademy]")
+{
+    ScopedDir   tmp;
+    std::string err;
+    REQUIRE(forca_academy_ensure_skeleton(tmp.dir, err));
+    // A journal from before the bridging tag: its playbook was never written, and the user removed the stringing one.
+    fs::remove(tmp.dir / "playbooks" / "bridging.md");
+    fs::remove(tmp.dir / "playbooks" / "stringing.md");
+    nlohmann::json  insights = nlohmann::json::parse(read_file(tmp.dir / "forca" / "insights.json"));
+    nlohmann::json& written  = insights["playbooks_written"];
+    written.erase(std::remove(written.begin(), written.end(), nlohmann::json("bridging")), written.end());
+    {
+        boost::nowide::ofstream f((tmp.dir / "forca" / "insights.json").string(), std::ios::binary | std::ios::trunc);
+        f << insights.dump();
+    }
+
+    REQUIRE(forca_academy_write_starter_playbooks(tmp.dir, err));
+    const std::string bridging = read_file(tmp.dir / "playbooks" / "bridging.md");
+    CHECK(bridging.find("# Bridging") == 0);
+    CHECK(bridging.find("Thick external bridges") != std::string::npos);
+    CHECK_FALSE(fs::exists(tmp.dir / "playbooks" / "stringing.md"));
+}
+
+TEST_CASE("Thick external bridges is suggested only after a print tagged bridging, and only while it is off", "[ForcaAcademy]")
+{
+    auto print = [](const char* time, const char* filament, std::vector<std::string> tags) {
+        ForcaAcademyPrint p;
+        p.folder    = fs::path("prints") / time;
+        p.time      = time;
+        p.printer   = "AD5M";
+        p.filaments = { filament };
+        p.result    = "partial";
+        p.tags      = std::move(tags);
+        return p;
+    };
+    const std::vector<ForcaAcademyPrint> prints = {
+        print("2026-10-16", "Generic PLA", { "bridging", "warping" }),
+        print("2026-10-15", "Sunlu PETG", { "stringing" }),
+    };
+    const ForcaAcademyHistory pla  = forca_academy_history(prints, "AD5M", "Generic PLA");
+    const ForcaAcademyHistory petg = forca_academy_history(prints, "AD5M", "Sunlu PETG");
+
+    CHECK(forca_academy_suggest_thick_bridges({ petg, pla }, false));
+    CHECK_FALSE(forca_academy_suggest_thick_bridges({ petg, pla }, true));
+    CHECK_FALSE(forca_academy_suggest_thick_bridges({ petg }, false));
+    CHECK_FALSE(forca_academy_suggest_thick_bridges({}, false));
 }
 
 TEST_CASE("A problem tagged on a successful print counts, and is reported as successful", "[ForcaAcademy]")

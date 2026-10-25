@@ -8,15 +8,31 @@
 #include "MsgDialog.hpp"
 #include "Widgets/Label.hpp"
 
+#include <vector>
+#include <string>
+#include <cstddef>
+#include <functional>
+#include <wx/arrstr.h>
+#include <ctime>
+#include <set>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/checklst.h>
 #include <wx/clipbrd.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/dialog.h>
+#include <wx/listbase.h>
+#include <wx/colour.h>
+#include <wx/dynarray.h>
+#include <wx/dataobj.h>
 #include <wx/listctrl.h>
 #include <wx/choicdlg.h>
 #include <wx/filedlg.h>
 #include <wx/numdlg.h>
+#include <wx/string.h>
 #include <wx/textdlg.h>
+#include <wx/toplevel.h>
 #include <wx/weakref.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
@@ -425,7 +441,8 @@ void ForcaAIDialog::refresh()
         localtime_r(&grant.expires, &tm);
 #endif
         std::strftime(until, sizeof(until), "%H:%M", &tm);
-        grant_text = wxString::Format(_L("Print grant #%d: %d print(s) left, until %s, each up to %d h. Camera bed check: %s."),
+        // TRN Grant number, prints left (a label, so no plural), end time (HH:MM), longest print in hours, camera check "on"/"off".
+        grant_text = wxString::Format(_L("Print grant #%d - prints left: %d, until %s, each up to %d h. Camera bed check: %s."),
                                       grant.id, grant.prints_left, until, grant.max_print_min / 60,
                                       grant.camera_check ? _L("on") : _L("off"));
         for (const std::string& id : grant.printers)

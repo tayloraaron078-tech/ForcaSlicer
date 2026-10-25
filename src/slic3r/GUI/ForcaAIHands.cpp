@@ -28,9 +28,27 @@
 #include <boost/filesystem.hpp>
 
 #include <algorithm>
+#include <boost/filesystem/operations.hpp>
+#include <cctype>
 #include <chrono>
 #include <cmath>
+#include <libslic3r/Point.hpp>
+#include <libslic3r/Config.hpp>
+#include <cstddef>
+#include <exception>
+#include <libslic3r/Preset.hpp>
+#include <libslic3r/BoundingBox.hpp>
+#include <functional>
+#include <map>
+#include <libslic3r/libslic3r.h>
+#include <libslic3r/Geometry.hpp>
+#include <libslic3r/PrintBase.hpp>
+#include <cstdio>
 #include <set>
+#include <utility>
+#include <string>
+#include <vector>
+#include <stdexcept>
 
 namespace Slic3r { namespace GUI {
 

@@ -25,6 +25,7 @@
 #include <iterator>
 #include <cmath>
 #include <math.h>
+#include <memory>
 #include <numeric>
 #include <unordered_set>
 #include <boost/range/adaptor/reversed.hpp>

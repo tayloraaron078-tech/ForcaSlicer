@@ -4,6 +4,8 @@
 #include "libslic3r/calib.hpp"  // Calib_Params, CalibMode
 #include "ForcaCalibrationStore.hpp"
 
+#include <cstddef>
+#include <utility>
 #include <wx/panel.h>
 #include <wx/scrolwin.h>
 
@@ -11,6 +13,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <wx/string.h>
 
 class wxStaticText;
 class wxTextCtrl;
@@ -44,7 +47,7 @@ void     forca_discard_transient_preset_changes(); // revert a prior test's thro
 // pending state persist in the datadir store so a run resumes across the offline print.
 //
 // Forca order (per HQ plan): Temp -> MVS -> Flow(2-pass) -> PA -> [optional flow recheck] -> Retraction ->
-// Shrinkage -> [optional final check print]. Cal order == picker order == generate-page index.
+// Shrinkage -> [optional hole size] -> [optional final check print]. Cal order == picker order == generate-page index.
 //
 // Lives as the left panel of the "Calibration Wizard" main tab (ForcaCalibrationTab), next to the live plate
 // and the progress panel; it scrolls when the tab is shorter than its content.
@@ -52,8 +55,8 @@ class ForcaCalibrationWizard : public wxScrolled<wxPanel>
 {
 public:
     // Order matters: it is the calibration picker order AND the generate-page index in m_book.
-    enum class Cal { Temperature, MaxVolSpeed, FlowRate, PressureAdvance, Retraction, Shrinkage, FinalCheck, Count };
-    static constexpr int CORE_STEPS = 6; // Temp..Shrinkage count toward progress; the final check is optional
+    enum class Cal { Temperature, MaxVolSpeed, FlowRate, PressureAdvance, Retraction, Shrinkage, HoleSize, FinalCheck, Count };
+    static constexpr int CORE_STEPS = 6; // Temp..Shrinkage count toward progress; hole size and the final check are optional
 
     ForcaCalibrationWizard(wxWindow* parent, Plater* plater);
     ~ForcaCalibrationWizard() override = default;
@@ -134,6 +137,7 @@ private:
     wxPanel* build_pa_gen_page(wxWindow* parent);
     wxPanel* build_retraction_gen_page(wxWindow* parent);
     wxPanel* build_shrinkage_gen_page(wxWindow* parent);
+    wxPanel* build_hole_gen_page(wxWindow* parent);
     wxPanel* build_final_check_page(wxWindow* parent);
     wxPanel* build_result_page(wxWindow* parent);
     // The Slice & send / Generate only buttons + note (+ "already printed" button unless result_label is empty).
@@ -212,6 +216,10 @@ private:
     // Shrinkage (Forca's own procedurally generated frame; see launch_shrinkage_test) and the final check print.
     void launch_shrinkage_test(bool skip_confirm);
     void launch_final_check(bool skip_confirm);
+    // Hole size (optional; issue #10): a bar with holes of known sizes (libslic3r ForcaCalibModel). Its result goes into
+    // the PROCESS preset as an unsaved change -- the hole compensation settings are process settings, not filament ones.
+    void launch_hole_test(bool skip_confirm);
+    void apply_hole_result();
     double current_percent(const char* key) const;       // filament_shrink / _z of the selected filament (100 = none)
 
     // Create or update the run's target filament preset (works on a copy; never dirties the source).
@@ -240,7 +248,12 @@ private:
     wxTextCtrl*   m_shrink_x        { nullptr };
     wxTextCtrl*   m_shrink_y        { nullptr };
     wxTextCtrl*   m_shrink_z        { nullptr };
+    wxPanel*      m_hole_inputs     { nullptr }; // Hole size: one measured diameter per hole
+    std::vector<wxTextCtrl*> m_hole_values;
     wxTextCtrl*   m_preset_name     { nullptr };
+    wxSizer*      m_preset_name_row { nullptr }; // "Save as preset" row + its note (hidden for Hole size)
+    wxStaticText* m_preset_note     { nullptr };
+    wxButton*     m_apply_btn       { nullptr };
     wxStaticText* m_result_hint     { nullptr }; // per-calibration guidance on the result page
     wxPanel*      m_height_help     { nullptr }; // "measured height -> result" helper (MVS, PA Tower, Retraction)
     wxStaticText* m_height_hint     { nullptr };

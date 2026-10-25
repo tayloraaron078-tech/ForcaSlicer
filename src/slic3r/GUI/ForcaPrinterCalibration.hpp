@@ -4,6 +4,7 @@
 #include "ForcaCalibrationWizard.hpp" // ProgressModel, the shared ForcaCalibrationStore
 #include "libslic3r/calib.hpp"        // Calib_Params
 
+#include <slic3r/GUI/ForcaCalibrationStore.hpp>
 #include <wx/panel.h>
 
 #include <functional>
@@ -11,6 +12,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <wx/string.h>
 
 class wxSimplebook;
 class wxStaticText;

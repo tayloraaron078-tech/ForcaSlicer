@@ -30,6 +30,13 @@ public:
     void        reset(const Vec3d &position);
     void        set_current_extruder(unsigned int extruder_id, unsigned int nozzle_id) { m_current_extruder = extruder_id; m_current_nozzle = nozzle_id; }
     std::string process_layer(std::string &&gcode, size_t layer_id, bool flush);
+    // Forca: the printed object's fan overrides (print by object; a negative value keeps the filament's).
+    void        set_object_fan_overrides(double fan_min, double fan_max, double overhang_fan)
+    {
+        m_forca_fan_min = fan_min;
+        m_forca_fan_max = fan_max;
+        m_forca_overhang_fan = overhang_fan;
+    }
 
 private:
 	CoolingBuffer& operator=(const CoolingBuffer&) = delete;
@@ -67,6 +74,10 @@ private:
     const GCode                &m_gcodegen;
     unsigned int                m_current_extruder;
     unsigned int                m_current_nozzle;
+    // Forca: see set_object_fan_overrides().
+    double                      m_forca_fan_min { -1 };
+    double                      m_forca_fan_max { -1 };
+    double                      m_forca_overhang_fan { -1 };
     //BBS: current fan speed
     int                         m_current_fan_speed;
     // Belt printers: the extrusion being processed lies in the first-layer band above the

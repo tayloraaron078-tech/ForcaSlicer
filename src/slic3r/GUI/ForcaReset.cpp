@@ -10,18 +10,26 @@
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Utils.hpp" // data_dir
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <ios>
+#include <exception>
 #include <nlohmann/json.hpp>
 
+#include <vector>
+#include <string>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dialog.h>
+#include <wx/gdicmn.h>
+#include <wx/event.h>
 #include <wx/modalhook.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/stdpaths.h>
+#include <wx/string.h>
 #include <wx/timer.h>
 
 #include <ctime>

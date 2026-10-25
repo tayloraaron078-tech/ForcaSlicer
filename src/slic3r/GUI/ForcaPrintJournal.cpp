@@ -2,6 +2,7 @@
 
 #include "GUI.hpp" // from_u8 / into_u8 / from_path / into_path / show_error / desktop_open_any_folder
 #include "ForcaBeforeYouPrint.hpp" // forca_option_label / forca_option_value
+#include "ForcaExperimentDialog.hpp"
 #include "ForcaReset.hpp"
 #include "GUI_App.hpp"
 #include "I18N.hpp"
@@ -12,22 +13,34 @@
 #include "Widgets/SpinInput.hpp"
 #include "libslic3r/AppConfig.hpp"
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <nlohmann/json.hpp>
 
+#include <vector>
+#include <string>
+#include <slic3r/GUI/ForcaAcademy.hpp>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/dialog.h>
 #include <wx/dnd.h>
+#include <wx/event.h>
 #include <wx/filedlg.h>
+#include <wx/gdicmn.h>
 #include <wx/image.h>
+#include <wx/listbase.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
 #include <wx/radiobox.h>
 #include <wx/sizer.h>
+#include <wx/spinctrl.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
+#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
+#include <wx/types.h>
+#include <wx/toplevel.h>
 #include <wx/utils.h>
 
 #include <algorithm>
@@ -56,7 +69,8 @@ std::vector<Tag> tags()
              { "layer_shift", _L("Layer shift") },     { "spaghetti", _L("Spaghetti") },
              { "bed_adhesion", _L("Bed adhesion") },   { "supports", _L("Supports") },
              { "under_extrusion", _L("Under-extrusion") }, { "over_extrusion", _L("Over-extrusion") },
-             { "ringing", _L("Ringing") },             { "layer_separation", _L("Layer separation") } };
+             { "ringing", _L("Ringing") },             { "layer_separation", _L("Layer separation") },
+             { "bridging", _L("Bridging") } };
 }
 
 wxString result_label(const std::string& key)
@@ -430,10 +444,13 @@ public:
         auto* pat_buttons = new wxBoxSizer(wxHORIZONTAL);
         m_show_prints     = new wxButton(this, wxID_ANY, _L("Show prints"));
         m_write_lesson    = new wxButton(this, wxID_ANY, _L("Write a lesson") + dots);
+        m_plan            = new wxButton(this, wxID_ANY, _L("Plan an experiment") + dots);
+        m_plan->SetToolTip(_L("Test one setting for this problem: Forca builds a plate with one copy per value to compare."));
         m_dismiss         = new wxButton(this, wxID_ANY, _L("Don't show again"));
         m_dismiss->SetToolTip(_L("Stop showing this pattern. Forca remembers it in the Academy folder."));
         pat_buttons->Add(m_show_prints, 0, wxRIGHT, FromDIP(6));
         pat_buttons->Add(m_write_lesson, 0, wxRIGHT, FromDIP(6));
+        pat_buttons->Add(m_plan, 0, wxRIGHT, FromDIP(6));
         pat_buttons->Add(m_dismiss, 0);
         root->Add(pat_buttons, 0, wxALL, pad);
         m_patterns->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent&) { update_pattern_buttons(); });
@@ -447,6 +464,11 @@ public:
                     reload_patterns();
             }
         });
+        m_plan->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            // The plate is built in the main window: close so the user sees it.
+            if (const ForcaAcademyPattern* p = selected_pattern(); p != nullptr && forca_plan_experiment(this, p->tag, forca_journal_tag_label(p->tag)))
+                EndModal(wxID_OK);
+        });
         m_dismiss->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
             if (const ForcaAcademyPattern* p = selected_pattern()) {
                 std::string err;
@@ -457,7 +479,7 @@ public:
             }
         });
 
-        // Experiments saved from "Compare".
+        // Experiments saved from "Compare", and planned ones (a test plate, judged here).
         auto* exp_title = new wxStaticText(this, wxID_ANY, _L("Experiments"));
         exp_title->SetFont(Label::Head_14);
         root->Add(exp_title, 0, wxLEFT | wxRIGHT, pad);
@@ -469,9 +491,41 @@ public:
             if (e.GetIndex() >= 0 && size_t(e.GetIndex()) < m_exps.size())
                 wxLaunchDefaultApplication(from_path(m_exps[size_t(e.GetIndex())].file));
         });
+        m_experiments->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent&) { update_experiment_buttons(); });
+        m_experiments->Bind(wxEVT_LIST_ITEM_DESELECTED, [this](wxListEvent&) { update_experiment_buttons(); });
         root->Add(m_experiments, 0, wxEXPAND | wxTOP | wxLEFT | wxRIGHT, pad);
+        auto* exp_buttons = new wxBoxSizer(wxHORIZONTAL);
+        m_open_exp        = new wxButton(this, wxID_ANY, _L("Open page"));
+        m_open_exp->SetToolTip(_L("Open the experiment's page: the plan, the prints, the comparison and your result."));
+        m_open_exp_folder = new wxButton(this, wxID_ANY, _L("Open folder"));
+        m_judge           = new wxButton(this, wxID_ANY, _L("Compare the copies") + dots);
+        m_judge->SetToolTip(_L("Rate each copy of a planned experiment against the baseline and pick the winner."));
+        exp_buttons->Add(m_open_exp, 0, wxRIGHT, FromDIP(6));
+        exp_buttons->Add(m_open_exp_folder, 0, wxRIGHT, FromDIP(6));
+        exp_buttons->Add(m_judge, 0);
+        m_open_exp->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            if (const ForcaAcademyExperiment* e = selected_experiment())
+                wxLaunchDefaultApplication(from_path(e->file));
+        });
+        m_open_exp_folder->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            if (const ForcaAcademyExperiment* e = selected_experiment()) // a planned one's own folder; else experiments/
+                desktop_open_any_folder(e->file.parent_path().string());
+        });
+        root->Add(exp_buttons, 0, wxTOP | wxLEFT | wxRIGHT, pad);
+        m_judge->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            const long r = m_experiments->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+            if (r < 0 || size_t(r) >= m_exps.size() || m_exps[size_t(r)].state.empty())
+                return;
+            const ForcaJudgeOutcome done = forca_judge_experiment(this, m_exps[size_t(r)].file.parent_path());
+            if (done == ForcaJudgeOutcome::NewPlate) { // "Plan the next experiment" built a plate: show it
+                EndModal(wxID_OK);
+                return;
+            }
+            reload();
+        });
         auto* exp_note = new wxStaticText(this, wxID_ANY,
-            _L("Select two prints in the journal and press Compare to start one. Double-click an experiment to open it."));
+            _L("Select two prints in the journal and press Compare to start one, or plan one from a possible pattern. "
+               "Double-click an experiment to open its page."));
         exp_note->Wrap(FromDIP(800));
         root->Add(exp_note, 0, wxALL, pad);
 
@@ -492,8 +546,34 @@ private:
         for (size_t i = 0; i < m_exps.size(); ++i) {
             const long r = m_experiments->InsertItem(long(i), from_u8(m_exps[i].date));
             m_experiments->SetItem(r, 1, from_u8(m_exps[i].title));
-            m_experiments->SetItem(r, 2, m_exps[i].has_result ? _L("Written") : _L("Not yet"));
+            m_experiments->SetItem(r, 2, experiment_state(m_exps[i]));
         }
+        update_experiment_buttons();
+    }
+
+    static wxString experiment_state(const ForcaAcademyExperiment& e)
+    {
+        if (e.state == "planned")
+            return _L("Not printed yet");
+        if (e.state == "printed")
+            return _L("Printed, not compared yet");
+        if (e.state == "judged")
+            return _L("Compared");
+        return e.has_result ? _L("Written") : _L("Not yet");
+    }
+
+    const ForcaAcademyExperiment* selected_experiment() const
+    {
+        const long r = m_experiments->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        return r >= 0 && size_t(r) < m_exps.size() ? &m_exps[size_t(r)] : nullptr;
+    }
+
+    void update_experiment_buttons()
+    {
+        const ForcaAcademyExperiment* e = selected_experiment();
+        m_open_exp->Enable(e != nullptr);
+        m_open_exp_folder->Enable(e != nullptr);
+        m_judge->Enable(e != nullptr && !e->state.empty());
     }
 
     void reload_groups()
@@ -558,6 +638,7 @@ private:
         const bool on = selected_pattern() != nullptr;
         m_show_prints->Enable(on);
         m_write_lesson->Enable(on);
+        m_plan->Enable(on);
         m_dismiss->Enable(on);
     }
 
@@ -593,6 +674,10 @@ private:
     wxListCtrl*                         m_patterns     = nullptr;
     wxButton*                           m_show_prints  = nullptr;
     wxButton*                           m_write_lesson = nullptr;
+    wxButton*                           m_plan         = nullptr;
+    wxButton*                           m_judge        = nullptr;
+    wxButton*                           m_open_exp     = nullptr;
+    wxButton*                           m_open_exp_folder = nullptr;
     wxButton*                           m_dismiss      = nullptr;
     wxListCtrl*                         m_experiments  = nullptr;
     std::vector<ForcaAcademyPrint>      m_prints;
@@ -646,7 +731,10 @@ ForcaPrintJournalDialog::ForcaPrintJournalDialog(wxWindow* parent, std::vector<f
             save_if_changed();
             {
                 ForcaInsightsDialog dlg(this);
-                dlg.ShowModal();
+                if (dlg.ShowModal() == wxID_OK) { // an experiment's test plate was built: show it
+                    Close();
+                    return;
+                }
             }
             reload(); // outcomes may have changed in a journal opened from Insights
         });
@@ -726,7 +814,37 @@ ForcaPrintJournalDialog::ForcaPrintJournalDialog(wxWindow* parent, std::vector<f
     auto* playbooks = new wxButton(tag_box->GetStaticBox(), wxID_ANY, _L("Playbooks") + dots);
     playbooks->SetToolTip(_L("Open the playbook for a problem: likely causes, checks, and the Forca settings and "
                              "Calibration Wizard tests that address it."));
-    tag_box->Add(playbooks, 0, wxALIGN_RIGHT | wxALL, FromDIP(4));
+    // Forca: plan an experiment for one of the problems (this print's ticked ones first). Not on a filtered journal:
+    // that one is opened from a send dialog, and the experiment replaces the project.
+    auto* plan = new wxButton(tag_box->GetStaticBox(), wxID_ANY, _L("Plan an experiment") + dots);
+    plan->SetToolTip(_L("Test one setting for a problem: Forca builds a plate with one copy per value to compare."));
+    plan->Show(m_only.empty());
+    auto* tag_buttons = new wxBoxSizer(wxHORIZONTAL);
+    tag_buttons->AddStretchSpacer(1);
+    tag_buttons->Add(plan, 0, wxRIGHT, FromDIP(6));
+    tag_buttons->Add(playbooks, 0);
+    tag_box->Add(tag_buttons, 0, wxEXPAND | wxALL, FromDIP(4));
+    plan->Bind(wxEVT_BUTTON, [this, plan](wxCommandEvent&) {
+        const std::vector<Tag> all = tags();
+        std::vector<size_t>    order;
+        for (size_t pass = 0; pass < 2; ++pass)
+            for (size_t i = 0; i < all.size(); ++i)
+                if ((i < m_tags.size() && m_tags[i]->GetValue()) == (pass == 0))
+                    order.push_back(i);
+        wxMenu menu;
+        for (size_t i = 0; i < order.size(); ++i)
+            menu.Append(int(i + 1), all[order[i]].label);
+        menu.AppendSeparator();
+        menu.Append(int(order.size() + 1), _L("No particular problem"));
+        const int picked = plan->GetPopupMenuSelectionFromUser(menu);
+        if (picked < 1 || size_t(picked) > order.size() + 1)
+            return;
+        save_if_changed();
+        const bool none = size_t(picked) == order.size() + 1;
+        if (forca_plan_experiment(this, none ? std::string() : std::string(all[order[size_t(picked - 1)]].key),
+                                  none ? wxString() : all[order[size_t(picked - 1)]].label))
+            Close(); // the test plate is in the main window
+    });
     playbooks->Bind(wxEVT_BUTTON, [this, playbooks](wxCommandEvent&) {
         std::string err;
         if (!forca_academy_ensure_skeleton(forca_academy_dir(), err)) {

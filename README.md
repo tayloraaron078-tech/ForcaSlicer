@@ -59,12 +59,14 @@ https://github.com/user-attachments/assets/23ea01ea-bb8d-438b-8dfe-0c72c96b8af4
 
 ## Calibration Wizard
 A per-filament guided flow in its own tab: **Temperature → Max Volumetric Speed → Flow → Pressure Advance →
-(flow recheck) → Retraction → Shrinkage → (final check print)**.
+(flow recheck) → Retraction → Shrinkage → (hole size) → (final check print)**.
 
 - Uses OrcaSlicer's own test prints, with a choice of method where Orca has several.
 - Slice & send straight to the printer, or generate only (SD card).
 - Progress bar and before/after table; results go into **one new "(calibrated)" filament preset** — your starting
   preset is never changed.
+- **Hole size (optional):** prints a bar with 3–20 mm holes; from the diameters you measure it suggests X-Y hole
+  compensation in mm and in % of size, and puts both into your process preset (unsaved, so you decide).
 - **Printer calibration**, once per printer and nozzle: **Input Shaping** (frequency, then damping), **Cornering**
   and **VFA**. The result page turns the height you measure on the tower into the value, and you choose whether it
   updates your printer preset (with a backup you can restore) or goes into a new "(calibrated)" printer preset.
@@ -92,7 +94,9 @@ journal too (then without the history), and it never stops a print from being se
 Select two prints and press **Compare** to see what differed between them (presets, every setting, estimates,
 outcome), and save the pair as an **experiment** to record which change worked. When the same problem keeps coming
 back with one printer and filament, Insights point it out as a **possible pattern** and help you turn it into a
-**lesson**. Forca also writes a starter **playbook** for each problem (likely causes, checks, and the Forca settings
+**lesson**, or **plan an experiment**: pick one setting and a few values to try, and Forca builds a test plate with
+one copy per value (the current value as copy A) to print and compare. After printing, Forca asks how each copy
+came out, proposes the winner and can put the winning value into your preset. Forca also writes a starter **playbook** for each problem (likely causes, checks, and the Forca settings
 and calibration tests for it) and keeps a summary block on the folder's INDEX page. Forca proposes; you decide what
 goes into your lessons.
 
@@ -105,8 +109,9 @@ use the new settings.
   Bambu printers PLA skips retraction inside infill, while sticky filaments (PETG, PCTG, PA, TPU) retract again, as
   in Bambu Studio. (OrcaSlicer retracted on nearly every infill travel on Bambu printers, which made prints slower.)
 - **First-layer infill line width**, **filament overhang and bridge speeds**, **short-travel acceleration**, **slow
-  down by height**, **pre-start fan time**, **support ironing inset / direction / speed**, **cooling slowdown logic**,
-  **top / bottom paint penetration layers** and **"Avoid crossing walls - Includes support"**.
+  down by height**, **pre-start fan time**, **support ironing inset / direction / speed**, **cooling slowdown logic**
+  and **"Avoid crossing walls - Includes support"**. (Top / bottom paint penetration layers, which Forca ported
+  first, are now part of OrcaSlicer itself.)
 - Four settings Bambu Studio names differently are kept when you open its projects and profiles, and opening a newer
   Bambu Studio project lists any settings Forca still doesn't know (OrcaSlicer only writes them to its log).
 - **P2S and X2D** print outer walls clockwise, as Bambu Studio does on those printers.
@@ -192,6 +197,11 @@ See [SECURITY.md](SECURITY.md) for how it's protected.
 - **When a filament uses its own overhang speeds** ("Override overhang speed"), the process Speed page says so under
   "Overhang speed", naming those filaments.
 - **Web sites opened in the Home tab can't control Forca:** only Forca's own home page can send it requests.
+- **Filament overrides per object:** an object can have its own retraction (length, speeds, z-hop), pressure
+  advance and max volumetric speed, and when printing by object also its own nozzle temperatures and fan speeds (right-click an object > Edit Process Settings > Others > Filament overrides), so two copies on one plate
+  can test two values.
+- **X-Y hole compensation (% of size)** (Quality > Precision): holes grow or shrink by a percentage of their own
+  diameter, on top of the fixed X-Y hole compensation, so small and large holes can both come out right.
 - **Reset Forca data** (Preferences, the Forca AI window or the Print Journal): start again with a fresh print
   journal, Forca AI, AI-saved projects, Calibration Wizard history, or all of Forca as on a fresh install. Nothing is
   deleted: it all moves to `Documents\Forca reset backups`.

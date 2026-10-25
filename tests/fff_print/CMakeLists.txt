@@ -6,9 +6,11 @@ add_executable(${_TEST_NAME}_tests
 	test_cooling.cpp
 	test_extrusion_entity.cpp
 	test_extrusion_processor.cpp
+	test_exclusion_volumes.cpp
 	test_fill.cpp
 	test_flow.cpp
 	test_gcode_processor.cpp
+	test_gcode_statistics.cpp
 	test_gcode_timing.cpp
 	test_gcode.cpp
 	test_gcodeprocessor.cpp
@@ -17,6 +19,7 @@ add_executable(${_TEST_NAME}_tests
 	test_imex_slice_offset.cpp
 	test_model.cpp
 	test_multifilament.cpp
+	test_multimaterial_segmentation.cpp
 	test_perimeters.cpp
 	# Seam geometry and pipeline regressions share the existing Print fixtures.
 	test_precise_seam.cpp
@@ -27,6 +30,10 @@ add_executable(${_TEST_NAME}_tests
 	test_seam_placer.cpp
 	test_skirt_brim.cpp
 	test_forca_calib_model.cpp
+	test_forca_height_ranges.cpp
+	test_forca_hole_compensation.cpp
+	test_forca_object_filament.cpp
+	test_forca_regional_interface.cpp
 	test_gcode_benchmark.cpp
 	test_slicing_pipeline_hook.cpp
 	test_support_material.cpp

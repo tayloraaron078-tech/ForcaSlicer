@@ -4,6 +4,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <string>
+#include <utility>
 
 // Forca AI rule R1 -- never save over the user's files (HQ PLAN_forca_ai.md §2). The file-system side of it, kept in
 // libslic3r (no GUI) so tests/libslic3r/test_forca_ai_safe_path.cpp can cover it; the GUI wrapper is

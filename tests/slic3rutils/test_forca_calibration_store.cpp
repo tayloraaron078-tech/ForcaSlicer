@@ -1,6 +1,11 @@
 // Forca: ForcaCalibrationStore (src/slic3r/GUI/ForcaCalibrationStore.cpp) -- the Calibration Wizard's persisted
 // progress and results, including the printer track's optional record fields and printer runs.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include <string>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/catch_approx.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

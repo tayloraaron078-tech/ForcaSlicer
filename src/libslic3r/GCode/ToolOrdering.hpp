@@ -370,6 +370,7 @@ public:
                                                   std::vector<int> & initial_filaments);
 
     bool                has_non_support_filament(const PrintConfig &config);
+    bool                is_last_extrusion_layer(coordf_t print_z, unsigned int extruder_id) const;
 
 private:
     void				initialize_layers(std::vector<coordf_t> &zs);
@@ -413,7 +414,11 @@ private:
     // which keeps every legacy per-object code path bit-identical (loops over an empty map are
     // no-ops; downstream emission falls through to the per-object branch).
     std::map<unsigned int, std::map<LayerTools::MixedSubLayerGroup::VolumeKey, std::vector<size_t>>> m_gradient_volume_layers;
+    // Map: extruder_id -> print_z (z coordinate) of the last layer it is used on
+    std::map<unsigned int, coordf_t> m_last_layer_per_extruder;
     const PrintObject*         m_print_object_ptr = nullptr;
+    // [regional-supports fork] 1-based filaments of the regional support-interface modifiers (collect_extruders).
+    std::set<unsigned int>     m_regional_override_filaments;
     Print*                     m_print;
     bool                       m_sorted = false;
 

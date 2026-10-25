@@ -1618,7 +1618,9 @@ void ObjectList::list_manipulation(const wxPoint& mouse_pos, bool evt_context_me
             get_selected_item_indexes(obj_idx, vol_idx, item);
             if (obj_idx != -1) {
                 Plater::TakeSnapshot snapshot(plater, _u8L("Shift objects to bed"));
-                (*m_objects)[obj_idx]->ensure_on_bed();
+                // Shift on request also when auto drop is off, which ensure_on_bed() skips.
+                ModelObject* mo = (*m_objects)[obj_idx];
+                mo->translate_instances(-mo->min_z() * Vec3d::UnitZ());
                 cnv->reload_scene(true, true);
                 update_info_items(obj_idx);
                 notify_instance_updated(obj_idx);
@@ -3982,7 +3984,8 @@ wxDataViewItem ObjectList::add_settings_item(wxDataViewItem parent_item, const D
     if (is_layer_settings) {
         auto tab_object = dynamic_cast<TabPrintModel*>(wxGetApp().get_model_tab());
         auto object_cfg = tab_object->get_config();
-        if (config->opt_float("layer_height") == object_cfg->opt_float("layer_height")) {
+        // Forca: a height range from a 3MF need not carry a layer height (the GUI always writes one).
+        if (config->has("layer_height") && config->opt_float("layer_height") == object_cfg->opt_float("layer_height")) {
             SettingsFactory::Bundle new_cat_options;
             for (auto cat_opt : cat_options) {
                 std::vector<std::string> temp;
@@ -6752,7 +6755,9 @@ void ObjectList::OnEditingStarted(wxDataViewEvent &event)
         Plater::TakeSnapshot snapshot(plater, _u8L("Shift objects to bed"));
         int obj_idx, vol_idx;
         get_selected_item_indexes(obj_idx, vol_idx, item);
-        (*m_objects)[obj_idx]->ensure_on_bed();
+        // Shift on request also when auto drop is off, which ensure_on_bed() skips.
+        ModelObject* mo = (*m_objects)[obj_idx];
+        mo->translate_instances(-mo->min_z() * Vec3d::UnitZ());
         cnv->reload_scene(true, true);
         update_info_items(obj_idx);
         notify_instance_updated(obj_idx);

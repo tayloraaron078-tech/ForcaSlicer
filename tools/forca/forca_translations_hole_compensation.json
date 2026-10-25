@@ -1,0 +1,59 @@
+{
+  "_comment": "X-Y hole compensation as a percentage of each hole's size (xy_hole_compensation_percent, src/libslic3r/PrintConfig.cpp). Terms follow each catalog's existing translation of X-Y hole compensation and its tooltip. tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "X-Y hole compensation (% of size)",
+      "translations": {
+        "ca": "Compensació de forat X-Y (% de la mida)",
+        "cs": "Kompenzace otvoru v ose X-Y (% velikosti)",
+        "de": "X-Y-Loch-Kompensation (% der Größe)",
+        "es": "Compensación en X-Y de huecos (% del tamaño)",
+        "eu": "X-Y zulo-konpentsazioa (tamainaren %)",
+        "fr": "Compensation de trou X-Y (% de la taille)",
+        "hu": "X-Y furatkompenzáció (a méret %-a)",
+        "it": "Compensazione fori X-Y (% della dimensione)",
+        "ja": "ホール補正 X-Y（サイズの%）",
+        "ko": "X-Y 구멍 보정 (크기의 %)",
+        "lt": "XY angų kompensavimas (% dydžio)",
+        "nl": "X-Y-gaten compensatie (% van de grootte)",
+        "pl": "Kompensacja otworów X-Y (% rozmiaru)",
+        "pt_BR": "Compensação de furos XY (% do tamanho)",
+        "ru": "Расширение пустот в слое (% от размера)",
+        "sv": "X-Y håls kompensation (% av storleken)",
+        "th": "การชดเชยรู X-Y (% ของขนาด)",
+        "tr": "X-Y delik telafisi (boyutun %'si)",
+        "uk": "Компенсація отвору XY (% розміру)",
+        "vi": "Bù lỗ X-Y (% kích thước)",
+        "zh_CN": "X-Y 孔洞尺寸补偿（尺寸的 %）",
+        "zh_TW": "X-Y 孔洞尺寸補償（尺寸的 %）"
+      }
+    },
+    {
+      "msgid": "Holes in objects will expand or contract in the XY plane by this percentage of each hole's own diameter, on top of X-Y hole compensation. Positive values make holes bigger and negative values make holes smaller. Use it when holes shrink in proportion to their size, so that small and large holes need different compensation (for example, 1% makes a 10 mm hole 0.1 mm wider and a 3 mm hole 0.03 mm wider).",
+      "translations": {
+        "ca": "Els forats de l'objecte creixeran o es reduiran en el pla XY en aquest percentatge del diàmetre de cada forat, a més de la compensació de forat X-Y. Un valor positiu fa que els forats siguin més grans i un valor negatiu, més petits. Feu-lo servir quan els forats s'encongeixen en proporció a la seva mida, de manera que els forats petits i els grans necessiten una compensació diferent (per exemple, un 1% fa un forat de 10 mm 0,1 mm més ample i un de 3 mm 0,03 mm més ample).",
+        "cs": "Otvory v objektech se v rovině XY rozšíří nebo zmenší o toto procento průměru každého otvoru, navíc ke kompenzaci otvoru v ose X-Y. Kladné hodnoty otvory zvětšují, záporné hodnoty je zmenšují. Použijte ji, když se otvory smršťují úměrně své velikosti, takže malé a velké otvory potřebují jinou kompenzaci (například 1 % rozšíří otvor 10 mm o 0,1 mm a otvor 3 mm o 0,03 mm).",
+        "de": "Die Löcher des Objekts werden in der XY-Ebene um diesen Prozentsatz des Durchmessers jedes einzelnen Lochs vergrößert oder verkleinert, zusätzlich zur X-Y-Loch-Kompensation. Positive Werte machen die Löcher größer, negative kleiner. Verwende sie, wenn Löcher im Verhältnis zu ihrer Größe schrumpfen, sodass kleine und große Löcher eine unterschiedliche Kompensation brauchen (zum Beispiel macht 1 % ein 10-mm-Loch 0,1 mm weiter und ein 3-mm-Loch 0,03 mm weiter).",
+        "es": "Los huecos del objeto crecerán o se reducirán en el plano XY en este porcentaje del diámetro de cada hueco, además de la compensación en X-Y de huecos. Los valores positivos hacen los huecos más grandes y los negativos, más pequeños. Úsalo cuando los huecos se encogen en proporción a su tamaño, de modo que los huecos pequeños y los grandes necesitan una compensación distinta (por ejemplo, un 1% hace un hueco de 10 mm 0,1 mm más ancho y uno de 3 mm 0,03 mm más ancho).",
+        "eu": "Objektuetako zuloak XY planoan zabaldu edo uzkurtuko dira zulo bakoitzaren diametroaren ehuneko honetan, X-Y zulo-konpentsazioaz gain. Balio positiboek zuloak handitzen dituzte; negatiboek txikitu. Erabili zuloak beren tamainaren proportzioan uzkurtzen direnean, zulo txikiek eta handiek konpentsazio desberdina behar baitute (adibidez, % 1ek 10 mm-ko zuloa 0,1 mm zabaltzen du, eta 3 mm-koa 0,03 mm).",
+        "fr": "Les trous des objets s’agrandissent ou se rétrécissent dans le plan XY de ce pourcentage du diamètre de chaque trou, en plus de la compensation de trou X-Y. Les valeurs positives agrandissent les trous, les valeurs négatives les rétrécissent. Utilisez-la lorsque les trous rétrécissent en proportion de leur taille, de sorte que petits et grands trous demandent une compensation différente (par exemple, 1 % élargit un trou de 10 mm de 0,1 mm et un trou de 3 mm de 0,03 mm).",
+        "hu": "A tárgy furatai az XY síkban minden furat saját átmérőjének ennyi százalékával nőnek vagy zsugorodnak, az X-Y furatkompenzáción felül. Pozitív érték esetén a furatok nagyobbak, negatív esetén kisebbek lesznek. Akkor használd, ha a furatok a méretükkel arányosan zsugorodnak, így a kis és nagy furatok eltérő kompenzációt igényelnek (például 1% egy 10 mm-es furatot 0,1 mm-rel, egy 3 mm-eset 0,03 mm-rel tesz szélesebbé).",
+        "it": "I fori negli oggetti verranno ingranditi o rimpiccioliti sul piano XY di questa percentuale del diametro di ciascun foro, in aggiunta alla compensazione fori X-Y. I valori positivi ingrandiscono i fori mentre quelli negativi li rimpiccioliscono. Usala quando i fori si restringono in proporzione alla loro dimensione, così che fori piccoli e grandi richiedono una compensazione diversa (ad esempio, l'1% allarga un foro da 10 mm di 0,1 mm e uno da 3 mm di 0,03 mm).",
+        "ja": "オブジェクトの穴を、ホール補正 X-Yに加えて、各穴の直径に対するこの割合だけXY平面で拡大または縮小します。正数は穴を大きくし、負数は穴を小さくします。穴が大きさに比例して縮み、小さな穴と大きな穴で必要な補正が異なる場合に使います（例: 1%では10 mmの穴が0.1 mm、3 mmの穴が0.03 mm広がります）。",
+        "ko": "객체의 구멍은 X-Y 구멍 보정에 더해, 각 구멍 지름의 이 비율만큼 XY 평면에서 커지거나 줄어듭니다. 양수 값은 구멍을 더 크게, 음수 값은 더 작게 만듭니다. 구멍이 크기에 비례해 줄어들어 작은 구멍과 큰 구멍에 다른 보정이 필요할 때 사용하세요(예: 1%는 10 mm 구멍을 0.1 mm, 3 mm 구멍을 0.03 mm 넓힙니다).",
+        "lt": "Objektuose esančios skylės XY plokštumoje išsiplės arba susitrauks šiuo kiekvienos skylės skersmens procentu, papildomai prie XY angų kompensavimo. Teigiamos reikšmės skyles padidina, o neigiamos – sumažina. Naudokite, kai skylės susitraukia proporcingai savo dydžiui, todėl mažoms ir didelėms skylėms reikia skirtingo kompensavimo (pavyzdžiui, 1 % 10 mm skylę praplatina 0,1 mm, o 3 mm skylę – 0,03 mm).",
+        "nl": "Gaten in objecten worden in het XY-vlak groter of kleiner met dit percentage van de diameter van elk gat, bovenop de X-Y-gaten compensatie. Positieve waarden maken de gaten groter en negatieve waarden kleiner. Gebruik dit als gaten krimpen in verhouding tot hun grootte, zodat kleine en grote gaten een andere compensatie nodig hebben (bijvoorbeeld: 1% maakt een gat van 10 mm 0,1 mm wijder en een gat van 3 mm 0,03 mm wijder).",
+        "pl": "Otwory obiektu będą powiększane lub zmniejszane w płaszczyźnie XY o ten procent średnicy każdego otworu, dodatkowo do kompensacji otworów X-Y. Wartości dodatnie powiększają otwory, a ujemne je zmniejszają. Użyj, gdy otwory kurczą się proporcjonalnie do swojego rozmiaru, więc małe i duże otwory wymagają innej kompensacji (na przykład 1% poszerza otwór 10 mm o 0,1 mm, a otwór 3 mm o 0,03 mm).",
+        "pt_BR": "Os furos nos objetos irão expandir ou contrair no plano XY por esta porcentagem do diâmetro de cada furo, além da compensação de furos XY. Valores positivos aumentam os furos e valores negativos os reduzem. Use quando os furos encolhem em proporção ao seu tamanho, de modo que furos pequenos e grandes precisam de compensações diferentes (por exemplo, 1% alarga um furo de 10 mm em 0,1 mm e um de 3 mm em 0,03 mm).",
+        "ru": "Отверстия в объектах расширяются или сужаются в плоскости XY на этот процент от диаметра каждого отверстия, дополнительно к расширению пустот в слое. Положительные значения увеличивают отверстия, отрицательные уменьшают. Используйте, когда отверстия усаживаются пропорционально своему размеру и малым и большим отверстиям нужна разная компенсация (например, 1% расширяет отверстие 10 мм на 0,1 мм, а отверстие 3 мм на 0,03 мм).",
+        "sv": "Objektets hål ökar eller krymper i XY-planet med denna procentandel av varje håls egen diameter, utöver X-Y håls kompensation. Positiva värden gör hålen större och negativa värden mindre. Använd den när hål krymper i proportion till sin storlek, så att små och stora hål behöver olika kompensation (till exempel gör 1 % ett hål på 10 mm 0,1 mm vidare och ett hål på 3 mm 0,03 mm vidare).",
+        "th": "รูในวัตถุจะขยายหรือหดตัวในระนาบ XY ตามเปอร์เซ็นต์นี้ของเส้นผ่านศูนย์กลางของแต่ละรู เพิ่มจากการชดเชยรู X-Y ค่าบวกทำให้รูใหญ่ขึ้น ค่าลบทำให้รูเล็กลง ใช้เมื่อรูหดตัวตามสัดส่วนของขนาด ทำให้รูเล็กและรูใหญ่ต้องการการชดเชยต่างกัน (เช่น 1% ทำให้รู 10 mm กว้างขึ้น 0.1 mm และรู 3 mm กว้างขึ้น 0.03 mm)",
+        "tr": "Nesnedeki delikler, X-Y delik telafisine ek olarak her deliğin kendi çapının bu yüzdesi kadar XY düzleminde büyütülür veya küçültülür. Pozitif değerler delikleri büyütür, negatif değerler küçültür. Delikler boyutlarıyla orantılı olarak küçüldüğünde ve bu yüzden küçük ve büyük delikler farklı telafi gerektirdiğinde kullanın (örneğin %1, 10 mm'lik bir deliği 0,1 mm, 3 mm'lik bir deliği 0,03 mm genişletir).",
+        "uk": "Отвори обʼєктів будуть розширені або звужені в площині XY на цей відсоток від діаметра кожного отвору, додатково до компенсації отвору XY. Позитивні значення роблять отвори більшими, а негативні — меншими. Використовуйте, коли отвори усідають пропорційно до свого розміру, тож малим і великим отворам потрібна різна компенсація (наприклад, 1% розширює отвір 10 мм на 0,1 мм, а отвір 3 мм — на 0,03 мм).",
+        "vi": "Lỗ trong đối tượng sẽ mở rộng hoặc co lại trong mặt phẳng XY theo tỷ lệ phần trăm này của đường kính từng lỗ, cộng thêm vào bù lỗ X-Y. Giá trị dương làm lỗ lớn hơn, giá trị âm làm lỗ nhỏ hơn. Dùng khi lỗ co lại theo tỷ lệ kích thước của nó, nên lỗ nhỏ và lỗ lớn cần mức bù khác nhau (ví dụ, 1% làm lỗ 10 mm rộng thêm 0,1 mm và lỗ 3 mm rộng thêm 0,03 mm).",
+        "zh_CN": "物体中的孔洞将在 XY 平面内按各孔洞自身直径的这一百分比扩展或收缩，叠加在 X-Y 孔洞尺寸补偿之上。正值使孔洞变大，负值使孔洞变小。当孔洞按其尺寸成比例收缩、导致小孔和大孔需要不同补偿时使用（例如 1% 会使 10 mm 的孔扩大 0.1 mm，3 mm 的孔扩大 0.03 mm）。",
+        "zh_TW": "物件中的孔洞將在 XY 平面上依各孔洞自身直徑的這一百分比擴大或縮小，疊加在 X-Y 孔洞尺寸補償之上。正值使孔洞變大，負值使孔洞變小。當孔洞依其尺寸成比例收縮、導致小孔與大孔需要不同補償時使用（例如 1% 會使 10 mm 的孔擴大 0.1 mm，3 mm 的孔擴大 0.03 mm）。"
+      }
+    }
+  ]
+}

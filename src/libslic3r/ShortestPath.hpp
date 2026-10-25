@@ -19,20 +19,18 @@ namespace Slic3r {
 std::vector<size_t> 				 chain_points(const Points &points, const Point *start_near = nullptr);
 // Variant with post-processing (crossing removal + 2-opt) for object ordering.
 std::vector<size_t> 				 chain_points_with_postprocessing(const Points &points, const Point *start_near = nullptr);
-// Greedy chain refined by open-path 2-opt: the path starts at start_near (when given) and does not return to it.
-std::vector<size_t> 				 chain_points_2opt(const Points &points, const Point *start_near = nullptr);
 std::vector<size_t> 				 chain_expolygons(const ExPolygons &input_exploy);
 
 std::vector<std::pair<size_t, bool>> chain_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point *start_near = nullptr);
 void                                 reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const std::vector<std::pair<size_t, bool>> &chain);
+// From start_near, the greedy chain is refined by 2-opt and or-opt moves, which shortens the travel at some extra cost.
 void                                 chain_and_reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point &start_near);
+// The greedy chain only.
 void                                 chain_and_reorder_extrusion_entities(std::vector<ExtrusionEntity*> &entities, const Point *start_near = nullptr);
-// Each entity the chain reverses is replaced by a reversed clone that reversed_clones owns, so the originals stay unchanged.
+// Refined as above. Each entity the chain reverses is replaced by a reversed clone that reversed_clones owns, so the
+// originals stay unchanged.
 void                                 chain_and_reorder_extrusion_entities(std::vector<const ExtrusionEntity*> &entities, const Point &start_near,
                                                                           std::vector<std::unique_ptr<ExtrusionEntity>> &reversed_clones);
-// Like the above, with the greedy chain refined by open-path 2-opt (see chain_points_2opt()).
-void                                 chain_and_reorder_extrusion_entities_2opt(std::vector<const ExtrusionEntity*> &entities, const Point &start_near,
-                                                                               std::vector<std::unique_ptr<ExtrusionEntity>> &reversed_clones);
 
 std::vector<std::pair<size_t, bool>> chain_extrusion_paths(std::vector<ExtrusionPath> &extrusion_paths, const Point *start_near = nullptr);
 void                                 reorder_extrusion_paths(std::vector<ExtrusionPath> &extrusion_paths, std::vector<std::pair<size_t, bool>> &chain);

@@ -1,7 +1,11 @@
 #include "ForcaPresetMerge.hpp"
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 
+#include <cstddef>
+#include <boost/filesystem/path.hpp>
+#include <string>
 #include <vector>
 
 namespace Slic3r {

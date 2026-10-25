@@ -1,5 +1,9 @@
 #include "ForcaAISafePath.hpp"
 
+#include <boost/filesystem/path.hpp>
+#include <exception>
+#include <boost/filesystem/file_status.hpp>
+#include <ios>
 #include <nlohmann/json.hpp>
 
 #include <boost/filesystem/fstream.hpp> // wide-path streams on Windows
@@ -13,6 +17,7 @@
 #include <mutex>
 #include <regex>
 #include <sstream>
+#include <string>
 
 namespace Slic3r { namespace ForcaAI {
 

@@ -2,6 +2,7 @@
 
 #include <boost/filesystem/path.hpp>
 
+#include <cstddef>
 #include <string>
 
 namespace Slic3r {

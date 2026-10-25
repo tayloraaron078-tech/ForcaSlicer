@@ -1,5 +1,8 @@
 // Forca: which pages in the Home tab's web view may send requests to the app (src/slic3r/GUI/WebViewDialog.cpp).
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/generators/catch_generators.hpp"
+#include "catch2/catch_message.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

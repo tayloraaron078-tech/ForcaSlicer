@@ -1,5 +1,8 @@
 // Forca: the Moonraker printer agent's failure log line (src/slic3r/Utils/MoonrakerPrinterAgent.cpp); no network.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include "catch2/matchers/catch_matchers_string.hpp"
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/matchers/catch_matchers.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN
@@ -60,4 +63,13 @@ TEST_CASE("The last Server header wins after a redirect", "[ForcaMoonrakerAgent]
     const std::string line    = moonraker_describe_failed_request("http://printer/x", "(HTTP 404)", headers, "", false);
 
     CHECK_THAT(line, ContainsSubstring("server=aiohttp"));
+}
+
+TEST_CASE("The printer address the agent reports keeps the port", "[ForcaMoonrakerAgent]")
+{
+    // A KX-Bridge on port 7125: reporting the bare host sent every later request to port 80.
+    CHECK(moonraker_device_address("192.168.1.12", "7125") == "192.168.1.12:7125");
+    CHECK(moonraker_device_address("192.168.1.12", "") == "192.168.1.12");
+    CHECK(moonraker_device_address("192.168.1.12:7125", "7125") == "192.168.1.12:7125");
+    CHECK(moonraker_device_address("[fe80::1]", "7125") == "[fe80::1]:7125");
 }

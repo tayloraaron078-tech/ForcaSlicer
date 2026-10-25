@@ -136,7 +136,6 @@ struct SupportNode
     TreeNodeType   type            = eCircle;
     bool           is_corner       = false;
     bool           is_processed    = false;
-    bool           need_extra_wall = false;
     bool           is_sharp_tail   = false;
     bool           valid = true;
     bool           region_zero_gap = false; // [regional-supports fork] this contact/column carries a regional zero Top-Z gap; keep it flush through plan_layer_heights

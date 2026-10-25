@@ -5,13 +5,38 @@
 #include "libslic3r/Utils.hpp" // data_dir()
 #include "libslic3r_version.h"
 
+#include <atomic>
 #include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/asio/error.hpp>
+#include <boost/asio/ip/address.hpp>
+#include <boost/asio/post.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/core/detail/base64.hpp>
+#include <boost/beast/core/error.hpp>
+#include <boost/beast/core/flat_buffer.hpp>
 #include <boost/beast/http.hpp>
+#include <boost/beast/http/message.hpp>
+#include <boost/beast/http/string_body.hpp>
+#include <boost/beast/http/status.hpp>
+#include <boost/beast/http/field.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 
+#include <string>
+#include <ios>
+#include <utility>
+#include <memory>
+#include <map>
+#include <functional>
+#include <mutex>
+#include <exception>
+#include <thread>
+#include <vector>
 #include <wx/app.h>
 #include <wx/stdpaths.h>
 #include <wx/thread.h>

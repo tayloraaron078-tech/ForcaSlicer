@@ -24,6 +24,18 @@ lessons. Forca only ever proposes a judgment.
 - Selecting two prints and pressing "Compare" shows them side by side: printer, presets, estimates, outcome and tags,
   then the settings that differed. "Save as experiment" writes `experiments/<date>_<name>.md` with both prints, what
   differed and a Result section for the user. The journal's "Playbooks" button opens the playbook for a problem tag.
+- "Plan an experiment" (on a possible pattern in Insights, and in the journal next to "Playbooks", for a chosen
+  problem) tests one setting: the user picks the setting from the ones that suit the problem (or any setting that can
+  differ per object), up to three values to try against the current one, a hypothesis and a test model (a built-in
+  bridge, overhang or stringing test, or the shape of an object in the project). Forca builds the test plate in a new project:
+  copy "A baseline" keeps the presets' value, copies B-D each carry their value as a per-object setting, and the plate
+  always prints by object, so each copy prints on its own and no copy's travel, strings or temperature reaches another
+  (Forca's nozzle temperature and fan overrides only differ per copy that way). The copies are spaced so the print head
+  clears them; when they don't all fit on one plate they are spread evenly over more. The experiment's folder is
+  written at the same time. When a plate is sent, the print's record and the experiment are linked. "Compare the copies" (Insights, on a planned experiment) rates each copy
+  better / same / worse than A with a note, takes the winner (Forca proposes the first copy rated better) and photos,
+  and offers "Write a lesson", "Apply to preset" (the winning value into the preset being edited, unsaved) and "Plan the
+  next experiment".
 - The send dialogs (Bambu's print dialog and the print-host upload dialogs) show "Before you print": how earlier prints
   with the same printer and filament preset went, the settings changed and not saved, and collapsed Details (layer
   height, sparse infill pattern and density, supports, brim, nozzle, and per filament its temperatures, bed
@@ -35,7 +47,10 @@ lessons. Forca only ever proposes a judgment.
 AGENTS.md, INDEX.md, lessons.md        starter files, written once; never overwritten (the user owns them)
 printers/ materials/ experiments/
 playbooks/<tag>.md                     a starter per journal tag, written once; never overwritten or recreated
+                                       (forca/insights.json "playbooks_written" lists them, so a tag added later
+                                       gets its starter in existing folders)
 prints/YYYY/YYYY-MM-DD_HHMM_<slug>/    record.json, settings.json, notes.md, thumbnail.png, photos/, camera/
+experiments/<date>_<slug>/             a planned experiment: experiment.md (the user's page) and plan.json (Forca's)
 forca/insights.json                    Forca's own state: dismissed patterns, which starters it already wrote
 ```
 
@@ -89,6 +104,30 @@ Forca AI tools.
   one included, and the pattern also says on how many of those the print was successful. Dismissing a pattern, or saving a lesson from it, adds its
   id (printer, filament, tag) to `forca/insights.json`. Forca drafts the lesson text; it is saved only when the user
   presses the button.
+- **Experiments.** `ForcaExperiment.{hpp,cpp}` (no GUI, tested in `tests/slic3rutils/test_forca_experiment.cpp`)
+  holds the problem-to-settings table, the value suggestions (the other state of a switch, other choices of a list,
+  numbers a round step away within the setting's limits) and the experiment folder; `ForcaExperimentDialog.cpp` the
+  dialog and the plate. Only print-object and print-region settings are offered, since nothing else can differ
+  between copies on one plate; a Forca filament override (`object_*`) takes its baseline from the setting it stands
+  in for. Before replacing the project the dialog works out the layout by the rules of Orca's by-object collision
+  check (`forca_experiment_layout`): the printer's extruder clearance (plus a per-object skirt) between copies, a grid
+  while the model is no taller than the gantry rod, one column when taller (a copy may only pass the rod's height when
+  no copy printed after it shares its row), one copy per plate when taller than the lid, turned 90 degrees when that
+  fits more, and as many plates as needed with the copies spread evenly (`forca_experiment_plates`). The copies are
+  loaded from one file, named, given their setting and placed by Forca itself (A first, each plate's copies centred on
+  it; the arrange job could leave them stacked on a by-object plate). Each plate's own print sequence is set to by
+  object, so the process preset is untouched, and the object list is rebuilt so it shows names and settings. The test models live in `resources/forca_experiments/`
+  (`tools/forca/make_experiment_models.py` writes the overhang and stringing tests). Experiments from Compare stay
+  single files; the list shows both kinds.
+  A sent plate is an experiment's print when every copy name of one of the experiment's plates (`plan.json` copies
+  carry a 1-based "plate" when there are several) is among its object names
+  (`forca_experiment_for_plate`, newest experiment first), so it survives saving and reopening the project but not
+  renaming the copies. The record gets `"experiment"`, and the experiment's `plan.json` "prints" list and the page's
+  Forca-owned Prints block get the print (state planned -> printed). Judging writes the ratings, notes and winner to
+  `plan.json` (state judged) and replaces the page's Comparison block; the user's Result section is never touched.
+  "Apply to preset" writes a process setting to the process preset and a Forca filament override to the filament
+  setting it stands in for (retraction and z-hop as the filament's own `filament_*` override), in every slot of a list
+  setting, through the tab, so it shows as an unsaved change.
 - **Forca AI.** With the Academy on, the AI can read the folder, list and search prints, see the Insights
   (`forca_academy_insights`: groups, open patterns, experiments) and compare two prints (`forca_academy_compare`),
   record an outcome, and write Markdown it created (lessons, playbooks, printer and material notes) or a starter file

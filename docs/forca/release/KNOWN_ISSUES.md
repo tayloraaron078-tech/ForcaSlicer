@@ -11,14 +11,13 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
   Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to mid-October 2026, the code OrcaSlicer is releasing
-  as 2.5.0-alpha), not a stable Orca release.
+- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 23 October 2026, a week past OrcaSlicer's
+  2.5.0-alpha), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
   enable it in Preferences). Forca hasn't changed it.
-- **Some of Forca's own text is English only** (parts of the support-region tools). The Calibration Wizard and the
-  Forca AI window are translated into all of OrcaSlicer's languages, by machine for now -- corrections welcome. The rest of the app
+- **Forca's own screens are translated by machine** into all of OrcaSlicer's languages (corrections welcome). The rest of the app
   keeps OrcaSlicer's translations.
 
 ## Regional support interfaces
@@ -34,12 +33,13 @@ differently).
 - Multi-device sends are recorded, but how the print ended is only followed on the printer selected in the Device tab.
 - Klipper and Flashforge prints are followed while Forca is running and can reach the printer; a stock Flashforge
   printer needs its access code in the printer's network settings (API Key / Password).
-- Journal files (AGENTS.md, notes) are written in English.
+- Journal files (AGENTS.md, playbooks, notes) are written in English.
 
 ## Non-Bambu printers
-- **Filament sync from Klipper filament changers can put filaments in the wrong slots and pick "Generic" presets**
-  (seen with an Anycubic ACE through KX-Bridge). A fix is in testing on
-  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3); until then, check the filament list after
+- **Filament sync from Klipper filament changers picks generic filament presets** (seen with an Anycubic ACE through
+  KX-Bridge): the type and colour come across, but not the bridge's exact filament profile. The sync itself works
+  again in this release (the printer's port is no longer lost, see
+  [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3)); check the filament list after
   "Synchronize filament list". The two OrcaSlicer pull requests in this release (not merged upstream yet) are
   untested on Happy Hare MMU hardware.
 - **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the

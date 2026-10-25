@@ -1,6 +1,9 @@
 // Forca: print grants (src/slic3r/GUI/ForcaAIAutonomy.cpp) -- the printer slot names the AI gives for each filament
 // ("A4", "Ext"), which Forca sets in the print dialog and checks before it presses Send.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/catch_message.hpp"
+#include <vector>
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

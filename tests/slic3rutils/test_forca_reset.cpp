@@ -1,6 +1,9 @@
 // Forca: "Reset Forca data" (src/slic3r/GUI/ForcaReset.cpp) -- what each part moves to the backup folder, and that the
 // start-up step carries out a pending plan before Forca reads its data folder.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include "catch2/catch_test_macros.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

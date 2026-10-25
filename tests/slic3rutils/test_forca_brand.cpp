@@ -1,5 +1,8 @@
 // Forca: forca_brand() (src/slic3r/GUI/I18N.cpp) swaps Orca's product name for Forca's in translated GUI text.
 // Same Windows include prologue as test_dev_mapping.cpp (wx pulls in <windows.h>).
+#include <string>
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/generators/catch_generators.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

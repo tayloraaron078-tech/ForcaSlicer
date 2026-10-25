@@ -10,6 +10,7 @@
 #include "libslic3r/Utils.hpp" // resources_dir()
 
 #include <boost/log/trivial.hpp>
+#include <memory>
 #include <nlohmann/json.hpp>
 
 #include <wx/timer.h>
@@ -17,6 +18,7 @@
 #include <algorithm>
 #include <atomic>
 #include <thread>
+#include <wx/webview.h>
 
 namespace Slic3r { namespace GUI {
 

@@ -9,6 +9,7 @@
 #define wxMediaCtrl3_h
 
 #include <chrono>
+#include <string>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/string.h>

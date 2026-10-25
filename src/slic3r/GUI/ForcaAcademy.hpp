@@ -76,6 +76,10 @@ struct ForcaAcademyHistory
 ForcaAcademyHistory forca_academy_history(const std::vector<ForcaAcademyPrint>& prints, const std::string& printer,
                                           const std::string& filament);
 
+// "Before you print" suggests Thick external bridges when any of these histories has a print tagged "bridging" and
+// the process has it off (it fixed sagging and torn bridges in Forca's tests).
+bool forca_academy_suggest_thick_bridges(const std::vector<ForcaAcademyHistory>& histories, bool thick_bridges);
+
 // The Print Journal's Insights: the prints grouped by printer, filament preset (a print with several filaments counts
 // once under each) or process preset, most prints first (then by name). Prints with an empty group value are skipped.
 enum class ForcaAcademyGroup { Printer, Filament, Process };
@@ -124,8 +128,12 @@ struct ForcaAcademyExperiment
     boost::filesystem::path file;
     std::string             title, date;
     bool                    has_result = false; // the user wrote something under "## Result"
+    std::string             state; // a planned experiment's: "planned" / "printed" / "judged"; empty for one from Compare
 };
+// Single-file experiments and planned ones (a folder with experiment.md, ForcaExperiment.hpp).
 std::vector<ForcaAcademyExperiment> forca_academy_list_experiments(const boost::filesystem::path& dir); // newest first
+// What an experiment page says under "## Result" until the user writes there.
+extern const char* const FORCA_EXPERIMENT_RESULT_UNWRITTEN;
 
 // "Possible pattern": the same tag on at least `count` of the last `window` prints with an outcome for one printer +
 // filament preset. Strongest first. `id` names it for dismissing.

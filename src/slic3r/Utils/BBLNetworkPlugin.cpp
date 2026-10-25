@@ -18,13 +18,16 @@
 #include <vector>
 #include <utility>
 #include "libslic3r/Utils.hpp"
+#include <boost/nowide/convert.hpp>
 #include "slic3r/Utils/FileTransferUtils.hpp"
 #include "slic3r/GUI/I18N.hpp"
 #include <cstddef>
 #include <cstring>
 #include <cwchar>
 
-#if !defined(_MSC_VER) && !defined(_WIN32)
+#if defined(_MSC_VER) || defined(_WIN32)
+#include <Windows.h>
+#else
 #include <dlfcn.h>
 #endif
 
@@ -143,10 +146,8 @@ int BBLNetworkPlugin::initialize(bool using_backup, const std::string& version)
                            : resolve_library_path(version);
 
 #if defined(_MSC_VER) || defined(_WIN32)
-    wchar_t lib_wstr[256];
-    memset(lib_wstr, 0, sizeof(lib_wstr));
-    ::MultiByteToWideChar(CP_UTF8, NULL, library.c_str(), strlen(library.c_str())+1, lib_wstr, sizeof(lib_wstr) / sizeof(lib_wstr[0]));
-    m_networking_module = LoadLibrary(lib_wstr);
+    // Forca: widened without a fixed-size buffer -- a 256 wchar_t buffer cut off long data-dir paths.
+    m_networking_module = LoadLibraryW(boost::nowide::widen(library).c_str());
     if (!m_networking_module) {
         std::string library_path = get_libpath_in_current_directory(std::string(BAMBU_NETWORK_LIBRARY));
         if (library_path.empty()) {
@@ -157,9 +158,7 @@ int BBLNetworkPlugin::initialize(bool using_backup, const std::string& version)
             );
             return -1;
         }
-        memset(lib_wstr, 0, sizeof(lib_wstr));
-        ::MultiByteToWideChar(CP_UTF8, NULL, library_path.c_str(), strlen(library_path.c_str())+1, lib_wstr, sizeof(lib_wstr) / sizeof(lib_wstr[0]));
-        m_networking_module = LoadLibrary(lib_wstr);
+        m_networking_module = LoadLibraryW(boost::nowide::widen(library_path).c_str());
     }
 #else
     m_networking_module = dlopen(library.c_str(), RTLD_LAZY);
@@ -329,20 +328,16 @@ void* BBLNetworkPlugin::get_source_module()
     auto plugin_folder = data_dir_path / "plugins";
 
 #if defined(_MSC_VER) || defined(_WIN32)
-    wchar_t lib_wstr[128];
-
+    // Forca: widened without a fixed-size buffer. A 128 wchar_t buffer cut off any data-dir path longer than about
+    // 100 characters, so the camera module failed to load and the app asked to reinstall the network plug-in.
     library = plugin_folder.string() + "/" + std::string(BAMBU_SOURCE_LIBRARY) + ".dll";
-    memset(lib_wstr, 0, sizeof(lib_wstr));
-    ::MultiByteToWideChar(CP_UTF8, NULL, library.c_str(), strlen(library.c_str())+1, lib_wstr, sizeof(lib_wstr) / sizeof(lib_wstr[0]));
-    m_source_module = LoadLibrary(lib_wstr);
+    m_source_module = LoadLibraryW(boost::nowide::widen(library).c_str());
     if (!m_source_module) {
         std::string library_path = get_libpath_in_current_directory(std::string(BAMBU_SOURCE_LIBRARY));
         if (library_path.empty()) {
             return m_source_module;
         }
-        memset(lib_wstr, 0, sizeof(lib_wstr));
-        ::MultiByteToWideChar(CP_UTF8, NULL, library_path.c_str(), strlen(library_path.c_str()) + 1, lib_wstr, sizeof(lib_wstr) / sizeof(lib_wstr[0]));
-        m_source_module = LoadLibrary(lib_wstr);
+        m_source_module = LoadLibraryW(boost::nowide::widen(library_path).c_str());
     }
 #else
 #if defined(__WXMAC__)

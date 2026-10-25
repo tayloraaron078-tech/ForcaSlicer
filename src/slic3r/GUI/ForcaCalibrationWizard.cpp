@@ -13,6 +13,10 @@
 #include "Widgets/Label.hpp"
 #include "Widgets/StateColor.hpp"
 #include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/BoundingBox.hpp"
+#include "libslic3r/ForcaCalibModel.hpp"
+#include "libslic3r/Geometry.hpp"
+#include "libslic3r/Model.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/TriangleMesh.hpp"
@@ -21,10 +25,29 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/log/trivial.hpp>
 
+#include <vector>
+#include <cstddef>
+#include <libslic3r/Preset.hpp>
+#include <string>
+#include <libslic3r/Config.hpp>
+#include <wx/colour.h>
+#include <wx/scrolwin.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <slic3r/GUI/ForcaCalibrationStore.hpp>
+#include <libslic3r/calib.hpp>
+#include <libslic3r/Point.hpp>
+#include <utility>
+#include <libslic3r/Format/bbs_3mf.hpp>
+#include <map>
+#include <cstdio>
+#include <slic3r/GUI/GUI.hpp>
+#include <functional>
 #include <wx/sizer.h>
 #include <wx/panel.h>
 #include <wx/simplebook.h>
 #include <wx/stattext.h>
+#include <wx/string.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>
 #include <wx/button.h>
@@ -36,6 +59,7 @@
 #include <algorithm>
 #include <cmath>
 #include <optional>
+#include <wx/unichar.h>
 
 namespace Slic3r { namespace GUI {
 
@@ -337,6 +361,7 @@ ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     m_cal_choice->Append(_L("Pressure Advance"));
     m_cal_choice->Append(_L("Retraction"));
     m_cal_choice->Append(_L("Shrinkage"));
+    m_cal_choice->Append(_L("Hole size (optional)"));
     m_cal_choice->Append(_L("Final check print (optional)"));
     m_cal_choice->SetSelection(0);
     m_cal_choice->Bind(wxEVT_CHOICE, &ForcaCalibrationWizard::on_calibration_changed, this);
@@ -353,6 +378,7 @@ ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     m_book->AddPage(build_pa_gen_page(m_book),         _L("PA"));
     m_book->AddPage(build_retraction_gen_page(m_book), _L("Retraction"));
     m_book->AddPage(build_shrinkage_gen_page(m_book),  _L("Shrinkage"));
+    m_book->AddPage(build_hole_gen_page(m_book),       _L("Hole size"));
     m_book->AddPage(build_final_check_page(m_book),    _L("Final check"));
     m_book->AddPage(build_result_page(m_book),         _L("Result"));      // PAGE_RESULT
     m_book->AddPage(build_start_page(m_book),          _L("Start"));       // PAGE_START
@@ -526,6 +552,33 @@ wxPanel* ForcaCalibrationWizard::build_shrinkage_gen_page(wxWindow* parent)
     box->Add(coach, 0, wxALL, FromDIP(6));
 
     add_run_buttons(panel, box, _L("I have already printed the frame - enter measurements"));
+
+    auto* outer = new wxBoxSizer(wxVERTICAL);
+    outer->Add(box, 0, wxEXPAND);
+    panel->SetSizerAndFit(outer);
+    return panel;
+}
+
+wxPanel* ForcaCalibrationWizard::build_hole_gen_page(wxWindow* parent)
+{
+    auto* panel = new wxPanel(parent);
+    auto* box   = new wxStaticBoxSizer(new wxStaticBox(panel, wxID_ANY, _L("Hole size (optional)")), wxVERTICAL);
+
+    wxString sizes;
+    for (double d : forca_hole_plate_sizes())
+        sizes += (sizes.IsEmpty() ? "" : ", ") + wxString::Format("%g", d);
+    auto* coach = new wxStaticText(panel, wxID_ANY, hard_wrap(wxString::Format(
+        // TRN %s is the list of hole diameters, e.g. "3, 5, 8, 12, 20".
+        _L("This prints a bar with a row of round holes (%s mm), smallest at the notched end. X-Y hole compensation "
+           "is turned off for this test, so the result starts from the holes as modelled. Do Shrinkage first: it "
+           "changes hole sizes too. Let the bar cool, then measure each hole's diameter -- a pin gauge or drill shank "
+           "that just fits is more exact than caliper jaws in small holes. The result page turns those into X-Y hole "
+           "compensation (mm and %% of size) in your process preset."),
+        sizes), 60));
+    coach->SetMinSize(FromDIP(wxSize(430, -1)));
+    box->Add(coach, 0, wxALL, FromDIP(6));
+
+    add_run_buttons(panel, box, _L("I have already printed the bar - enter measurements"));
 
     auto* outer = new wxBoxSizer(wxVERTICAL);
     outer->Add(box, 0, wxEXPAND);
@@ -756,12 +809,30 @@ wxPanel* ForcaCalibrationWizard::build_result_page(wxWindow* parent)
     m_shrink_inputs->Hide(); // shown by show_result_page for Shrinkage only
     sizer->Add(m_shrink_inputs, 0, wxBOTTOM, FromDIP(8));
 
+    // Hole size only: one measured diameter per hole.
+    m_hole_inputs = new wxPanel(panel);
+    auto* hole_sizer = new wxBoxSizer(wxVERTICAL);
+    for (double d : forca_hole_plate_sizes()) {
+        auto* r = new wxBoxSizer(wxHORIZONTAL);
+        r->Add(new wxStaticText(m_hole_inputs, wxID_ANY, wxString::Format(_L("Measured %g mm hole:"), d), wxDefaultPosition,
+                                FromDIP(wxSize(200, -1))),
+               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+        auto* t = new wxTextCtrl(m_hole_inputs, wxID_ANY, "", wxDefaultPosition, FromDIP(wxSize(90, -1)));
+        r->Add(t, 0);
+        hole_sizer->Add(r, 0, wxBOTTOM, FromDIP(4));
+        m_hole_values.push_back(t);
+    }
+    m_hole_inputs->SetSizer(hole_sizer);
+    m_hole_inputs->Hide(); // shown by show_result_page for Hole size only
+    sizer->Add(m_hole_inputs, 0, wxBOTTOM, FromDIP(8));
+
     m_result_hint = new wxStaticText(panel, wxID_ANY, "");
     m_result_hint->SetForegroundColour(wxColour("#6B6B6B"));
     m_result_hint->SetMinSize(FromDIP(wxSize(430, -1))); // pin width so the guidance/formula can't widen the dialog
     sizer->Add(m_result_hint, 0, wxBOTTOM, FromDIP(8));
 
     auto* name_row = new wxBoxSizer(wxHORIZONTAL);
+    m_preset_name_row = name_row;
     name_row->Add(new wxStaticText(panel, wxID_ANY, _L("Save as preset:"), wxDefaultPosition, FromDIP(wxSize(200, -1))),
                   0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
     m_preset_name = new wxTextCtrl(panel, wxID_ANY, "");
@@ -776,11 +847,13 @@ wxPanel* ForcaCalibrationWizard::build_result_page(wxWindow* parent)
     wrap_label(note, wrap);
     note->SetForegroundColour(wxColour("#6B6B6B"));
     sizer->Add(note, 0, wxBOTTOM, FromDIP(10));
+    m_preset_note = note;
 
     auto* buttons = new wxBoxSizer(wxHORIZONTAL);
     auto* back_btn = new wxButton(panel, wxID_ANY, _L("Back"));
     back_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_back_from_result, this);
     auto* apply_btn = new wxButton(panel, wxID_ANY, _L("Apply and save to preset"));
+    m_apply_btn = apply_btn;
     apply_btn->Bind(wxEVT_BUTTON, &ForcaCalibrationWizard::on_apply_result, this);
     buttons->Add(back_btn, 0, wxRIGHT, FromDIP(8));
     buttons->AddStretchSpacer(1);
@@ -803,6 +876,7 @@ std::string ForcaCalibrationWizard::cal_id(Cal cal)
     case Cal::PressureAdvance: return "pa";
     case Cal::Retraction:      return "retraction";
     case Cal::Shrinkage:       return "shrinkage";
+    case Cal::HoleSize:        return "holes";
     default:                   return "final_check";
     }
 }
@@ -816,6 +890,7 @@ wxString ForcaCalibrationWizard::cal_display() const
     case Cal::PressureAdvance: return _L("Pressure Advance");
     case Cal::Retraction:      return _L("Retraction");
     case Cal::Shrinkage:       return _L("Shrinkage");
+    case Cal::HoleSize:        return _L("Hole size");
     default:                   return _L("Final check print");
     }
 }
@@ -829,6 +904,7 @@ wxString ForcaCalibrationWizard::format_result(double value) const
     case Cal::PressureAdvance: return wxString::Format(_L("PA %.3f"), value);
     case Cal::Retraction:      return wxString::Format(_L("retraction %.2f mm"), value);
     case Cal::Shrinkage:       return wxString::Format(_L("XY shrinkage %.2f%%"), value);
+    case Cal::HoleSize:        return wxString::Format(_L("hole compensation %.2f%% of size"), value);
     default:                   return wxEmptyString;
     }
 }
@@ -1022,6 +1098,7 @@ void ForcaCalibrationWizard::show_result_page()
     const bool is_pa   = (m_cal == Cal::PressureAdvance);
     const bool is_retract = (m_cal == Cal::Retraction);
     const bool is_shrink  = (m_cal == Cal::Shrinkage);
+    const bool is_holes   = (m_cal == Cal::HoleSize);
     const int  pa_method = m_pa_method->GetSelection();
     const bool is_tower  = is_pa && pa_method == PA_TOWER;
     wxString rlabel = _L("Best temperature (C):");
@@ -1033,8 +1110,15 @@ void ForcaCalibrationWizard::show_result_page()
     m_result_value->SetValue("");
 
     // Shrinkage takes three measurements instead of the single value.
-    m_result_row->ShowItems(!is_shrink);
+    m_result_row->ShowItems(!is_shrink && !is_holes);
     m_shrink_inputs->Show(is_shrink);
+    // Hole size: one value per hole, written into the process preset (no filament preset name to pick).
+    m_hole_inputs->Show(is_holes);
+    for (wxTextCtrl* t : m_hole_values)
+        t->SetValue("");
+    m_preset_name_row->ShowItems(!is_holes);
+    m_preset_note->Show(!is_holes);
+    m_apply_btn->SetLabel(is_holes ? _L("Apply to process preset") : _L("Apply and save to preset"));
     if (is_shrink) {
         m_shrink_x->SetValue("");
         m_shrink_y->SetValue("");
@@ -1093,7 +1177,14 @@ void ForcaCalibrationWizard::show_result_page()
             _L("Enter what you measured. Leave Z empty to keep the current Z value. Current compensation: "
                "XY %.2f%%, Z %.2f%% (already applied to this print, so it is accounted for)."),
             current_percent("filament_shrink"), current_percent("filament_shrinkage_compensation_z")), 52));
-    else
+    else if (is_holes) {
+        const DynamicPrintConfig& print = wxGetApp().preset_bundle->prints.get_edited_preset().config;
+        m_result_hint->SetLabel(hard_wrap(wxString::Format(
+            _L("Enter each hole's measured diameter in mm. Leave a hole empty if you can't measure it (at least two "
+               "are needed). The process preset now has X-Y hole compensation %.2f mm and %.2f%% of size; the test "
+               "printed without them, and the result replaces both."),
+            print.opt_float("xy_hole_compensation"), print.option<ConfigOptionPercent>("xy_hole_compensation_percent")->value), 52));
+    } else
         m_result_hint->SetLabel("");
 
     update_default_preset_name();
@@ -1304,7 +1395,7 @@ bool ForcaCalibrationWizard::build_params_for_current_cal(Calib_Params& out, wxS
         return true;
     }
 
-    if (m_cal == Cal::Shrinkage || m_cal == Cal::FinalCheck) {
+    if (m_cal == Cal::Shrinkage || m_cal == Cal::HoleSize || m_cal == Cal::FinalCheck) {
         // Not Orca calib modes: plain models, no calibration g-code. Record the shrinkage nominals for the store.
         out.mode = CalibMode::Calib_None;
         if (m_cal == Cal::Shrinkage) {
@@ -1364,6 +1455,8 @@ void ForcaCalibrationWizard::launch_calib(const Calib_Params& params, bool skip_
         m_plater->calib_retraction(params, skip_confirm);
     else if (m_cal == Cal::Shrinkage)
         launch_shrinkage_test(skip_confirm);
+    else if (m_cal == Cal::HoleSize)
+        launch_hole_test(skip_confirm);
     else if (m_cal == Cal::FinalCheck)
         launch_final_check(skip_confirm);
     else { // Pressure Advance (params.mode picks Tower / Line / Pattern)
@@ -1493,6 +1586,39 @@ void ForcaCalibrationWizard::launch_shrinkage_test(bool skip_confirm)
     its_merge(frame, box(L - W, W, 0, W, L - 2 * W, H));           // right bar
     its_merge(frame, box(0, 0, H, W, W, SHRINK_Z_MM - H));         // Z post on the front-left corner
     wxGetApp().obj_list()->load_mesh_object(TriangleMesh(std::move(frame)), _L("Forca shrinkage frame"), true);
+}
+
+void ForcaCalibrationWizard::launch_hole_test(bool skip_confirm)
+{
+    if (m_plater->new_project(skip_confirm, false, _L("Hole size test")) == wxID_CANCEL)
+        return;
+    wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
+    m_plater->get_partplate_list().get_current_fff_print().set_calib_params(Calib_Params()); // see launch_shrinkage_test
+
+    // The bar is a model part and the holes are negative volumes, so it's added like ObjectList::load_mesh_object does,
+    // but with all its volumes at once.
+    Model&       model = m_plater->model();
+    ModelObject* obj   = model.add_object();
+    obj->name          = into_u8(_L("Forca hole plate"));
+    forca_build_hole_plate(*obj);
+    obj->add_instance();
+    obj->config.set_key_value("extruder", new ConfigOptionInt(1));
+    // Both hole settings at 0 on the test object: the fit starts from the holes as modelled.
+    obj->config.set_key_value("xy_hole_compensation", new ConfigOptionFloat(0.));
+    obj->config.set_key_value("xy_hole_compensation_percent", new ConfigOptionPercent(0.));
+    obj->sort_volumes(true);
+    BoundingBoxf3 bb;
+    for (const ModelVolume* v : obj->volumes)
+        if (v->is_model_part())
+            bb.merge(v->mesh().bounding_box());
+    obj->invalidate_bounding_box();
+    obj->translate(-bb.center());
+    save_object_mesh(*obj);
+    obj->instances[0]->set_offset(to_3d(m_plater->build_volume().bed_center(), -obj->origin_translation.z()));
+    obj->ensure_on_bed();
+    const Geometry::Transformation t = obj->instances[0]->get_transformation();
+    obj->instances[0]->set_assemble_transformation(t);
+    wxGetApp().obj_list()->paste_objects_into_list({ model.objects.size() - 1 });
 }
 
 void ForcaCalibrationWizard::launch_final_check(bool skip_confirm)
@@ -1632,6 +1758,10 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
 {
     if (m_cal == Cal::FinalCheck)
         return; // nothing to save (its page has no result button; guard against a stale result page)
+    if (m_cal == Cal::HoleSize) {
+        apply_hole_result(); // into the process preset, not the run's filament preset
+        return;
+    }
 
     double value = 0.0;
     double shrink_z_pct = 0.0; // Shrinkage only: the Z percent written, for the confirmation message
@@ -1832,6 +1962,12 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
         break;
     case Cal::PressureAdvance: next = Cal::Retraction; break; // the optional recheck is offered below
     case Cal::Retraction:      next = Cal::Shrinkage;  next_line = _L("Next up: Shrinkage."); break;
+    case Cal::Shrinkage:
+        next = Cal::HoleSize;
+        next_line = _L("That completes the calibrations. Optionally, calibrate hole sizes next, then print the final check "
+                       "to confirm the whole profile.");
+        m_run_finished = true; // as below
+        break;
     default:
         next = Cal::FinalCheck;
         next_line = _L("That completes the calibrations. Optionally, print the final check to confirm the whole profile.");
@@ -1880,6 +2016,77 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
     }
     update_status_label();
     update_default_preset_name();
+    show_gen_page();
+}
+
+void ForcaCalibrationWizard::apply_hole_result()
+{
+    std::vector<double> measured;
+    for (wxTextCtrl* t : m_hole_values) {
+        const wxString text = t->GetValue().Trim(true).Trim(false);
+        double         m    = 0.;
+        if (!text.IsEmpty() && (!text.ToDouble(&m) || m <= 0.)) {
+            MessageDialog dlg(this, _L("Please enter each measured diameter in mm, or leave it empty."), cal_display(),
+                              wxICON_WARNING | wxOK);
+            dlg.ShowModal();
+            return;
+        }
+        measured.push_back(m); // 0 = not measured
+    }
+    const ForcaHoleFit fit = forca_hole_fit(forca_hole_plate_sizes(), measured);
+    if (fit.error != ForcaHoleFit::Error::None) {
+        MessageDialog dlg(this,
+                          fit.error == ForcaHoleFit::Error::TooFew ?
+                              _L("Please measure at least two holes of different sizes.") :
+                              _L("At least one measurement is far from its hole's size. Please re-check the numbers (for "
+                                 "example a missing decimal point)."),
+                          cal_display(), wxICON_WARNING | wxOK);
+        dlg.ShowModal();
+        return;
+    }
+
+    PresetBundle* b   = wxGetApp().preset_bundle;
+    Tab*          tab = wxGetApp().get_tab(Preset::TYPE_PRINT);
+    if (b == nullptr || tab == nullptr)
+        return;
+    const double mm      = std::round(fit.mm * 100.) / 100.;
+    const double percent = std::round(fit.percent * 100.) / 100.;
+    const wxString process = wxString::FromUTF8(b->prints.get_edited_preset().name);
+
+    wxString msg = wxString::Format(_L("Suggested settings:\nX-Y hole compensation: %.2f mm\nX-Y hole compensation (%% of size): "
+                                       "%.2f%%"), mm, percent);
+    if (fit.used >= 3)
+        msg += "\n\n" + wxString::Format(_L("With them, the measured holes should be within %.2f mm of their size."),
+                                           fit.worst_error);
+    if (fit.clamped)
+        msg += "\n\n" + _L("A value was limited to the setting's range, so holes may still be off. Re-check the measurements "
+                            "and the filament's shrinkage.");
+    msg += "\n\n" + wxString::Format(_L("Put them into the process preset \"%s\"? It isn't saved until you save the preset."),
+                                       process);
+    MessageDialog ask(this, msg, cal_display(), wxICON_QUESTION | wxYES_NO);
+    if (ask.ShowModal() != wxID_YES)
+        return;
+
+    DynamicPrintConfig config = b->prints.get_edited_preset().config;
+    config.set_key_value("xy_hole_compensation", new ConfigOptionFloat(mm));
+    config.set_key_value("xy_hole_compensation_percent", new ConfigOptionPercent(percent));
+    tab->load_config(config); // edits the preset; the user saves it (or not)
+
+    m_store.set_done(current_key(), percent, std::string());
+    forca_academy_log_calibration(false, selected_filament_name(),
+                                  cal_id(Cal::HoleSize) + ": " + into_u8(wxString::Format("%.2f mm, %.2f%%", mm, percent)) +
+                                      " -- " + b->printers.get_edited_preset().name + " (Calibration Wizard)");
+
+    MessageDialog done(this,
+                       wxString::Format(_L("The hole settings are in the process preset \"%s\". Save the preset to keep them."),
+                                        process) +
+                           "\n\n" + _L("Optionally, print the final check to confirm the whole profile."),
+                       cal_display(), wxICON_INFORMATION | wxOK);
+    done.ShowModal();
+
+    m_run_finished = true;
+    set_cal(Cal::FinalCheck);
+    update_status_label();
     show_gen_page();
 }
 
@@ -2235,6 +2442,7 @@ ForcaCalibrationWizard::Cal ForcaCalibrationWizard::next_after(Cal done)
     case Cal::FlowRate:        return Cal::PressureAdvance;
     case Cal::PressureAdvance: return Cal::Retraction;
     case Cal::Retraction:      return Cal::Shrinkage;
+    case Cal::Shrinkage:       return Cal::HoleSize;
     default:                   return Cal::FinalCheck;
     }
 }
@@ -2379,7 +2587,7 @@ ForcaCalibrationWizard::ProgressModel ForcaCalibrationWizard::progress_model() c
         total += st.fraction;
         m.steps.push_back(st);
     }
-    // Optional markers (not counted): the flow recheck and the final check print.
+    // Optional markers (not counted): the flow recheck, hole size and the final check print.
     {
         Step recheck;
         recheck.cal      = Cal::FlowRate;
@@ -2389,6 +2597,18 @@ ForcaCalibrationWizard::ProgressModel ForcaCalibrationWizard::progress_model() c
         recheck.fraction = (record(Cal::FlowRate, r) && r.pass >= 3) ? 1.0 : 0.0;
         recheck.current  = (m_cal == Cal::FlowRate && m_flow_recheck);
         m.steps.push_back(recheck);
+
+        Step holes;
+        holes.cal      = Cal::HoleSize;
+        holes.name     = _L("Hole size");
+        holes.optional = true;
+        if (record(Cal::HoleSize, r)) {
+            holes.pending  = (r.status == "pending");
+            holes.skipped  = (r.status == "skipped");
+            holes.fraction = (holes.skipped || has_value(r)) ? 1.0 : 0.0;
+        }
+        holes.current = (m_cal == Cal::HoleSize);
+        m.steps.push_back(holes);
 
         Step fc;
         fc.cal      = Cal::FinalCheck;

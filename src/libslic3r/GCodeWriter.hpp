@@ -52,6 +52,12 @@ public:
     // Extruders are expected to be sorted in an increasing order.
     void                 set_extruders(std::vector<unsigned int> extruder_ids);
     const std::vector<Extruder>& extruders() const { return m_filament_extruders; }
+    // Forca: the printed object's retraction overrides for every filament (nullptr = none).
+    void set_object_overrides(const ObjectRetractionOverrides* overrides)
+    {
+        for (Extruder& e : m_filament_extruders)
+            e.set_object_overrides(overrides);
+    }
     std::vector<unsigned int> extruder_ids() const {
         std::vector<unsigned int> out;
         out.reserve(m_filament_extruders.size());
@@ -71,6 +77,10 @@ public:
     std::string set_jerk_xy(double jerk);
     // Orca: set acceleration and jerk in one command for Klipper
     std::string set_accel_and_jerk(unsigned int acceleration, double jerk);
+    // Orca: Klipper's accel_to_decel limit for `acceleration`, sent as the legacy ACCEL_TO_DECEL and as the
+    // equivalent MINIMUM_CRUISE_RATIO = 1 - ACCEL_TO_DECEL / ACCEL that replaced it. Klipper before 0.13 and
+    // vendor forks read only the first, current Klipper only the second, and 0.13 prefers the second.
+    static void append_klipper_accel_to_decel(std::string &gcode, unsigned int acceleration, double accel_to_decel_factor);
     std::string set_junction_deviation(double junction_deviation); 
     std::string set_pressure_advance(double pa, int tool = -1) const;
     std::string set_input_shaping(char axis, float damp, float freq, std::string type) const;
@@ -93,6 +103,9 @@ public:
     double      get_current_speed() const { return m_current_speed;}
     std::string travel_to_xy(const Vec2d &point, const std::string &comment = std::string());
     std::string travel_to_xyz(const Vec3d &point, const std::string &comment = std::string(), bool force_z = false);
+    // Physical Z range which travel_to_xyz() will emit without mutating writer state.
+    // This includes an existing lift or a pending lazy lift.
+    std::pair<double, double> planned_travel_z(const Vec3d &point, bool force_z = false) const;
     std::string travel_to_z(double z, const std::string &comment = std::string(), bool force = false);
     bool        will_move_z(double z) const;
     std::string extrude_to_xy(const Vec2d &point, double dE, const std::string &comment = std::string(), bool force_no_extrusion = false);

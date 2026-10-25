@@ -13,6 +13,7 @@
 #include <set>
 #include <string>
 #include <thread>
+#include <utility>
 #include <vector>
 
 namespace Slic3r { namespace GUI {

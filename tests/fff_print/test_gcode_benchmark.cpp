@@ -1,5 +1,6 @@
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "test_helpers.hpp"
 #include "test_utils.hpp"
 
@@ -12,7 +13,13 @@
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include <libslic3r/Print.hpp>
+#include <libslic3r/Model.hpp>
+#include <libslic3r/PrintConfig.hpp>
+#include <libslic3r/TriangleMesh.hpp>
+#include <ratio>
 #include <string>
+#include <utility>
 #include <vector>
 
 using namespace Slic3r;

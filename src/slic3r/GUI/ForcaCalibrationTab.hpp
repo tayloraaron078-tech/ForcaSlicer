@@ -4,11 +4,14 @@
 #include "ForcaCalibrationWizard.hpp"
 
 #include <wx/bitmap.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
 #include <wx/image.h>
 #include <wx/panel.h>
 
 #include <functional>
 #include <vector>
+#include <wx/string.h>
 
 class wxButton;
 class wxDC;

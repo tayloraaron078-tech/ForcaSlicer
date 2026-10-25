@@ -1028,60 +1028,6 @@
       }
     },
     {
-      "msgid": "How many layers deep a color painted on a top surface goes into the part. 0 means the same as the top shell layers.",
-      "translations": {
-        "ca": "Quantes capes de profunditat penetra a la peça un color pintat en una superfície superior. 0 vol dir el mateix que les capes sòlides de la carcassa superior.",
-        "cs": "Kolik vrstev hluboko do dílu pronikne barva namalovaná na horní ploše. 0 znamená stejně jako vrstvy horního pláště.",
-        "de": "Wie viele Schichten tief eine auf eine obere Fläche gemalte Farbe in das Teil eindringt. 0 bedeutet dasselbe wie die oberen Schalenschichten.",
-        "es": "Cuántas capas de profundidad penetra en la pieza un color pintado en una superficie superior. 0 significa lo mismo que las capas de la cubierta superior.",
-        "eu": "Goiko gainazal batean margotutako kolore bat zenbat geruzatan sartzen den piezan. 0 goiko oskolaren geruzen berdina da.",
-        "fr": "Sur combien de couches une couleur peinte sur une surface supérieure pénètre dans la pièce. 0 signifie autant que les couches supérieures de la coque.",
-        "hu": "Hány réteg mélyen hatol be az alkatrészbe egy felső felületre festett szín. A 0 ugyanannyit jelent, mint a felső héj rétegek.",
-        "it": "Per quanti strati un colore dipinto su una superficie superiore penetra nel pezzo. 0 significa come gli strati guscio superiore.",
-        "ja": "上面に塗った色がパーツ内部に何層まで浸透するか。0 はトップ面層数と同じです。",
-        "ko": "상단 면에 칠한 색이 파트 안으로 몇 레이어까지 스며드는지입니다. 0은 상단 쉘 레이어와 같습니다.",
-        "lt": "Kiek sluoksnių į detalę įsiskverbia ant viršutinio paviršiaus nudažyta spalva. 0 reiškia tą patį, ką viršutiniai apvalkalo sluoksniai.",
-        "nl": "Hoeveel lagen diep een op een bovenvlak geschilderde kleur in het onderdeel doordringt. 0 betekent hetzelfde als het aantal lagen bovenkant.",
-        "pl": "Na ile warstw w głąb części wnika kolor namalowany na górnej powierzchni. 0 oznacza tyle samo, co górne warstwy powłoki.",
-        "pt_BR": "Quantas camadas de profundidade uma cor pintada em uma superfície superior penetra na peça. 0 significa o mesmo que as camadas de topo da casca.",
-        "ru": "На сколько слоёв вглубь детали проникает цвет, нанесённый на верхнюю поверхность. 0 означает столько же, сколько сплошных слоёв сверху.",
-        "sv": "Hur många lager djupt en färg som målats på en övre yta tränger in i delen. 0 betyder samma som övre skal lager.",
-        "th": "จำนวนเลเยอร์ที่สีซึ่งระบายบนพื้นผิวด้านบนซึมลึกเข้าไปในชิ้นงาน 0 หมายถึงเท่ากับเลเยอร์ผนังด้านบน",
-        "tr": "Üst yüzeye boyanan rengin parçanın içine kaç katman derinliğe ineceği. 0, üst katmanlarla aynı demektir.",
-        "uk": "На скільки шарів углиб деталі проникає колір, нанесений на верхню поверхню. 0 означає стільки ж, скільки шарів верхньої оболонки.",
-        "vi": "Màu sơn trên bề mặt trên thấm sâu vào chi tiết bao nhiêu lớp. 0 nghĩa là bằng số lớp vỏ trên.",
-        "zh_CN": "涂在顶面上的颜色渗入零件的层数。0 表示与顶部壳体层数相同。",
-        "zh_TW": "塗在頂面上的顏色滲入零件的層數。0 表示與頂部外殼層數相同。"
-      }
-    },
-    {
-      "msgid": "How many layers deep a color painted on a bottom surface goes into the part. 0 means the same as the bottom shell layers.",
-      "translations": {
-        "ca": "Quantes capes de profunditat penetra a la peça un color pintat en una superfície inferior. 0 vol dir el mateix que les capes de la carcassa inferior.",
-        "cs": "Kolik vrstev hluboko do dílu pronikne barva namalovaná na spodní ploše. 0 znamená stejně jako počet vrstev spodního pláště.",
-        "de": "Wie viele Schichten tief eine auf eine untere Fläche gemalte Farbe in das Teil eindringt. 0 bedeutet dasselbe wie die unteren Schalenschichten.",
-        "es": "Cuántas capas de profundidad penetra en la pieza un color pintado en una superficie inferior. 0 significa lo mismo que las capas inferiores de cubierta.",
-        "eu": "Beheko gainazal batean margotutako kolore bat zenbat geruzatan sartzen den piezan. 0 beheko oskol-geruzen berdina da.",
-        "fr": "Sur combien de couches une couleur peinte sur une surface inférieure pénètre dans la pièce. 0 signifie autant que les couches inférieures de la coque.",
-        "hu": "Hány réteg mélyen hatol be az alkatrészbe egy alsó felületre festett szín. A 0 ugyanannyit jelent, mint az alsó héj rétegek.",
-        "it": "Per quanti strati un colore dipinto su una superficie inferiore penetra nel pezzo. 0 significa come gli strati guscio inferiore.",
-        "ja": "底面に塗った色がパーツ内部に何層まで浸透するか。0 は底面層数と同じです。",
-        "ko": "하단 면에 칠한 색이 파트 안으로 몇 레이어까지 스며드는지입니다. 0은 하단 쉘 레이어와 같습니다.",
-        "lt": "Kiek sluoksnių į detalę įsiskverbia ant apatinio paviršiaus nudažyta spalva. 0 reiškia tą patį, ką apatinio apvalkalo sluoksniai.",
-        "nl": "Hoeveel lagen diep een op een ondervlak geschilderde kleur in het onderdeel doordringt. 0 betekent hetzelfde als het aantal bodemlagen.",
-        "pl": "Na ile warstw w głąb części wnika kolor namalowany na dolnej powierzchni. 0 oznacza tyle samo, co dolne warstwy powłoki.",
-        "pt_BR": "Quantas camadas de profundidade uma cor pintada em uma superfície inferior penetra na peça. 0 significa o mesmo que as camadas da casca de base.",
-        "ru": "На сколько слоёв вглубь детали проникает цвет, нанесённый на нижнюю поверхность. 0 означает столько же, сколько сплошных слоёв снизу.",
-        "sv": "Hur många lager djupt en färg som målats på en undre yta tränger in i delen. 0 betyder samma som botten skal lager.",
-        "th": "จำนวนเลเยอร์ที่สีซึ่งระบายบนพื้นผิวด้านล่างซึมลึกเข้าไปในชิ้นงาน 0 หมายถึงเท่ากับเลเยอร์ผนังด้านล่าง",
-        "tr": "Alt yüzeye boyanan rengin parçanın içine kaç katman derinliğe ineceği. 0, alt katmanlarla aynı demektir.",
-        "uk": "На скільки шарів углиб деталі проникає колір, нанесений на нижню поверхню. 0 означає стільки ж, скільки шарів нижньої оболонки.",
-        "vi": "Màu sơn trên bề mặt dưới thấm sâu vào chi tiết bao nhiêu lớp. 0 nghĩa là bằng số lớp vỏ dưới.",
-        "zh_CN": "涂在底面上的颜色渗入零件的层数。0 表示与底部壳体层数相同。",
-        "zh_TW": "塗在底面上的顏色滲入零件的層數。0 表示與底部外殼層數相同。"
-      }
-    },
-    {
       "msgid": "The overhang and bridge speeds above don't apply to %1%, which use their own (filament settings, Filament page, Overhang speed).",
       "translations": {
         "ca": "Les velocitats de voladís i de pont anteriors no s'apliquen a %1%, que fan servir les seves pròpies (ajustos del filament, pàgina Filament, Velocitat de voladís).",

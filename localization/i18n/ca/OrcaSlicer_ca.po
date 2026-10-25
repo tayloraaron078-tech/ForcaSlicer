@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 09:55-0300\n"
+"POT-Creation-Date: 2026-10-19 09:48-0300\n"
 "PO-Revision-Date: 2025-03-15 10:55+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -746,6 +746,9 @@ msgstr "mm"
 msgid "Part selection"
 msgstr "Selecció de part"
 
+msgid "Select multiple objects"
+msgstr "Seleccionar múltiples objectes"
+
 msgid "Fixed step drag"
 msgstr "Arrossegament de pas fix"
 
@@ -810,9 +813,83 @@ msgstr "Peça"
 msgid "Relative"
 msgstr "Relatiu"
 
+msgid "Selection"
+msgstr "Selecció"
+
+msgid "Plate"
+msgstr "Safata"
+
+# AI Translated
+# Needs human review: Glossary has no Catalan rendering; Distribuir chosen as the counterpart of Alinear (command that spaces objects evenly).
+msgid "Distribute"
+msgstr "Distribuir"
+
 # AI Translated
 msgid "Coordinate system used for transform actions."
 msgstr "Sistema de coordenades utilitzat per a les accions de transformació."
+
+# AI Translated
+msgid "Reference for alignment"
+msgstr "Referència per a l'alineació"
+
+# AI Translated
+msgid "Select at least 3 parts or objects"
+msgstr "Seleccioneu almenys 3 peces o objectes"
+
+# AI Translated
+msgid "Align left"
+msgstr "Alinear a l'esquerra"
+
+# AI Translated
+msgid "Align left-right center"
+msgstr "Alinear al centre esquerra-dreta"
+
+# AI Translated
+msgid "Align right"
+msgstr "Alinear a la dreta"
+
+# AI Translated
+msgid "Align front"
+msgstr "Alinear al davant"
+
+# AI Translated
+msgid "Align front-back center"
+msgstr "Alinear al centre davant-darrere"
+
+# AI Translated
+msgid "Align back"
+msgstr "Alinear al darrere"
+
+# AI Translated
+msgid "Align bottom"
+msgstr "Alinear a baix"
+
+# AI Translated
+msgid "Align top-bottom center"
+msgstr "Alinear al centre dalt-baix"
+
+# AI Translated
+msgid "Align top"
+msgstr "Alinear a dalt"
+
+# AI Translated
+msgid "Distribute left-right"
+msgstr "Distribuir esquerra-dreta"
+
+# AI Translated
+msgid "Distribute front-back"
+msgstr "Distribuir davant-darrere"
+
+# AI Translated
+msgid "Distribute top-bottom"
+msgstr "Distribuir dalt-baix"
+
+msgid "Drop"
+msgstr "Deixar anar"
+
+# AI Translated
+msgid "Move the selection along Z so that its lowest point touches the bed."
+msgstr "Moveu la selecció al llarg de Z perquè el seu punt més baix toqui el llit."
 
 # AI Translated
 msgid "Absolute"
@@ -1717,7 +1794,7 @@ msgid "Stroke of shape (%1%) contains unsupported: %2%."
 msgstr "Traç de forma ( %1% ) conté elements no compatibles: %2%."
 
 # AI Translated
-msgid "Not valid state please report reproduction steps on github"
+msgid "Not valid state please report reproduction steps on GitHub"
 msgstr "Estat no vàlid; informeu dels passos per reproduir-lo a GitHub"
 
 # AI Translated
@@ -1725,11 +1802,11 @@ msgid "No embossed file"
 msgstr "No hi ha cap fitxer en relleu"
 
 # AI Translated
-msgid "Missing svg file in embossed shape"
+msgid "Missing SVG file in embossed shape"
 msgstr "Falta el fitxer SVG a la forma en relleu"
 
 # AI Translated
-msgid "Missing data of svg file"
+msgid "Missing data of SVG file"
 msgstr "Falten les dades del fitxer SVG"
 
 msgid "Face the camera"
@@ -2054,6 +2131,22 @@ msgstr "Entrant al gizmo d'Ensamblatge"
 # AI Translated
 msgid "Leaving Assembly gizmo"
 msgstr "Sortint del gizmo d'Ensamblatge"
+
+# AI Translated
+msgid "Parts of a cut object cannot be moved"
+msgstr "Les peces d'un objecte tallat no es poden moure"
+
+# AI Translated
+msgid "Aligning to the plate is available in X and Y only"
+msgstr "L'alineació amb la placa només està disponible en X i Y"
+
+# AI Translated
+msgid "Turn off Auto-Drop for the selected objects to move them in Z"
+msgstr "Desactiveu la Caiguda automàtica dels objectes seleccionats per moure'ls en Z"
+
+# AI Translated
+msgid "All selected objects must be on the same plate"
+msgstr "Tots els objectes seleccionats han d'estar a la mateixa placa"
 
 msgid "Shift+"
 msgstr "Màj+"
@@ -2487,6 +2580,66 @@ msgstr "Restricció del connector de xarxa"
 
 msgid "Privacy Policy Update"
 msgstr "Actualització de la política de privadesa"
+
+# AI Translated
+msgid "All your filament presets are available on the printers they were made for."
+msgstr "Tots els vostres perfils de filament estan disponibles a les impressores per a les quals es van crear."
+
+# AI Translated
+msgid "Migrate Filament Presets"
+msgstr "Migrar els perfils de filament"
+
+# AI Translated
+msgid ""
+"OrcaSlicer 2.5.0 restructured many system filament presets to fix incorrect profiles and prepare for future features. As a result, the presets below no longer show on some printers they were made for. Sorry for the trouble; this is a one-time fix.\n"
+"\n"
+"Add those printers back to your presets now? Your presets are backed up first. You can also do this later from Help > Migrate Filament Presets."
+msgstr ""
+"OrcaSlicer 2.5.0 ha reestructurat molts perfils de filament del sistema per corregir perfils incorrectes i preparar funcions futures. Com a resultat, els perfils següents ja no apareixen en algunes de les impressores per a les quals es van crear. Disculpeu les molèsties; és una correcció única.\n"
+"\n"
+"Voleu tornar a afegir aquestes impressores als vostres perfils ara? Abans es farà una còpia de seguretat dels vostres perfils. També podeu fer-ho més tard des d'Ajuda > Migrar els perfils de filament."
+
+# AI Translated
+#, boost-format
+msgid "%1% (based on %2%)"
+msgstr "%1% (basat en %2%)"
+
+msgid "Don't remind me again"
+msgstr "No m'ho recordis més"
+
+# AI Translated
+msgid "Your presets could not be backed up, so they were not migrated."
+msgstr "No s'ha pogut fer una còpia de seguretat dels vostres perfils, de manera que no s'han migrat."
+
+# AI Translated
+msgid "The user presets folder could not be locked, so nothing was migrated. Another OrcaSlicer instance may be saving presets; try again later from Help > Migrate Filament Presets."
+msgstr "No s'ha pogut bloquejar la carpeta de perfils d'usuari, de manera que no s'ha migrat res. Pot ser que una altra instància d'OrcaSlicer estigui desant perfils; torneu-ho a provar més tard des d'Ajuda > Migrar els perfils de filament."
+
+# AI Translated
+#, boost-format
+msgid ""
+"Your filament presets could not be migrated. A backup of your presets was saved to:\n"
+"%1%"
+msgstr ""
+"No s'han pogut migrar els vostres perfils de filament. S'ha desat una còpia de seguretat dels vostres perfils a:\n"
+"%1%"
+
+# AI Translated
+#, boost-format
+msgid ""
+"Your filament presets were migrated. Select them again in the filament list where you used them.\n"
+"\n"
+"A backup of your presets was saved to:\n"
+"%1%"
+msgstr ""
+"S'han migrat els vostres perfils de filament. Torneu-los a seleccionar a la llista de filaments on els utilitzàveu.\n"
+"\n"
+"S'ha desat una còpia de seguretat dels vostres perfils a:\n"
+"%1%"
+
+# AI Translated
+msgid "These presets could not be migrated:"
+msgstr "No s'han pogut migrar aquests perfils:"
 
 # AI Translated
 #, c-format, boost-format
@@ -3221,8 +3374,13 @@ msgstr "(Color perdut)"
 msgid "Center"
 msgstr "Centre"
 
-msgid "Drop"
-msgstr "Deixar anar"
+# AI Translated
+msgid "Align/Distribute"
+msgstr "Alinear/Distribuir"
+
+# AI Translated
+msgid "Align and distribute objects"
+msgstr "Alinear i distribuir objectes"
 
 msgid "Edit Process Settings"
 msgstr "Editar la configuració de Processat"
@@ -3599,9 +3757,6 @@ msgstr "Sense Vora d'Adherència"
 
 msgid "Outer wall speed"
 msgstr "Velocitat del perímetre exterior"
-
-msgid "Plate"
-msgstr "Safata"
 
 msgid "Brim"
 msgstr "Vora d'Adherència"
@@ -4911,7 +5066,7 @@ msgstr "Deseu el projecte i reinicieu el programa."
 msgid "Unknown C++ exception."
 msgstr "Excepció de C++ desconeguda."
 
-msgid "Processing G-Code from previous file…"
+msgid "Processing G-code from previous file…"
 msgstr "Processant el G-code del fitxer anterior..."
 
 msgid "Slicing complete"
@@ -5338,8 +5493,9 @@ msgstr "Pausa (coberta frontal despresa)"
 msgid "Calibrating the micro lidar"
 msgstr "Calibrant el micro lidar"
 
+# AI Translated
 msgid "Calibrating flow ratio"
-msgstr "Calibrant proporció de flux"
+msgstr "Calibrant la relació de flux"
 
 msgid "Pause (nozzle temperature malfunction)"
 msgstr "Pausa (mal funcionament de temperatura del broquet)"
@@ -5807,6 +5963,7 @@ msgstr "Temps de capa"
 msgid "Layer Time (log)"
 msgstr "Temps de capa ( log )"
 
+# AI Translated
 msgid "Pressure Advance"
 msgstr "Pressure Advance"
 
@@ -6456,6 +6613,11 @@ msgstr "Eixos"
 msgid "Gridlines"
 msgstr "Línies de la graella"
 
+# AI Translated
+# Needs human review: Glossary has no Catalan rendering for Focus mode (hides the UI to concentrate on the 3D canvas); check the wording.
+msgid "Focus mode"
+msgstr "Mode de concentració"
+
 msgid "Labels"
 msgstr "Etiquetes"
 
@@ -6742,6 +6904,10 @@ msgstr "Assistent per a la instal·lació"
 
 msgid "Show Configuration Folder"
 msgstr "Mostra la Carpeta Configuració"
+
+# AI Translated
+msgid "Bring back filament presets that a profile update removed from printers they were made for"
+msgstr "Recupereu els perfils de filament que una actualització de perfils ha eliminat de les impressores per a les quals es van crear"
 
 # AI Translated
 msgid "Troubleshoot Center"
@@ -10899,6 +11065,14 @@ msgid "Show incompatible/unsupported presets in the printer and filament dropdow
 msgstr "Mostra els perfils incompatibles o no compatibles a les llistes desplegables d'impressora i de filament. Aquests perfils no es poden seleccionar."
 
 # AI Translated
+msgid "Export statistics with G-code"
+msgstr "Exportar estadístiques amb el G-code"
+
+# AI Translated
+msgid "If enabled, exporting a G-code file also writes its statistics as JSON next to it, as <name>.statistics.json, and an exported sliced 3MF file holds them inside: print time, filament and feature totals, and the same per layer and per object."
+msgstr "Si està activat, en exportar un fitxer de G-code també s'escriuen les seves estadístiques en JSON al costat, com a <name>.statistics.json, i un fitxer 3MF laminat exportat les conté a dins: temps d'impressió, totals de filament i per tipus de línia, i el mateix per capa i per objecte."
+
+# AI Translated
 msgid "Experimental Features"
 msgstr "Funcions experimentals"
 
@@ -11760,6 +11934,10 @@ msgstr "No s'ha pogut pujar el fitxer a l'emmagatzematge de la impressora. Torne
 # AI Translated
 msgid "Send Failed"
 msgstr "L'enviament ha fallat"
+
+# AI Translated
+msgid "No available printers"
+msgstr "No hi ha impressores disponibles"
 
 msgid "The name length exceeds the limit."
 msgstr "La longitud del nom supera el límit."
@@ -13426,9 +13604,6 @@ msgstr "Volums de purga per al canvi de filament"
 msgid "from/to"
 msgstr "de/a"
 
-msgid "Please choose the filament color"
-msgstr "Trieu el color del filament"
-
 # AI Translated
 msgid "Cloud agent is not available. Please restart OrcaSlicer and try again."
 msgstr "L'agent del núvol no està disponible. Reinicieu l'OrcaSlicer i torneu-ho a provar."
@@ -13625,8 +13800,8 @@ msgid "Left mouse"
 msgstr "Botó esquerre del ratolí"
 
 # AI Translated
-msgid "Available anywhere in the window, even while typing in a text field."
-msgstr "Disponible a qualsevol lloc de la finestra, fins i tot mentre s'escriu en un camp de text."
+msgid "Available anywhere in the window."
+msgstr "Disponible a qualsevol lloc de la finestra."
 
 # AI Translated
 msgid "Run favorite 1 to 10"
@@ -13651,9 +13826,6 @@ msgstr "Disponible mentre la vista 3D de la pestanya Preparació té el focus."
 
 msgid "Select a part"
 msgstr "Seleccionar una peça"
-
-msgid "Select multiple objects"
-msgstr "Seleccionar múltiples objectes"
 
 msgid "Select objects by rectangle"
 msgstr "Seleccionar objectes per rectangle"
@@ -13741,10 +13913,6 @@ msgstr "La drecera %s està assignada a %s. Voleu reassignar-la a %s?"
 #, c-format, boost-format
 msgid "The default %s is assigned to %s. Reassign it to %s?"
 msgstr "La drecera predeterminada %s està assignada a %s. Voleu reassignar-la a %s?"
-
-# AI Translated
-msgid "Global shortcuts also apply while typing."
-msgstr "Les dreceres globals també s'apliquen mentre s'escriu."
 
 # AI Translated
 msgid "A key that types a character cannot be a global shortcut."
@@ -14174,6 +14342,18 @@ msgid "a perimeter is fully inside a modifier, the modifier was not applied to i
 msgstr "un perímetre és completament dins d'un modificador; el modificador no s'hi ha aplicat (%1%)"
 
 # AI Translated
+#. TRN: %1% is the modifier type "Seam Blocked" as in the menu, %2% the modifier name, %3% the object name.
+#, boost-format
+msgid "%1% modifier \"%2%\" of \"%3%\" covers an entire perimeter"
+msgstr "El modificador %1% \"%2%\" de \"%3%\" cobreix un perímetre sencer"
+
+# AI Translated
+#. TRN: %1% is the modifier type "Seam Blocked" as in the menu, %2% the modifier name, %3% the object name, %4% the number of modifiers.
+#, boost-format
+msgid "%1% modifier \"%2%\" of \"%3%\" (%4% in total) covers an entire perimeter"
+msgstr "El modificador %1% \"%2%\" de \"%3%\" (%4% en total) cobreix un perímetre sencer"
+
+# AI Translated
 #, boost-format
 msgid "modifier \"%1%\" of \"%2%\" had no effect on the seam (it might not reach the centerline of the printed perimeter)"
 msgstr "el modificador \"%1%\" de \"%2%\" no ha tingut cap efecte sobre la costura (potser no arriba a la línia central del perímetre imprès)"
@@ -14186,6 +14366,11 @@ msgstr "el modificador \"%1%\" de \"%2%\" (%3% en total) no ha tingut cap efecte
 # AI Translated
 msgid "Seam placement may differ from expected."
 msgstr "La posició de la costura pot ser diferent de l'esperada."
+
+# AI Translated
+#, boost-format
+msgid "Failed to write the G-code statistics to %1%."
+msgstr "No s'han pogut escriure les estadístiques del G-code a %1%."
 
 msgid "Internal Bridge"
 msgstr "Pont Interior"
@@ -15174,8 +15359,9 @@ msgstr ""
 "\n"
 "Aquesta opció funciona especialment bé combinada amb l'opció de segon pont intern sobre el farciment, per millorar encara més els ponts abans d'extrudir el farciment sòlid."
 
+# AI Translated
 msgid "Bridge flow ratio"
-msgstr "Ratio de flux del pont"
+msgstr "Relació de flux del pont"
 
 # AI Translated
 msgid ""
@@ -15197,16 +15383,17 @@ msgid ""
 "Recommended to use with a higher Bridge density or Bridge flow ratio.\n"
 "\n"
 "The maximum value is 100% or the nozzle diameter.\n"
-"If set to 0, the line width will match the Internal solid infill width."
+"If set to 0, the line width will match the Internal solid infill width, or the nozzle diameter for thick bridges."
 msgstr ""
-"Amplada de línia del Pont. Si s'expressa en %, es calcularà sobre el diàmetre del broquet.\n"
-"Es recomana utilitzar-la amb una densitat de Pont o una relació de flux del Pont més altes.\n"
+"Amplada de línia del pont. Si s'expressa en %, es calcularà sobre el diàmetre del broquet.\n"
+"Es recomana utilitzar-la amb una densitat de pont o una relació de flux del pont més altes.\n"
 "\n"
 "El valor màxim és el 100% o el diàmetre del broquet.\n"
-"Si s'estableix a 0, l'amplada de línia coincidirà amb l'amplada del farciment sòlid intern."
+"Si s'estableix a 0, l'amplada de línia coincidirà amb l'amplada del farciment sòlid intern, o amb el diàmetre del broquet en els ponts gruixuts."
 
+# AI Translated
 msgid "Internal bridge flow ratio"
-msgstr "Ratio de flux del pont intern"
+msgstr "Relació de flux del pont intern"
 
 # AI Translated
 msgid ""
@@ -15222,8 +15409,9 @@ msgstr ""
 "\n"
 "El flux de pont real utilitzat es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Top surface flow ratio"
-msgstr "Ratio de flux superficial superior"
+msgstr "Relació de flux superficial superior"
 
 msgid ""
 "This factor affects the amount of material for top solid infill. You can decrease it slightly to have smooth surface finish.\n"
@@ -15234,8 +15422,9 @@ msgstr ""
 "\n"
 "El flux real de la superfície superior s'utilitza calculant la multiplicació d'aquest valor amb la relació de flux del filament i, si està configurada, la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Bottom surface flow ratio"
-msgstr "Ratio de flux superficial inferior"
+msgstr "Relació de flux superficial inferior"
 
 msgid ""
 "This factor affects the amount of material for bottom solid infill.\n"
@@ -15246,15 +15435,19 @@ msgstr ""
 "\n"
 "El cabal de farciment sòlid inferior real utilitzat es calcula multiplicant aquest valor per la relació de flux de filament i, si s'estableix, la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Set other flow ratios"
-msgstr "Estableix altres proporcions de flux"
+msgstr "Estableix altres relacions de flux"
 
+# AI Translated
 msgid "Change flow ratios for other extrusion path types."
-msgstr "Canvia les proporcions de flux per a altres tipus de camí d'extrusió."
+msgstr "Canvia les relacions de flux per a altres tipus de camí d'extrusió."
 
+# AI Translated
 msgid "First layer flow ratio"
-msgstr "Proporció de flux de la primera capa"
+msgstr "Relació de flux de la primera capa"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material on the first layer for the extrusion path roles listed in this section.\n"
 "\n"
@@ -15262,11 +15455,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material a la primera capa per als rols de camí d'extrusió llistats en aquesta secció.\n"
 "\n"
-"Per a la primera capa, la proporció de flux real per a cada rol de camí (no afecta vores i faldilles) es multiplicarà per aquest valor."
+"Per a la primera capa, la relació de flux real per a cada rol de camí (no afecta vores i faldilles) es multiplicarà per aquest valor."
 
+# AI Translated
 msgid "Outer wall flow ratio"
-msgstr "Proporció de flux de la paret exterior"
+msgstr "Relació de flux de la paret exterior"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for outer walls.\n"
 "\n"
@@ -15274,11 +15469,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per a les parets exteriors.\n"
 "\n"
-"El flux real de la paret exterior es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real de la paret exterior es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Inner wall flow ratio"
-msgstr "Proporció de flux de la paret interior"
+msgstr "Relació de flux de la paret interior"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for inner walls.\n"
 "\n"
@@ -15286,11 +15483,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per a les parets interiors.\n"
 "\n"
-"El flux real de la paret interior es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real de la paret interior es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Overhang flow ratio"
-msgstr "Proporció de flux per a voladissos"
+msgstr "Relació de flux per a voladissos"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for overhangs.\n"
 "\n"
@@ -15298,11 +15497,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per als voladissos.\n"
 "\n"
-"El flux real dels voladissos es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real dels voladissos es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Sparse infill flow ratio"
-msgstr "Proporció de flux del farciment dispers"
+msgstr "Relació de flux del farciment dispers"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for sparse infill.\n"
 "\n"
@@ -15310,11 +15511,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per al farciment dispers.\n"
 "\n"
-"El flux real del farciment dispers es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real del farciment dispers es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Internal solid infill flow ratio"
-msgstr "Proporció de flux del farciment sòlid intern"
+msgstr "Relació de flux del farciment sòlid intern"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for internal solid infill.\n"
 "\n"
@@ -15322,11 +15525,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per al farciment sòlid intern.\n"
 "\n"
-"El flux real del farciment sòlid intern es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real del farciment sòlid intern es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Gap fill flow ratio"
-msgstr "Proporció de flux del farciment d'espais"
+msgstr "Relació de flux del farciment d'espais"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for filling the gaps.\n"
 "\n"
@@ -15334,11 +15539,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per al farciment d'espais.\n"
 "\n"
-"El flux real del farciment d'espais es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real del farciment d'espais es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Support flow ratio"
-msgstr "Proporció de flux del suport"
+msgstr "Relació de flux del suport"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for support.\n"
 "\n"
@@ -15346,11 +15553,13 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per al suport.\n"
 "\n"
-"El flux real del suport es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real del suport es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
+# AI Translated
 msgid "Support interface flow ratio"
-msgstr "Proporció de flux de la interfície de suport"
+msgstr "Relació de flux de la interfície de suport"
 
+# AI Translated
 msgid ""
 "This factor affects the amount of material for the support interface.\n"
 "\n"
@@ -15358,7 +15567,7 @@ msgid ""
 msgstr ""
 "Aquest factor afecta la quantitat de material per a la interfície de suport.\n"
 "\n"
-"El flux real de la interfície de suport es calcula multiplicant aquest valor per la proporció de flux del filament i, si està establert, per la proporció de flux de l'objecte."
+"El flux real de la interfície de suport es calcula multiplicant aquest valor per la relació de flux del filament i, si està establerta, per la relació de flux de l'objecte."
 
 msgid "Precise wall"
 msgstr "Perímetre precís"
@@ -15488,10 +15697,10 @@ msgid ""
 "3. If artifacts still appear, enable Extrusion Rate Smoothing (ERS) to further smooth the flow transitions.\n"
 "\n"
 "Note: When this option is enabled, overhang perimeters are treated like overhangs, meaning the overhang speed is applied even if the overhanging perimeter is part of a bridge.\n"
-"For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 100% overhang speed will be applied."
+"For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 75% overhang speed will be applied, limited by the bridge speed."
 msgstr ""
 "Activeu aquesta opció per alentir la impressió en àrees on els perímetres s'hagin pogut corbar cap amunt.\n"
-"Per exemple, s'aplicarà una alentiment addicional en imprimir voladissos en cantonades pronunciades, com ara la proa del casc del Benchy, cosa que redueix el corbament que s'acumula al llarg de diverses capes.\n"
+"Per exemple, s'aplicarà un alentiment addicional en imprimir voladissos en cantonades pronunciades, com ara la proa del casc del Benchy, cosa que redueix el corbament que s'acumula al llarg de diverses capes.\n"
 "\n"
 "En general es recomana tenir aquesta opció activada, tret que la refrigeració de la impressora sigui prou potent o la velocitat d'impressió prou baixa com perquè no es produeixi corbament dels perímetres. \n"
 "Si s'imprimeix amb una velocitat alta de perímetre exterior, aquest paràmetre pot introduir defectes als perímetres en alentir, a causa de la variació potencialment gran de velocitats d'impressió, que fa que l'extrusor no pugui seguir el canvi de flux sol·licitat.\n"
@@ -15500,22 +15709,23 @@ msgstr ""
 "Recomanacions en activar aquesta opció:\n"
 "1. Reduïu el temps de suavitzat de Pressure Advance a 0,015 - 0,02 perquè l'extrusor reaccioni ràpidament als canvis de velocitat.\n"
 "2. Augmenteu les velocitats d'impressió mínimes per limitar la magnitud de l'alentiment i reduir la variació entre segments ràpids i lents.\n"
-"3. Si encara apareixen defectes, activeu el Suavitzat del Ritme d'Extrusió (ERS) per suavitzar encara més les transicions de flux.\n"
+"3. Si encara apareixen defectes, activeu el Suavitzat de la velocitat d'extrusió (ERS) per suavitzar encara més les transicions de flux.\n"
 "\n"
 "Nota: quan aquesta opció està activada, els perímetres de voladís es tracten com a voladissos, cosa que vol dir que s'aplica la velocitat de voladís fins i tot si el perímetre en voladís forma part d'un pont.\n"
-"Per exemple, quan els perímetres estan en voladís al 100%, sense cap perímetre que els aguanti per sota, s'aplicarà la velocitat de voladís del 100%."
+"Per exemple, quan els perímetres estan en voladís al 100%, sense cap perímetre que els aguanti per sota, s'aplicarà la velocitat de voladís del 75%, limitada per la velocitat de pont."
 
 msgid "mm/s or %"
 msgstr "mm/s o %"
 
+# AI Translated
 msgid ""
 "Speed of the externally visible bridge extrusions.\n"
 "\n"
-"In addition, if Slow down for curled perimeters is disabled or Classic overhang mode is enabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
+"In addition, if Slow down for curled perimeters is disabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
 msgstr ""
 "Velocitat de les extrusions del pont visibles externament.\n"
 "\n"
-"A més, si l'opció de Reduir la velocitat per als perímetres corbats està desactivada o el mode clàssic de voladís està activat, aquesta serà la velocitat d'impressió per a les parets de voladís que estan suportades per menys del 13%, ja sigui que formin part d'un pont o d'un voladís."
+"A més, si l'opció \"Alentir la velocitat per a perímetres corbats\" està desactivada, aquesta serà la velocitat d'impressió per a les parets de voladís que estan suportades per menys del 13%, ja sigui que formin part d'un pont o d'un voladís."
 
 msgid "Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based on the bridge_speed. Default value is 150%."
 msgstr "Velocitat dels ponts interns. Si el valor s'expressa com un percentatge, es calcularà en funció de la velocitat del pont (bridge_speed). El valor per defecte és del 150%."
@@ -16092,8 +16302,9 @@ msgstr "Velocitat del perímetre més exterior i visible. S'utilitza per ser mé
 msgid "Small perimeters"
 msgstr "Petits perímetres"
 
-msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above. Set to zero for auto."
-msgstr "Aquest ajustament independent afectarà la velocitat dels perímetres amb radi <= small_perimeter_threshold ( normalment orificis ). Si s'expressa com a percentatge ( per exemple: 80% ) es calcula sobre l'ajustament de velocitat del perímetre exterior anterior. Poseu-lo a zero per automàtic."
+# AI Translated
+msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above."
+msgstr "Aquest ajustament independent afectarà la velocitat dels perímetres amb radi <= small_perimeter_threshold (normalment orificis). Si s'expressa com a percentatge (per exemple: 80%) es calcula sobre l'ajustament de velocitat del perímetre exterior anterior."
 
 msgid "Small perimeters threshold"
 msgstr "Llindar de perímetres petits"
@@ -16106,8 +16317,8 @@ msgid "Small support perimeters"
 msgstr "Petits perímetres de suport"
 
 # AI Translated
-msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above. Set to zero for auto."
-msgstr "Igual que \"Petits perímetres\", però per als suports. Aquest ajustament separat afectarà la velocitat del suport en àrees <= `small_support_perimeter_threshold`. Si s'expressa com a percentatge (per exemple: 80%), es calcularà sobre l'ajustament anterior de velocitat de suport o d'interfície de suport. Establiu-ho a zero per a automàtic."
+msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above."
+msgstr "Igual que \"Petits perímetres\", però per als suports. Aquest ajustament separat afectarà la velocitat del suport en àrees <= `small_support_perimeter_threshold`. Si s'expressa com a percentatge (per exemple: 80%), es calcularà sobre l'ajustament anterior de velocitat de suport o d'interfície de suport."
 
 # AI Translated
 msgid "Small support perimeters threshold"
@@ -16120,23 +16331,23 @@ msgstr "Estableix el llindar per a la longitud dels petits perímetres de suport
 msgid "Walls printing order"
 msgstr "Ordre d'impressió de perímetres"
 
+# AI Translated
 msgid ""
 "Print sequence of the internal (inner) and external (outer) walls.\n"
 "\n"
 "Use Inner/Outer for best overhangs. This is because the overhanging walls can adhere to a neighbouring perimeter while printing. However, this option results in slightly reduced surface quality as the external perimeter is deformed by being squashed to the internal perimeter.\n"
 "\n"
-"Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended against the Outer/Inner option in most cases.\n"
+"Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended over the Outer/Inner option in most cases.\n"
 "\n"
 "Use Outer/Inner for the same external wall quality and dimensional accuracy benefits of Inner/Outer/Inner option. However, the Z seams will appear less consistent as the first extrusion of a new layer starts on a visible surface."
 msgstr ""
-"Seqüència d'impressió de les parets interiors (interiors) i exteriors (exteriors).\n"
+"Seqüència d'impressió dels perímetres interiors i exteriors.\n"
 "\n"
-"Utilitzeu Interior / Exterior per a millors voladissos. Això es deu al fet que les parets que sobresurten poden adherir-se a un perímetre veí durant la impressió. No obstant això, aquesta opció resulta en una qualitat superficial lleugerament reduïda, ja que el perímetre extern es deforma en ser aixafat al perímetre intern.\n"
+"Utilitzeu Interior/Exterior per obtenir els millors voladissos. Això es deu al fet que els perímetres en voladís poden adherir-se a un perímetre veí durant la impressió. No obstant això, aquesta opció resulta en una qualitat superficial lleugerament reduïda, ja que el perímetre exterior es deforma en ser aixafat contra el perímetre interior.\n"
 "\n"
-"Utilitzeu Interior / Exterior / Interior per obtenir el millor acabat de la superfície externa i precisió dimensional, ja que la paret externa s'imprimeix sense molèsties des d'un perímetre intern. Tanmateix, el rendiment del voladís es reduirà, ja que no hi ha un perímetre intern per imprimir la paret externa. Aquesta opció requereix un mínim de 3 parets per ser efectiva, ja que imprimeix primer les parets interiors a partir del 3r\n"
-" perímetre, després el perímetre extern i, finalment, el primer perímetre intern. Aquesta opció es recomana contra l'opció Exterior/Interior en la majoria dels casos.\n"
+"Utilitzeu Interior/Exterior/Interior per obtenir el millor acabat de la superfície exterior i la millor precisió dimensional, ja que el perímetre exterior s'imprimeix sense cap pertorbació des d'un perímetre interior. Tanmateix, el rendiment dels voladissos es reduirà, ja que no hi ha cap perímetre interior contra el qual imprimir el perímetre exterior. Aquesta opció requereix un mínim de 3 perímetres per ser efectiva, ja que imprimeix primer els perímetres interiors a partir del 3r perímetre, després el perímetre exterior i, finalment, el primer perímetre interior. En la majoria dels casos, es recomana aquesta opció en lloc de l'opció Exterior/Interior.\n"
 "\n"
-"Utilitzeu Exterior / Interior per obtenir la mateixa qualitat de paret externa i els mateixos avantatges de precisió dimensional de l'opció Interior / Exterior / Interior. Tanmateix, les costures z semblaran menys consistents a mesura que comenci la primera extrusió d'una nova capa en una superfície visible."
+"Utilitzeu Exterior/Interior per obtenir la mateixa qualitat del perímetre exterior i els mateixos avantatges de precisió dimensional que l'opció Interior/Exterior/Interior. Tanmateix, les costures Z semblaran menys consistents, ja que la primera extrusió d'una capa nova comença en una superfície visible."
 
 msgid "Inner/Outer"
 msgstr "Interior/Exterior"
@@ -17093,14 +17304,16 @@ msgstr "Alçada de la capa inicial"
 msgid "Height of the first layer. Making the first layer height thicker can improve build plate adhesion."
 msgstr "Alçada de la capa inicial. Fer que l'alçada inicial de la capa sigui lleugerament més gruixuda pot millorar l'adherència de la placa d'impressió"
 
-msgid "This is the speed for the first layer except for solid infill sections."
-msgstr "Velocitat de la capa inicial excepte la part de farciment sòlid"
+# AI Translated
+msgid "This is the speed for the walls and brim of the first layer."
+msgstr "Velocitat dels perímetres i de la vora d'adherència de la capa inicial."
 
 msgid "First layer infill"
 msgstr "Farciment de la capa inicial"
 
-msgid "This is the speed for solid infill parts of the first layer."
-msgstr "Velocitat de farciment sòlid de la capa inicial"
+# AI Translated
+msgid "This is the speed for the first layer except for walls and brim, such as infill, gap fill and support."
+msgstr "Velocitat de la capa inicial, excepte els perímetres i la vora d'adherència, com ara el farciment, el farciment de buits i els suports."
 
 msgid "First layer travel speed"
 msgstr "Velocitat de desplaçament de la capa inicial"
@@ -17610,6 +17823,14 @@ msgstr "Excloure objectes"
 msgid "Enable this option to add EXCLUDE OBJECT command in G-code."
 msgstr "Activeu aquesta opció per afegir l'ordre EXCLUDE OBJECT al G-code."
 
+# AI Translated
+msgid "Outline tolerance"
+msgstr "Tolerància del contorn"
+
+# AI Translated
+msgid "Maximum deviation of the object outline written to EXCLUDE_OBJECT_DEFINE from the original outline. Larger values give fewer points, which helps firmware that stalls while parsing G-code with many objects. 0 keeps every point."
+msgstr "Desviació màxima del contorn de l'objecte escrit a EXCLUDE_OBJECT_DEFINE respecte del contorn original. Els valors més grans donen menys punts, cosa que ajuda el firmware que es bloqueja en analitzar G-code amb molts objectes. 0 conserva tots els punts."
+
 msgid "Verbose G-code"
 msgstr "G-code detallat"
 
@@ -17814,16 +18035,18 @@ msgstr "Amplada de línia de farciment poc dens intern. Si s'expressa en %, es c
 msgid "Infill/wall overlap"
 msgstr "Superposició de farciment/perímetre"
 
+# AI Translated
 #, no-c-format, no-boost-format
-msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
-msgstr "L'àrea de farciment s'amplia lleugerament per superposar-se amb la paret per a una millor unió. El valor percentual és relatiu a l'amplada de línia de farciment poc dens. Establiu aquest valor a ~ 10-15% per minimitzar la potencial sobreextrusió i acumulació de material que resulti en superfícies superiors rugoses."
+msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to the inner wall line width. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
+msgstr "L'àrea de farciment s'amplia lleugerament per superposar-se amb la paret per a una millor unió. El valor percentual és relatiu a l'amplada de línia del perímetre interior. Establiu aquest valor a ~ 10-15% per minimitzar la potencial sobreextrusió i acumulació de material que resulti en superfícies superiors rugoses."
 
 msgid "Top/Bottom solid infill/wall overlap"
 msgstr "Farciment superposat a paret superior/inferior\""
 
+# AI Translated
 #, no-c-format, no-boost-format
-msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
-msgstr "L'àrea de farciment sòlida superior s'amplia lleugerament per superposar-se a la paret per a una millor unió i per minimitzar l'aparició de forats on l'ompliment superior es troba amb les parets. Un valor de 25-30% is és un bon punt de partida, minimitzant l'aparició de forats. El valor percentual és relatiu a l'amplada de línia de l'emplenament escàs"
+msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to the inner wall line width."
+msgstr "L'àrea de farciment sòlid superior s'amplia lleugerament per superposar-se a la paret per a una millor unió i per minimitzar l'aparició de forats on el farciment superior es troba amb les parets. Un valor de 25-30% és un bon punt de partida, minimitzant l'aparició de forats. El valor percentual és relatiu a l'amplada de línia del perímetre interior."
 
 msgid "This is the speed for internal sparse infill."
 msgstr "Velocitat de farciment poc dens intern"
@@ -17849,8 +18072,9 @@ msgstr "Amplada màxima d'una regió segmentada. El zero desactiva aquesta funci
 msgid "Interlocking depth of a segmented region"
 msgstr "Profunditat d'entrellaçament d'una regió segmentada"
 
-msgid "Interlocking depth of a segmented region. It will be ignored if \"mmu_segmented_region_max_width\" is zero or if \"mmu_segmented_region_interlocking_depth\" is bigger than \"mmu_segmented_region_max_width\". Zero disables this feature."
-msgstr "Profunditat d'enclavament d'una regió segmentada. S'ignorarà si \"mmu_segmented_region_max_width\" és zero o si \"mmu_segmented_region_interlocking_depth\" és més gran que \"mmu_segmented_region_max_width\". Zero desactiva aquesta funció."
+# AI Translated
+msgid "Interlocking depth of a segmented region. On every other layer, the segmented region is limited to this depth. It will be ignored if \"interlocking_beam\" is enabled. Zero disables this feature."
+msgstr "Profunditat d'entrellaçament d'una regió segmentada. En una de cada dues capes, la regió segmentada es limita a aquesta profunditat. S'ignorarà si \"interlocking_beam\" està activat. Zero desactiva aquesta funció."
 
 msgid "Use beam interlocking"
 msgstr "Utilitzar feixos d'entrellaçament"
@@ -17959,11 +18183,11 @@ msgstr "Angle per minimitzar l'alçada del perímetre"
 # AI Translated
 msgid ""
 "Reduce the height of top-surface perimeters to match the model edge height.\n"
-"Affects perimeters with a slope less than this angle (degrees).\n"
+"Affects perimeters with a slope greater than this angle (degrees).\n"
 "A reasonable value is 35. Set to 0 to disable."
 msgstr ""
 "Redueix l'alçada dels perímetres de la superfície superior perquè coincideixi amb l'alçada de la vora del model.\n"
-"Afecta els perímetres amb un pendent inferior a aquest angle (graus).\n"
+"Afecta els perímetres amb un pendent superior a aquest angle (graus).\n"
 "Un valor raonable és 35. Establiu-ho a 0 per desactivar-ho."
 
 # AI Translated
@@ -18970,7 +19194,8 @@ msgstr "Unió en Bisell per a parets interiors"
 msgid "Use scarf joint for inner walls as well."
 msgstr "Utilitzar també l'Unió en Bisell per a les parets interiors."
 
-msgid "Role base wipe speed"
+# AI Translated
+msgid "Role based wipe speed"
 msgstr "Velocitat de neteja basada en l'acció"
 
 msgid "The wipe speed is determined by the speed of the current extrusion role. e.g. if a wipe action is executed immediately following an outer wall extrusion, the speed of the outer wall extrusion will be utilized for the wipe action."
@@ -19060,14 +19285,15 @@ msgstr "Limita els bucles de la faldilla/escudo protector a una paret després d
 msgid "Draft shield"
 msgstr "Escut contra corrents d'aire"
 
+# AI Translated
 msgid ""
 "A draft shield is useful to protect an ABS or ASA print from warping and detaching from print bed due to wind draft. It is usually needed only with open frame printers, i.e. without an enclosure.\n"
 "\n"
-"Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used.\n"
-"Note: With the draft shield active, the skirt will be printed at skirt distance from the object. Therefore, if brims are active it may intersect with them. To avoid this, increase the skirt distance value.\n"
+"Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used."
 msgstr ""
-"Activat = la faldilla és tan alta com l'objecte imprès més alt. En cas contrari, s'utilitza \"Alçada de la faldilla\".\n"
-"Nota: amb l'escut de corrent actiu, la faldilla s'imprimirà a una distància de la faldilla de l'objecte. Per tant, si les vores estan actives, es pot creuar amb elles. Per evitar-ho, augmenta el valor de la distància de la faldilla.\n"
+"Un escut contra corrents d'aire és útil per protegir una impressió d'ABS o ASA de la deformació i del despreniment del llit d'impressió a causa dels corrents d'aire. Normalment només cal en impressores de bastidor obert, és a dir, sense carcassa.\n"
+"\n"
+"Activat = la faldilla és tan alta com l'objecte imprès més alt. En cas contrari, s'utilitza \"Alçada de la faldilla\"."
 
 msgid "Enabled"
 msgstr "Habilitat"
@@ -20222,40 +20448,42 @@ msgstr "Angle del vèrtex del con que s'utilitza per estabilitzar la Torre de Pu
 msgid "Maximum wipe tower print speed"
 msgstr "Velocitat màxima d'impressió de la torre de purga"
 
+# AI Translated
 msgid ""
 "The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. When purging, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
 "\n"
-"When printing the sparse layers, if the internal perimeter speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+"When printing the sparse layers, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
 "\n"
 "Increasing this speed may affect the tower's stability as well as increase the force with which the nozzle collides with any blobs that may have formed on the wipe tower.\n"
 "\n"
 "Before increasing this parameter beyond the default of 90 mm/s, make sure your printer can reliably bridge at the increased speeds and that ooze when tool changing is well controlled.\n"
 "\n"
-"For the wipe tower external perimeters the internal perimeter speed is used regardless of this setting."
+"For the wipe tower external perimeters the internal perimeter speed is used, also limited by this setting."
 msgstr ""
 "La velocitat màxima d'impressió en purgar a la torre de purga i imprimir a la torre de purga capes poc denses. En la purga, si la velocitat de farciment poc dens o la velocitat calculada de la màxima velocitat volumètrica del filament és menor, s'utilitzarà la més baixa.\n"
 "\n"
-"En imprimir les capes poc denses, si la velocitat perimetral interna o la velocitat calculada de la màxima velocitat volumètrica del filament és menor, s'utilitzarà la més baixa.\n"
+"En imprimir les capes poc denses, si la velocitat de farciment poc dens o la velocitat calculada de la màxima velocitat volumètrica del filament és menor, s'utilitzarà la més baixa.\n"
 "\n"
 "L'augment d'aquesta velocitat pot afectar l'estabilitat de la torre, així com augmentar la força amb què el broquet xoca amb els grumolls que s'hagin pogut formar a la torre de purga.\n"
 "\n"
-"Abans d'augmentar aquest paràmetre més enllà del valor per defecte de 90 mm/segon, assegureu-vos que la impressora pugui fer un pont de manera fiable a les velocitats augmentades i que el degoteig quan es produeixi el canvi d'eina estigui ben controlat.\n"
+"Abans d'augmentar aquest paràmetre més enllà del valor per defecte de 90 mm/s, assegureu-vos que la impressora pugui fer un pont de manera fiable a les velocitats augmentades i que el degoteig quan es produeixi el canvi d'eina estigui ben controlat.\n"
 "\n"
-"Per als perímetres externs de la torre de purga, s'utilitza la velocitat perimetral interna independentment d'aquesta configuració."
+"Per als perímetres exteriors de la torre de purga, s'utilitza la velocitat del perímetre interior, també limitada per aquesta configuració."
 
 msgid "Wall type"
 msgstr "Tipus de paret"
 
+# AI Translated
 msgid ""
 "Wipe tower outer wall type.\n"
-"1. Rectangle: The default wall type, a rectangle with fixed width and height.\n"
+"1. Rectangle: A rectangle with fixed width and height.\n"
 "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
-"3. Rib: Adds four ribs to the tower wall for enhanced stability."
+"3. Rib: The default wall type, which adds four ribs to the tower wall for enhanced stability."
 msgstr ""
-"Tipus de paret exterior de la torre de purga.\n"
-"1. Rectangle: el tipus de paret predeterminat, un rectangle amb amplada i alçada fixes.\n"
+"Tipus de perímetre exterior de la torre de purga.\n"
+"1. Rectangle: un rectangle amb amplada i alçada fixes.\n"
 "2. Con: un con amb arrodoniment a la base per ajudar a estabilitzar la torre de purga.\n"
-"3. Nervi: afegeix quatre nervis a la paret de la torre per a una estabilitat millorada."
+"3. Nervi: el tipus de paret predeterminat, que afegeix quatre nervis a la paret de la torre per a una estabilitat millorada."
 
 # AI Translated
 msgid "Rectangle"
@@ -20347,8 +20575,9 @@ msgstr "Espaiat de les línies de purga de la Torre de Purga."
 msgid "Extra flow for purging"
 msgstr "Flux addicional per a la purga"
 
-msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker or narrower than they normally would be. The spacing is adjusted automatically."
-msgstr "Flux addicional utilitzat per a les línies de purga a la torre de neteja. Això fa que les línies de purga siguin més gruixudes o més estretes del que serien normalment. L'espaiat s'ajusta automàticament."
+# AI Translated
+msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker than they normally would be. The spacing is adjusted automatically."
+msgstr "Flux addicional utilitzat per a les línies de purga a la torre de purga. Això fa que les línies de purga siguin més gruixudes del que serien normalment. L'espaiat s'ajusta automàticament."
 
 msgid "Idle temperature"
 msgstr "Temperatura d'espera"
@@ -20466,14 +20695,15 @@ msgstr "Gruix mínim de les característiques primes. Les característiques del 
 msgid "Minimum wall length"
 msgstr "Longitud mínima del perímetre"
 
+# AI Translated
 msgid ""
-"Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. Higher values remove more and longer walls.\n"
+"Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. The value is a multiple of the wall width. Higher values remove more and longer walls.\n"
 "\n"
-"NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the Advanced settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
+"NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the 'Walls and surfaces' settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
 msgstr ""
-"Ajusteu aquest valor per evitar que s'imprimeixin parets curtes i no tancades, cosa que podria augmentar el temps d'impressió. Els valors més alts eliminen més i més parets més llargues.\n"
+"Ajusteu aquest valor per evitar que s'imprimeixin parets curtes i no tancades, cosa que podria augmentar el temps d'impressió. El valor és un múltiple de l'amplada de la paret. Els valors més alts eliminen més parets i més llargues.\n"
 "\n"
-"NOTA: Les superfícies inferior i superior no es veuran afectades per aquest valor per evitar espais visuals a l'exterior del model. Ajusteu \"Llindar d'una paret\" a la configuració avançada següent per ajustar la sensibilitat del que es considera una superfície superior. \"Llindar d'una paret\" només és visible si aquesta configuració està per sobre del valor predeterminat de 0,5 o si les superfícies superiors d'una sola paret estan habilitades."
+"NOTA: Les superfícies inferior i superior no es veuran afectades per aquest valor per evitar espais visuals a l'exterior del model. Ajusteu \"Llindar d'un sol perímetre\" a la configuració de \"Parets i superfícies\" següent per ajustar la sensibilitat del que es considera una superfície superior. \"Llindar d'un sol perímetre\" només és visible si aquest valor està per sobre del valor predeterminat de 0,5 o si les superfícies superiors d'una sola paret estan habilitades."
 
 # AI Translated
 msgid "Maximum wall resolution"
@@ -20867,6 +21097,14 @@ msgstr "Directori de sortida"
 
 msgid "This is the output directory for exported files."
 msgstr "Directori de sortida dels fitxers exportats."
+
+# AI Translated
+msgid "Export statistics"
+msgstr "Exportar estadístiques"
+
+# AI Translated
+msgid "Write the statistics of each sliced plate as JSON, as plate_N.statistics.json next to its G-code in the output directory and inside the 3MF of --export-3mf: print time, filament and feature totals, and the same per layer and per object."
+msgstr "Escriu les estadístiques de cada placa laminada en JSON, com a plate_N.statistics.json al costat del seu G-code al directori de sortida i dins del 3MF de --export-3mf: temps d'impressió, totals de filament i per tipus de línia, i el mateix per capa i per objecte."
 
 msgid "Debug level"
 msgstr "Nivell de depuració"
@@ -22422,14 +22660,17 @@ msgstr "Desar Perfil de Filament"
 msgid "Record Factor"
 msgstr "Factor de guardat"
 
+# AI Translated
 msgid "We found the best flow ratio for you"
-msgstr "Hem trobat la millor Ratio de Flux per a tú"
+msgstr "Hem trobat la millor relació de flux per a tu"
 
+# AI Translated
 msgid "Flow Ratio"
-msgstr "Ratio de Flux"
+msgstr "Relació de Flux"
 
+# AI Translated
 msgid "Please input a valid value (0.0 < flow ratio < 2.0)"
-msgstr "Introduïu un valor vàlid ( 0.0 < Ratio de Flux < 2.0 )"
+msgstr "Introduïu un valor vàlid ( 0.0 < relació de flux < 2.0 )"
 
 msgid "Please enter the name of the preset you want to save."
 msgstr "Introduïu el nom del perfil que voleu desar."
@@ -22449,9 +22690,10 @@ msgstr "Emplenar el valor que hi ha a sobre del bloc amb la superfície superior
 msgid "Skip Calibration2"
 msgstr "Saltar calibratge2"
 
+# AI Translated
 #, c-format, boost-format
 msgid "flow ratio : %s "
-msgstr "ratio de flux : %s "
+msgstr "relació de flux : %s "
 
 msgid "Please choose a block with smoothest top surface."
 msgstr "Trieu un bloc amb la superfície superior més llisa."
@@ -22465,8 +22707,9 @@ msgstr "Tipus de calibratge"
 msgid "Complete Calibration"
 msgstr "Calibratge Complet"
 
+# AI Translated
 msgid "Fine Calibration based on flow ratio"
-msgstr "Calibratge Fi basat en la Ratio de Flux"
+msgstr "Calibratge Fi basat en la relació de flux"
 
 msgid "Title"
 msgstr "Títol"
@@ -23299,7 +23542,7 @@ msgstr "Inici de la prova de %s..."
 
 # AI Translated
 #, c-format, boost-format
-msgid "test %s ip resolved = %s"
+msgid "test %s IP resolved = %s"
 msgstr "Prova de %s: IP resolta = %s"
 
 # AI Translated
@@ -24497,9 +24740,6 @@ msgstr "Activar l'assignació intel·ligent de filament: assigna un filament a d
 # AI Translated
 msgid "File Saving"
 msgstr "Desament de fitxers"
-
-msgid "Don't remind me again"
-msgstr "No m'ho recordis més"
 
 msgid "No further pop-up will appear. You can reopen it in 'Preferences'"
 msgstr "No apareixerà cap més finestra emergent. Podeu reobrir-la a 'Preferències'"
@@ -29896,9 +30136,6 @@ msgstr "Obrir l'Accés ràpid"
 msgid "Slicing and printing"
 msgstr "Laminat i impressió"
 
-msgid "Selection"
-msgstr "Selecció"
-
 # AI Translated
 msgid "Editing"
 msgstr "Edició"
@@ -30804,6 +31041,1647 @@ msgstr[0] "La llista de filaments actual no conté %s. Després de la descomposi
 msgstr[1] "La llista de filaments actual no conté %s. Després de la descomposició es crearan automàticament els filaments de projecte que necessita el filament mixt."
 
 # AI Translated
+msgid "Color Picker"
+msgstr "Selector de color"
+
+# AI Translated
+msgid "Basic Colors"
+msgstr "Colors bàsics"
+
+# AI Translated
+#. TRN: Keep the brand name "Orca" unchanged; translate only the palette descriptor.
+msgid "Orca Palette"
+msgstr "Paleta Orca"
+
+# AI Translated
+#. TRN: Keep the standard/brand name "RAL" unchanged.
+msgid "RAL Classic"
+msgstr "RAL Clàssic"
+
+# AI Translated
+msgid "Gradients"
+msgstr "Gradients"
+
+# AI Translated
+msgctxt "Color picker"
+msgid "Solid"
+msgstr "Sòlid"
+
+# AI Translated
+# Needs human review: Glossary has no Catalan cell for Gradient; kept Gradient, matching the existing Gradient lineal/radial, while the mixed filament gradient uses Degradat.
+msgid "Gradient"
+msgstr "Gradient"
+
+# AI Translated
+msgid "Gradient start"
+msgstr "Inici del gradient"
+
+# AI Translated
+msgid "Gradient end"
+msgstr "Final del gradient"
+
+# AI Translated
+msgid "Gradient color"
+msgstr "Color del gradient"
+
+# AI Translated
+msgid "Add color"
+msgstr "Afegir color"
+
+# AI Translated
+msgid "Remove color"
+msgstr "Eliminar color"
+
+# AI Translated
+msgid "Saturation"
+msgstr "Saturació"
+
+# AI Translated
+msgid "Original color"
+msgstr "Color original"
+
+# AI Translated
+#. TRN: Clicking the current color preview adds it to the saved favorites.
+msgid "Save current color"
+msgstr "Desar el color actual"
+
+# AI Translated
+# Needs human review: Glossary has no Catalan cell for Palette; Paleta chosen.
+msgid "Palettes"
+msgstr "Paletes"
+
+# AI Translated
+msgid "Search colors"
+msgstr "Cercar colors"
+
+# AI Translated
+msgid "Filter colors"
+msgstr "Filtrar colors"
+
+# AI Translated
+msgid "No matching colors"
+msgstr "No hi ha colors coincidents"
+
+# AI Translated
+msgid "Hex color"
+msgstr "Color hexadecimal"
+
+# AI Translated
+msgid "Opacity"
+msgstr "Opacitat"
+
+# AI Translated
+msgid "Opacity percent"
+msgstr "Percentatge d'opacitat"
+
+# AI Translated
+msgid "Save color"
+msgstr "Desar color"
+
+# AI Translated
+msgid "Enter a complete hexadecimal color"
+msgstr "Introduïu un color hexadecimal complet"
+
+# AI Translated
+msgid "The current multi-color selection is kept until you choose a different color."
+msgstr "La selecció multicolor actual es conserva fins que trieu un color diferent."
+
+# AI Translated
+#, c-format, boost-format
+msgid "Up to %d colors supported."
+msgstr "S'admeten fins a %d colors."
+
+# AI Translated
+msgid "Crimson"
+msgstr "Carmesí"
+
+# AI Translated
+msgid "Orange red"
+msgstr "Vermell taronja"
+
+# AI Translated
+msgid "Tomato"
+msgstr "Tomàquet"
+
+# AI Translated
+msgid "Orange"
+msgstr "Taronja"
+
+# AI Translated
+msgid "Dark orange"
+msgstr "Taronja fosc"
+
+# AI Translated
+msgid "Gold"
+msgstr "Or"
+
+# AI Translated
+msgid "Burly wood"
+msgstr "Fusta robusta"
+
+# AI Translated
+msgid "Bisque"
+msgstr "Bisque"
+
+# AI Translated
+msgid "Misty rose"
+msgstr "Rosa boirós"
+
+# AI Translated
+msgid "Light yellow"
+msgstr "Groc clar"
+
+# AI Translated
+msgid "Lemon chiffon"
+msgstr "Xifó de llimona"
+
+# AI Translated
+msgid "Beige"
+msgstr "Beix"
+
+# AI Translated
+msgid "Light golden rod yellow"
+msgstr "Groc vara d'or clar"
+
+# AI Translated
+msgid "Pale golden rod"
+msgstr "Vara d'or pàl·lida"
+
+# AI Translated
+msgid "Khaki"
+msgstr "Caqui"
+
+# AI Translated
+msgid "Dark khaki"
+msgstr "Caqui fosc"
+
+# AI Translated
+msgid "Peach puff"
+msgstr "Préssec clar"
+
+# AI Translated
+msgid "Moccasin"
+msgstr "Mocassí"
+
+# AI Translated
+msgid "Papaya whip"
+msgstr "Nata de papaia"
+
+# AI Translated
+msgid "Blanched almond"
+msgstr "Ametlla pelada"
+
+# AI Translated
+msgid "Antique white"
+msgstr "Blanc antic"
+
+# AI Translated
+msgid "Navajo white"
+msgstr "Blanc navajo"
+
+# AI Translated
+msgid "Wheat"
+msgstr "Blat"
+
+# AI Translated
+msgid "Golden rod"
+msgstr "Vara d'or"
+
+# AI Translated
+msgid "Chocolate"
+msgstr "Xocolata"
+
+# AI Translated
+msgid "Peru"
+msgstr "Perú"
+
+# AI Translated
+msgid "Fire brick"
+msgstr "Maó refractari"
+
+# AI Translated
+msgid "Sienna"
+msgstr "Sienna"
+
+# AI Translated
+msgid "Saddle brown"
+msgstr "Marró sella"
+
+# AI Translated
+msgid "Brown"
+msgstr "Marró"
+
+# AI Translated
+msgid "Rosy brown"
+msgstr "Marró rosat"
+
+# AI Translated
+msgid "Salmon"
+msgstr "Salmó"
+
+# AI Translated
+msgid "Light salmon"
+msgstr "Salmó clar"
+
+# AI Translated
+msgid "Dark salmon"
+msgstr "Salmó fosc"
+
+# AI Translated
+msgid "Sandy brown"
+msgstr "Marró sorra"
+
+# AI Translated
+msgid "Coral"
+msgstr "Corall"
+
+# AI Translated
+msgid "Light coral"
+msgstr "Corall clar"
+
+# AI Translated
+msgid "Indian red"
+msgstr "Vermell indi"
+
+# AI Translated
+msgid "Dark red"
+msgstr "Vermell fosc"
+
+# AI Translated
+msgid "Maroon"
+msgstr "Grana"
+
+# AI Translated
+msgid "Green yellow"
+msgstr "Verd groguenc"
+
+# AI Translated
+msgid "Yellow green"
+msgstr "Groc verdós"
+
+# AI Translated
+msgid "Chartreuse"
+msgstr "Chartreuse"
+
+# AI Translated
+msgid "Lawn green"
+msgstr "Verd gespa"
+
+# AI Translated
+msgid "Lime green"
+msgstr "Verd llima"
+
+# AI Translated
+msgid "Spring green"
+msgstr "Verd primavera"
+
+# AI Translated
+msgid "Medium spring green"
+msgstr "Verd primavera mitjà"
+
+# AI Translated
+msgid "Lime"
+msgstr "Llima"
+
+# AI Translated
+msgid "Forest green"
+msgstr "Verd bosc"
+
+# AI Translated
+msgid "Dark green"
+msgstr "Verd fosc"
+
+# AI Translated
+msgid "Olive drab"
+msgstr "Oliva apagat"
+
+# AI Translated
+msgid "Olive"
+msgstr "Oliva"
+
+# AI Translated
+msgid "Dark olive green"
+msgstr "Verd oliva fosc"
+
+# AI Translated
+msgid "Pale green"
+msgstr "Verd pàl·lid"
+
+# AI Translated
+msgid "Light green"
+msgstr "Verd clar"
+
+# AI Translated
+msgid "Medium sea green"
+msgstr "Verd mar mitjà"
+
+# AI Translated
+msgid "Sea green"
+msgstr "Verd mar"
+
+# AI Translated
+msgid "Dark sea green"
+msgstr "Verd mar fosc"
+
+# AI Translated
+msgid "Cadet blue"
+msgstr "Blau cadet"
+
+# AI Translated
+msgid "Medium aqua marine"
+msgstr "Aiguamarina mitjana"
+
+# AI Translated
+msgid "Turquoise"
+msgstr "Turquesa"
+
+# AI Translated
+msgid "Medium turquoise"
+msgstr "Turquesa mitjana"
+
+# AI Translated
+msgid "Dark turquoise"
+msgstr "Turquesa fosca"
+
+# AI Translated
+msgid "Pale turquoise"
+msgstr "Turquesa pàl·lida"
+
+# AI Translated
+msgid "Aqua"
+msgstr "Aigua"
+
+# AI Translated
+msgid "Light cyan"
+msgstr "Cian clar"
+
+# AI Translated
+msgid "Mint cream"
+msgstr "Crema de menta"
+
+# AI Translated
+msgid "Honey dew"
+msgstr "Rosada de mel"
+
+# AI Translated
+msgid "Aquamarine"
+msgstr "Aiguamarina"
+
+# AI Translated
+msgid "Light sea green"
+msgstr "Verd mar clar"
+
+# AI Translated
+msgid "Dark cyan"
+msgstr "Cian fosc"
+
+# AI Translated
+# Needs human review: CSS teal (dark blue-green); check that Verd blavós fosc reads as a color name next to Blau verdós and Verd blavós.
+msgid "Teal"
+msgstr "Verd blavós fosc"
+
+# AI Translated
+msgid "Dark slate gray"
+msgstr "Gris pissarra fosc"
+
+# AI Translated
+msgid "Light slate gray"
+msgstr "Gris pissarra clar"
+
+# AI Translated
+msgid "Slate gray"
+msgstr "Gris pissarra"
+
+# AI Translated
+msgid "Deep sky blue"
+msgstr "Blau cel intens"
+
+# AI Translated
+msgid "Dodger Blue"
+msgstr "Blau Dodger"
+
+# AI Translated
+msgid "Sky blue"
+msgstr "Blau cel"
+
+# AI Translated
+msgid "Light sky blue"
+msgstr "Blau cel clar"
+
+# AI Translated
+msgid "Light blue"
+msgstr "Blau clar"
+
+# AI Translated
+msgid "Powder blue"
+msgstr "Blau talc"
+
+# AI Translated
+msgid "Light steel blue"
+msgstr "Blau acer clar"
+
+# AI Translated
+msgid "Steel blue"
+msgstr "Blau acer"
+
+# AI Translated
+msgid "Cornflower blue"
+msgstr "Blau blauet"
+
+# AI Translated
+msgid "Royal blue"
+msgstr "Blau reial"
+
+# AI Translated
+msgid "Medium blue"
+msgstr "Blau mitjà"
+
+# AI Translated
+msgid "Midnight blue"
+msgstr "Blau mitjanit"
+
+# AI Translated
+msgid "Dark blue"
+msgstr "Blau fosc"
+
+# AI Translated
+msgid "Navy"
+msgstr "Blau marí"
+
+# AI Translated
+msgid "Slate blue"
+msgstr "Blau pissarra"
+
+# AI Translated
+msgid "Dark slate blue"
+msgstr "Blau pissarra fosc"
+
+# AI Translated
+msgid "Medium slate blue"
+msgstr "Blau pissarra mitjà"
+
+# AI Translated
+msgid "Blue violet"
+msgstr "Violeta blavós"
+
+# AI Translated
+msgid "Indigo"
+msgstr "Indi"
+
+# AI Translated
+msgid "Dark violet"
+msgstr "Violeta fosc"
+
+# AI Translated
+msgid "Dark orchid"
+msgstr "Orquídia fosca"
+
+# AI Translated
+msgid "Medium orchid"
+msgstr "Orquídia mitjana"
+
+# AI Translated
+msgid "Orchid"
+msgstr "Orquídia"
+
+# AI Translated
+msgid "Violet"
+msgstr "Violeta"
+
+# AI Translated
+msgid "Medium purple"
+msgstr "Porpra mitjà"
+
+# AI Translated
+msgid "Purple"
+msgstr "Porpra"
+
+# AI Translated
+msgid "Rebecca purple"
+msgstr "Porpra Rebecca"
+
+# AI Translated
+msgid "Medium violet red"
+msgstr "Vermell violeta mitjà"
+
+# AI Translated
+msgid "Pale violet red"
+msgstr "Vermell violeta pàl·lid"
+
+# AI Translated
+msgid "Deep pink"
+msgstr "Rosa intens"
+
+# AI Translated
+msgid "Hot pink"
+msgstr "Rosa viu"
+
+# AI Translated
+msgid "Light pink"
+msgstr "Rosa clar"
+
+# AI Translated
+msgid "Pink"
+msgstr "Rosa"
+
+# AI Translated
+msgid "Plum"
+msgstr "Pruna"
+
+# AI Translated
+msgid "Thistle"
+msgstr "Card"
+
+# AI Translated
+msgid "Fuchsia"
+msgstr "Fúcsia"
+
+# AI Translated
+msgid "Dark magenta"
+msgstr "Magenta fosc"
+
+# AI Translated
+msgid "Linen"
+msgstr "Lli"
+
+# AI Translated
+msgid "Old lace"
+msgstr "Punta antiga"
+
+# AI Translated
+# Needs human review: CSS color 'seashell'; the Shell glossary match is a false positive.
+msgid "Sea shell"
+msgstr "Petxina"
+
+# AI Translated
+msgid "Ivory"
+msgstr "Ivori"
+
+# AI Translated
+msgid "Floral white"
+msgstr "Blanc floral"
+
+# AI Translated
+msgid "Lavender blush"
+msgstr "Lavanda rosada"
+
+# AI Translated
+msgid "Ghost white"
+msgstr "Blanc fantasma"
+
+# AI Translated
+msgid "Alice blue"
+msgstr "Blau Alice"
+
+# AI Translated
+msgid "Lavender"
+msgstr "Lavanda"
+
+# AI Translated
+msgid "White smoke"
+msgstr "Blanc fum"
+
+# AI Translated
+msgid "Gainsboro"
+msgstr "Gainsboro"
+
+# AI Translated
+msgid "Black"
+msgstr "Negre"
+
+# AI Translated
+msgid "Coral fire"
+msgstr "Foc de corall"
+
+# AI Translated
+msgid "Sea anemone"
+msgstr "Anemone de mar"
+
+# AI Translated
+msgid "Deep abyss"
+msgstr "Abisme profund"
+
+# AI Translated
+msgid "Lobster red"
+msgstr "Vermell llamàntol"
+
+# AI Translated
+msgid "Sandy clay"
+msgstr "Argila sorrenca"
+
+# AI Translated
+msgid "Driftwood"
+msgstr "Fusta de deriva"
+
+# AI Translated
+# Needs human review: Plant name (Hippophae); check the Catalan name and whether a color-only name reads better.
+msgid "Sea buckthorn"
+msgstr "Arç marí"
+
+# AI Translated
+msgid "Sunset reef"
+msgstr "Escull de capvespre"
+
+# AI Translated
+msgid "Tiger coral"
+msgstr "Corall tigre"
+
+# AI Translated
+msgid "Pink coral"
+msgstr "Corall rosa"
+
+# AI Translated
+msgid "Seashell glow"
+msgstr "Resplendor de petxina"
+
+# AI Translated
+msgid "Sand"
+msgstr "Sorra"
+
+# AI Translated
+msgid "Golden kelp"
+msgstr "Alga daurada"
+
+# AI Translated
+msgid "Sunlit dune"
+msgstr "Duna assolellada"
+
+# AI Translated
+msgid "Amber nautilus"
+msgstr "Nàutil ambre"
+
+# AI Translated
+msgid "Sea lemon"
+msgstr "Llimona de mar"
+
+# AI Translated
+msgid "Pale starfish"
+msgstr "Estrella de mar pàl·lida"
+
+# AI Translated
+msgid "Spring tide"
+msgstr "Marea viva"
+
+# AI Translated
+msgid "Lime algae"
+msgstr "Alga llima"
+
+# AI Translated
+msgid "Sea grass"
+msgstr "Herba marina"
+
+# AI Translated
+msgid "Neon plankton"
+msgstr "Plàncton neó"
+
+# AI Translated
+msgid "Kelp forest"
+msgstr "Bosc d'algues"
+
+# AI Translated
+msgid "Emerald wave"
+msgstr "Onada esmeralda"
+
+# AI Translated
+msgid "Whale shadow"
+msgstr "Ombra de balena"
+
+# AI Translated
+msgid "Sea turtle"
+msgstr "Tortuga marina"
+
+# AI Translated
+msgid "Lagoon"
+msgstr "Llacuna"
+
+# AI Translated
+msgid "Tropical current"
+msgstr "Corrent tropical"
+
+# AI Translated
+msgid "Midnight trench"
+msgstr "Fossa de mitjanit"
+
+# AI Translated
+msgid "Dark kelp"
+msgstr "Alga fosca"
+
+# AI Translated
+msgid "Crystal surf"
+msgstr "Onatge de cristall"
+
+# AI Translated
+msgid "Turquoise bay"
+msgstr "Badia turquesa"
+
+# AI Translated
+msgid "Sky over reef"
+msgstr "Cel sobre l'escull"
+
+# AI Translated
+msgid "Shallow sky"
+msgstr "Cel somer"
+
+# AI Translated
+msgid "Electric blue"
+msgstr "Blau elèctric"
+
+# AI Translated
+msgid "Dolphin"
+msgstr "Dofí"
+
+# AI Translated
+msgid "Ocean depths"
+msgstr "Profunditats de l'oceà"
+
+# AI Translated
+msgid "Whale"
+msgstr "Balena"
+
+# AI Translated
+msgid "Indigo abyss"
+msgstr "Abisme indi"
+
+# AI Translated
+msgid "Sea urchin"
+msgstr "Eriçó de mar"
+
+# AI Translated
+msgid "Lavender coral"
+msgstr "Corall lavanda"
+
+# AI Translated
+msgid "Violet tide"
+msgstr "Marea violeta"
+
+# AI Translated
+msgid "Deep sea orchid"
+msgstr "Orquídia abissal"
+
+# AI Translated
+msgid "Neon jelly"
+msgstr "Medusa neó"
+
+# AI Translated
+msgid "Fuchsia coral"
+msgstr "Corall fúcsia"
+
+# AI Translated
+msgid "Pink jellyfish"
+msgstr "Medusa rosa"
+
+# AI Translated
+msgid "Foam"
+msgstr "Escuma"
+
+# AI Translated
+msgid "Seashell white"
+msgstr "Blanc petxina"
+
+# AI Translated
+msgid "Pebble gray"
+msgstr "Gris còdol"
+
+# AI Translated
+msgid "Storm cloud"
+msgstr "Núvol de tempesta"
+
+# AI Translated
+msgid "Ink black"
+msgstr "Negre tinta"
+
+# AI Translated
+msgid "Green beige"
+msgstr "Beix verdós"
+
+# AI Translated
+msgid "Sand yellow"
+msgstr "Groc sorra"
+
+# AI Translated
+msgid "Signal yellow"
+msgstr "Groc de senyalització"
+
+# AI Translated
+msgid "Golden yellow"
+msgstr "Groc daurat"
+
+# AI Translated
+msgid "Honey yellow"
+msgstr "Groc mel"
+
+# AI Translated
+msgid "Maize yellow"
+msgstr "Groc blat de moro"
+
+# AI Translated
+msgid "Daffodil yellow"
+msgstr "Groc narcís"
+
+# AI Translated
+msgid "Brown beige"
+msgstr "Beix marronós"
+
+# AI Translated
+msgid "Lemon yellow"
+msgstr "Groc llimona"
+
+# AI Translated
+msgid "Oyster white"
+msgstr "Blanc ostra"
+
+# AI Translated
+msgid "Light ivory"
+msgstr "Ivori clar"
+
+# AI Translated
+msgid "Zinc yellow"
+msgstr "Groc de zinc"
+
+# AI Translated
+msgid "Grey beige"
+msgstr "Beix grisós"
+
+# AI Translated
+msgid "Olive yellow"
+msgstr "Groc oliva"
+
+# AI Translated
+msgid "Rape yellow"
+msgstr "Groc colza"
+
+# AI Translated
+msgid "Traffic yellow"
+msgstr "Groc trànsit"
+
+# AI Translated
+msgid "Ochre yellow"
+msgstr "Groc ocre"
+
+# AI Translated
+# Needs human review: Source name looks like a RAL variant; check the rendering.
+msgid "Traffic orange yellow"
+msgstr "Groc taronja trànsit"
+
+# AI Translated
+msgid "Curry"
+msgstr "Curri"
+
+# AI Translated
+msgid "Melon yellow"
+msgstr "Groc meló"
+
+# AI Translated
+msgid "Broom yellow"
+msgstr "Groc ginesta"
+
+# AI Translated
+msgid "Dahlia yellow"
+msgstr "Groc dàlia"
+
+# AI Translated
+msgid "Pastel yellow"
+msgstr "Groc pastel"
+
+# AI Translated
+msgid "Pearl beige"
+msgstr "Beix perla"
+
+# AI Translated
+msgid "Pearl gold"
+msgstr "Or perla"
+
+# AI Translated
+msgid "Sun yellow"
+msgstr "Groc sol"
+
+# AI Translated
+msgid "Yellow orange"
+msgstr "Taronja groguenc"
+
+# AI Translated
+msgid "Deep orange"
+msgstr "Taronja intens"
+
+# AI Translated
+msgid "Vermilion"
+msgstr "Vermelló"
+
+# AI Translated
+msgid "Pearl orange"
+msgstr "Taronja perla"
+
+# AI Translated
+msgid "Pure orange"
+msgstr "Taronja pur"
+
+# AI Translated
+msgid "Luminous orange"
+msgstr "Taronja lluminós"
+
+# AI Translated
+msgid "Luminous bright orange"
+msgstr "Taronja lluminós brillant"
+
+# AI Translated
+msgid "Bright red orange"
+msgstr "Taronja vermellós brillant"
+
+# AI Translated
+msgid "Traffic orange"
+msgstr "Taronja trànsit"
+
+# AI Translated
+msgid "Signal orange"
+msgstr "Taronja de senyalització"
+
+# AI Translated
+msgid "Salmon orange"
+msgstr "Taronja salmó"
+
+# AI Translated
+msgid "Pearl pink"
+msgstr "Rosa perla"
+
+# AI Translated
+msgid "Copper orange"
+msgstr "Taronja coure"
+
+# AI Translated
+msgid "Signal brown"
+msgstr "Marró de senyalització"
+
+# AI Translated
+# Needs human review: RAL color name as given in the source; check the rendering.
+msgid "Fir orange"
+msgstr "Taronja avet"
+
+# AI Translated
+msgid "Signal red"
+msgstr "Vermell de senyalització"
+
+# AI Translated
+msgid "Luminous red"
+msgstr "Vermell lluminós"
+
+# AI Translated
+msgid "Carmine red"
+msgstr "Vermell carmí"
+
+# AI Translated
+msgid "Pearl carmine red"
+msgstr "Vermell carmí perla"
+
+# AI Translated
+msgid "Pure red"
+msgstr "Vermell pur"
+
+# AI Translated
+msgid "Luminous deep red"
+msgstr "Vermell intens lluminós"
+
+# AI Translated
+msgid "Currant red"
+msgstr "Vermell grosella"
+
+# AI Translated
+msgid "Pearl ruby red"
+msgstr "Vermell rubí perla"
+
+# AI Translated
+msgid "Fire red"
+msgstr "Vermell foc"
+
+# AI Translated
+msgid "Ruby red"
+msgstr "Vermell rubí"
+
+# AI Translated
+msgid "Purple red"
+msgstr "Vermell porpra"
+
+# AI Translated
+msgid "Wine red"
+msgstr "Vermell vi"
+
+# AI Translated
+msgid "Black red"
+msgstr "Vermell negrós"
+
+# AI Translated
+msgid "Oxide red"
+msgstr "Vermell òxid"
+
+# AI Translated
+msgid "Brown red"
+msgstr "Vermell marronós"
+
+# AI Translated
+msgid "Pine red"
+msgstr "Vermell pi"
+
+# AI Translated
+msgid "Tomato red"
+msgstr "Vermell tomàquet"
+
+# AI Translated
+msgid "Antique pink"
+msgstr "Rosa antic"
+
+# AI Translated
+msgid "Coral red"
+msgstr "Vermell corall"
+
+# AI Translated
+msgid "Rose"
+msgstr "Rosat"
+
+# AI Translated
+msgid "Strawberry red"
+msgstr "Vermell maduixa"
+
+# AI Translated
+msgid "Traffic red"
+msgstr "Vermell trànsit"
+
+# AI Translated
+msgid "Salmon pink"
+msgstr "Rosa salmó"
+
+# AI Translated
+msgid "Luminous rose"
+msgstr "Rosa lluminós"
+
+# AI Translated
+msgid "Luminous bright red"
+msgstr "Vermell brillant lluminós"
+
+# AI Translated
+msgid "Raspberry red"
+msgstr "Vermell gerd"
+
+# AI Translated
+msgid "Orient red"
+msgstr "Vermell orient"
+
+# AI Translated
+msgid "Pearl ruby"
+msgstr "Rubí perla"
+
+# AI Translated
+msgid "Red purple"
+msgstr "Porpra vermellós"
+
+# AI Translated
+msgid "Red violet"
+msgstr "Violeta vermellós"
+
+# AI Translated
+msgid "Heather violet"
+msgstr "Violeta bruc"
+
+# AI Translated
+msgid "Bordeaux violet"
+msgstr "Violeta bordeus"
+
+# AI Translated
+msgid "Mahogany"
+msgstr "Caoba"
+
+# AI Translated
+msgid "Grey purple"
+msgstr "Porpra grisós"
+
+# AI Translated
+msgid "Signal violet"
+msgstr "Violeta de senyalització"
+
+# AI Translated
+msgid "Fir green"
+msgstr "Verd avet"
+
+# AI Translated
+# Needs human review: RAL color named after Sabine; check the rendering.
+msgid "Sabine grey"
+msgstr "Gris sabí"
+
+# AI Translated
+msgid "Pearl violet"
+msgstr "Violeta perla"
+
+# AI Translated
+msgid "Pearl blackberry"
+msgstr "Móra perla"
+
+# AI Translated
+msgid "Green blue"
+msgstr "Blau verdós"
+
+# AI Translated
+msgid "Ultramarine blue"
+msgstr "Blau ultramar"
+
+# AI Translated
+msgid "Sapphire blue"
+msgstr "Blau safir"
+
+# AI Translated
+msgid "Black blue"
+msgstr "Blau negrós"
+
+# AI Translated
+msgid "Signal blue"
+msgstr "Blau de senyalització"
+
+# AI Translated
+msgid "Brilliant blue"
+msgstr "Blau brillant"
+
+# AI Translated
+msgid "Grey blue"
+msgstr "Blau grisós"
+
+# AI Translated
+msgid "Azure blue"
+msgstr "Blau atzur"
+
+# AI Translated
+msgid "Gentian blue"
+msgstr "Blau genciana"
+
+# AI Translated
+msgid "Cobalt blue"
+msgstr "Blau cobalt"
+
+# AI Translated
+msgid "Pigeon blue"
+msgstr "Blau colom"
+
+# AI Translated
+msgid "Traffic blue"
+msgstr "Blau trànsit"
+
+# AI Translated
+msgid "Turquoise blue"
+msgstr "Blau turquesa"
+
+# AI Translated
+msgid "Capri blue"
+msgstr "Blau Capri"
+
+# AI Translated
+msgid "Ocean blue"
+msgstr "Blau oceà"
+
+# AI Translated
+msgid "Water blue"
+msgstr "Blau aigua"
+
+# AI Translated
+msgid "Night blue"
+msgstr "Blau nit"
+
+# AI Translated
+msgid "Distant blue"
+msgstr "Blau llunyà"
+
+# AI Translated
+msgid "Pastel blue"
+msgstr "Blau pastel"
+
+# AI Translated
+msgid "Pearl gentian blue"
+msgstr "Blau genciana perla"
+
+# AI Translated
+msgid "Pearl midnight blue"
+msgstr "Blau mitjanit perla"
+
+# AI Translated
+msgid "Patina green"
+msgstr "Verd pàtina"
+
+# AI Translated
+msgid "Emerald green"
+msgstr "Verd esmeralda"
+
+# AI Translated
+msgid "Leaf green"
+msgstr "Verd fulla"
+
+# AI Translated
+msgid "Olive green"
+msgstr "Verd oliva"
+
+# AI Translated
+msgid "Blue green"
+msgstr "Verd blavós"
+
+# AI Translated
+msgid "Moss green"
+msgstr "Verd molsa"
+
+# AI Translated
+msgid "Grey olive"
+msgstr "Oliva grisós"
+
+# AI Translated
+msgid "Pine green"
+msgstr "Verd pi"
+
+# AI Translated
+msgid "Pine brown"
+msgstr "Marró pi"
+
+# AI Translated
+msgid "Grass green"
+msgstr "Verd herba"
+
+# AI Translated
+msgid "Reseda green"
+msgstr "Verd reseda"
+
+# AI Translated
+msgid "Brown green"
+msgstr "Verd marronós"
+
+# AI Translated
+msgid "Reed green"
+msgstr "Verd canya"
+
+# AI Translated
+msgid "Black green"
+msgstr "Verd negrós"
+
+# AI Translated
+msgid "Turquoise green"
+msgstr "Verd turquesa"
+
+# AI Translated
+msgid "May green"
+msgstr "Verd maig"
+
+# AI Translated
+msgid "Chrome oxide green"
+msgstr "Verd òxid de crom"
+
+# AI Translated
+msgid "Traffic green"
+msgstr "Verd trànsit"
+
+# AI Translated
+msgid "Fern green"
+msgstr "Verd falguera"
+
+# AI Translated
+msgid "Opal green"
+msgstr "Verd òpal"
+
+# AI Translated
+msgid "Mint green"
+msgstr "Verd menta"
+
+# AI Translated
+msgid "Bronze green"
+msgstr "Verd bronze"
+
+# AI Translated
+msgid "Pearl green"
+msgstr "Verd perla"
+
+# AI Translated
+msgid "Sax turquoise"
+msgstr "Turquesa saxe"
+
+# AI Translated
+msgid "Pearl turquoise"
+msgstr "Turquesa perla"
+
+# AI Translated
+msgid "Pearl jade"
+msgstr "Jade perla"
+
+# AI Translated
+msgid "Pure green"
+msgstr "Verd pur"
+
+# AI Translated
+msgid "Luminous green"
+msgstr "Verd lluminós"
+
+# AI Translated
+msgid "Squirrel grey"
+msgstr "Gris esquirol"
+
+# AI Translated
+msgid "Silver grey"
+msgstr "Gris plata"
+
+# AI Translated
+msgid "Olive grey"
+msgstr "Gris oliva"
+
+# AI Translated
+msgid "Moss grey"
+msgstr "Gris molsa"
+
+# AI Translated
+msgid "Signal grey"
+msgstr "Gris de senyalització"
+
+# AI Translated
+msgid "Mouse grey"
+msgstr "Gris ratolí"
+
+# AI Translated
+msgid "Beige grey"
+msgstr "Gris beix"
+
+# AI Translated
+msgid "Khaki grey"
+msgstr "Gris caqui"
+
+# AI Translated
+msgid "Green grey"
+msgstr "Gris verdós"
+
+# AI Translated
+msgid "Tarpaulin grey"
+msgstr "Gris lona"
+
+# AI Translated
+msgid "Iron grey"
+msgstr "Gris ferro"
+
+# AI Translated
+msgid "Basalt grey"
+msgstr "Gris basalt"
+
+# AI Translated
+msgid "Brown grey"
+msgstr "Gris marronós"
+
+# AI Translated
+msgid "Slate grey"
+msgstr "Gris pissarra"
+
+# AI Translated
+msgid "Anthracite grey"
+msgstr "Gris antracita"
+
+# AI Translated
+msgid "Light grey"
+msgstr "Gris clar"
+
+# AI Translated
+msgid "Umber grey"
+msgstr "Gris ombra"
+
+# AI Translated
+msgid "Concrete grey"
+msgstr "Gris formigó"
+
+# AI Translated
+msgid "Graphite grey"
+msgstr "Gris grafit"
+
+# AI Translated
+msgid "Granite grey"
+msgstr "Gris granit"
+
+# AI Translated
+msgid "Stone grey"
+msgstr "Gris pedra"
+
+# AI Translated
+msgid "Pebble grey"
+msgstr "Gris còdol"
+
+# AI Translated
+msgid "Cement grey"
+msgstr "Gris ciment"
+
+# AI Translated
+msgid "Yellow grey"
+msgstr "Gris groguenc"
+
+# AI Translated
+msgid "Platinum grey"
+msgstr "Gris platí"
+
+# AI Translated
+msgid "Dusty grey"
+msgstr "Gris pols"
+
+# AI Translated
+msgid "Agate grey"
+msgstr "Gris àgata"
+
+# AI Translated
+msgid "Quartz grey"
+msgstr "Gris quars"
+
+# AI Translated
+msgid "Window grey"
+msgstr "Gris finestra"
+
+# AI Translated
+msgid "Traffic grey A"
+msgstr "Gris trànsit A"
+
+# AI Translated
+msgid "Traffic grey B"
+msgstr "Gris trànsit B"
+
+# AI Translated
+msgid "Silk grey"
+msgstr "Gris seda"
+
+# AI Translated
+msgid "Telegrey 1"
+msgstr "Telegris 1"
+
+# AI Translated
+msgid "Telegrey 2"
+msgstr "Telegris 2"
+
+# AI Translated
+msgid "Telegrey 4"
+msgstr "Telegris 4"
+
+# AI Translated
+msgid "Pearl mouse grey"
+msgstr "Gris ratolí perla"
+
+# AI Translated
+msgid "Green brown"
+msgstr "Marró verdós"
+
+# AI Translated
+msgid "Ochre brown"
+msgstr "Marró ocre"
+
+# AI Translated
+msgid "Clay brown"
+msgstr "Marró argila"
+
+# AI Translated
+msgid "Copper brown"
+msgstr "Marró coure"
+
+# AI Translated
+msgid "Chocolate brown"
+msgstr "Marró xocolata"
+
+# AI Translated
+msgid "Olive brown"
+msgstr "Marró oliva"
+
+# AI Translated
+msgid "Nut brown"
+msgstr "Marró nou"
+
+# AI Translated
+msgid "Red brown"
+msgstr "Marró vermellós"
+
+# AI Translated
+msgid "Sepia brown"
+msgstr "Marró sèpia"
+
+# AI Translated
+msgid "Chestnut brown"
+msgstr "Marró castanya"
+
+# AI Translated
+msgid "Mahogany brown"
+msgstr "Marró caoba"
+
+# AI Translated
+msgid "Grey brown"
+msgstr "Marró grisós"
+
+# AI Translated
+msgid "Pearl copper"
+msgstr "Coure perla"
+
+# AI Translated
+msgid "Beige brown"
+msgstr "Marró beix"
+
+# AI Translated
+msgid "Pearl mocha brown"
+msgstr "Marró moca perla"
+
+# AI Translated
+msgid "Earth brown"
+msgstr "Marró terra"
+
+# AI Translated
+msgid "Pearl brown"
+msgstr "Marró perla"
+
+# AI Translated
+msgid "Cream"
+msgstr "Crema"
+
+# AI Translated
+msgid "Grey white"
+msgstr "Blanc grisós"
+
+# AI Translated
+msgid "Signal white"
+msgstr "Blanc de senyalització"
+
+# AI Translated
+msgid "Signal black"
+msgstr "Negre de senyalització"
+
+# AI Translated
+msgid "Jet black"
+msgstr "Negre atzabeja"
+
+# AI Translated
+msgid "White aluminium"
+msgstr "Alumini blanc"
+
+# AI Translated
+msgid "Grey aluminium"
+msgstr "Alumini gris"
+
+# AI Translated
+msgid "Pure white"
+msgstr "Blanc pur"
+
+# AI Translated
+msgid "Graphite black"
+msgstr "Negre grafit"
+
+# AI Translated
+msgid "Traffic white"
+msgstr "Blanc trànsit"
+
+# AI Translated
+msgid "Traffic black"
+msgstr "Negre trànsit"
+
+# AI Translated
+msgid "Papyrus white"
+msgstr "Blanc papir"
+
+# AI Translated
+msgid "Pearl light grey"
+msgstr "Gris clar perla"
+
+# AI Translated
+msgid "Metal: Silver"
+msgstr "Metall: Plata"
+
+# AI Translated
+msgid "Metal: Brass"
+msgstr "Metall: Llautó"
+
+# AI Translated
+msgid "Metal: Gold"
+msgstr "Metall: Or"
+
+# AI Translated
+msgid "Metal: Copper"
+msgstr "Metall: Coure"
+
+# AI Translated
+msgid "Metal: Bronze"
+msgstr "Metall: Bronze"
+
+# AI Translated
+msgid "Nature: Pearl"
+msgstr "Natura: Perla"
+
+# AI Translated
+msgid "Nature: Rainbow"
+msgstr "Natura: Arc de Sant Martí"
+
+# AI Translated
+msgid "Nature: Clear Sky"
+msgstr "Natura: Cel clar"
+
+# AI Translated
+msgid "Nature: Sunset"
+msgstr "Natura: Posta de sol"
+
+# AI Translated
+msgid "Wood: Dark"
+msgstr "Fusta: Fosca"
+
+# AI Translated
+msgid "Wood: Medium"
+msgstr "Fusta: Mitjana"
+
+# AI Translated
+msgid "Wood: Light"
+msgstr "Fusta: Clara"
+
+# AI Translated
 msgid "Alternate nozzles:"
 msgstr "Broquets alternatius:"
 
@@ -31278,12 +33156,24 @@ msgid "Built-in"
 msgstr "Integrades"
 
 # AI Translated
+msgid "My textures"
+msgstr "Les meves textures"
+
+# AI Translated
 msgid "No textures found."
 msgstr "No s'ha trobat cap textura."
 
 # AI Translated
-msgid "My textures"
-msgstr "Les meves textures"
+msgid "Texture libraries"
+msgstr "Biblioteques de textures"
+
+# AI Translated
+msgid "Explore more texture libraries"
+msgstr "Explorar més biblioteques de textures"
+
+# AI Translated
+msgid "Opens OrcaCloud in the Home page to browse for plugins."
+msgstr "Obre OrcaCloud a la pàgina d'inici per cercar connectors."
 
 # AI Translated
 msgid "Import your own image as a height map. It is converted to the format the slicer bakes from and saved to your personal texture folder, kept separate from the textures shipped with OrcaSlicer."
@@ -31687,6 +33577,14 @@ msgid "How wide one copy of the texture is on the model. Smaller repeats the pat
 msgstr "Amplada d'una còpia de la textura sobre el model. Un valor més petit repeteix el patró més sovint i en fa el detall més fi; amb Tessel·lat desactivat, és la mida de la còpia única."
 
 # AI Translated
+msgid "Larger"
+msgstr "Més gran"
+
+# AI Translated
+msgid "Smaller"
+msgstr "Més petit"
+
+# AI Translated
 msgid "Turns the texture on the surface, in degrees - for lining a pattern up with an edge of the model."
 msgstr "Gira la textura sobre la superfície, en graus - per alinear un patró amb una aresta del model."
 
@@ -31759,6 +33657,14 @@ msgstr "Colors mixtos"
 # AI Translated
 msgid "The most mixed filaments a bake may add. They are picked from the texture's colors, and only the ones the bake actually uses are created."
 msgstr "El nombre màxim de filaments mixtos que pot afegir una fixació. Es trien a partir dels colors de la textura, i només es creen els que la fixació fa servir realment."
+
+# AI Translated
+msgid "Few"
+msgstr "Pocs"
+
+# AI Translated
+msgid "Many"
+msgstr "Molts"
 
 # AI Translated
 #. TRN The %2% part of "%1% printable colors %2%"; %1% is the number of filaments.
@@ -31883,10 +33789,6 @@ msgstr "Marc de projecció"
 # AI Translated
 msgid "Opens a window you drag over the model. Whatever you can see through it is what gets the texture, and its border becomes the edge of the projection."
 msgstr "Obre una finestra que arrossegueu sobre el model. Tot el que es veu a través d'ella rep la textura, i la seva vora es converteix en el límit de la projecció."
-
-# AI Translated
-msgid "Opacity"
-msgstr "Opacitat"
 
 # AI Translated
 msgid "How solid the frame window looks while you place it. Lower to see the model through it; it does not affect the result."
@@ -32117,6 +34019,14 @@ msgstr "Remallat"
 # AI Translated
 msgid "Triangle size the whole model is rebuilt with, in millimetres. Displacement works best on an even mesh; this is what makes one out of an uneven import."
 msgstr "Mida de triangle amb què es reconstrueix tot el model, en mil·límetres. El desplaçament funciona millor sobre una malla uniforme; això és el que en crea una a partir d'una importació irregular."
+
+# AI Translated
+msgid "Before"
+msgstr "Abans"
+
+# AI Translated
+msgid "After"
+msgstr "Després"
 
 # AI Translated
 msgid "Keep sharp edges"
@@ -33978,6 +35888,10 @@ msgid "Slicing Pipeline"
 msgstr "Flux de laminat"
 
 # AI Translated
+msgid "Resource Texture"
+msgstr "Textura de recurs"
+
+# AI Translated
 msgid "The plugin's configuration UI was empty. Showing the default editor."
 msgstr "La interfície de configuració del connector era buida. Es mostra l'editor predeterminat."
 
@@ -34123,6 +36037,30 @@ msgstr "El directori del connector conté fitxers d'entrada .py i .whl"
 # AI Translated
 msgid "Plugin directory does not contain a .py or .whl entry file"
 msgstr "El directori del connector no conté cap fitxer d'entrada .py ni .whl"
+
+# AI Translated
+msgid "Resource texture directory is not set"
+msgstr "No s'ha definit el directori de textures de recurs"
+
+# AI Translated
+msgid "Resource texture directory could not be resolved"
+msgstr "No s'ha pogut resoldre el directori de textures de recurs"
+
+# AI Translated
+msgid "Resource texture path is not a directory"
+msgstr "La ruta de textures de recurs no és un directori"
+
+# AI Translated
+msgid "Plugin folder could not be resolved"
+msgstr "No s'ha pogut resoldre la carpeta del connector"
+
+# AI Translated
+msgid "Resource texture directory is outside the plugin folder"
+msgstr "El directori de textures de recurs és fora de la carpeta del connector"
+
+# AI Translated
+msgid "Resource texture directory could not be read"
+msgstr "No s'ha pogut llegir el directori de textures de recurs"
 
 # AI Translated
 #, boost-format
@@ -34582,7 +36520,7 @@ msgstr "No s'ha pogut carregar el fitxer de configuració \"%1%\": %2%"
 # AI Translated
 #. TRN %1% is the application name.
 #, boost-format
-msgid "Not a gcode file generated by %1%."
+msgid "Not a G-code file generated by %1%."
 msgstr "No és un fitxer G-code generat per %1%."
 
 # AI Translated
@@ -34702,7 +36640,7 @@ msgid "Failed making a temporary copy of G-code file %1% before running a post-p
 msgstr "No s'ha pogut fer una còpia temporal del fitxer G-code %1% abans d'executar un script de postprocessament: %2%"
 
 # AI Translated
-msgid "Post-processor can't find exported gcode file"
+msgid "Post-processor can't find exported G-code file"
 msgstr "El postprocessador no troba el fitxer G-code exportat"
 
 # AI Translated
@@ -35220,14 +37158,6 @@ msgid "Forca Academy folder"
 msgstr "Carpeta de Forca Academy"
 
 # AI Translated
-msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
-msgstr "On es guarda el diari d'impressió: fitxers Markdown i JSON senzills. Una IA comença per AGENTS.md."
-
-# AI Translated
-msgid "Choose the Forca Academy folder"
-msgstr "Tria la carpeta de Forca Academy"
-
-# AI Translated
 msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
 msgstr "Obre la carpeta de Forca Academy (i la crea amb els fitxers inicials si cal)."
 
@@ -35424,6 +37354,278 @@ msgid "How many of the latest prints with an outcome, per printer and filament, 
 msgstr "Quantes de les darreres impressions amb resultat, per impressora i filament, té en compte la regla de patrons."
 
 # AI Translated
+msgid "The AI did not send this print"
+msgstr "La IA no ha enviat aquesta impressió"
+
+# AI Translated
+msgid "The AI is sending this print in %d s (print grant #%d)."
+msgstr "La IA enviarà aquesta impressió d'aquí a %d s (permís d'impressió #%d)."
+
+# AI Translated
+msgid "Share a printer with the AI first (the printer list in this window)."
+msgstr "Primer comparteix una impressora amb la IA (la llista d'impressores d'aquesta finestra)."
+
+# AI Translated
+msgid "Let the AI print on its own"
+msgstr "Deixa que la IA imprimeixi pel seu compte"
+
+# AI Translated
+msgid "Within this grant the AI may start prints itself, with no click from you: Forca opens its print dialog, counts down 10 seconds (you can cancel) and presses Send. It only sends to an idle printer whose bed is clear, and only when the print dialog has nothing to ask you. A wrong print can still damage your printer or waste filament, and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca."
+msgstr "Dins d'aquest permís, la IA pot iniciar impressions ella mateixa, sense cap clic teu: Forca obre el diàleg d'impressió, compta 10 segons enrere (pots cancel·lar) i prem Enviar. Només envia a una impressora inactiva amb el llit lliure, i només quan el diàleg d'impressió no té res a preguntar-te. Una impressió incorrecta encara pot fer malbé la impressora o malbaratar filament, i una impressora funcionant sense vigilància és un risc d'incendi: dona només el que et faci sentir còmode. El permís acaba quan s'esgota, quan s'acaba el temps, quan el revoques, tries Guarded o reinicies Forca."
+
+# AI Translated
+msgid "Printers:"
+msgstr "Impressores:"
+
+# AI Translated
+msgid "What to print (optional - without files, any plate):"
+msgstr "Què cal imprimir (opcional; sense fitxers, qualsevol safata):"
+
+# AI Translated
+msgid "Note for the AI"
+msgstr "Nota per a la IA"
+
+# AI Translated
+msgid "Add files..."
+msgstr "Afegeix fitxers..."
+
+# AI Translated
+msgid "Files the AI should print"
+msgstr "Fitxers que la IA ha d'imprimir"
+
+# AI Translated
+msgid "Copies..."
+msgstr "Còpies..."
+
+# AI Translated
+msgid "How many copies of this file?"
+msgstr "Quantes còpies d'aquest fitxer?"
+
+# AI Translated
+msgid "Note..."
+msgstr "Nota..."
+
+# AI Translated
+msgid "Instructions for the AI for this file (orientation, material, settings...):"
+msgstr "Instruccions per a la IA per a aquest fitxer (orientació, material, ajustos...):"
+
+# AI Translated
+msgid "Prints the AI may start:"
+msgstr "Impressions que la IA pot iniciar:"
+
+# AI Translated
+msgid "For the next (hours):"
+msgstr "Durant les properes (hores):"
+
+# AI Translated
+msgid "Longest print (hours):"
+msgstr "Impressió més llarga (hores):"
+
+# AI Translated
+msgid "The bed of these printers is clear now"
+msgstr "El llit d'aquestes impressores ara és lliure"
+
+# AI Translated
+msgid "Also let the AI decide by camera that a bed is clear"
+msgstr "Deixa també que la IA decideixi per càmera que un llit és lliure"
+
+# AI Translated
+msgid "Off: a bed counts as clear only after you click 'Bed is clear' in this window, once per print. On: the AI may also judge a fresh camera picture itself (Forca keeps the picture), so prints can follow each other while you are away. If it misses something on the bed, the printer will print into it."
+msgstr "Desactivat: un llit es considera lliure només després que facis clic a 'El llit és lliure' en aquesta finestra, un cop per impressió. Activat: la IA també pot valorar ella mateixa una imatge recent de la càmera (Forca en guarda la imatge), de manera que les impressions poden seguir-se mentre no hi ets. Si se li escapa alguna cosa al llit, la impressora hi imprimirà a sobre."
+
+# AI Translated
+msgid "Give grant"
+msgstr "Dona el permís"
+
+# AI Translated
+msgid "Tick at least one printer."
+msgstr "Marca almenys una impressora."
+
+# AI Translated
+msgid "Let an AI assistant (for example Claude Code) see and work in Forca. It connects only from this computer, using the key below. At the Guarded level Forca never lets the AI save over your files, and never sends anything to a printer without your approval here in Forca."
+msgstr "Permet que un assistent d'IA (per exemple Claude Code) vegi Forca i hi treballi. Només es connecta des d'aquest ordinador, amb la clau de sota. Al nivell Guarded, Forca mai deixa que la IA desi sobre els teus fitxers i mai envia res a una impressora sense la teva aprovació aquí a Forca."
+
+# AI Translated
+msgid "Let an AI connect to Forca"
+msgstr "Permet que una IA es connecti a Forca"
+
+# AI Translated
+msgid "How much the AI may do:"
+msgstr "Què pot fer la IA:"
+
+# AI Translated
+msgid "Guarded (recommended) - new files only; you approve every print request"
+msgstr "Guarded (recomanat) - només fitxers nous; aproves cada sol·licitud d'impressió"
+
+# AI Translated
+msgid "Advanced - may overwrite your files and presets; no approval card"
+msgstr "Advanced - pot sobreescriure els teus fitxers i perfils; sense targeta d'aprovació"
+
+# AI Translated
+msgid "Unless you give it a print grant below, you press Send yourself. At every level the AI never deletes files or discards your unsaved edits, and it cannot heat, move or change your printers."
+msgstr "Tret que li donis un permís d'impressió a sota, ets tu qui prem Enviar. A tots els nivells, la IA mai esborra fitxers ni descarta les teves edicions sense desar, i no pot escalfar, moure ni canviar les teves impressores."
+
+# AI Translated
+msgid "Advanced lets the AI save over your own files and change your own presets. Forca copies each file into Documents\\Forca AI\\Backups before the AI overwrites it, but a mistake can still cost you work.\n\nPrint requests will open the print dialog straight away, without an approval card. Nothing prints until you press Send, so check the plate, printer and filament before you do: a wrong print can damage your printer, and never leave a printer running unattended.\n\nSwitch to Advanced?"
+msgstr "Advanced permet que la IA desi sobre els teus propis fitxers i canviï els teus propis perfils. Forca copia cada fitxer a Documents\\Forca AI\\Backups abans que la IA el sobreescrigui, però un error encara et pot costar feina.\n\nLes sol·licituds d'impressió obriran el diàleg d'impressió directament, sense targeta d'aprovació. No s'imprimeix res fins que prems Enviar, així que comprova la safata, la impressora i el filament abans: una impressió incorrecta pot fer malbé la impressora, i no deixis mai una impressora funcionant sense vigilància.\n\nVols canviar a Advanced?"
+
+# AI Translated
+msgid "To connect Claude Code, run this once in a terminal:"
+msgstr "Per connectar Claude Code, executa això una vegada en un terminal:"
+
+# AI Translated
+msgid "Copy command"
+msgstr "Copia l'ordre"
+
+# AI Translated
+msgid "Make a new key"
+msgstr "Crea una clau nova"
+
+# AI Translated
+msgid "Stops every AI that uses the old key; connect them again with the new command."
+msgstr "Atura totes les IA que fan servir la clau antiga; torna-les a connectar amb l'ordre nova."
+
+# AI Translated
+msgid "Make a new key? Every AI connected with the old key stops working until you connect it again with the new command."
+msgstr "Vols crear una clau nova? Totes les IA connectades amb la clau antiga deixaran de funcionar fins que les tornis a connectar amb l'ordre nova."
+
+# AI Translated
+msgid "Printers the AI may use (it cannot see the others):"
+msgstr "Impressores que la IA pot fer servir (no veu les altres):"
+
+# AI Translated
+msgid "Printers the AI may also PAUSE when its camera shows a problem (it can resume only its own pause):"
+msgstr "Impressores que la IA també pot POSAR EN PAUSA quan la càmera mostra un problema (només pot reprendre la seva pròpia pausa):"
+
+# AI Translated
+msgid "Printing on its own:"
+msgstr "Impressió pel seu compte:"
+
+# AI Translated
+msgid "Give a print grant..."
+msgstr "Dona un permís d'impressió..."
+
+# AI Translated
+msgid "Bed is clear..."
+msgstr "El llit és lliure..."
+
+# AI Translated
+msgid "Revoke"
+msgstr "Revoca"
+
+# AI Translated
+msgid "Which printer's bed is clear?"
+msgstr "Quina impressora té el llit lliure?"
+
+# AI Translated
+msgid "What the AI has done (newest first):"
+msgstr "Què ha fet la IA (el més recent primer):"
+
+# AI Translated
+msgid "Needs the Advanced level."
+msgstr "Cal el nivell Advanced."
+
+# AI Translated
+msgid "No print grant: the AI cannot start a print by itself."
+msgstr "Cap permís d'impressió: la IA no pot iniciar una impressió per si sola."
+
+# AI Translated
+msgid "Print grant #%d - prints left: %d, until %s, each up to %d h. Camera bed check: %s."
+msgstr "Permís d'impressió #%d: impressions restants: %d, fins a les %s, cadascuna fins a %d h. Comprovació del llit per càmera: %s."
+
+# AI Translated
+msgid "on"
+msgstr "activada"
+
+# AI Translated
+msgid "off"
+msgstr "desactivada"
+
+# AI Translated
+msgid "bed marked clear"
+msgstr "llit marcat com a lliure"
+
+# AI Translated
+msgid "bed not marked clear"
+msgstr "llit no marcat com a lliure"
+
+# AI Translated
+msgid "%d of %d sent"
+msgstr "%d de %d enviades"
+
+# AI Translated
+msgid "(turn Forca AI on to see the command)"
+msgstr "(activa Forca AI per veure l'ordre)"
+
+# AI Translated
+msgid "(no printers yet -- connect one in the Device tab)"
+msgstr "(encara no hi ha impressores -- connecta'n una a la pestanya Dispositiu)"
+
+# AI Translated
+msgid "(no printers yet)"
+msgstr "(encara no hi ha impressores)"
+
+# AI Translated
+msgid "Forca AI - print request"
+msgstr "Forca AI - sol·licitud d'impressió"
+
+# AI Translated
+msgid "The AI asks to print this plate"
+msgstr "La IA demana imprimir aquesta safata"
+
+# AI Translated
+msgid "Printer preset"
+msgstr "Perfil d'impressora"
+
+# AI Translated
+msgid "Print time"
+msgstr "Temps d'impressió"
+
+# AI Translated
+msgid "The AI says"
+msgstr "La IA diu"
+
+# AI Translated
+msgid "Approve opens Forca's print dialog for this plate, where you choose the printer and filament slots and press Send. The approval works once, and only for this exact slice."
+msgstr "Aprova obre el diàleg d'impressió de Forca per a aquesta safata, on tries la impressora i les ranures de filament i prems Enviar. L'aprovació funciona una sola vegada, i només per a aquest laminat exacte."
+
+# AI Translated
+msgid "Decline"
+msgstr "Rebutja"
+
+# AI Translated
+msgid "Approve"
+msgstr "Aprova"
+
+# AI Translated
+msgid "Forca AI - print paused"
+msgstr "Forca AI - impressió en pausa"
+
+# AI Translated
+msgid "The AI paused a print"
+msgstr "La IA ha posat en pausa una impressió"
+
+# AI Translated
+msgid "Job"
+msgstr "Tasca"
+
+# AI Translated
+msgid "Why"
+msgstr "Motiu"
+
+# AI Translated
+msgid "Check the print. Resume it here or on the printer, or stop it on the printer. The AI may resume only this pause, and only while the print stays paused."
+msgstr "Comprova la impressió. Reprèn-la aquí o a la impressora, o atura-la a la impressora. La IA només pot reprendre aquesta pausa, i només mentre la impressió continuï en pausa."
+
+# AI Translated
+msgid "Keep paused"
+msgstr "Mantén en pausa"
+
+# AI Translated
+msgid "Resume print"
+msgstr "Reprèn la impressió"
+
+# AI Translated
 msgid "Metal stickiness"
 msgstr "Adherència al metall"
 
@@ -35576,16 +37778,24 @@ msgid "Bottom paint penetration layers"
 msgstr "Capes de penetració de la pintura inferior"
 
 # AI Translated
-msgid "How many layers deep a color painted on a top surface goes into the part. 0 means the same as the top shell layers."
-msgstr "Quantes capes de profunditat penetra a la peça un color pintat en una superfície superior. 0 vol dir el mateix que les capes sòlides de la carcassa superior."
-
-# AI Translated
-msgid "How many layers deep a color painted on a bottom surface goes into the part. 0 means the same as the bottom shell layers."
-msgstr "Quantes capes de profunditat penetra a la peça un color pintat en una superfície inferior. 0 vol dir el mateix que les capes de la carcassa inferior."
-
-# AI Translated
 msgid "The overhang and bridge speeds above don't apply to %1%, which use their own (filament settings, Filament page, Overhang speed)."
 msgstr "Les velocitats de voladís i de pont anteriors no s'apliquen a %1%, que fan servir les seves pròpies (ajustos del filament, pàgina Filament, Velocitat de voladís)."
+
+# AI Translated
+msgid "Bambu Studio project"
+msgstr "Projecte de Bambu Studio"
+
+# AI Translated
+msgid "This project was made with Bambu Studio %s. Forca doesn't know the following settings from it and ignores them:"
+msgstr "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajustos següents i els ignora:"
+
+# AI Translated
+msgid "Earlier prints here were tagged Bridging, and Thick external bridges is off. In Forca's tests, turning it on (Quality > Bridging) fixed sagging and torn bridges."
+msgstr "Impressions anteriors aquí es van etiquetar amb Ponts, i Ponts exteriors gruixuts està desactivat. A les proves de Forca, activar-lo (Qualitat > Ponts) va solucionar els ponts que es pengen o s'esquincen."
+
+# AI Translated
+msgid "Thick external bridges\nDid you know that turning on Thick external bridges (Quality > Bridging) prints round, full-height bridge lines that sag and tear far less? In Forca's tests on two printers it made the biggest difference to bridges."
+msgstr "Ponts exteriors gruixuts\nSabíeu que activar Ponts exteriors gruixuts (Qualitat > Ponts) imprimeix línies de pont rodones i d'alçada completa que es pengen i s'esquincen molt menys? A les proves de Forca en dues impressores va ser el que més va millorar els ponts."
 
 # AI Translated
 msgid "Preparing"
@@ -35630,6 +37840,414 @@ msgstr "Mostra aquesta interfície web a la pestanya Dispositiu:"
 # AI Translated
 msgid "Plate is clear"
 msgstr "La placa és buida"
+
+# AI Translated
+msgid "Plan an experiment"
+msgstr "Planifica un experiment"
+
+# AI Translated
+msgid "Change one setting and keep everything else the same. Forca builds a test plate in a new project with one copy per value: A keeps the current value (the baseline), the others try the new values. Print it and compare each copy with A."
+msgstr "Canvia un sol ajust i deixa tota la resta igual. Forca crea una safata de prova en un projecte nou amb una còpia per valor: A manté el valor actual (la referència) i les altres proven els valors nous. Imprimeix-la i compara cada còpia amb A."
+
+# AI Translated
+msgid "The plate is for the presets selected now: %1% / %2% / %3%."
+msgstr "La safata és per als perfils seleccionats ara: %1% / %2% / %3%."
+
+# AI Translated
+msgid "Setting to change"
+msgstr "Ajust a canviar"
+
+# AI Translated
+msgid "Another setting"
+msgstr "Un altre ajust"
+
+# AI Translated
+msgid "Now (copy A)"
+msgstr "Ara (còpia A)"
+
+# AI Translated
+msgid "Values to try"
+msgstr "Valors a provar"
+
+# AI Translated
+msgid "Hypothesis"
+msgstr "Hipòtesi"
+
+# AI Translated
+msgid "Bridge test (built in)"
+msgstr "Prova de ponts (integrada)"
+
+# AI Translated
+msgid "Overhang test (built in)"
+msgstr "Prova de voladissos (integrada)"
+
+# AI Translated
+msgid "Stringing test: two towers (built in)"
+msgstr "Prova de fils: dues torres (integrada)"
+
+# AI Translated
+msgid "Object in this project: %1%"
+msgstr "Objecte d'aquest projecte: %1%"
+
+# AI Translated
+msgid "To find a value from scratch, use a Calibration Wizard test instead: it sweeps the value on one print."
+msgstr "Per trobar un valor des de zero, fes servir una prova de l'Assistent de calibratge: recorre el valor en una sola impressió."
+
+# AI Translated
+msgid "Create the test plate"
+msgstr "Crea la safata de prova"
+
+# AI Translated
+msgid "Only settings that can differ between objects on one plate are listed."
+msgstr "Només es mostren els ajustos que poden ser diferents entre objectes d'una mateixa safata."
+
+# AI Translated
+msgid "Changing %1% from %2% to %3% gives a better print."
+msgstr "Canviar %1% de %2% a %3% dona una impressió millor."
+
+# AI Translated
+msgid "Changing %1% from %2% to %3% reduces this problem: %4%."
+msgstr "Canviar %1% de %2% a %3% redueix aquest problema: %4%."
+
+# AI Translated
+msgid "Enter at least one value to try that differs from the current one."
+msgstr "Introdueix almenys un valor a provar que sigui diferent de l'actual."
+
+# AI Translated
+msgid "%1% is not a valid value for %2%."
+msgstr "%1% no és un valor vàlid per a %2%."
+
+# AI Translated
+msgid "Could not save a copy of the object."
+msgstr "No s'ha pogut desar una còpia de l'objecte."
+
+# AI Translated
+msgid "The test model is missing from Forca's resources folder."
+msgstr "Falta el model de prova a la carpeta de recursos de Forca."
+
+# AI Translated
+msgid "The test model does not fit on the bed."
+msgstr "El model de prova no cap al llit."
+
+# AI Translated
+msgid "Not all copies fit on the bed (copies that fit: %1%). Try fewer values or a smaller model."
+msgstr "No hi caben totes les còpies al llit (còpies que hi caben: %1%). Prova amb menys valors o un model més petit."
+
+# AI Translated
+msgid "Forca could not load the test model."
+msgstr "Forca no ha pogut carregar el model de prova."
+
+# AI Translated
+msgid "Test one setting for this problem: Forca builds a plate with one copy per value to compare."
+msgstr "Prova un ajust per a aquest problema: Forca crea una safata amb una còpia per valor per comparar-les."
+
+# AI Translated
+msgid "Test one setting for a problem: Forca builds a plate with one copy per value to compare."
+msgstr "Prova un ajust per a un problema: Forca crea una safata amb una còpia per valor per comparar-les."
+
+# AI Translated
+msgid "No particular problem"
+msgstr "Cap problema en concret"
+
+# AI Translated
+msgid "Compare the copies"
+msgstr "Compara les còpies"
+
+# AI Translated
+msgid "How did each copy come out compared with A, the baseline? Hypothesis: %1%"
+msgstr "Com ha sortit cada còpia comparada amb A, la referència? Hipòtesi: %1%"
+
+# AI Translated
+msgid "No print of this plate has been recorded yet. You can still compare the copies."
+msgstr "Encara no s'ha registrat cap impressió d'aquesta safata. Igualment pots comparar les còpies."
+
+# AI Translated
+msgid "Recorded prints of this plate: %1%"
+msgstr "Impressions registrades d'aquesta safata: %1%"
+
+# AI Translated
+msgid "Better than A"
+msgstr "Millor que A"
+
+# AI Translated
+msgid "About the same"
+msgstr "Més o menys igual"
+
+# AI Translated
+msgid "Worse than A"
+msgstr "Pitjor que A"
+
+# AI Translated
+msgid "(baseline)"
+msgstr "(referència)"
+
+# AI Translated
+msgid "Note (optional)"
+msgstr "Nota (opcional)"
+
+# AI Translated
+msgid "Works best"
+msgstr "Funciona millor"
+
+# AI Translated
+msgid "Copy photos of the printed plate into the experiment's folder."
+msgstr "Copia fotos de la safata impresa a la carpeta de l'experiment."
+
+# AI Translated
+msgid "Save the comparison"
+msgstr "Desa la comparació"
+
+# AI Translated
+msgid "Apply to preset"
+msgstr "Aplica al perfil"
+
+# AI Translated
+msgid "Set the winning value in the preset you are editing. It isn't saved: you decide whether to save the preset."
+msgstr "Posa el valor guanyador al perfil que estàs editant. No es desa: tu decideixes si deses el perfil."
+
+# AI Translated
+msgid "Plan the next experiment"
+msgstr "Planifica el proper experiment"
+
+# AI Translated
+msgid "Forca drafted this lesson from the comparison. Edit it, then add it to lessons.md."
+msgstr "Forca ha redactat aquesta lliçó a partir de la comparació. Edita-la i després afegeix-la a lessons.md."
+
+# AI Translated
+msgid "The lesson was added to lessons.md."
+msgstr "La lliçó s'ha afegit a lessons.md."
+
+# AI Translated
+msgid "%1% is now %2% in the preset \"%3%\". It isn't saved yet: save the preset to keep it."
+msgstr "%1% ara és %2% al perfil \"%3%\". Encara no s'ha desat: desa el perfil per conservar-ho."
+
+# AI Translated
+msgid "This experiment's plan.json is missing or damaged."
+msgstr "Falta el plan.json d'aquest experiment o està malmès."
+
+# AI Translated
+msgid "Rate each copy of a planned experiment against the baseline and pick the winner."
+msgstr "Valora cada còpia d'un experiment planificat respecte a la referència i tria la guanyadora."
+
+# AI Translated
+msgid "Select two prints in the journal and press Compare to start one, or plan one from a possible pattern. Double-click an experiment to open its page."
+msgstr "Selecciona dues impressions al diari i prem Compara per començar-ne un, o planifica'n un a partir d'un possible patró. Fes doble clic en un experiment per obrir-ne la pàgina."
+
+# AI Translated
+msgid "Not printed yet"
+msgstr "Encara no imprès"
+
+# AI Translated
+msgid "Printed, not compared yet"
+msgstr "Imprès, encara no comparat"
+
+# AI Translated
+msgid "Compared"
+msgstr "Comparat"
+
+# AI Translated
+msgid "Open page"
+msgstr "Obre la pàgina"
+
+# AI Translated
+msgid "Open the experiment's page: the plan, the prints, the comparison and your result."
+msgstr "Obre la pàgina de l'experiment: el pla, les impressions, la comparació i el teu resultat."
+
+# AI Translated
+msgid "Forca prints the test plate by object: each copy prints on its own, start to finish, so no copy's travel, strings or temperature reaches another. The copies are spaced so the print head clears them, on more than one plate if they don't all fit on one."
+msgstr "Forca imprimeix la safata de prova per objecte: cada còpia s'imprimeix sola, de principi a fi, perquè els desplaçaments, els fils o la temperatura d'una còpia no arribin a cap altra. Les còpies se separen prou perquè el capçal hi passi lliure, en més d'una safata si no caben totes en una."
+
+# AI Translated
+msgid "The test plate is ready. It prints by object (set in the plate's settings; the process preset is unchanged). Print it, then compare each copy with A, the baseline. The plan is saved in Forca Academy: %1%"
+msgstr "La safata de prova està llesta. S'imprimeix per objecte (definit a la configuració de la placa; el perfil de procés no canvia). Imprimeix-la i després compara cada còpia amb A, la referència. El pla s'ha desat a Forca Academy: %1%"
+
+# AI Translated
+msgid "Not all copies fit on one plate printed by object, so the test is spread over more than one (plates: %1%). Each plate prints by object (set in the plate's settings; the process preset is unchanged). Print every plate, then compare each copy with A, the baseline. The plan is saved in Forca Academy: %2%"
+msgstr "No totes les còpies caben en una safata impresa per objecte, així que la prova es reparteix en més d'una (safates: %1%). Cada safata s'imprimeix per objecte (definit a la configuració de la placa; el perfil de procés no canvia). Imprimeix totes les safates i després compara cada còpia amb A, la referència. El pla s'ha desat a Forca Academy: %2%"
+
+# AI Translated
+msgid "Hole size (optional)"
+msgstr "Mida dels forats (opcional)"
+
+# AI Translated
+msgid "Hole size"
+msgstr "Mida dels forats"
+
+# AI Translated
+msgid "This prints a bar with a row of round holes (%s mm), smallest at the notched end. X-Y hole compensation is turned off for this test, so the result starts from the holes as modelled. Do Shrinkage first: it changes hole sizes too. Let the bar cool, then measure each hole's diameter -- a pin gauge or drill shank that just fits is more exact than caliper jaws in small holes. The result page turns those into X-Y hole compensation (mm and %% of size) in your process preset."
+msgstr "Això imprimeix una barra amb una filera de forats rodons (%s mm), el més petit a l'extrem amb l'osca. La compensació de forat X-Y es desactiva per a aquesta prova, de manera que el resultat parteix dels forats tal com estan modelats. Feu primer la contracció: també canvia la mida dels forats. Deixeu refredar la barra i mesureu el diàmetre de cada forat -- una galga o la tija d'una broca que hi entri just és més precisa que les puntes del peu de rei en forats petits. La pàgina de resultats ho converteix en compensació de forat X-Y (mm i %% de la mida) al vostre perfil de procés."
+
+# AI Translated
+msgid "I have already printed the bar - enter measurements"
+msgstr "Ja he imprès la barra - introdueix les mesures"
+
+# AI Translated
+msgid "Measured %g mm hole:"
+msgstr "Forat de %g mm mesurat:"
+
+# AI Translated
+msgid "hole compensation %.2f%% of size"
+msgstr "compensació de forats %.2f%% de la mida"
+
+# AI Translated
+msgid "Apply to process preset"
+msgstr "Aplica al perfil de procés"
+
+# AI Translated
+msgid "Enter each hole's measured diameter in mm. Leave a hole empty if you can't measure it (at least two are needed). The process preset now has X-Y hole compensation %.2f mm and %.2f%% of size; the test printed without them, and the result replaces both."
+msgstr "Introduïu el diàmetre mesurat de cada forat en mm. Deixeu buit un forat si no el podeu mesurar (en calen almenys dos). El perfil de procés té ara una compensació de forat X-Y de %.2f mm i %.2f%% de la mida; la prova s'ha imprès sense, i el resultat substitueix tots dos valors."
+
+# AI Translated
+msgid "Hole size test"
+msgstr "Prova de mida dels forats"
+
+# AI Translated
+msgid "Forca hole plate"
+msgstr "Placa de forats Forca"
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, calibrate hole sizes next, then print the final check to confirm the whole profile."
+msgstr "Amb això s'han completat els calibratges. Si voleu, calibreu ara la mida dels forats i després imprimiu la comprovació final per confirmar tot el perfil."
+
+# AI Translated
+msgid "Please enter each measured diameter in mm, or leave it empty."
+msgstr "Introduïu cada diàmetre mesurat en mm, o deixeu-lo buit."
+
+# AI Translated
+msgid "Please measure at least two holes of different sizes."
+msgstr "Mesureu almenys dos forats de mides diferents."
+
+# AI Translated
+msgid "At least one measurement is far from its hole's size. Please re-check the numbers (for example a missing decimal point)."
+msgstr "Almenys una mesura s'allunya molt de la mida del seu forat. Reviseu els números (per exemple, una coma decimal que falti)."
+
+# AI Translated
+msgid "Suggested settings:\nX-Y hole compensation: %.2f mm\nX-Y hole compensation (%% of size): %.2f%%"
+msgstr "Ajustos suggerits:\nCompensació de forat X-Y: %.2f mm\nCompensació de forat X-Y (%% de la mida): %.2f%%"
+
+# AI Translated
+msgid "With them, the measured holes should be within %.2f mm of their size."
+msgstr "Amb aquests valors, els forats mesurats haurien de quedar a menys de %.2f mm de la seva mida."
+
+# AI Translated
+msgid "A value was limited to the setting's range, so holes may still be off. Re-check the measurements and the filament's shrinkage."
+msgstr "Un valor s'ha limitat al rang de l'ajust, així que els forats encara poden no quedar bé. Reviseu les mesures i la contracció del filament."
+
+# AI Translated
+msgid "Put them into the process preset \"%s\"? It isn't saved until you save the preset."
+msgstr "Voleu posar-los al perfil de procés \"%s\"? No es desa fins que no deseu el perfil."
+
+# AI Translated
+msgid "The hole settings are in the process preset \"%s\". Save the preset to keep them."
+msgstr "Els ajustos de forats són al perfil de procés \"%s\". Deseu el perfil per conservar-los."
+
+# AI Translated
+msgid "Optionally, print the final check to confirm the whole profile."
+msgstr "Si voleu, imprimiu la comprovació final per confirmar tot el perfil."
+
+# AI Translated
+msgid "X-Y hole compensation (% of size)"
+msgstr "Compensació de forat X-Y (% de la mida)"
+
+# AI Translated
+msgid "Holes in objects will expand or contract in the XY plane by this percentage of each hole's own diameter, on top of X-Y hole compensation. Positive values make holes bigger and negative values make holes smaller. Use it when holes shrink in proportion to their size, so that small and large holes need different compensation (for example, 1% makes a 10 mm hole 0.1 mm wider and a 3 mm hole 0.03 mm wider)."
+msgstr "Els forats de l'objecte creixeran o es reduiran en el pla XY en aquest percentatge del diàmetre de cada forat, a més de la compensació de forat X-Y. Un valor positiu fa que els forats siguin més grans i un valor negatiu, més petits. Feu-lo servir quan els forats s'encongeixen en proporció a la seva mida, de manera que els forats petits i els grans necessiten una compensació diferent (per exemple, un 1% fa un forat de 10 mm 0,1 mm més ample i un de 3 mm 0,03 mm més ample)."
+
+# AI Translated
+msgid "Filament overrides"
+msgstr "Substitucions del filament"
+
+# AI Translated
+msgid "Retraction length (this object)"
+msgstr "Longitud de retracció (aquest objecte)"
+
+# AI Translated
+msgid "Retraction speed (this object)"
+msgstr "Velocitat de retracció (aquest objecte)"
+
+# AI Translated
+msgid "Deretraction speed (this object)"
+msgstr "Velocitat de deretracció (aquest objecte)"
+
+# AI Translated
+msgid "Z-hop height (this object)"
+msgstr "Alçada Z-hop (aquest objecte)"
+
+# AI Translated
+msgid "Pressure advance (this object)"
+msgstr "Pressure Advance (aquest objecte)"
+
+# AI Translated
+msgid "Retraction length while this object prints, in place of the filament's (or printer's) value. It also applies when the nozzle leaves this object for another one. Set to -1 to use the filament's value."
+msgstr "Longitud de retracció mentre s'imprimeix aquest objecte, en lloc del valor del filament (o de la impressora). També s'aplica quan el broquet surt d'aquest objecte cap a un altre. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Retraction speed while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "Velocitat de retracció mentre s'imprimeix aquest objecte, en lloc del valor del filament (o de la impressora). Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Speed for loading the filament back after a retraction while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "Velocitat per tornar a carregar el filament després d'una retracció mentre s'imprimeix aquest objecte, en lloc del valor del filament (o de la impressora). Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Z-hop height for retractions while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "Alçada Z-hop de les retraccions mentre s'imprimeix aquest objecte, en lloc del valor del filament (o de la impressora). Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Pressure advance while this object prints, in place of the filament's value; adaptive pressure advance is not used inside this object. Objects without this override print with the filament's pressure advance. Set to -1 to use the filament's value."
+msgstr "Pressure Advance mentre s'imprimeix aquest objecte, en lloc del valor del filament; dins d'aquest objecte no s'utilitza el Pressure Advance adaptatiu. Els objectes sense aquesta substitució s'imprimeixen amb el Pressure Advance del filament. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Max volumetric speed (this object)"
+msgstr "Velocitat volumètrica màxima (aquest objecte)"
+
+# AI Translated
+msgid "The most filament volume per second this object may print (its supports included), in place of the filament's max volumetric speed. Faster print speeds are lowered to stay within it. Set to -1 to use the filament's value."
+msgstr "El volum màxim de filament per segon que pot imprimir aquest objecte (inclosos els seus suports), en lloc de la velocitat volumètrica màxima del filament. Les velocitats d'impressió més altes es redueixen per no superar-lo. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Nozzle temperature (this object)"
+msgstr "Temperatura del broquet (aquest objecte)"
+
+# AI Translated
+msgid "Nozzle temperature, first layer (this object)"
+msgstr "Temperatura del broquet, capa inicial (aquest objecte)"
+
+# AI Translated
+msgid "Min fan speed (this object)"
+msgstr "Velocitat mínima del ventilador (aquest objecte)"
+
+# AI Translated
+msgid "Max fan speed (this object)"
+msgstr "Velocitat màxima del ventilador (aquest objecte)"
+
+# AI Translated
+msgid "Overhang fan speed (this object)"
+msgstr "Velocitat del ventilador de voladissos (aquest objecte)"
+
+# AI Translated
+msgid "Nozzle temperature for this object after its first layer, in place of the filament's. Only used when printing by object: Forca heats to it before the object starts and waits. Set to -1 to use the filament's value."
+msgstr "Temperatura del broquet per a aquest objecte després de la capa inicial, en lloc de la del filament. Només s'utilitza en imprimir per objecte: Forca hi escalfa abans que comenci l'objecte i espera. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Nozzle temperature for this object's first layer, in place of the filament's. Only used when printing by object. Set to -1 to use the object's nozzle temperature above, or the filament's."
+msgstr "Temperatura del broquet per a la capa inicial d'aquest objecte, en lloc de la del filament. Només s'utilitza en imprimir per objecte. Posa -1 per fer servir la temperatura del broquet de l'objecte de dalt, o la del filament."
+
+# AI Translated
+msgid "Minimum part cooling fan speed while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "Velocitat mínima del ventilador de capa mentre s'imprimeix aquest objecte, en lloc de la del filament. Només s'utilitza en imprimir per objecte. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Maximum part cooling fan speed while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "Velocitat màxima del ventilador de capa mentre s'imprimeix aquest objecte, en lloc de la del filament. Només s'utilitza en imprimir per objecte. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "Part cooling fan speed for overhangs and bridges while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "Velocitat del ventilador de capa per a voladissos i ponts mentre s'imprimeix aquest objecte, en lloc de la del filament. Només s'utilitza en imprimir per objecte. Posa -1 per fer servir el valor del filament."
+
+# AI Translated
+msgid "This object's fan and nozzle temperature overrides are only used when printing by object (Print sequence: By object)."
+msgstr "Les substitucions del ventilador i de la temperatura del broquet d'aquest objecte només s'utilitzen en imprimir per objecte (Seqüència d'impressió: Objecte)."
 
 # AI Translated
 msgid "Network plug-in"
@@ -35728,6 +38346,18 @@ msgid "Close and reopen Forca to finish switching."
 msgstr "Tanca i torna a obrir Forca per acabar el canvi."
 
 # AI Translated
+msgid "You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences."
+msgstr "Feu servir Open Bamboo Networking (OBN). Aquesta versió de Forca fa servir el connector de xarxa de Bambu Lab %s, i els fitxers d'OBN d'aquest ordinador són per a un d'anterior.\n\nVoleu baixar ara la darrera versió d'OBN per a %s? Si no ho feu, Forca farà servir el connector de xarxa de Bambu Lab i podreu tornar a triar OBN a les Preferències."
+
+# AI Translated
+msgid "Could not get Open Bamboo Networking for this plug-in:"
+msgstr "No s'ha pogut obtenir Open Bamboo Networking per a aquest connector:"
+
+# AI Translated
+msgid "Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences."
+msgstr "De moment, Forca fa servir el connector de xarxa de Bambu Lab. Podeu tornar a triar OBN a les Preferències."
+
+# AI Translated
 msgid "%1% %2% (preset %3%)"
 msgstr "%1% %2% (perfil %3%)"
 
@@ -35798,6 +38428,118 @@ msgstr "Mostra \"Abans d'imprimir\" en enviar"
 # AI Translated
 msgid "The send dialog lists the settings you changed and didn't save, the values that most often decide a print and, with the print journal on, how earlier prints with the same printer and filament went. It never stops a print from being sent."
 msgstr "El diàleg d'enviament mostra els ajustos que heu canviat i no heu desat, els valors que més sovint decideixen una impressió i, amb el diari d'impressió activat, com van anar les impressions anteriors amb la mateixa impressora i el mateix filament. Mai no impedeix enviar una impressió."
+
+# AI Translated
+msgid "%1% (prints: %2%, successful: %3%)"
+msgstr "%1% (impressions: %2%, amb èxit: %3%)"
+
+# AI Translated
+msgid "%1% of the last %2% (successful: %3%)"
+msgstr "%1% de les últimes %2% (amb èxit: %3%)"
+
+# AI Translated
+msgid "Reset Forca data"
+msgstr "Restableix les dades de Forca"
+
+# AI Translated
+msgid "Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration Wizard history or all of Forca. Everything moves to a backup folder first."
+msgstr "Torna a començar de zero: el diari d'impressió, Forca AI, els projectes desats per la IA, l'historial de l'Assistent de calibratge o tot Forca. Primer es mou tot a una carpeta de còpia de seguretat."
+
+# AI Translated
+msgid "Forca was reset, but some files could not be moved to the backup folder:"
+msgstr "S'ha restablert Forca, però alguns fitxers no s'han pogut moure a la carpeta de còpia de seguretat:"
+
+# AI Translated
+msgid "Start again from scratch. Nothing is deleted: everything you tick moves to a backup folder in your Documents (Forca reset backups), where you can copy things back or delete it later. Forca closes, and the reset happens when you open it again."
+msgstr "Torna a començar de zero. No s'esborra res: tot el que marqueu es mou a una carpeta de còpia de seguretat als vostres Documents (Forca reset backups), des d'on podeu recuperar coses o esborrar-la més endavant. Forca es tanca i el restabliment es fa quan el torneu a obrir."
+
+# AI Translated
+msgid "Forca itself (like a fresh install)"
+msgstr "Forca mateix (com una instal·lació nova)"
+
+# AI Translated
+msgid "All settings, your own presets, printers, network plug-ins and logs. Forca opens as on the first day, so this also covers the AI and Calibration Wizard data below."
+msgstr "Tota la configuració, els vostres perfils, impressores, connectors de xarxa i registres. Forca s'obre com el primer dia, així que també inclou les dades de la IA i de l'Assistent de calibratge de sota."
+
+# AI Translated
+msgid "Forca Academy print journal"
+msgstr "Diari d'impressió de Forca Academy"
+
+# AI Translated
+msgid "Every print record, note, photo, lesson, playbook and experiment in the Academy folder."
+msgstr "Cada registre d'impressió, nota, foto, lliçó, guia i experiment de la carpeta de l'Academy."
+
+# AI Translated
+msgid "A new key (AI clients must be connected again), no shared printers or pause permission, the Guarded level, Forca AI switched off, and its activity log."
+msgstr "Una clau nova (cal tornar a connectar els clients d'IA), cap impressora compartida ni permís de pausa, el nivell Guarded, Forca AI desactivat i el seu registre d'activitat."
+
+# AI Translated
+msgid "Projects saved by the AI"
+msgstr "Projectes desats per la IA"
+
+# AI Translated
+msgid "The Forca AI folder in your Documents: AI-saved projects, backups and bed-check pictures."
+msgstr "La carpeta Forca AI dels vostres Documents: projectes desats per la IA, còpies de seguretat i imatges de comprovació del llit."
+
+# AI Translated
+msgid "Calibration Wizard history"
+msgstr "Historial de l'Assistent de calibratge"
+
+# AI Translated
+msgid "The wizard's progress and results history. Values you saved to your presets stay."
+msgstr "El progrés i l'historial de resultats de l'assistent. Els valors que heu desat als perfils es mantenen."
+
+# AI Translated
+msgid "Reset and close Forca"
+msgstr "Restableix i tanca Forca"
+
+# AI Translated
+msgid "Forca closes now and resets the ticked parts when you open it again. Everything goes to the backup folder first. Continue?"
+msgstr "Forca es tanca ara i restableix les parts marcades quan el torneu a obrir. Primer tot va a la carpeta de còpia de seguretat. Voleu continuar?"
+
+# AI Translated
+msgid "Choose where to keep the Forca Academy folder"
+msgstr "Trieu on voleu desar la carpeta Forca Academy"
+
+# AI Translated
+msgid "Where the print journal is kept: a Forca Academy folder in the place you choose, with plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "On es desa el diari d'impressió: una carpeta Forca Academy al lloc que trieu, amb fitxers Markdown i JSON senzills. Una IA que el llegeixi comença per AGENTS.md."
+
+# AI Translated
+msgid "Support Interface Regions"
+msgstr "Regions d'interfície de suport"
+
+# AI Translated
+msgid "On overhangs only"
+msgstr "Només en voladissos"
+
+# AI Translated
+msgid "Paint region"
+msgstr "Pinta la regió"
+
+# AI Translated
+msgid "Interface filament"
+msgstr "Filament de la interfície"
+
+# AI Translated
+msgid "Paint only on overhang faces, per the Highlight overhangs angle below."
+msgstr "Pinta només a les cares en voladís, segons l'angle de «Ressaltar zones en voladís» de sota."
+
+# AI Translated
+msgid "Unselect all"
+msgstr "Desselecciona-ho tot"
+
+# AI Translated
+msgid "Paint support-interface region"
+msgstr "Pinta una regió d'interfície de suport"
+
+# AI Translated
+msgid "Erase support-interface region"
+msgstr "Esborra una regió d'interfície de suport"
+
+# AI Translated
+msgid "Note"
+msgstr "Nota"
 
 # AI Translated
 msgid "Retraction length"
@@ -36476,14 +39218,6 @@ msgid "Setting"
 msgstr "Paràmetre"
 
 # AI Translated
-msgid "Before"
-msgstr "Abans"
-
-# AI Translated
-msgid "After"
-msgstr "Després"
-
-# AI Translated
 msgid "Change"
 msgstr "Canvi"
 
@@ -36972,372 +39706,192 @@ msgid "none"
 msgstr "cap"
 
 # AI Translated
-msgid "You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences."
-msgstr "Feu servir Open Bamboo Networking (OBN). Aquesta versió de Forca fa servir el connector de xarxa de Bambu Lab %s, i els fitxers d'OBN d'aquest ordinador són per a un d'anterior.\n\nVoleu baixar ara la darrera versió d'OBN per a %s? Si no ho feu, Forca farà servir el connector de xarxa de Bambu Lab i podreu tornar a triar OBN a les Preferències."
-
-# AI Translated
-msgid "Could not get Open Bamboo Networking for this plug-in:"
-msgstr "No s'ha pogut obtenir Open Bamboo Networking per a aquest connector:"
-
-# AI Translated
-msgid "Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences."
-msgstr "De moment, Forca fa servir el connector de xarxa de Bambu Lab. Podeu tornar a triar OBN a les Preferències."
-
-# AI Translated
-msgid "%1% (prints: %2%, successful: %3%)"
-msgstr "%1% (impressions: %2%, amb èxit: %3%)"
-
-# AI Translated
-msgid "%1% of the last %2% (successful: %3%)"
-msgstr "%1% de les últimes %2% (amb èxit: %3%)"
-
-# AI Translated
-msgid "Reset Forca data"
-msgstr "Restableix les dades de Forca"
-
-# AI Translated
-msgid "Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration Wizard history or all of Forca. Everything moves to a backup folder first."
-msgstr "Torna a començar de zero: el diari d'impressió, Forca AI, els projectes desats per la IA, l'historial de l'Assistent de calibratge o tot Forca. Primer es mou tot a una carpeta de còpia de seguretat."
-
-# AI Translated
-msgid "Forca was reset, but some files could not be moved to the backup folder:"
-msgstr "S'ha restablert Forca, però alguns fitxers no s'han pogut moure a la carpeta de còpia de seguretat:"
-
-# AI Translated
-msgid "Start again from scratch. Nothing is deleted: everything you tick moves to a backup folder in your Documents (Forca reset backups), where you can copy things back or delete it later. Forca closes, and the reset happens when you open it again."
-msgstr "Torna a començar de zero. No s'esborra res: tot el que marqueu es mou a una carpeta de còpia de seguretat als vostres Documents (Forca reset backups), des d'on podeu recuperar coses o esborrar-la més endavant. Forca es tanca i el restabliment es fa quan el torneu a obrir."
-
-# AI Translated
-msgid "Forca itself (like a fresh install)"
-msgstr "Forca mateix (com una instal·lació nova)"
-
-# AI Translated
-msgid "All settings, your own presets, printers, network plug-ins and logs. Forca opens as on the first day, so this also covers the AI and Calibration Wizard data below."
-msgstr "Tota la configuració, els vostres perfils, impressores, connectors de xarxa i registres. Forca s'obre com el primer dia, així que també inclou les dades de la IA i de l'Assistent de calibratge de sota."
-
-# AI Translated
-msgid "Forca Academy print journal"
-msgstr "Diari d'impressió de Forca Academy"
-
-# AI Translated
-msgid "Every print record, note, photo, lesson, playbook and experiment in the Academy folder."
-msgstr "Cada registre d'impressió, nota, foto, lliçó, guia i experiment de la carpeta de l'Academy."
-
-# AI Translated
-msgid "A new key (AI clients must be connected again), no shared printers or pause permission, the Guarded level, Forca AI switched off, and its activity log."
-msgstr "Una clau nova (cal tornar a connectar els clients d'IA), cap impressora compartida ni permís de pausa, el nivell Guarded, Forca AI desactivat i el seu registre d'activitat."
-
-# AI Translated
-msgid "Projects saved by the AI"
-msgstr "Projectes desats per la IA"
-
-# AI Translated
-msgid "The Forca AI folder in your Documents: AI-saved projects, backups and bed-check pictures."
-msgstr "La carpeta Forca AI dels vostres Documents: projectes desats per la IA, còpies de seguretat i imatges de comprovació del llit."
-
-# AI Translated
-msgid "Calibration Wizard history"
-msgstr "Historial de l'Assistent de calibratge"
-
-# AI Translated
-msgid "The wizard's progress and results history. Values you saved to your presets stay."
-msgstr "El progrés i l'historial de resultats de l'assistent. Els valors que heu desat als perfils es mantenen."
-
-# AI Translated
-msgid "Reset and close Forca"
-msgstr "Restableix i tanca Forca"
-
-# AI Translated
-msgid "Forca closes now and resets the ticked parts when you open it again. Everything goes to the backup folder first. Continue?"
-msgstr "Forca es tanca ara i restableix les parts marcades quan el torneu a obrir. Primer tot va a la carpeta de còpia de seguretat. Voleu continuar?"
-
-# AI Translated
-msgid "Choose where to keep the Forca Academy folder"
-msgstr "Trieu on voleu desar la carpeta Forca Academy"
-
-# AI Translated
-msgid "Where the print journal is kept: a Forca Academy folder in the place you choose, with plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
-msgstr "On es desa el diari d'impressió: una carpeta Forca Academy al lloc que trieu, amb fitxers Markdown i JSON senzills. Una IA que el llegeixi comença per AGENTS.md."
-
-# AI Translated
-msgid "The AI did not send this print"
-msgstr "La IA no ha enviat aquesta impressió"
-
-# AI Translated
-msgid "The AI is sending this print in %d s (print grant #%d)."
-msgstr "La IA enviarà aquesta impressió d'aquí a %d s (permís d'impressió #%d)."
-
-# AI Translated
-msgid "Share a printer with the AI first (the printer list in this window)."
-msgstr "Primer comparteix una impressora amb la IA (la llista d'impressores d'aquesta finestra)."
-
-# AI Translated
-msgid "Let the AI print on its own"
-msgstr "Deixa que la IA imprimeixi pel seu compte"
-
-# AI Translated
-msgid "Within this grant the AI may start prints itself, with no click from you: Forca opens its print dialog, counts down 10 seconds (you can cancel) and presses Send. It only sends to an idle printer whose bed is clear, and only when the print dialog has nothing to ask you. A wrong print can still damage your printer or waste filament, and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca."
-msgstr "Dins d'aquest permís, la IA pot iniciar impressions ella mateixa, sense cap clic teu: Forca obre el diàleg d'impressió, compta 10 segons enrere (pots cancel·lar) i prem Enviar. Només envia a una impressora inactiva amb el llit lliure, i només quan el diàleg d'impressió no té res a preguntar-te. Una impressió incorrecta encara pot fer malbé la impressora o malbaratar filament, i una impressora funcionant sense vigilància és un risc d'incendi: dona només el que et faci sentir còmode. El permís acaba quan s'esgota, quan s'acaba el temps, quan el revoques, tries Guarded o reinicies Forca."
-
-# AI Translated
-msgid "Printers:"
-msgstr "Impressores:"
-
-# AI Translated
-msgid "What to print (optional - without files, any plate):"
-msgstr "Què cal imprimir (opcional; sense fitxers, qualsevol safata):"
-
-# AI Translated
-msgid "Note for the AI"
-msgstr "Nota per a la IA"
-
-# AI Translated
-msgid "Add files..."
-msgstr "Afegeix fitxers..."
-
-# AI Translated
-msgid "Files the AI should print"
-msgstr "Fitxers que la IA ha d'imprimir"
-
-# AI Translated
-msgid "Copies..."
-msgstr "Còpies..."
-
-# AI Translated
-msgid "How many copies of this file?"
-msgstr "Quantes còpies d'aquest fitxer?"
-
-# AI Translated
-msgid "Note..."
-msgstr "Nota..."
-
-# AI Translated
-msgid "Instructions for the AI for this file (orientation, material, settings...):"
-msgstr "Instruccions per a la IA per a aquest fitxer (orientació, material, ajustos...):"
-
-# AI Translated
-msgid "Prints the AI may start:"
-msgstr "Impressions que la IA pot iniciar:"
-
-# AI Translated
-msgid "For the next (hours):"
-msgstr "Durant les properes (hores):"
-
-# AI Translated
-msgid "Longest print (hours):"
-msgstr "Impressió més llarga (hores):"
-
-# AI Translated
-msgid "The bed of these printers is clear now"
-msgstr "El llit d'aquestes impressores ara és lliure"
-
-# AI Translated
-msgid "Also let the AI decide by camera that a bed is clear"
-msgstr "Deixa també que la IA decideixi per càmera que un llit és lliure"
-
-# AI Translated
-msgid "Off: a bed counts as clear only after you click 'Bed is clear' in this window, once per print. On: the AI may also judge a fresh camera picture itself (Forca keeps the picture), so prints can follow each other while you are away. If it misses something on the bed, the printer will print into it."
-msgstr "Desactivat: un llit es considera lliure només després que facis clic a 'El llit és lliure' en aquesta finestra, un cop per impressió. Activat: la IA també pot valorar ella mateixa una imatge recent de la càmera (Forca en guarda la imatge), de manera que les impressions poden seguir-se mentre no hi ets. Si se li escapa alguna cosa al llit, la impressora hi imprimirà a sobre."
-
-# AI Translated
-msgid "Give grant"
-msgstr "Dona el permís"
-
-# AI Translated
-msgid "Tick at least one printer."
-msgstr "Marca almenys una impressora."
-
-# AI Translated
-msgid "Let an AI assistant (for example Claude Code) see and work in Forca. It connects only from this computer, using the key below. At the Guarded level Forca never lets the AI save over your files, and never sends anything to a printer without your approval here in Forca."
-msgstr "Permet que un assistent d'IA (per exemple Claude Code) vegi Forca i hi treballi. Només es connecta des d'aquest ordinador, amb la clau de sota. Al nivell Guarded, Forca mai deixa que la IA desi sobre els teus fitxers i mai envia res a una impressora sense la teva aprovació aquí a Forca."
-
-# AI Translated
-msgid "Let an AI connect to Forca"
-msgstr "Permet que una IA es connecti a Forca"
-
-# AI Translated
-msgid "How much the AI may do:"
-msgstr "Què pot fer la IA:"
-
-# AI Translated
-msgid "Guarded (recommended) - new files only; you approve every print request"
-msgstr "Guarded (recomanat) - només fitxers nous; aproves cada sol·licitud d'impressió"
-
-# AI Translated
-msgid "Advanced - may overwrite your files and presets; no approval card"
-msgstr "Advanced - pot sobreescriure els teus fitxers i perfils; sense targeta d'aprovació"
-
-# AI Translated
-msgid "Unless you give it a print grant below, you press Send yourself. At every level the AI never deletes files or discards your unsaved edits, and it cannot heat, move or change your printers."
-msgstr "Tret que li donis un permís d'impressió a sota, ets tu qui prem Enviar. A tots els nivells, la IA mai esborra fitxers ni descarta les teves edicions sense desar, i no pot escalfar, moure ni canviar les teves impressores."
-
-# AI Translated
-msgid "Advanced lets the AI save over your own files and change your own presets. Forca copies each file into Documents\\Forca AI\\Backups before the AI overwrites it, but a mistake can still cost you work.\n\nPrint requests will open the print dialog straight away, without an approval card. Nothing prints until you press Send, so check the plate, printer and filament before you do: a wrong print can damage your printer, and never leave a printer running unattended.\n\nSwitch to Advanced?"
-msgstr "Advanced permet que la IA desi sobre els teus propis fitxers i canviï els teus propis perfils. Forca copia cada fitxer a Documents\\Forca AI\\Backups abans que la IA el sobreescrigui, però un error encara et pot costar feina.\n\nLes sol·licituds d'impressió obriran el diàleg d'impressió directament, sense targeta d'aprovació. No s'imprimeix res fins que prems Enviar, així que comprova la safata, la impressora i el filament abans: una impressió incorrecta pot fer malbé la impressora, i no deixis mai una impressora funcionant sense vigilància.\n\nVols canviar a Advanced?"
-
-# AI Translated
-msgid "To connect Claude Code, run this once in a terminal:"
-msgstr "Per connectar Claude Code, executa això una vegada en un terminal:"
-
-# AI Translated
-msgid "Copy command"
-msgstr "Copia l'ordre"
-
-# AI Translated
-msgid "Make a new key"
-msgstr "Crea una clau nova"
-
-# AI Translated
-msgid "Stops every AI that uses the old key; connect them again with the new command."
-msgstr "Atura totes les IA que fan servir la clau antiga; torna-les a connectar amb l'ordre nova."
-
-# AI Translated
-msgid "Make a new key? Every AI connected with the old key stops working until you connect it again with the new command."
-msgstr "Vols crear una clau nova? Totes les IA connectades amb la clau antiga deixaran de funcionar fins que les tornis a connectar amb l'ordre nova."
-
-# AI Translated
-msgid "Printers the AI may use (it cannot see the others):"
-msgstr "Impressores que la IA pot fer servir (no veu les altres):"
-
-# AI Translated
-msgid "Printers the AI may also PAUSE when its camera shows a problem (it can resume only its own pause):"
-msgstr "Impressores que la IA també pot POSAR EN PAUSA quan la càmera mostra un problema (només pot reprendre la seva pròpia pausa):"
-
-# AI Translated
-msgid "Printing on its own:"
-msgstr "Impressió pel seu compte:"
-
-# AI Translated
-msgid "Give a print grant..."
-msgstr "Dona un permís d'impressió..."
-
-# AI Translated
-msgid "Bed is clear..."
-msgstr "El llit és lliure..."
-
-# AI Translated
-msgid "Revoke"
-msgstr "Revoca"
-
-# AI Translated
-msgid "Which printer's bed is clear?"
-msgstr "Quina impressora té el llit lliure?"
-
-# AI Translated
-msgid "What the AI has done (newest first):"
-msgstr "Què ha fet la IA (el més recent primer):"
-
-# AI Translated
-msgid "Needs the Advanced level."
-msgstr "Cal el nivell Advanced."
-
-# AI Translated
-msgid "No print grant: the AI cannot start a print by itself."
-msgstr "Cap permís d'impressió: la IA no pot iniciar una impressió per si sola."
-
-# AI Translated
-msgid "Print grant #%d: %d print(s) left, until %s, each up to %d h. Camera bed check: %s."
-msgstr "Permís d'impressió #%d: impressions restants: %d, fins a les %s, cadascuna fins a %d h. Comprovació del llit per càmera: %s."
-
-# AI Translated
-msgid "on"
-msgstr "activada"
-
-# AI Translated
-msgid "off"
-msgstr "desactivada"
-
-# AI Translated
-msgid "bed marked clear"
-msgstr "llit marcat com a lliure"
-
-# AI Translated
-msgid "bed not marked clear"
-msgstr "llit no marcat com a lliure"
-
-# AI Translated
-msgid "%d of %d sent"
-msgstr "%d de %d enviades"
-
-# AI Translated
-msgid "(turn Forca AI on to see the command)"
-msgstr "(activa Forca AI per veure l'ordre)"
-
-# AI Translated
-msgid "(no printers yet -- connect one in the Device tab)"
-msgstr "(encara no hi ha impressores -- connecta'n una a la pestanya Dispositiu)"
-
-# AI Translated
-msgid "(no printers yet)"
-msgstr "(encara no hi ha impressores)"
-
-# AI Translated
-msgid "Forca AI - print request"
-msgstr "Forca AI - sol·licitud d'impressió"
-
-# AI Translated
-msgid "The AI asks to print this plate"
-msgstr "La IA demana imprimir aquesta safata"
-
-# AI Translated
-msgid "Printer preset"
-msgstr "Perfil d'impressora"
-
-# AI Translated
-msgid "Print time"
-msgstr "Temps d'impressió"
-
-# AI Translated
-msgid "The AI says"
-msgstr "La IA diu"
-
-# AI Translated
-msgid "Approve opens Forca's print dialog for this plate, where you choose the printer and filament slots and press Send. The approval works once, and only for this exact slice."
-msgstr "Aprova obre el diàleg d'impressió de Forca per a aquesta safata, on tries la impressora i les ranures de filament i prems Enviar. L'aprovació funciona una sola vegada, i només per a aquest laminat exacte."
-
-# AI Translated
-msgid "Decline"
-msgstr "Rebutja"
-
-# AI Translated
-msgid "Approve"
-msgstr "Aprova"
-
-# AI Translated
-msgid "Forca AI - print paused"
-msgstr "Forca AI - impressió en pausa"
-
-# AI Translated
-msgid "The AI paused a print"
-msgstr "La IA ha posat en pausa una impressió"
-
-# AI Translated
-msgid "Job"
-msgstr "Tasca"
-
-# AI Translated
-msgid "Why"
-msgstr "Motiu"
-
-# AI Translated
-msgid "Check the print. Resume it here or on the printer, or stop it on the printer. The AI may resume only this pause, and only while the print stays paused."
-msgstr "Comprova la impressió. Reprèn-la aquí o a la impressora, o atura-la a la impressora. La IA només pot reprendre aquesta pausa, i només mentre la impressió continuï en pausa."
-
-# AI Translated
-msgid "Keep paused"
-msgstr "Mantén en pausa"
-
-# AI Translated
-msgid "Resume print"
-msgstr "Reprèn la impressió"
-
-# AI Translated
-msgid "Bambu Studio project"
-msgstr "Projecte de Bambu Studio"
-
-# AI Translated
-msgid "This project was made with Bambu Studio %s. Forca doesn't know the following settings from it and ignores them:"
-msgstr "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajustos següents i els ignora:"
+#~ msgid "Dalmatian yellow"
+#~ msgstr "Groc dàlmata"
+
+# AI Translated
+#~ msgid "Capsanthin violet"
+#~ msgstr "Violeta capsantina"
+
+# AI Translated
+# Needs human review: RAL color name; check the rendering.
+#~ msgid "Olivestone"
+#~ msgstr "Pedra d'oliva"
+
+# AI Translated
+#~ msgid "Available anywhere in the window, even while typing in a text field."
+#~ msgstr "Disponible a qualsevol lloc de la finestra, fins i tot mentre s'escriu en un camp de text."
+
+# AI Translated
+#~ msgid "Global shortcuts also apply while typing."
+#~ msgstr "Les dreceres globals també s'apliquen mentre s'escriu."
+
+#~ msgid "Please choose the filament color"
+#~ msgstr "Trieu el color del filament"
+
+# AI Translated
+#~ msgid ""
+#~ "Line width of the Bridge. If expressed as a %, it will be computed over the nozzle diameter.\n"
+#~ "Recommended to use with a higher Bridge density or Bridge flow ratio.\n"
+#~ "\n"
+#~ "The maximum value is 100% or the nozzle diameter.\n"
+#~ "If set to 0, the line width will match the Internal solid infill width."
+#~ msgstr ""
+#~ "Amplada de línia del Pont. Si s'expressa en %, es calcularà sobre el diàmetre del broquet.\n"
+#~ "Es recomana utilitzar-la amb una densitat de Pont o una relació de flux del Pont més altes.\n"
+#~ "\n"
+#~ "El valor màxim és el 100% o el diàmetre del broquet.\n"
+#~ "Si s'estableix a 0, l'amplada de línia coincidirà amb l'amplada del farciment sòlid intern."
+
+# AI Translated
+#, no-c-format, no-boost-format
+#~ msgid ""
+#~ "Enable this option to slow down printing in areas where perimeters may have curled upwards.\n"
+#~ "For example, additional slowdown will be applied when printing overhangs on sharp corners like the front of the Benchy hull, reducing curling which compounds over multiple layers.\n"
+#~ "\n"
+#~ "It is generally recommended to have this option switched on unless your printer cooling is powerful enough or the print speed is slow enough that perimeter curling does not happen. \n"
+#~ "If printing with a high external perimeter speed, this parameter may introduce wall artifacts when slowing down, due to the potentially large variance in print speeds causing the extruder to be unable to keep up with the requested flow change.\n"
+#~ "Root cause of these artifacts is most likely PA tuning being slightly off, especially when combined with a high PA smooth time.\n"
+#~ "\n"
+#~ "Recommendations when enabling this option:\n"
+#~ "1. Reduce Pressure Advance smooth time to 0.015 - 0.02 so the extruder reacts quickly to the speed changes.\n"
+#~ "2. Increase the minimum print speeds to limit the magnitude of the slowdown and reduce the variance between fast and slow segments.\n"
+#~ "3. If artifacts still appear, enable Extrusion Rate Smoothing (ERS) to further smooth the flow transitions.\n"
+#~ "\n"
+#~ "Note: When this option is enabled, overhang perimeters are treated like overhangs, meaning the overhang speed is applied even if the overhanging perimeter is part of a bridge.\n"
+#~ "For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 100% overhang speed will be applied."
+#~ msgstr ""
+#~ "Activeu aquesta opció per alentir la impressió en àrees on els perímetres s'hagin pogut corbar cap amunt.\n"
+#~ "Per exemple, s'aplicarà una alentiment addicional en imprimir voladissos en cantonades pronunciades, com ara la proa del casc del Benchy, cosa que redueix el corbament que s'acumula al llarg de diverses capes.\n"
+#~ "\n"
+#~ "En general es recomana tenir aquesta opció activada, tret que la refrigeració de la impressora sigui prou potent o la velocitat d'impressió prou baixa com perquè no es produeixi corbament dels perímetres. \n"
+#~ "Si s'imprimeix amb una velocitat alta de perímetre exterior, aquest paràmetre pot introduir defectes als perímetres en alentir, a causa de la variació potencialment gran de velocitats d'impressió, que fa que l'extrusor no pugui seguir el canvi de flux sol·licitat.\n"
+#~ "La causa d'aquests defectes és molt probablement un ajust de PA lleugerament desviat, especialment si es combina amb un temps de suavitzat de PA elevat.\n"
+#~ "\n"
+#~ "Recomanacions en activar aquesta opció:\n"
+#~ "1. Reduïu el temps de suavitzat de Pressure Advance a 0,015 - 0,02 perquè l'extrusor reaccioni ràpidament als canvis de velocitat.\n"
+#~ "2. Augmenteu les velocitats d'impressió mínimes per limitar la magnitud de l'alentiment i reduir la variació entre segments ràpids i lents.\n"
+#~ "3. Si encara apareixen defectes, activeu el Suavitzat del Ritme d'Extrusió (ERS) per suavitzar encara més les transicions de flux.\n"
+#~ "\n"
+#~ "Nota: quan aquesta opció està activada, els perímetres de voladís es tracten com a voladissos, cosa que vol dir que s'aplica la velocitat de voladís fins i tot si el perímetre en voladís forma part d'un pont.\n"
+#~ "Per exemple, quan els perímetres estan en voladís al 100%, sense cap perímetre que els aguanti per sota, s'aplicarà la velocitat de voladís del 100%."
+
+#~ msgid ""
+#~ "Speed of the externally visible bridge extrusions.\n"
+#~ "\n"
+#~ "In addition, if Slow down for curled perimeters is disabled or Classic overhang mode is enabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
+#~ msgstr ""
+#~ "Velocitat de les extrusions del pont visibles externament.\n"
+#~ "\n"
+#~ "A més, si l'opció de Reduir la velocitat per als perímetres corbats està desactivada o el mode clàssic de voladís està activat, aquesta serà la velocitat d'impressió per a les parets de voladís que estan suportades per menys del 13%, ja sigui que formin part d'un pont o d'un voladís."
+
+#~ msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above. Set to zero for auto."
+#~ msgstr "Aquest ajustament independent afectarà la velocitat dels perímetres amb radi <= small_perimeter_threshold ( normalment orificis ). Si s'expressa com a percentatge ( per exemple: 80% ) es calcula sobre l'ajustament de velocitat del perímetre exterior anterior. Poseu-lo a zero per automàtic."
+
+# AI Translated
+#~ msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above. Set to zero for auto."
+#~ msgstr "Igual que \"Petits perímetres\", però per als suports. Aquest ajustament separat afectarà la velocitat del suport en àrees <= `small_support_perimeter_threshold`. Si s'expressa com a percentatge (per exemple: 80%), es calcularà sobre l'ajustament anterior de velocitat de suport o d'interfície de suport. Establiu-ho a zero per a automàtic."
+
+#~ msgid ""
+#~ "Print sequence of the internal (inner) and external (outer) walls.\n"
+#~ "\n"
+#~ "Use Inner/Outer for best overhangs. This is because the overhanging walls can adhere to a neighbouring perimeter while printing. However, this option results in slightly reduced surface quality as the external perimeter is deformed by being squashed to the internal perimeter.\n"
+#~ "\n"
+#~ "Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended against the Outer/Inner option in most cases.\n"
+#~ "\n"
+#~ "Use Outer/Inner for the same external wall quality and dimensional accuracy benefits of Inner/Outer/Inner option. However, the Z seams will appear less consistent as the first extrusion of a new layer starts on a visible surface."
+#~ msgstr ""
+#~ "Seqüència d'impressió de les parets interiors (interiors) i exteriors (exteriors).\n"
+#~ "\n"
+#~ "Utilitzeu Interior / Exterior per a millors voladissos. Això es deu al fet que les parets que sobresurten poden adherir-se a un perímetre veí durant la impressió. No obstant això, aquesta opció resulta en una qualitat superficial lleugerament reduïda, ja que el perímetre extern es deforma en ser aixafat al perímetre intern.\n"
+#~ "\n"
+#~ "Utilitzeu Interior / Exterior / Interior per obtenir el millor acabat de la superfície externa i precisió dimensional, ja que la paret externa s'imprimeix sense molèsties des d'un perímetre intern. Tanmateix, el rendiment del voladís es reduirà, ja que no hi ha un perímetre intern per imprimir la paret externa. Aquesta opció requereix un mínim de 3 parets per ser efectiva, ja que imprimeix primer les parets interiors a partir del 3r\n"
+#~ " perímetre, després el perímetre extern i, finalment, el primer perímetre intern. Aquesta opció es recomana contra l'opció Exterior/Interior en la majoria dels casos.\n"
+#~ "\n"
+#~ "Utilitzeu Exterior / Interior per obtenir la mateixa qualitat de paret externa i els mateixos avantatges de precisió dimensional de l'opció Interior / Exterior / Interior. Tanmateix, les costures z semblaran menys consistents a mesura que comenci la primera extrusió d'una nova capa en una superfície visible."
+
+#~ msgid "This is the speed for the first layer except for solid infill sections."
+#~ msgstr "Velocitat de la capa inicial excepte la part de farciment sòlid"
+
+#~ msgid "This is the speed for solid infill parts of the first layer."
+#~ msgstr "Velocitat de farciment sòlid de la capa inicial"
+
+#, no-c-format, no-boost-format
+#~ msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
+#~ msgstr "L'àrea de farciment s'amplia lleugerament per superposar-se amb la paret per a una millor unió. El valor percentual és relatiu a l'amplada de línia de farciment poc dens. Establiu aquest valor a ~ 10-15% per minimitzar la potencial sobreextrusió i acumulació de material que resulti en superfícies superiors rugoses."
+
+#, no-c-format, no-boost-format
+#~ msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
+#~ msgstr "L'àrea de farciment sòlida superior s'amplia lleugerament per superposar-se a la paret per a una millor unió i per minimitzar l'aparició de forats on l'ompliment superior es troba amb les parets. Un valor de 25-30% is és un bon punt de partida, minimitzant l'aparició de forats. El valor percentual és relatiu a l'amplada de línia de l'emplenament escàs"
+
+#~ msgid "Interlocking depth of a segmented region. It will be ignored if \"mmu_segmented_region_max_width\" is zero or if \"mmu_segmented_region_interlocking_depth\" is bigger than \"mmu_segmented_region_max_width\". Zero disables this feature."
+#~ msgstr "Profunditat d'enclavament d'una regió segmentada. S'ignorarà si \"mmu_segmented_region_max_width\" és zero o si \"mmu_segmented_region_interlocking_depth\" és més gran que \"mmu_segmented_region_max_width\". Zero desactiva aquesta funció."
+
+# AI Translated
+#~ msgid ""
+#~ "Reduce the height of top-surface perimeters to match the model edge height.\n"
+#~ "Affects perimeters with a slope less than this angle (degrees).\n"
+#~ "A reasonable value is 35. Set to 0 to disable."
+#~ msgstr ""
+#~ "Redueix l'alçada dels perímetres de la superfície superior perquè coincideixi amb l'alçada de la vora del model.\n"
+#~ "Afecta els perímetres amb un pendent inferior a aquest angle (graus).\n"
+#~ "Un valor raonable és 35. Establiu-ho a 0 per desactivar-ho."
+
+#~ msgid "Role base wipe speed"
+#~ msgstr "Velocitat de neteja basada en l'acció"
+
+#~ msgid ""
+#~ "A draft shield is useful to protect an ABS or ASA print from warping and detaching from print bed due to wind draft. It is usually needed only with open frame printers, i.e. without an enclosure.\n"
+#~ "\n"
+#~ "Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used.\n"
+#~ "Note: With the draft shield active, the skirt will be printed at skirt distance from the object. Therefore, if brims are active it may intersect with them. To avoid this, increase the skirt distance value.\n"
+#~ msgstr ""
+#~ "Activat = la faldilla és tan alta com l'objecte imprès més alt. En cas contrari, s'utilitza \"Alçada de la faldilla\".\n"
+#~ "Nota: amb l'escut de corrent actiu, la faldilla s'imprimirà a una distància de la faldilla de l'objecte. Per tant, si les vores estan actives, es pot creuar amb elles. Per evitar-ho, augmenta el valor de la distància de la faldilla.\n"
+
+#~ msgid ""
+#~ "The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. When purging, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+#~ "\n"
+#~ "When printing the sparse layers, if the internal perimeter speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+#~ "\n"
+#~ "Increasing this speed may affect the tower's stability as well as increase the force with which the nozzle collides with any blobs that may have formed on the wipe tower.\n"
+#~ "\n"
+#~ "Before increasing this parameter beyond the default of 90 mm/s, make sure your printer can reliably bridge at the increased speeds and that ooze when tool changing is well controlled.\n"
+#~ "\n"
+#~ "For the wipe tower external perimeters the internal perimeter speed is used regardless of this setting."
+#~ msgstr ""
+#~ "La velocitat màxima d'impressió en purgar a la torre de purga i imprimir a la torre de purga capes poc denses. En la purga, si la velocitat de farciment poc dens o la velocitat calculada de la màxima velocitat volumètrica del filament és menor, s'utilitzarà la més baixa.\n"
+#~ "\n"
+#~ "En imprimir les capes poc denses, si la velocitat perimetral interna o la velocitat calculada de la màxima velocitat volumètrica del filament és menor, s'utilitzarà la més baixa.\n"
+#~ "\n"
+#~ "L'augment d'aquesta velocitat pot afectar l'estabilitat de la torre, així com augmentar la força amb què el broquet xoca amb els grumolls que s'hagin pogut formar a la torre de purga.\n"
+#~ "\n"
+#~ "Abans d'augmentar aquest paràmetre més enllà del valor per defecte de 90 mm/segon, assegureu-vos que la impressora pugui fer un pont de manera fiable a les velocitats augmentades i que el degoteig quan es produeixi el canvi d'eina estigui ben controlat.\n"
+#~ "\n"
+#~ "Per als perímetres externs de la torre de purga, s'utilitza la velocitat perimetral interna independentment d'aquesta configuració."
+
+#~ msgid ""
+#~ "Wipe tower outer wall type.\n"
+#~ "1. Rectangle: The default wall type, a rectangle with fixed width and height.\n"
+#~ "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
+#~ "3. Rib: Adds four ribs to the tower wall for enhanced stability."
+#~ msgstr ""
+#~ "Tipus de paret exterior de la torre de purga.\n"
+#~ "1. Rectangle: el tipus de paret predeterminat, un rectangle amb amplada i alçada fixes.\n"
+#~ "2. Con: un con amb arrodoniment a la base per ajudar a estabilitzar la torre de purga.\n"
+#~ "3. Nervi: afegeix quatre nervis a la paret de la torre per a una estabilitat millorada."
+
+#~ msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker or narrower than they normally would be. The spacing is adjusted automatically."
+#~ msgstr "Flux addicional utilitzat per a les línies de purga a la torre de neteja. Això fa que les línies de purga siguin més gruixudes o més estretes del que serien normalment. L'espaiat s'ajusta automàticament."
+
+#~ msgid ""
+#~ "Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. Higher values remove more and longer walls.\n"
+#~ "\n"
+#~ "NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the Advanced settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
+#~ msgstr ""
+#~ "Ajusteu aquest valor per evitar que s'imprimeixin parets curtes i no tancades, cosa que podria augmentar el temps d'impressió. Els valors més alts eliminen més i més parets més llargues.\n"
+#~ "\n"
+#~ "NOTA: Les superfícies inferior i superior no es veuran afectades per aquest valor per evitar espais visuals a l'exterior del model. Ajusteu \"Llindar d'una paret\" a la configuració avançada següent per ajustar la sensibilitat del que es considera una superfície superior. \"Llindar d'una paret\" només és visible si aquesta configuració està per sobre del valor predeterminat de 0,5 o si les superfícies superiors d'una sola paret estan habilitades."
 
 # AI Translated
 #, boost-format
@@ -37648,9 +40202,6 @@ msgstr "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajust
 #~ msgid "no configured tool"
 #~ msgstr "cap eina configurada"
 
-#~ msgid "Add end G-Code when finishing the entire print."
-#~ msgstr "G-code Final en acabar tota la impressió"
-
 #~ msgid "Maximum X speed"
 #~ msgstr "Velocitat màxima a l'eix X"
 
@@ -37668,25 +40219,9 @@ msgstr "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajust
 #~ msgstr "Connector(s) de Python invocats a cada pas del flux de laminat per llegir i modificar dades intermèdies de laminat, incloent-hi un pas final de postprocessament del G-code. Recerca/experimental."
 
 # AI Translated
-#~ msgid "When enabled, the slicer emits g-code with the primary zone's contents centered on bed origin (0,0). The printer firmware is responsible for placing copies/mirrors at each physical zone position. Enable only on printers whose firmware applies its own zone offsets in copy/mirror mode (e.g. RepRapFirmware IDEX duplication mode). Has no effect in Primary mode."
-#~ msgstr "Quan està activat, el laminador genera G-code amb el contingut de la zona principal centrat a l'origen del llit (0,0). El firmware de la impressora s'encarrega de col·locar les còpies/miralls a la posició física de cada zona. Activeu-ho només en impressores el firmware de les quals aplica els seus propis desplaçaments de zona en mode de còpia/mirall (p. ex. el mode de duplicació IDEX de RepRapFirmware). No té cap efecte en mode Principal (Primary)."
-
-# AI Translated
 # Needs human review: 'pem-inversion' is developer shorthand (inverting the physical extruder map); check the wording reads right.
 #~ msgid "Per-plate override mapping physical heads to filament slots (1-based). Empty means use pem-inversion defaults."
 #~ msgstr "Correspondència per placa que substitueix l'assignació dels capçals físics a les ranures de filament (començant per 1). Si és buida, s'utilitzen els valors per defecte de la inversió del pem."
-
-# AI Translated
-#~ msgid "Axis the mesh is rotated about before slicing. This is the belt printer's tilt: an isometric (no distortion) rotation that also drives bed rendering and support gravity tilt, and that the g-code back-transform inverts before the machine-frame shear/scale and remap. X is the typical gantry tilt (belt travels along Y)."
-#~ msgstr "Eix al voltant del qual es gira la malla abans de laminar. És la inclinació de la impressora de cinta: una rotació isomètrica (sense distorsió) que també determina la representació del llit i la inclinació de la gravetat dels suports, i que la transformació inversa del G-code desfà abans del cisallament/escala i la reassignació d'eixos del sistema de coordenades de la màquina. X és la inclinació típica del pòrtic (la cinta es desplaça al llarg de Y)."
-
-# AI Translated
-#~ msgid "Expert override: set the machine-frame (g-code shear/scale) tilt angle independently of the pre-slice rotation angle. When disabled, the machine-frame transform is derived from the belt tilt angle, so a single angle drives both stages. Enable only to compensate for a machine whose physical gantry tilt differs from the slicing rotation."
-#~ msgstr "Ajust per a experts: estableix l'angle d'inclinació del sistema de coordenades de la màquina (cisallament/escala del G-code) independentment de l'angle de rotació previ al laminat. Quan està desactivat, la transformació del sistema de coordenades de la màquina es deriva de l'angle d'inclinació de la cinta, de manera que un sol angle controla les dues etapes. Activeu-ho només per compensar una màquina la inclinació física del pòrtic de la qual difereix de la rotació de laminat."
-
-# AI Translated
-#~ msgid "The maximum deviation allowed when reducing the resolution for the 'Maximum wall resolution' setting. If you increase this, the print will be less accurate, but the G-Code will be smaller. 'Maximum wall deviation' limits 'Maximum wall resolution', so if the two conflict, 'Maximum wall deviation' takes precedence."
-#~ msgstr "La desviació màxima permesa en reduir la resolució per a l'ajustament 'Resolució màxima del perímetre'. Si l'augmenteu, la impressió serà menys precisa, però el G-Code serà més petit. La 'Desviació màxima del perímetre' limita la 'Resolució màxima del perímetre', de manera que, si totes dues entren en conflicte, preval la 'Desviació màxima del perímetre'."
 
 #~ msgid " not in range "
 #~ msgstr " fora de rang "
@@ -38484,9 +41019,6 @@ msgstr "Aquest projecte es va fer amb Bambu Studio %s. Forca no coneix els ajust
 
 #~ msgid "Reset mapped extruders."
 #~ msgstr "Restableix els extrusors mapejats."
-
-#~ msgid "Note"
-#~ msgstr "Nota"
 
 #~ msgid ""
 #~ "The color has been selected, you can choose OK \n"

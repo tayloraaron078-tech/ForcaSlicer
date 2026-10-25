@@ -1,5 +1,6 @@
 // Forca AI: which settings the AI may write (src/slic3r/GUI/ForcaAIKeys.hpp) and which callers the bridge accepts
 // (ForcaAI.cpp). Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include "catch2/catch_test_macros.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

@@ -197,17 +197,19 @@ double Extruder::retract_after_wipe() const
 
 double Extruder::retraction_length() const
 {
+    if (m_object_overrides && m_object_overrides->retraction_length >= 0) // Forca: object override
+        return m_object_overrides->retraction_length;
     return m_config->retraction_length.get_at(m_config_index);
 }
 
 double Extruder::retract_lift() const
 {
-    return m_config->z_hop.get_at(m_config_index);
+    return object_z_hop_or(m_config->z_hop.get_at(m_config_index)); // Forca: object override first
 }
 
 int Extruder::retract_speed() const
 {
-    return int(floor(m_config->retraction_speed.get_at(m_config_index)+0.5));
+    return int(floor(object_retraction_speed_or(m_config->retraction_speed.get_at(m_config_index))+0.5)); // Forca: object override first
 }
 
 bool Extruder::use_firmware_retraction() const
@@ -217,6 +219,8 @@ bool Extruder::use_firmware_retraction() const
 
 int Extruder::deretract_speed() const
 {
+    if (m_object_overrides && m_object_overrides->deretraction_speed > 0) // Forca: object override
+        return int(floor(m_object_overrides->deretraction_speed + 0.5));
     int speed = int(floor(m_config->deretraction_speed.get_at(m_config_index)+0.5));
     return (speed > 0) ? speed : this->retract_speed();
 }

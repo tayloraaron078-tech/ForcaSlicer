@@ -1,6 +1,7 @@
 // Forca: the facts behind the send dialogs' "Before you print" block (libslic3r/ForcaPreflight).
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "libslic3r/ForcaPreflight.hpp"
 #include "libslic3r/PrintConfig.hpp"
 

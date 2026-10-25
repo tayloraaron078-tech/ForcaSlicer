@@ -9,14 +9,19 @@
 #include "ForcaAIFiles.hpp"
 #include "ForcaAcademy.hpp"
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <ios>
+#include <cstdint>
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <cctype>
 #include <ctime>
 #include <iterator>
+#include <string>
 
 namespace Slic3r { namespace GUI {
 

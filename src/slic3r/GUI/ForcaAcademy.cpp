@@ -3,6 +3,7 @@
 #include "ForcaAI.hpp" // forca_ai_plate_report
 #include "ForcaAIFiles.hpp" // forca_ai_may_write / forca_ai_record_write (INDEX.md facts)
 #include "ForcaAIKeys.hpp"  // forca_ai_is_secret_key (settings.json keeps no secrets)
+#include "ForcaExperiment.hpp" // forca_experiment_for_plate / forca_experiment_add_print
 #include "ForcaHostStatus.hpp" // Klipper / Flashforge print status
 #include "GUI.hpp"     // from_u8 / into_path
 #include "GUI_App.hpp"
@@ -21,11 +22,21 @@
 #include "libslic3r/GCode/ThumbnailData.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/convert.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <ios>
+#include <libslic3r/Preset.hpp>
+#include <libslic3r/Config.hpp>
+#include <exception>
 #include <miniz.h>
+#include <utility>
+#include <string>
+#include <vector>
+#include <wx/app.h>
+#include <slic3r/GUI/DeviceCore/DevDefs.h>
 #include <wx/stdpaths.h>
 #include <wx/timer.h>
 
@@ -244,14 +255,26 @@ fs::path forca_academy_write_record(const fs::path& dir, const json& record, con
         err = "Could not create " + folder.string() + ": " + ec.message();
         return {};
     }
-    if (record.contains("settings")) {
-        json rest = record;
-        rest.erase("settings");
-        if (!write_text(folder / "record.json", rest.dump(2) + "\n", err) ||
-            !write_text(folder / "settings.json", without_private_settings(record["settings"]).dump(1) + "\n", err))
-            return {};
-    } else if (!write_text(folder / "record.json", record.dump(2) + "\n", err))
+    // A plate holding a planned experiment's copies (by object name) is that experiment's print (ForcaExperiment.hpp).
+    std::vector<std::string> object_names;
+    if (const auto plate = record.find("plate"); plate != record.end() && plate->is_object() && plate->contains("objects"))
+        for (const json& o : (*plate)["objects"])
+            if (o.is_string())
+                object_names.push_back(o.get<std::string>());
+    const std::string experiment = object_names.empty() ? std::string() : forca_experiment_for_plate(dir, object_names);
+    json              rest       = record;
+    rest.erase("settings");
+    if (!experiment.empty())
+        rest["experiment"] = experiment;
+    if (!write_text(folder / "record.json", rest.dump(2) + "\n", err) ||
+        (record.contains("settings") &&
+         !write_text(folder / "settings.json", without_private_settings(record["settings"]).dump(1) + "\n", err)))
         return {};
+    if (!experiment.empty()) {
+        std::string link_err; // a failed link must not lose the record
+        if (!forca_experiment_add_print(dir / experiment, forca_academy_relative(dir, folder), record.value("time", std::string()), link_err))
+            BOOST_LOG_TRIVIAL(warning) << "Forca Academy: could not link the print to " << experiment << ": " << link_err;
+    }
 
     std::string printer = record.contains("printer") ? record["printer"].value("device", std::string()) : std::string();
     if (printer.empty() && record.contains("printer"))
@@ -492,6 +515,15 @@ ForcaAcademyHistory forca_academy_history(const std::vector<ForcaAcademyPrint>& 
     return h;
 }
 
+bool forca_academy_suggest_thick_bridges(const std::vector<ForcaAcademyHistory>& histories, bool thick_bridges)
+{
+    if (thick_bridges)
+        return false;
+    return std::any_of(histories.begin(), histories.end(), [](const ForcaAcademyHistory& h) {
+        return std::any_of(h.tags.begin(), h.tags.end(), [](const auto& t) { return t.first == "bridging"; });
+    });
+}
+
 std::vector<ForcaAcademyInsight> forca_academy_insights(const std::vector<ForcaAcademyPrint>& prints, ForcaAcademyGroup by)
 {
     std::map<std::string, ForcaAcademyInsight>        groups;
@@ -709,9 +741,9 @@ std::string tag_text(std::string tag)
     return tag;
 }
 
-const char* const EXPERIMENT_RESULT_UNWRITTEN = "Not written yet: which print came out better, and what you will keep.";
-
 } // namespace
+
+const char* const FORCA_EXPERIMENT_RESULT_UNWRITTEN = "Not written yet: which print came out better, and what you will keep.";
 
 bool forca_academy_private_setting(const std::string& key)
 {
@@ -798,7 +830,7 @@ fs::path forca_academy_write_experiment(const fs::path& dir, const std::string& 
         text += "- " + d + "\n";
     if (differences.empty())
         text += "- (no setting differences were recorded)\n";
-    text += "\n## Result\n\n" + std::string(EXPERIMENT_RESULT_UNWRITTEN) + "\n";
+    text += "\n## Result\n\n" + std::string(FORCA_EXPERIMENT_RESULT_UNWRITTEN) + "\n";
     return write_text(file, text, err) ? file : fs::path();
 }
 
@@ -806,15 +838,22 @@ std::vector<ForcaAcademyExperiment> forca_academy_list_experiments(const fs::pat
 {
     std::vector<ForcaAcademyExperiment> out;
     boost::system::error_code           ec;
+    std::vector<std::string>            keys; // the file stem or folder name: date first, so newest first sorts by it
     for (fs::directory_iterator it(dir / "experiments", ec), end; !ec && it != end; it.increment(ec)) {
-        if (it->path().extension() != ".md" || !fs::is_regular_file(it->path(), ec))
-            continue;
         ForcaAcademyExperiment e;
-        e.file                 = it->path();
-        const std::string stem = it->path().stem().string();
+        // A planned experiment (ForcaExperiment.cpp) is a folder with experiment.md; one from Compare is a single file.
+        if (fs::is_directory(it->path(), ec) && fs::is_regular_file(it->path() / "experiment.md", ec)) {
+            e.file = it->path() / "experiment.md";
+            ForcaExperimentPlan plan;
+            e.state = forca_experiment_load(it->path(), plan) ? plan.state : std::string("planned");
+        } else if (it->path().extension() == ".md" && fs::is_regular_file(it->path(), ec))
+            e.file = it->path();
+        else
+            continue;
+        const std::string stem = e.file.filename() == "experiment.md" ? it->path().filename().string() : it->path().stem().string();
         e.date                 = stem.size() >= 10 && stem[4] == '-' && stem[7] == '-' ? stem.substr(0, 10) : std::string();
         e.title                = stem;
-        const std::string text = read_all(it->path());
+        const std::string text = read_all(e.file);
         if (text.rfind("# ", 0) == 0)
             e.title = text.substr(2, text.find_first_of("\r\n") - 2);
         if (const size_t r = text.find("## Result"); r != std::string::npos) {
@@ -823,12 +862,19 @@ std::vector<ForcaAcademyExperiment> forca_academy_list_experiments(const fs::pat
                 rest.resize(next);
             rest.erase(0, rest.find_first_not_of(" \t\r\n"));
             rest.erase(rest.find_last_not_of(" \t\r\n") + 1);
-            e.has_result = !rest.empty() && rest != EXPERIMENT_RESULT_UNWRITTEN;
+            e.has_result = !rest.empty() && rest != FORCA_EXPERIMENT_RESULT_UNWRITTEN;
         }
+        keys.push_back(stem);
         out.push_back(std::move(e));
     }
-    std::sort(out.begin(), out.end(), [](const auto& x, const auto& y) { return x.file.stem().string() > y.file.stem().string(); });
-    return out;
+    std::vector<size_t> order(out.size());
+    for (size_t i = 0; i < order.size(); ++i)
+        order[i] = i;
+    std::sort(order.begin(), order.end(), [&keys](size_t x, size_t y) { return keys[x] > keys[y]; });
+    std::vector<ForcaAcademyExperiment> sorted;
+    for (size_t i : order)
+        sorted.push_back(std::move(out[i]));
+    return sorted;
 }
 
 std::vector<ForcaAcademyPattern> forca_academy_patterns(const std::vector<ForcaAcademyPrint>& prints, int count, int window)
@@ -1005,7 +1051,8 @@ const std::vector<std::string>& forca_academy_tag_keys()
 {
     static const std::vector<std::string> keys = { "stringing",       "warping",        "layer_shift", "spaghetti",
                                                    "bed_adhesion",    "supports",       "under_extrusion",
-                                                   "over_extrusion",  "ringing",        "layer_separation" };
+                                                   "over_extrusion",  "ringing",        "layer_separation",
+                                                   "bridging" };
     return keys;
 }
 
@@ -1086,6 +1133,16 @@ const Playbook PLAYBOOKS[] = {
       "3. Under-extrusion (see that playbook).\n4. Drafts on a large part.\n",
       "- Do the layers split at the same height every time?\n- Did it happen on thin walls or thick ones?\n",
       "- Calibration Wizard: Temperature, Max volumetric speed.\n- Filament settings: nozzle temperature, fan speeds.\n" },
+    { "bridging", "Bridging",
+      "1. Thin bridge lines: with Thick external bridges off (OrcaSlicer's default), bridge lines are flattened to the "
+      "layer height and sag or tear on longer spans.\n2. Too little cooling on the bridge.\n3. Bridge printed too fast "
+      "for this printer.\n4. A span too long for this filament.\n",
+      "- Is the bridge layer itself sagging or torn, or is the layer above it rough?\n- Do the bridge lines come off "
+      "with little force (poorly bonded) or stay tight?\n- Is it worse on the longer spans?\n",
+      "- Process settings: Thick external bridges (Quality > Bridging) prints round, full-height bridge lines. In "
+      "Forca's tests on a Bambu Lab H2S and a Flashforge AD5M it made the biggest difference; slower bridges, lower "
+      "acceleration and less flow helped far less.\n- Process settings: bridge speed, Bridge flow ratio, Extra bridge "
+      "layers (beta).\n- Filament settings: Overhangs and external bridges fan speed.\n" },
 };
 
 std::string playbook_text(const Playbook& p)

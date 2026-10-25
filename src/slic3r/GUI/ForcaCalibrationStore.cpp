@@ -3,11 +3,16 @@
 #include "libslic3r/Utils.hpp" // Slic3r::data_dir()
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <ios>
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <fstream>
 #include <ctime>
+#include <string>
+#include <utility>
 
 namespace Slic3r { namespace GUI {
 

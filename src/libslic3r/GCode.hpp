@@ -7,6 +7,7 @@
 #include "Print.hpp"
 #include "libslic3r.h"
 #include "GCodeWriter.hpp"
+#include "Extruder.hpp" // Forca: ObjectRetractionOverrides
 #include "GCode/BeltKinematics.hpp"
 #include "Layer.hpp"
 #include "Point.hpp"
@@ -14,6 +15,7 @@
 #include "PrintConfig.hpp"
 #include "GCode/AvoidCrossingPerimeters.hpp"
 #include "GCode/CoolingBuffer.hpp"
+#include "GCode/ExclusionVolumeTravelAvoidance.hpp"
 #include "GCode/FanMover.hpp"
 #include "GCode/RetractWhenCrossingPerimeters.hpp"
 #include "GCode/SpiralVase.hpp"
@@ -248,7 +250,6 @@ public:
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
         m_brim_done(false),
         m_second_layer_things_done(false),
-        m_silent_time_estimator_enabled(false),
         m_last_obj_copy(nullptr, Point(std::numeric_limits<coord_t>::max(), std::numeric_limits<coord_t>::max())),
         // BBS
         m_toolchange_count(0),
@@ -320,6 +321,7 @@ public:
     bool is_BBL_Printer();
     WipeTowerType wipe_tower_type();
 
+    void assign_object_label_ids(Print &print);
     // SoftFever
     std::string set_object_info(Print* print);
 
@@ -470,19 +472,25 @@ protected:
         const PrintObject &object,
         size_t instance_id,
         bool first_layer,
+        unsigned int extruder_id,
         const Layer *object_layer);
 
     // Belt printers: emit one brim-only apron layer.  These print below the
     // object's first layer, so there is no object or support layer for the normal
     // process_layer() machinery to work from.  Kept to the minimum a layer needs -
     // tool, Z move, extrusions - so that nothing here can perturb the
-    // Layer::id()-based logic the ordinary path relies on.
+    // Layer::id()-based logic the ordinary path relies on.  Its layer change G-code
+    // uses process_layer_change_gcode(), so an apron band counts in the running
+    // printed mass like an object layer.
     LayerResult process_belt_brim_layer(
         const Print                     &print,
         const std::vector<LayerToPrint> &layers,
         const LayerTools                &layer_tools,
         const bool                       last_layer,
-        const size_t                     single_object_instance_idx);
+        const size_t                     single_object_instance_idx,
+        const int                        most_used_extruder);
+
+    std::string process_layer_change_gcode(const Print &print, coordf_t print_z, int most_used_extruder, bool has_wipe_tower);
 
     // Emit the apron bands carried by these layers whose brim filament is extruder_id
     // (0-based).  Called from both the brim-only branch and the ordinary path, since a
@@ -535,8 +543,16 @@ protected:
     size_t get_extruder_id(unsigned int filament_id) const;
     void   update_placeholder_parser_with_variant_params();
 
-    void            set_last_pos(const Point &pos) { m_last_pos = Point3(pos, 0); m_last_pos_defined = true; }
-    void            set_last_pos(const Point3 &pos) { m_last_pos = pos; m_last_pos_defined = true; }
+    void            set_last_pos(const Point &pos) {
+        m_last_pos = Point3(pos, 0);
+        m_last_pos_defined = true;
+        m_pending_start_gcode_position.reset();
+    }
+    void            set_last_pos(const Point3 &pos) {
+        m_last_pos = pos;
+        m_last_pos_defined = true;
+        m_pending_start_gcode_position.reset();
+    }
     bool            last_pos_defined() const { return m_last_pos_defined; }
     void            set_extruders(const std::vector<unsigned int> &extruder_ids);
     std::string     preamble();
@@ -649,6 +665,10 @@ protected:
     // Farthest-point timelapse: find the extrusion point farthest from camera (0,0)
     void compute_farthest_point(const std::vector<LayerToPrint> &layers, int most_used_extruder,
                                 const std::map<std::pair<const SupportLayer *, ExtrusionRole>, unsigned int> &support_filaments);
+    // Requires an active filament.
+    DynamicConfig   timelapse_gcode_config(const Print &print, coordf_t print_z, int most_used_extruder,
+                                           const std::vector<const PrintObject*> *printed_objects,
+                                           bool skip_pos_pick);
     // Build the per-layer timelapse snapshot g-code (safe-position or, when skip_pos_pick,
     // an inline photo at the current head position). Extracted from the former process_layer lambda so the
     // per-extrusion farthest-point hook (_extrude) can call it too. Identical to the old lambda when the
@@ -757,8 +777,11 @@ protected:
     OozePrevention                      m_ooze_prevention;
     Wipe                                m_wipe;
     AvoidCrossingPerimeters             m_avoid_crossing_perimeters;
+    ExclusionVolumeTravelAvoidance      m_exclusion_volume_travel_avoidance;
     RetractWhenCrossingPerimeters       m_retract_when_crossing_perimeters;
     TimelapsePosPicker                  m_timelapse_pos_picker;
+    bool                                m_timelapse_uses_pos{ false };
+    bool                                m_timelapse_uses_clear_to_x0{ false };
 
     // Farthest-point timelapse context. Corexy-only refinement layered on top of the existing
     // timelapse_type. All fields default to the inert state; `enabled` is (re)computed each layer in
@@ -795,7 +818,7 @@ protected:
     
     bool m_enable_exclude_object;
     std::vector<size_t> m_label_objects_ids;
-    // Object label names by instance, built on first use from the ids set_object_info() assigns.
+    // Object label names by instance, built on first use from the ids assign_object_label_ids() assigns.
     std::unordered_map<const PrintInstance*, std::string> m_instance_names;
     const std::string& instance_name(const PrintInstance &instance);
     std::string _encode_label_ids_to_base64(std::vector<size_t> ids);
@@ -844,11 +867,41 @@ protected:
     Point3                              m_last_pos;
     bool                                m_last_pos_defined;
 
+    struct ToolchangePositionState
+    {
+        Vec2d emitted_xy{Vec2d::Zero()};
+    };
+
+    // Capture and restore the actual command-space position around a physical
+    // nozzle change. Model-space m_last_pos is tied to the active nozzle offset,
+    // while the machine position itself does not change when Tx is emitted.
+    std::optional<ToolchangePositionState> capture_toolchange_position();
+    void synchronize_toolchange_position(const ToolchangePositionState &before,
+                                         const std::string             &emitted_gcode);
+
     std::unique_ptr<CoolingBuffer>      m_cooling_buffer;
     std::unique_ptr<SpiralVase>         m_spiral_vase;
     std::unique_ptr<PressureEqualizer>  m_pressure_equalizer;
     
     std::unique_ptr<AdaptivePAProcessor>      m_pa_processor;
+
+    // Forca: per-object filament overrides of the object being printed (-1 = none); see forca_apply_object_overrides().
+    ObjectRetractionOverrides m_forca_object_retraction;
+    double                    m_forca_object_pa { -1 };
+    double                    m_forca_object_max_volumetric_speed { -1 };
+    // Forca: the printed object's max volumetric speed override, else the filament's (0 = no limit).
+    double forca_max_volumetric_speed() const;
+    // Forca: print by object -- the nozzle temperatures of the object being printed (-1 = the filament's).
+    double m_forca_object_temp { -1 };
+    double m_forca_object_temp_first { -1 };
+    // Forca: before an object prints in "By object" mode, apply its fan and nozzle temperature overrides: the
+    // cooling buffer gets its fan values, and its first-layer temperature (or the filament's again after an object
+    // with one) is set and waited for.
+    std::string forca_apply_sequential_object_overrides(const PrintObject& object, unsigned int extruder_id);
+    // Forca: after m_config took the printed object's settings, switch its filament overrides on (or off). Emits a
+    // retraction with the previous object's values when they change, and the pressure advance to use. Emits nothing
+    // while no object on the plate has an override.
+    std::string forca_apply_object_overrides();
 
     // IMEX: active parallel mode name ("primary", "copy", "iq-copy", etc.).
     // Set at the start of export. Empty string means non-IMEX or not yet set.
@@ -877,7 +930,6 @@ protected:
     int m_timelapse_warning_code = 0;
     bool m_support_traditional_timelapse = true;
 
-    bool m_silent_time_estimator_enabled;
 
     Print *m_print{nullptr};
 
@@ -885,6 +937,10 @@ protected:
 
     // Processor
     GCodeProcessor m_processor;
+    // Command-space endpoint after startup G-code. The processor sees direct
+    // file writes synchronously, while the generator has not established its
+    // first model-space point yet.
+    std::optional<GCodeProcessor::PositionState> m_pending_start_gcode_position;
 
     //some post-processing on the file, with their data class
     std::unique_ptr<FanMover> m_fan_mover;
@@ -1006,6 +1062,7 @@ protected:
         size_t                                                  num_objects,
         size_t                                                  num_islands);
 
+    friend class OozePrevention;
     friend class Wipe;
     friend class WipeTowerIntegration;
     friend class PressureEqualizer;

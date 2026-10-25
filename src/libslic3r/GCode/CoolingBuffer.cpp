@@ -966,7 +966,7 @@ std::string CoolingBuffer::apply_layer_cooldown(
 #define EXTRUDER_CONFIG(OPT) m_config.OPT.get_at(m_current_extruder)
         // The per-variant options take the extruder variant the filament prints with on this layer
         const size_t config_index = m_gcodegen.get_filament_config_index(m_current_extruder, layer_id);
-        float fan_min_speed = m_config.fan_min_speed.get_at(config_index);
+        float fan_min_speed = m_forca_fan_min >= 0 ? float(m_forca_fan_min) : m_config.fan_min_speed.get_at(config_index); // Forca: object override first
         float fan_speed_new = EXTRUDER_CONFIG(reduce_fan_stop_start_freq) ? fan_min_speed : 0;
         //BBS
         int additional_fan_speed_new = m_config.additional_cooling_fan_speed.get_at(config_index);
@@ -1005,7 +1005,7 @@ std::string CoolingBuffer::apply_layer_cooldown(
             // additional_fan_speed_new is left at its configured value (auxiliary fan is independent of the
             // part-cooling override).
         } else if (int(layer_id) >= close_fan_the_first_x_layers) {
-            float   fan_max_speed             = m_config.fan_max_speed.get_at(config_index);
+            float   fan_max_speed             = m_forca_fan_max >= 0 ? float(m_forca_fan_max) : m_config.fan_max_speed.get_at(config_index); // Forca: object override first
             float slow_down_layer_time = float(EXTRUDER_CONFIG(slow_down_layer_time));
             float fan_cooling_layer_time      = float(EXTRUDER_CONFIG(fan_cooling_layer_time));
             //BBS: always enable the fan speed interpolation according to layer time
@@ -1020,7 +1020,7 @@ std::string CoolingBuffer::apply_layer_cooldown(
                     fan_speed_new = int(floor(t * fan_min_speed + (1. - t) * fan_max_speed) + 0.5);
                 }
             //}
-            overhang_fan_speed   = EXTRUDER_CONFIG(overhang_fan_speed);
+            overhang_fan_speed   = m_forca_overhang_fan >= 0 ? int(m_forca_overhang_fan + 0.5) : EXTRUDER_CONFIG(overhang_fan_speed); // Forca: object override first
             if (int(layer_id) >= close_fan_the_first_x_layers && int(layer_id) + 1 < full_fan_speed_layer) {
                 if (has_initial_layer_override && close_fan_the_first_x_layers == 0 && full_fan_speed_layer > 1) {
                     // ORCA: Option-B anchored ramp. When the first-layer override is configured and there's

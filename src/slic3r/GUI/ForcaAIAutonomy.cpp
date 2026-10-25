@@ -36,15 +36,28 @@
 #include "Widgets/Label.hpp"
 #include "libslic3r/PresetBundle.hpp"
 
+#include <algorithm>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <string>
+#include <vector>
+#include <utility>
+#include <libslic3r/Config.hpp>
+#include <ios>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/string.h>
 #include <wx/timer.h>
 
 #include <chrono>

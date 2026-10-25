@@ -1,6 +1,9 @@
 // Forca: the Calibration Wizard's explicit line wrapping (forca_hard_wrap, src/slic3r/GUI/ForcaCalibrationWizard.cpp),
 // which must also break translated text that has no spaces (Chinese, Japanese, Thai).
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include <wx/string.h>
+#include "catch2/catch_test_macros.hpp"
+#include <wx/unichar.h>
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

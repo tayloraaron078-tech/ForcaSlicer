@@ -1,6 +1,7 @@
 #include "PhysicalPrinterDialog.hpp"
 #include "ForcaHostStatus.hpp" // Forca: find Fluidd / Mainsail
 
+#include <utility>
 #include <wx/choicdlg.h>
 #include "PresetComboBoxes.hpp"
 #include "PrinterCloudAuthDialog.hpp"

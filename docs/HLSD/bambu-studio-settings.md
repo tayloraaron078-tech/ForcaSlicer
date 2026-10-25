@@ -18,7 +18,7 @@ Bambu Studio project still lists any setting Forca doesn't know when it is opene
   setting (role-based wipe speed, outer-wall slowdown, wipe tower purge speed, support ironing).
 - **The default keeps today's output.** Where Bambu Studio's default would change prints that don't set the key, Forca
   uses a default that keeps OrcaSlicer's behaviour, usually 0 meaning "as before" (first-layer infill width, short-travel
-  acceleration, paint penetration layers) or "Disabled" (infill retraction). Non-Bambu G-code is unchanged; Bambu
+  acceleration) or "Disabled" (infill retraction). Non-Bambu G-code is unchanged; Bambu
   profiles that set a value get Bambu Studio's behaviour.
 - **Replaced keys load into the new one.** When a ported setting replaces an OrcaSlicer key (the
   `reduce_infill_retraction` bool became `reduce_infill_retraction_mode`), `handle_legacy` maps old values, and
@@ -38,7 +38,6 @@ Bambu Studio project still lists any setting Forca doesn't know when it is opene
 | `support_ironing_inset`, `_direction`, `_speed` | `Support/SupportCommon.cpp` (inset, angle relative to the interface lines) and `GCode::extrude_support` (speed) |
 | `cooling_slowdown_logic`, `cooling_perimeter_transition_distance` | `GCode/CoolingBuffer.cpp`; Forca restores the original speed for the transition distance, which Bambu Studio only accounts for in its time estimate |
 | `avoid_crossing_wall_includes_support` | `GCode/AvoidCrossingPerimeters.cpp`, turning OrcaSlicer's compile-time `INCLUDE_SUPPORTS_IN_BOUNDARY` into a run-time choice |
-| `top_color_penetration_layers`, `bottom_color_penetration_layers` | `MultiMaterialSegmentation.cpp` through `top/bottom_paint_penetration_layers()`, in place of the shell layers |
 
 Bambu Studio's `print_in_clockwise` (P2S, X2D) is not a setting in Forca: OrcaSlicer's `wall_direction` has only ccw
 and cw, so a printer-level key could not tell a user's explicit choice from the default. The P2S and X2D process

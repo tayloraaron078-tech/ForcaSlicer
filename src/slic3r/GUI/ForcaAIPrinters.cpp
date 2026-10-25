@@ -32,6 +32,23 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <slic3r/GUI/Printer/BambuTunnel.h>
+#include <set>
+#include <string>
+#include <vector>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/constants.hpp>
+#include <boost/algorithm/string/join.hpp>
+#include "PrinterNetworkTypes.hpp"
+#include <wx/gdicmn.h>
+#include <functional>
+#include <utility>
+#include <wx/string.h>
+#include <wx/colour.h>
+#include <wx/event.h>
+#include <boost/filesystem/operations.hpp>
+#include <ios>
 
 #include "libslic3r_version.h"
 

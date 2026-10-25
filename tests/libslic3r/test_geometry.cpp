@@ -765,33 +765,6 @@ TEST_CASE("Convex polygon intersection test prusa polygons", "[Geometry][Rotcali
     }
 }
 
-TEST_CASE("Open-path 2-opt chaining is never longer than the greedy chain", "[Geometry]")
-{
-    // Fixed seed and raw engine output, so the points are the same on every platform.
-    std::mt19937 rng(42);
-    Points points;
-    for (size_t i = 0; i < 200; ++ i)
-        points.emplace_back(coord_t(rng() % 100000000), coord_t(rng() % 100000000));
-    const Point start(0, 0);
-    const auto open_length = [&points, &start](const std::vector<size_t> &order) {
-        double length = (points[order.front()] - start).cast<double>().norm();
-        for (size_t i = 1; i < order.size(); ++ i)
-            length += (points[order[i]] - points[order[i - 1]]).cast<double>().norm();
-        return length;
-    };
-
-    const std::vector<size_t> greedy = chain_points(points, &start);
-    const std::vector<size_t> improved = chain_points_2opt(points, &start);
-
-    std::vector<size_t> sorted = improved;
-    std::sort(sorted.begin(), sorted.end());
-    std::vector<size_t> identity(points.size());
-    std::iota(identity.begin(), identity.end(), size_t(0));
-    REQUIRE(sorted == identity);
-    // 200 random points leave the greedy chain plenty of crossings to remove.
-    CHECK(open_length(improved) < open_length(greedy));
-}
-
 namespace {
 // Scale on the local axes, with a mirror on `mirror_axis`, then rotation.
 Transform3d mirrored_transform(const Matrix3d &rotation, const Vec3d &scale, int mirror_axis)

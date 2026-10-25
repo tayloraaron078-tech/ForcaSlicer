@@ -1,6 +1,9 @@
 // Forca: presets under an Orca Cloud account folder are merged into user/default once (libslic3r/ForcaPresetMerge).
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "libslic3r/ForcaPresetMerge.hpp"
 #include "test_utils.hpp"
 
@@ -8,6 +11,9 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <ctime>
+#include <string>
+#include <ios>
+#include <iterator>
 
 using namespace Slic3r;
 namespace fs = boost::filesystem;

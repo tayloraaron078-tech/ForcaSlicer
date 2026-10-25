@@ -8,6 +8,23 @@ namespace Slic3r {
 
 class GCodeConfig;
 
+// Forca: the retraction values of the object being printed (its "Filament overrides"); a negative value keeps the
+// filament's. Owned by the g-code generator, which sets it on every Extruder while an object with overrides prints.
+struct ObjectRetractionOverrides
+{
+    double retraction_length   = -1;
+    double retraction_speed    = -1;
+    double deretraction_speed  = -1;
+    double z_hop               = -1;
+    bool   any() const { return retraction_length >= 0 || retraction_speed >= 0 || deretraction_speed >= 0 || z_hop >= 0; }
+    bool   operator==(const ObjectRetractionOverrides& o) const
+    {
+        return retraction_length == o.retraction_length && retraction_speed == o.retraction_speed &&
+               deretraction_speed == o.deretraction_speed && z_hop == o.z_hop;
+    }
+    bool   operator!=(const ObjectRetractionOverrides& o) const { return !(*this == o); }
+};
+
 class Extruder
 {
 public:
@@ -87,6 +104,19 @@ public:
 
     bool   use_firmware_retraction() const;
 
+    // Forca: the printed object's retraction overrides, or nullptr for none (the getters above then read the config).
+    void set_object_overrides(const ObjectRetractionOverrides* overrides) { m_object_overrides = overrides; }
+    // The z-hop to use: the object's override if it sets one, else `filament_z_hop`.
+    double object_z_hop_or(double filament_z_hop) const
+    {
+        return m_object_overrides && m_object_overrides->z_hop >= 0 ? m_object_overrides->z_hop : filament_z_hop;
+    }
+    // The retraction speed (mm/s) to use: the object's override if it sets one, else `filament_speed`.
+    double object_retraction_speed_or(double filament_speed) const
+    {
+        return m_object_overrides && m_object_overrides->retraction_speed >= 0 ? m_object_overrides->retraction_speed : filament_speed;
+    }
+
 private:
     // Private constructor to create a key for a search in std::set.
     Extruder(unsigned int id) : m_id(id) {}
@@ -106,6 +136,8 @@ private:
     // When retracted, this value stores the extra amount of priming on deretraction.
     double       m_restart_extra;
     double       m_e_per_mm3;
+    // Forca: see set_object_overrides().
+    const ObjectRetractionOverrides* m_object_overrides { nullptr };
 
     // BBS.
     // Create shared E and retraction data for single extruder multi-material machine

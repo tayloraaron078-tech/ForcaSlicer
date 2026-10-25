@@ -27,8 +27,16 @@
 #include "libslic3r/GCode/ThumbnailData.hpp"
 #include "libslic3r/PresetBundle.hpp"
 
+#include <string>
+#include <cstddef>
+#include <vector>
+#include <map>
+#include <utility>
 #include <wx/button.h>
+#include <wx/colour.h>
 #include <wx/dialog.h>
+#include <wx/gdicmn.h>
+#include <wx/event.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
@@ -36,6 +44,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
+#include <wx/string.h>
 
 namespace Slic3r { namespace GUI {
 

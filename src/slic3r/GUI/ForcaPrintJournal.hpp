@@ -2,9 +2,12 @@
 
 #include "ForcaAcademy.hpp"
 
+#include <boost/filesystem/path.hpp>
+#include <string>
 #include <wx/dialog.h>
 
 #include <vector>
+#include <wx/string.h>
 
 class wxButton;
 class wxCheckBox;

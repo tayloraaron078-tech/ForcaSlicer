@@ -12,10 +12,19 @@
 #include "slic3r/Utils/bambu_networking.hpp"
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/directory.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/fstream.hpp>
 
+#include <string>
+#include <wx/busycursor.h>
+#include <ctime>
+#include <ios>
+#include <iterator>
+#include <vector>
 #include <wx/busyinfo.h>
+#include <wx/string.h>
 #include <wx/utils.h>
 
 namespace fs = boost::filesystem;

@@ -6,10 +6,19 @@
 #include "slic3r/Utils/Http.hpp"
 
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/log/trivial.hpp>
 
 #include <algorithm>
 #include <cstring>
+#include <string>
+#include <libslic3r/Config.hpp>
+#include <utility>
+#include <exception>
+#include <vector>
+#include <libslic3r/Preset.hpp>
 
 namespace Slic3r { namespace GUI {
 

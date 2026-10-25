@@ -1,0 +1,59 @@
+{
+  "_comment": "Thick external bridges advice: the \"Before you print\" tip (src/slic3r/GUI/ForcaBeforeYouPrint.cpp) and the Forca \"Did you know\" hint (resources/data/hints.ini). Setting, page and group names use each catalog's own terms. tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Earlier prints here were tagged Bridging, and Thick external bridges is off. In Forca's tests, turning it on (Quality > Bridging) fixed sagging and torn bridges.",
+      "translations": {
+        "ca": "Impressions anteriors aquí es van etiquetar amb Ponts, i Ponts exteriors gruixuts està desactivat. A les proves de Forca, activar-lo (Qualitat > Ponts) va solucionar els ponts que es pengen o s'esquincen.",
+        "cs": "Dřívější tisky zde byly označeny Mostování a Silné vnější mosty jsou vypnuté. V testech Forca jejich zapnutí (Kvalita > Mostování) odstranilo prověšené a potrhané mosty.",
+        "de": "Frühere Drucke hier wurden mit Brücken markiert, und Dicke externe Brücken ist aus. In Forcas Tests hat das Einschalten (Qualität > Brücken) durchhängende und gerissene Brücken behoben.",
+        "es": "Impresiones anteriores aquí se etiquetaron con Puentes, y Puentes externos gruesos está desactivado. En las pruebas de Forca, activarlo (Calidad > Puentes) solucionó los puentes caídos y rotos.",
+        "eu": "Hemengo aurreko inprimaketak Zubigintza etiketarekin markatu ziren, eta Kanpoko zubi lodiak desaktibatuta dago. Forcaren probetan, hura aktibatzeak (Kalitatea > Zubigintza) zubi zintzilikatuak eta urratuak konpondu zituen.",
+        "fr": "Des impressions précédentes ici ont été marquées Ponts, et Ponts extérieurs épais est désactivé. Dans les tests de Forca, l'activer (Qualité > Ponts) a corrigé les ponts affaissés et déchirés.",
+        "hu": "A korábbi nyomtatások itt a Hídnyomtatás címkét kapták, és a Vastag külső hidak ki van kapcsolva. A Forca tesztjeiben a bekapcsolása (Minőség > Hídnyomtatás) megszüntette a megereszkedett és szakadt hidakat.",
+        "it": "Le stampe precedenti qui sono state etichettate Ponti, e Ponti esterni spessi è disattivato. Nei test di Forca, attivarlo (Qualità > Ponti) ha risolto i ponti cadenti e strappati.",
+        "ja": "ここでの以前のプリントに「ブリッジング」のタグが付いていますが、厚い外部ブリッジはオフです。Forca のテストでは、これをオンにする（品質 > ブリッジング）ことで、垂れたり切れたりするブリッジが解消されました。",
+        "ko": "이전 출력에 브릿지 태그가 붙어 있는데 두꺼운 외부 브릿지가 꺼져 있습니다. Forca의 테스트에서는 이를 켜면(품질 > 브릿지) 처지거나 끊어지는 브릿지가 해결되었습니다.",
+        "lt": "Ankstesni spaudiniai čia buvo pažymėti žyma Tiltai, o Stori išoriniai tilteliai išjungti. Forca bandymuose juos įjungus (Kokybė > Tiltai) dingo įlinkę ir nutrūkę tiltai.",
+        "nl": "Eerdere prints hier zijn getagd met Overbruggen, en Dikke externe bruggen staat uit. In de tests van Forca loste aanzetten (Kwaliteit > Overbruggen) doorhangende en gescheurde bruggen op.",
+        "pl": "Wcześniejsze wydruki tutaj oznaczono tagiem Mosty, a Grube zewnętrzne mosty są wyłączone. W testach Forca ich włączenie (Jakość > Mosty) usunęło opadające i zerwane mosty.",
+        "pt_BR": "Impressões anteriores aqui foram marcadas com Ponte, e Pontes externas grossas está desligado. Nos testes do Forca, ligá-lo (Qualidade > Ponte) resolveu pontes caídas e rompidas.",
+        "ru": "Прежние печати здесь отмечены тегом «Мосты», а «Круглые внешние мосты» выключены. В тестах Forca их включение (Вид > Мосты) устранило провисающие и рвущиеся мосты.",
+        "sv": "Tidigare utskrifter här taggades med Bridging, och Tjocka yttre bridges är av. I Forcas tester åtgärdade det hängande och trasiga bridges att slå på det (Kvalitet > Bridging).",
+        "th": "งานพิมพ์ก่อนหน้านี้ที่นี่ถูกติดแท็ก การพิมพ์สะพาน และ สะพานภายนอกหนา ปิดอยู่ ในการทดสอบของ Forca การเปิดใช้ (คุณภาพ > การพิมพ์สะพาน) แก้ปัญหาสะพานหย่อนและขาดได้",
+        "tr": "Buradaki önceki baskılar Köprüleme olarak etiketlendi ve Kalın dış köprüler kapalı. Forca'nın testlerinde bunu açmak (Kalite > Köprüleme) sarkan ve kopan köprüleri düzeltti.",
+        "uk": "Попередні друки тут позначено тегом «Створення мостів», а «Товсті зовнішні мости» вимкнено. У тестах Forca їх увімкнення (Якість > Створення мостів) усунуло провислі та розірвані мости.",
+        "vi": "Các bản in trước đây ở đây được gắn thẻ Bắc cầu, và Cầu bên ngoài dày đang tắt. Trong các thử nghiệm của Forca, bật nó (Chất lượng > Bắc cầu) đã khắc phục cầu bị võng và đứt.",
+        "zh_CN": "此前在这里的打印被标记为“搭桥”，而“外部搭桥用厚桥”处于关闭状态。在 Forca 的测试中，开启它（质量 > 搭桥）解决了下垂和断裂的桥接。",
+        "zh_TW": "先前在這裡的列印被標記為「橋接」，而「增厚外部橋接」處於關閉狀態。在 Forca 的測試中，開啟它（品質 > 橋接）解決了下垂和斷裂的橋接。"
+      }
+    },
+    {
+      "msgid": "Thick external bridges\nDid you know that turning on Thick external bridges (Quality > Bridging) prints round, full-height bridge lines that sag and tear far less? In Forca's tests on two printers it made the biggest difference to bridges.",
+      "translations": {
+        "ca": "Ponts exteriors gruixuts\nSabíeu que activar Ponts exteriors gruixuts (Qualitat > Ponts) imprimeix línies de pont rodones i d'alçada completa que es pengen i s'esquincen molt menys? A les proves de Forca en dues impressores va ser el que més va millorar els ponts.",
+        "cs": "Silné vnější mosty\nVěděli jste, že zapnutím Silné vnější mosty (Kvalita > Mostování) se mosty tisknou kulatými linkami v plné výšce, které se mnohem méně prověšují a trhají? V testech Forca na dvou tiskárnách to mosty zlepšilo nejvíce.",
+        "de": "Dicke externe Brücken\nWusstest du, dass Dicke externe Brücken (Qualität > Brücken) runde Brückenlinien in voller Höhe druckt, die viel weniger durchhängen und reißen? In Forcas Tests auf zwei Druckern hat das bei Brücken den größten Unterschied gemacht.",
+        "es": "Puentes externos gruesos\n¿Sabías que activar Puentes externos gruesos (Calidad > Puentes) imprime líneas de puente redondas y de altura completa que se caen y rompen mucho menos? En las pruebas de Forca en dos impresoras fue lo que más mejoró los puentes.",
+        "eu": "Kanpoko zubi lodiak\nBa al zenekien Kanpoko zubi lodiak (Kalitatea > Zubigintza) aktibatzeak altuera osoko zubi-lerro biribilak inprimatzen dituela, askoz gutxiago zintzilikatu eta urratzen direnak? Forcaren probetan bi inprimagailutan hori izan zen zubiak gehien hobetu zituena.",
+        "fr": "Ponts extérieurs épais\nSaviez-vous qu'activer Ponts extérieurs épais (Qualité > Ponts) imprime des lignes de pont rondes, de pleine hauteur, qui s'affaissent et se déchirent bien moins ? Dans les tests de Forca sur deux imprimantes, c'est ce qui a le plus amélioré les ponts.",
+        "hu": "Vastag külső hidak\nTudta, hogy a Vastag külső hidak (Minőség > Hídnyomtatás) bekapcsolásával kerek, teljes magasságú hídvonalak készülnek, amelyek sokkal kevésbé ereszkednek meg és szakadnak el? A Forca két nyomtatón végzett tesztjeiben ez javított a legtöbbet a hidakon.",
+        "it": "Ponti esterni spessi\nSapevi che attivare Ponti esterni spessi (Qualità > Ponti) stampa linee di ponte tonde e ad altezza piena che cedono e si strappano molto meno? Nei test di Forca su due stampanti è stato ciò che ha migliorato di più i ponti.",
+        "ja": "厚い外部ブリッジ\n厚い外部ブリッジ（品質 > ブリッジング）をオンにすると、丸くて高さいっぱいのブリッジラインがプリントされ、垂れや切れが大幅に減ることをご存知ですか？2 台のプリンターでの Forca のテストでは、これがブリッジを最も改善しました。",
+        "ko": "두꺼운 외부 브릿지\n두꺼운 외부 브릿지(품질 > 브릿지)를 켜면 둥글고 높이가 온전한 브릿지 선이 출력되어 처짐과 끊어짐이 훨씬 줄어든다는 것을 알고 계셨나요? 프린터 두 대에서 진행한 Forca의 테스트에서 브릿지를 가장 크게 개선했습니다.",
+        "lt": "Stori išoriniai tilteliai\nAr žinojote, kad įjungus Stori išoriniai tilteliai (Kokybė > Tiltai) spausdinamos apvalios, viso aukščio tilto linijos, kurios daug mažiau įlinksta ir trūksta? Forca bandymuose su dviem spausdintuvais tai labiausiai pagerino tiltus.",
+        "nl": "Dikke externe bruggen\nWist je dat Dikke externe bruggen (Kwaliteit > Overbruggen) ronde brugdraden op volle hoogte print die veel minder doorhangen en scheuren? In de tests van Forca op twee printers maakte dit het grootste verschil voor bruggen.",
+        "pl": "Grube zewnętrzne mosty\nCzy wiesz, że włączenie Grube zewnętrzne mosty (Jakość > Mosty) drukuje okrągłe linie mostu o pełnej wysokości, które znacznie mniej opadają i się zrywają? W testach Forca na dwóch drukarkach to najbardziej poprawiło mosty.",
+        "pt_BR": "Pontes externas grossas\nVocê sabia que ligar Pontes externas grossas (Qualidade > Ponte) imprime linhas de ponte redondas e de altura total que caem e rompem muito menos? Nos testes do Forca em duas impressoras, foi o que mais melhorou as pontes.",
+        "ru": "Круглые внешние мосты\nЗнаете ли вы, что включение «Круглые внешние мосты» (Вид > Мосты) печатает круглые линии моста на полную высоту, которые гораздо меньше провисают и рвутся? В тестах Forca на двух принтерах это сильнее всего улучшило мосты.",
+        "sv": "Tjocka yttre bridges\nVisste du att Tjocka yttre bridges (Kvalitet > Bridging) skriver ut runda bridge-linjer i full höjd som hänger och går sönder mycket mindre? I Forcas tester på två skrivare gjorde det störst skillnad för bridges.",
+        "th": "สะพานภายนอกหนา\nคุณรู้หรือไม่ว่าการเปิด สะพานภายนอกหนา (คุณภาพ > การพิมพ์สะพาน) จะพิมพ์เส้นสะพานกลมเต็มความสูง ซึ่งหย่อนและขาดน้อยลงมาก ในการทดสอบของ Forca บนเครื่องพิมพ์สองเครื่อง สิ่งนี้ช่วยปรับปรุงสะพานได้มากที่สุด",
+        "tr": "Kalın dış köprüler\nKalın dış köprüleri (Kalite > Köprüleme) açmanın, çok daha az sarkan ve kopan, yuvarlak ve tam yükseklikte köprü çizgileri bastığını biliyor muydunuz? Forca'nın iki yazıcıdaki testlerinde köprülerde en büyük farkı bu yarattı.",
+        "uk": "Товсті зовнішні мости\nЧи знаєте ви, що ввімкнення «Товсті зовнішні мости» (Якість > Створення мостів) друкує круглі лінії мосту на повну висоту, які набагато менше провисають і рвуться? У тестах Forca на двох принтерах це найбільше покращило мости.",
+        "vi": "Cầu bên ngoài dày\nBạn có biết rằng bật Cầu bên ngoài dày (Chất lượng > Bắc cầu) sẽ in các đường cầu tròn, đủ chiều cao, ít bị võng và đứt hơn nhiều? Trong các thử nghiệm của Forca trên hai máy in, đây là thay đổi cải thiện cầu nhiều nhất.",
+        "zh_CN": "外部搭桥用厚桥\n你知道吗？开启“外部搭桥用厚桥”（质量 > 搭桥）会打印圆形、全高的桥接线，下垂和断裂都少得多。在 Forca 于两台打印机上的测试中，这对桥接的改善最大。",
+        "zh_TW": "增厚外部橋接\n你知道嗎？開啟「增厚外部橋接」（品質 > 橋接）會列印圓形、全高的橋接線，下垂和斷裂都少得多。在 Forca 於兩台列印裝置上的測試中，這對橋接的改善最大。"
+      }
+    }
+  ]
+}

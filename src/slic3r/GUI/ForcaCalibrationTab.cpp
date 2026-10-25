@@ -8,7 +8,17 @@
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Utils.hpp" // resources_dir()
 
+#include <functional>
+#include <utility>
+#include <slic3r/GUI/ForcaCalibrationWizard.hpp>
+#include <cstddef>
+#include <vector>
 #include <wx/button.h>
+#include <wx/colour.h>
+#include <wx/panel.h>
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/image.h>
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
@@ -19,6 +29,7 @@
 #include <algorithm>
 #include <cmath>
 #include <string>
+#include <wx/string.h>
 
 namespace Slic3r { namespace GUI {
 

@@ -1,8 +1,10 @@
 // Forca's own version (version.inc FORCA_VERSION): the update check compares it with Forca's GitHub release tags.
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "libslic3r/Semver.hpp"
 #include "libslic3r/libslic3r.h" // FORCA_VERSION (via the generated libslic3r_version.h)
+#include "libslic3r_version.h"
 
 #include <string>
 

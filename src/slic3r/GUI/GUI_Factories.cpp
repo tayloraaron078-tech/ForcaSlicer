@@ -16,6 +16,7 @@
 #include "Selection.hpp"
 //BBS: add partplate related logic
 #include "PartPlate.hpp"
+#include "Gizmos/GLGizmoAlignment.hpp"
 #include "Gizmos/GLGizmoEmboss.hpp"
 #include "Gizmos/GLGizmoSVG.hpp"
 
@@ -107,7 +108,7 @@ std::map<std::string, std::vector<SimpleSettingData>>  SettingsFactory::OBJECT_C
                     //{"initial_layer_print_height", "",2},
                     {"seam_position", "",2},
                     {"slice_closing_radius", "",3}, {"resolution", "",4},
-                    {"xy_hole_compensation", "",5}, {"xy_contour_compensation", "",6}, {"elefant_foot_compensation", "",7},
+                    {"xy_hole_compensation", "",5}, {"xy_hole_compensation_percent", "",5}, {"xy_contour_compensation", "",6}, {"elefant_foot_compensation", "",7},
                     {"make_overhang_printable_angle","", 8},{"make_overhang_printable_hole_size","",9}, {"wall_sequence","",10},
                     {"precise_z_height", "",10}
                     }},
@@ -121,7 +122,14 @@ std::map<std::string, std::vector<SimpleSettingData>>  SettingsFactory::OBJECT_C
                     {"support_object_first_layer_gap","",35}
                     }},
     { L("Speed"), {{"support_speed", "",12}, {"support_interface_speed", "",13}
-                  }}
+                  }},
+    // Forca: per-object filament overrides (docs/HLSD/per-object-filament-overrides.md)
+    { L("Filament overrides"), {{"object_retraction_length", "",1}, {"object_retraction_speed", "",2},
+                                {"object_deretraction_speed", "",3}, {"object_z_hop", "",4}, {"object_pressure_advance", "",5},
+                                {"object_max_volumetric_speed", "",6}, {"object_nozzle_temperature", "",7},
+                                {"object_nozzle_temperature_initial_layer", "",8}, {"object_fan_min_speed", "",9},
+                                {"object_fan_max_speed", "",10}, {"object_overhang_fan_speed", "",11}
+                               }}
 };
 
 std::map<std::string, std::vector<SimpleSettingData>> SettingsFactory::PART_CATEGORY_SETTINGS =
@@ -143,15 +151,17 @@ std::map<std::string, std::vector<SimpleSettingData>> SettingsFactory::PART_CATE
        {"top_shell_layers", L("Top solid layers"), 1},
        {"top_shell_thickness", L("Top minimum shell thickness"), 1},
        {"top_surface_density", L("Top Surface Density"), 1},
+       {"top_color_penetration_layers", "", 1},
        {"bottom_shell_layers", L("Bottom solid layers"), 1},
        {"bottom_shell_thickness", L("Bottom minimum shell thickness"), 1},
        {"bottom_surface_density", L("Bottom Surface Density"), 1},
+       {"bottom_color_penetration_layers", "", 1},
        {"sparse_infill_density", "", 1},
        {"fill_multiline", "", 1},
        {"sparse_infill_pattern", "", 1},
-       {"tpms_adaptive", "", 1},
-       {"tpms_interior_density", "", 1},
-       {"tpms_adaptive_gradient", "", 1},
+       {"adaptive_infill_mode", "", 1},
+       {"adaptive_infill_interior_density", "", 1},
+       {"adaptive_infill_gradient", "", 1},
        {"sparse_infill_smooth_factor", "", 1},
        {"lateral_lattice_angle_1", "", 1},
        {"lateral_lattice_angle_2", "", 1},
@@ -236,7 +246,7 @@ std::vector<SimpleSettingData> SettingsFactory::get_visible_options(const std::s
 
     t_config_option_keys object_options = {
         //Quality
-        "layer_height", "initial_layer_print_height", "adaptive_layer_height", "seam_position", "xy_hole_compensation", "xy_contour_compensation", "elefant_foot_compensation", "support_line_width",
+        "layer_height", "initial_layer_print_height", "adaptive_layer_height", "seam_position", "xy_hole_compensation", "xy_hole_compensation_percent", "xy_contour_compensation", "elefant_foot_compensation", "support_line_width",
         //Support
         "enable_support", "support_type", "support_threshold_angle", "support_threshold_overlap", "support_on_build_plate_only", "support_critical_regions_only", "enforce_support_layers",
         //tree support
@@ -355,6 +365,7 @@ std::map<std::string, std::string> SettingsFactory::CATEGORY_ICON =
     { L("Bed adhesion")         , "blank_14"    },
 //  { L("Speed > Acceleration") , "time"        },
     { L("Advanced")             , "blank_14"    },
+    { L("Filament overrides")   , "blank_14"    }, // Forca
     // BBS: remove SLA categories
 };
 
@@ -661,7 +672,7 @@ void MenuFactory::load_handy_model(std::size_t index)
         return;
     pl->load_files(input_files, LoadStrategy::LoadModel);
     if (model.arrange_after_import) {
-        pl->set_prepare_state(Job::PREPARE_STATE_MENU);
+        pl->set_prepare_state(Job::PREPARE_STATE_DEFAULT);
         pl->arrange();
     }
 
@@ -1686,6 +1697,8 @@ void MenuFactory::create_extra_object_menu()
     append_menu_item_merge_parts_to_single_part(&m_object_menu);
     // Object Center
     append_menu_item_center(&m_object_menu);
+    // Object Align/Distribute
+    append_menu_item_align_distribute(&m_object_menu);
     // Object Drop
     append_menu_item_drop(&m_object_menu);
     // Object Split
@@ -1793,6 +1806,7 @@ void MenuFactory::create_text_part_menu()
     append_menu_item_fix_through_cgal(menu);
     append_menu_item_simplify(menu);
     append_menu_item_center(menu);
+    append_menu_item_align_distribute(menu);
     append_menu_items_mirror(menu);
     menu->AppendSeparator();
     append_menu_item_per_object_process(menu);
@@ -1825,6 +1839,7 @@ void MenuFactory::create_bbl_part_menu()
     append_menu_item_simplify(menu);
     append_menu_item_smooth_mesh(menu);
     append_menu_item_center(menu);
+    append_menu_item_align_distribute(menu);
     append_menu_item_drop(menu);
     append_menu_items_mirror(menu);
     wxMenu* split_menu = new wxMenu();
@@ -2153,6 +2168,7 @@ wxMenu* MenuFactory::multi_selection_menu()
             index++;
         }
         append_menu_item_center(menu);
+        append_menu_item_align_distribute(menu);
         append_menu_item_drop(menu);
         append_menu_item_fix_through_cgal(menu);
         //append_menu_item_simplify(menu);
@@ -2161,14 +2177,15 @@ wxMenu* MenuFactory::multi_selection_menu()
 
         append_menu_item_set_printable(menu);
         menu->AppendSeparator();
-        
+
         append_menu_item_set_auto_drop(menu);
         menu->AppendSeparator();
-        
+
         append_menu_item_per_object_process(menu);
         menu->AppendSeparator();
-        
+
         append_menu_items_convert_unit(menu);
+        append_menu_item_reload_from_disk(menu);
         append_menu_item_replace_all_with_stl(menu);
         //BBS
         append_menu_item_change_filament(menu);
@@ -2178,11 +2195,13 @@ wxMenu* MenuFactory::multi_selection_menu()
     }
     else {
         append_menu_item_center(menu);
+        append_menu_item_align_distribute(menu);
         append_menu_item_drop(menu);
         append_menu_item_fix_through_cgal(menu);
         //append_menu_item_simplify(menu);
         append_menu_item_delete(menu);
         append_menu_items_convert_unit(menu);
+        append_menu_item_reload_from_disk(menu);
         append_menu_item_replace_all_with_stl(menu);
         append_menu_item_change_filament(menu);
         wxMenu* split_menu = new wxMenu();
@@ -2342,6 +2361,64 @@ void MenuFactory::append_menu_item_center(wxMenu* menu)
         }, m_parent);
 }
 
+void MenuFactory::append_menu_item_align_distribute(wxMenu *menu)
+{
+    using AlignType = GLGizmoAlignment::AlignType;
+    auto can = [](AlignType type) {
+        if (plater()->canvas3D()->get_canvas_type() != GLCanvas3D::ECanvasType::CanvasView3D)
+            return false;
+        GLGizmoAlignment alignment_helper(*plater()->get_view3D_canvas3D());
+        return type >= AlignType::DISTRIBUTE_X ? alignment_helper.can_distribute(type) : alignment_helper.can_align(type);
+    };
+    auto run = [](AlignType type) {
+        GLGizmoAlignment alignment_helper(*plater()->get_view3D_canvas3D());
+        if (type >= AlignType::DISTRIBUTE_X)
+            alignment_helper.distribute_objects(type);
+        else
+            alignment_helper.align_objects(type);
+    };
+
+    struct AlignMenuItem
+    {
+        wxString    label;
+        AlignType   type;
+        std::string icon;
+    };
+    const AlignMenuItem items[] = {
+        // icons shared with caanvas. BitmapCache converts colors dark to light. so dark variations used for proper colors
+        {_L("Distribute left-right")   + " (X)" , AlignType::DISTRIBUTE_X, "distribute_x_dark"},
+        {_L("Distribute front-back")   + " (Y)" , AlignType::DISTRIBUTE_Y, "distribute_y_dark"},
+        {_L("Distribute top-bottom")   + " (Z)" , AlignType::DISTRIBUTE_Z, "distribute_z_dark"},
+        {wxString(),                              AlignType::NONE,         ""},
+        {_L("Align left")              + " (-X)", AlignType::X_MIN,        "align_x_min_dark"},
+        {_L("Align left-right center") + " (X)" , AlignType::CENTER_X,     "align_x_center_dark"},
+        {_L("Align right")             + " (+X)", AlignType::X_MAX,        "align_x_max_dark"},
+        {wxString(),                              AlignType::NONE,         ""},
+        {_L("Align front")             + " (-Y)", AlignType::Y_MIN,        "align_y_min_dark"},
+        {_L("Align front-back center") + " (Y)" , AlignType::CENTER_Y,     "align_y_center_dark"},
+        {_L("Align back")              + " (+Y)", AlignType::Y_MAX,        "align_y_max_dark"},
+        {wxString(),                              AlignType::NONE,         ""},
+        {_L("Align bottom")            + " (-Z)", AlignType::Z_MIN,        "align_z_min_dark"},
+        {_L("Align top-bottom center") + " (Z)" , AlignType::CENTER_Z,     "align_z_center_dark"},
+        {_L("Align top")               + " (+Z)", AlignType::Z_MAX,        "align_z_max_dark"},
+    };
+
+    wxMenu* align_distribute_menu = new wxMenu();
+    for (const AlignMenuItem &item : items) {
+        const AlignType type = item.type;
+        if (type == AlignType::NONE)
+            align_distribute_menu->AppendSeparator();
+        else
+            append_menu_item(
+                align_distribute_menu, wxID_ANY, item.label, "", [run, type](wxCommandEvent &) { run(type); }, item.icon, nullptr,
+                [can, type]() { return can(type); }, m_parent);
+    }
+
+    // Anything that can be distributed can also be aligned, and aligning in X has no extra condition.
+    append_submenu(menu, align_distribute_menu, wxID_ANY, _L("Align/Distribute"), _L("Align and distribute objects"), "",
+        [can]() { return can(AlignType::X_MIN); }, m_parent);
+}
+
 void MenuFactory::append_menu_item_drop(wxMenu* menu)
 {
      append_menu_item(menu, wxID_ANY, _L("Drop") , "",
@@ -2352,7 +2429,7 @@ void MenuFactory::append_menu_item_drop(wxMenu* menu)
             if (plater()->canvas3D()->get_canvas_type() != GLCanvas3D::ECanvasType::CanvasView3D)
                 return false;
             else {
-                return (std::abs(plater()->get_view3D_canvas3D()->get_selection().get_bounding_box().min.z()) > -SINKING_Z_THRESHOLD);
+                return plater()->get_view3D_canvas3D()->get_selection().can_drop();
             } //disable if model is on the bed / not in View3D
         }, m_parent);
 }

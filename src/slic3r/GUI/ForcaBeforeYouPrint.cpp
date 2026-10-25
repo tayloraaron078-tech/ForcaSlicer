@@ -17,12 +17,18 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
 
+#include <libslic3r/Config.hpp>
+#include <cstddef>
+#include <wx/event.h>
+#include <utility>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <wx/translation.h>
+#include <wx/window.h>
 
 namespace Slic3r { namespace GUI {
 
@@ -142,8 +148,10 @@ bool ForcaBeforeYouPrintPanel::refresh(int plate_idx, const std::string& printer
                                                             : bundle->printers.get_edited_preset().name;
         const std::vector<ForcaAcademyPrint> prints = forca_academy_list_prints(forca_academy_dir());
         size_t                               lines  = 0;
+        std::vector<ForcaAcademyHistory>     histories;
         for (const auto& [slot, filament] : used) {
             const ForcaAcademyHistory h = forca_academy_history(prints, key, filament);
+            histories.push_back(h);
             if (h.recorded() == 0 || lines == MAX_HISTORY_LINES)
                 continue;
             auto* row = new wxBoxSizer(wxHORIZONTAL);
@@ -162,6 +170,12 @@ bool ForcaBeforeYouPrintPanel::refresh(int plate_idx, const std::string& printer
             m_sizer->Add(row, 0, wxEXPAND | wxBOTTOM, FromDIP(3));
             ++lines;
         }
+        const DynamicPrintConfig& process = bundle->prints.get_edited_preset().config;
+        if (forca_academy_suggest_thick_bridges(histories, process.has("thick_bridges") && process.opt_bool("thick_bridges")))
+            add_text(this, m_sizer,
+                     _L("Earlier prints here were tagged Bridging, and Thick external bridges is off. In Forca's tests, "
+                        "turning it on (Quality > Bridging) fixed sagging and torn bridges."),
+                     wrap);
     }
 
     // 2. Settings changed and not saved.

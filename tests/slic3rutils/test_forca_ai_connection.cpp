@@ -2,6 +2,9 @@
 // working with the installed Forca and with dev builds, and keeps working after updating from a version that kept the
 // key in its data folder.
 // Same Windows include prologue as test_forca_brand.cpp (wx pulls in <windows.h>).
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include "catch2/catch_test_macros.hpp"
 #ifdef WIN32
     #ifndef WIN32_LEAN_AND_MEAN
         #define WIN32_LEAN_AND_MEAN

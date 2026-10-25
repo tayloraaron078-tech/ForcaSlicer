@@ -1,0 +1,170 @@
+solid stringing_test
+  facet normal 0 -1 0
+    outer loop
+      vertex 0 0 0
+      vertex 6 0 0
+      vertex 6 0 20
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 0 6 0
+      vertex 6 6 20
+      vertex 6 6 0
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 0 0 0
+      vertex 6 0 20
+      vertex 0 0 20
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 0 6 0
+      vertex 0 6 20
+      vertex 6 6 20
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 0 0 0
+      vertex 6 6 0
+      vertex 6 0 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 0 0 0
+      vertex 0 6 0
+      vertex 6 6 0
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 6 0 0
+      vertex 6 6 20
+      vertex 6 0 20
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 6 0 0
+      vertex 6 6 0
+      vertex 6 6 20
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 6 0 20
+      vertex 0 6 20
+      vertex 0 0 20
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 6 0 20
+      vertex 6 6 20
+      vertex 0 6 20
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 0 0 20
+      vertex 0 6 0
+      vertex 0 0 0
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 0 0 20
+      vertex 0 6 20
+      vertex 0 6 0
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 26 0 0
+      vertex 32 0 0
+      vertex 32 0 20
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 26 6 0
+      vertex 32 6 20
+      vertex 32 6 0
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 26 0 0
+      vertex 32 0 20
+      vertex 26 0 20
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 26 6 0
+      vertex 26 6 20
+      vertex 32 6 20
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 26 0 0
+      vertex 32 6 0
+      vertex 32 0 0
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 26 0 0
+      vertex 26 6 0
+      vertex 32 6 0
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 32 0 0
+      vertex 32 6 20
+      vertex 32 0 20
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 32 0 0
+      vertex 32 6 0
+      vertex 32 6 20
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 32 0 20
+      vertex 26 6 20
+      vertex 26 0 20
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 32 0 20
+      vertex 32 6 20
+      vertex 26 6 20
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 26 0 20
+      vertex 26 6 0
+      vertex 26 0 0
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 26 0 20
+      vertex 26 6 20
+      vertex 26 6 0
+    endloop
+  endfacet
+endsolid stringing_test

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Orca Slicer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-13 09:55-0300\n"
+"POT-Creation-Date: 2026-10-19 09:48-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -707,6 +707,9 @@ msgstr "mm"
 msgid "Part selection"
 msgstr "パーツ選択"
 
+msgid "Select multiple objects"
+msgstr "複数のオブジェクトを選択"
+
 msgid "Fixed step drag"
 msgstr "固定ステップドラッグ"
 
@@ -771,9 +774,82 @@ msgstr "パーツ"
 msgid "Relative"
 msgstr "相対"
 
+msgid "Selection"
+msgstr "選択"
+
+msgid "Plate"
+msgstr "プレート"
+
+# AI Translated
+msgid "Distribute"
+msgstr "均等配置"
+
 # AI Translated
 msgid "Coordinate system used for transform actions."
 msgstr "変換操作に使用する座標系です。"
+
+# AI Translated
+msgid "Reference for alignment"
+msgstr "整列の基準"
+
+# AI Translated
+msgid "Select at least 3 parts or objects"
+msgstr "パーツまたはオブジェクトを3つ以上選択してください"
+
+# AI Translated
+msgid "Align left"
+msgstr "左端揃え"
+
+# AI Translated
+msgid "Align left-right center"
+msgstr "左右中央揃え"
+
+# AI Translated
+msgid "Align right"
+msgstr "右端揃え"
+
+# AI Translated
+msgid "Align front"
+msgstr "前端揃え"
+
+# AI Translated
+msgid "Align front-back center"
+msgstr "前後中央揃え"
+
+# AI Translated
+msgid "Align back"
+msgstr "後端揃え"
+
+# AI Translated
+msgid "Align bottom"
+msgstr "下端揃え"
+
+# AI Translated
+msgid "Align top-bottom center"
+msgstr "上下中央揃え"
+
+# AI Translated
+msgid "Align top"
+msgstr "上端揃え"
+
+# AI Translated
+msgid "Distribute left-right"
+msgstr "左右に均等配置"
+
+# AI Translated
+msgid "Distribute front-back"
+msgstr "前後に均等配置"
+
+# AI Translated
+msgid "Distribute top-bottom"
+msgstr "上下に均等配置"
+
+msgid "Drop"
+msgstr "ドロップ"
+
+# AI Translated
+msgid "Move the selection along Z so that its lowest point touches the bed."
+msgstr "最下点がベッドに接するように、選択をZ方向に移動します。"
 
 # AI Translated
 msgid "Absolute"
@@ -1666,7 +1742,7 @@ msgid "Stroke of shape (%1%) contains unsupported: %2%."
 msgstr "形状 (%1%) のストロークにサポートされていないものが含まれています： %2%."
 
 # AI Translated
-msgid "Not valid state please report reproduction steps on github"
+msgid "Not valid state please report reproduction steps on GitHub"
 msgstr "無効な状態です。再現手順をGitHubで報告してください"
 
 # AI Translated
@@ -1674,11 +1750,11 @@ msgid "No embossed file"
 msgstr "エンボス対象のファイルがありません"
 
 # AI Translated
-msgid "Missing svg file in embossed shape"
+msgid "Missing SVG file in embossed shape"
 msgstr "エンボス形状にSVGファイルがありません"
 
 # AI Translated
-msgid "Missing data of svg file"
+msgid "Missing data of SVG file"
 msgstr "SVGファイルのデータがありません"
 
 msgid "Face the camera"
@@ -2001,6 +2077,22 @@ msgstr "組み立てギズモを開始"
 # AI Translated
 msgid "Leaving Assembly gizmo"
 msgstr "組み立てギズモを終了"
+
+# AI Translated
+msgid "Parts of a cut object cannot be moved"
+msgstr "切断されたオブジェクトのパーツは移動できません"
+
+# AI Translated
+msgid "Aligning to the plate is available in X and Y only"
+msgstr "プレートへの整列はXとYのみ可能です"
+
+# AI Translated
+msgid "Turn off Auto-Drop for the selected objects to move them in Z"
+msgstr "Z方向に移動するには、選択したオブジェクトの自動ドロップをオフにしてください"
+
+# AI Translated
+msgid "All selected objects must be on the same plate"
+msgstr "選択したオブジェクトはすべて同じプレート上にある必要があります"
 
 msgid "Shift+"
 msgstr "Shift+"
@@ -2433,6 +2525,66 @@ msgstr "ネットワークプラグイン制限"
 
 msgid "Privacy Policy Update"
 msgstr "プライバシーポリシーの更新"
+
+# AI Translated
+msgid "All your filament presets are available on the printers they were made for."
+msgstr "すべてのフィラメントプリセットは、対象のプリンターで利用できます。"
+
+# AI Translated
+msgid "Migrate Filament Presets"
+msgstr "フィラメントプリセットを移行"
+
+# AI Translated
+msgid ""
+"OrcaSlicer 2.5.0 restructured many system filament presets to fix incorrect profiles and prepare for future features. As a result, the presets below no longer show on some printers they were made for. Sorry for the trouble; this is a one-time fix.\n"
+"\n"
+"Add those printers back to your presets now? Your presets are backed up first. You can also do this later from Help > Migrate Filament Presets."
+msgstr ""
+"OrcaSlicer 2.5.0 では、誤ったプロファイルの修正と今後の機能への備えのため、多くのシステムフィラメントプリセットを再構成しました。その結果、以下のプリセットが、作成元のプリンターの一部で表示されなくなっています。ご不便をおかけして申し訳ありません。これは1回限りの修正です。\n"
+"\n"
+"これらのプリンターをプリセットに今すぐ再度追加しますか？プリセットは事前にバックアップされます。後から ヘルプ > フィラメントプリセットを移行 で実行することもできます。"
+
+# AI Translated
+#, boost-format
+msgid "%1% (based on %2%)"
+msgstr "%1% (%2%ベース)"
+
+msgid "Don't remind me again"
+msgstr "再度通知しない"
+
+# AI Translated
+msgid "Your presets could not be backed up, so they were not migrated."
+msgstr "プリセットをバックアップできなかったため、移行しませんでした。"
+
+# AI Translated
+msgid "The user presets folder could not be locked, so nothing was migrated. Another OrcaSlicer instance may be saving presets; try again later from Help > Migrate Filament Presets."
+msgstr "ユーザープリセットフォルダーをロックできなかったため、何も移行されませんでした。別のOrcaSlicerのインスタンスがプリセットを保存している可能性があります。しばらくしてから、ヘルプ > フィラメントプリセットを移行 からもう一度お試しください。"
+
+# AI Translated
+#, boost-format
+msgid ""
+"Your filament presets could not be migrated. A backup of your presets was saved to:\n"
+"%1%"
+msgstr ""
+"フィラメントプリセットを移行できませんでした。プリセットのバックアップを次の場所に保存しました:\n"
+"%1%"
+
+# AI Translated
+#, boost-format
+msgid ""
+"Your filament presets were migrated. Select them again in the filament list where you used them.\n"
+"\n"
+"A backup of your presets was saved to:\n"
+"%1%"
+msgstr ""
+"フィラメントプリセットを移行しました。使用していたフィラメントリストで、もう一度選択してください。\n"
+"\n"
+"プリセットのバックアップを次の場所に保存しました:\n"
+"%1%"
+
+# AI Translated
+msgid "These presets could not be migrated:"
+msgstr "次のプリセットは移行できませんでした:"
 
 # AI Translated
 #, c-format, boost-format
@@ -3170,8 +3322,13 @@ msgstr "（色が失われました）"
 msgid "Center"
 msgstr "センター"
 
-msgid "Drop"
-msgstr "ドロップ"
+# AI Translated
+msgid "Align/Distribute"
+msgstr "整列/均等配置"
+
+# AI Translated
+msgid "Align and distribute objects"
+msgstr "オブジェクトの整列と均等配置"
 
 msgid "Edit Process Settings"
 msgstr "プロセス設定を編集"
@@ -3541,9 +3698,6 @@ msgstr "ブリム無し"
 
 msgid "Outer wall speed"
 msgstr "外壁造形速度"
-
-msgid "Plate"
-msgstr "プレート"
 
 msgid "Brim"
 msgstr "ブリム"
@@ -4830,7 +4984,7 @@ msgid "Unknown C++ exception."
 msgstr "不明なC++例外です。"
 
 # AI Translated
-msgid "Processing G-Code from previous file…"
+msgid "Processing G-code from previous file…"
 msgstr "前のファイルのG-codeを処理中…"
 
 msgid "Slicing complete"
@@ -5268,8 +5422,9 @@ msgstr "一時停止（フロントカバー脱落）"
 msgid "Calibrating the micro lidar"
 msgstr "ライダー キャリブレーション"
 
+# AI Translated
 msgid "Calibrating flow ratio"
-msgstr "フロー率のキャリブレーション中"
+msgstr "流量比のキャリブレーション中"
 
 msgid "Pause (nozzle temperature malfunction)"
 msgstr "一時停止（ノズル温度異常）"
@@ -5738,6 +5893,7 @@ msgstr "積層時間"
 msgid "Layer Time (log)"
 msgstr "積層時間 (Log)"
 
+# AI Translated
 msgid "Pressure Advance"
 msgstr "Pressure Advance"
 
@@ -6377,6 +6533,11 @@ msgstr "軸"
 msgid "Gridlines"
 msgstr "グリッドライン"
 
+# AI Translated
+# Needs human review: Mode name that hides the surrounding UI to focus on the 3D canvas; glossary has no entry, check the wording.
+msgid "Focus mode"
+msgstr "フォーカスモード"
+
 msgid "Labels"
 msgstr "ラベル"
 
@@ -6652,6 +6813,10 @@ msgstr "セットアップ ウィザード"
 
 msgid "Show Configuration Folder"
 msgstr "構成フォルダを表示"
+
+# AI Translated
+msgid "Bring back filament presets that a profile update removed from printers they were made for"
+msgstr "プロファイルの更新により作成元のプリンターから外れたフィラメントプリセットを元に戻します"
 
 # AI Translated
 msgid "Troubleshoot Center"
@@ -9223,6 +9388,7 @@ msgid "Cannot slice: an object overlaps an area reserved for IDEX/IQEX parallel 
 msgstr "スライスできません: オブジェクトがIDEX/IQEX並列印刷用に予約された領域 (セカンダリゾーン、またはプライマリゾーン内のキャリッジ用クリアランス帯) と重なっています。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Cannot slice: the prime tower overlaps an area reserved for IDEX/IQEX parallel printing (a secondary zone, or a carriage clearance strip inside the primary zone)."
 msgstr "スライスできません: プライムタワーがIDEX/IQEX並列印刷用に予約された領域 (セカンダリゾーン、またはプライマリゾーン内のキャリッジ用クリアランス帯) と重なっています。"
 
@@ -10788,6 +10954,15 @@ msgid "Show incompatible/unsupported presets in the printer and filament dropdow
 msgstr "プリンターとフィラメントのドロップダウンリストに、互換性のない/非対応のプリセットを表示します。これらのプリセットは選択できません。"
 
 # AI Translated
+msgid "Export statistics with G-code"
+msgstr "G-codeと一緒に統計をエクスポート"
+
+# AI Translated
+# Needs human review: "feature" here is the G-code feature (line) type, not the Design-tab Feature; rendered as line type, check.
+msgid "If enabled, exporting a G-code file also writes its statistics as JSON next to it, as <name>.statistics.json, and an exported sliced 3MF file holds them inside: print time, filament and feature totals, and the same per layer and per object."
+msgstr "有効にすると、G-codeファイルのエクスポート時にその統計もJSON形式で <name>.statistics.json として隣に書き出され、エクスポートしたスライス済み3MFファイルにも統計が含まれます。内容は、印刷時間、フィラメントと線種ごとの合計、および積層ごと・オブジェクトごとの同じ項目です。"
+
+# AI Translated
 msgid "Experimental Features"
 msgstr "実験的機能"
 
@@ -11647,6 +11822,10 @@ msgstr "プリンターのストレージへのファイルのアップロード
 msgid "Send Failed"
 msgstr "送信失敗"
 
+# AI Translated
+msgid "No available printers"
+msgstr "利用可能なプリンターがありません"
+
 msgid "The name length exceeds the limit."
 msgstr "名前の長さが制限を超えています。"
 
@@ -12069,6 +12248,7 @@ msgid "Prime tower is required for nozzle changing. There may be flaws on the mo
 msgstr "ノズルの切り替えにはプライムタワーが必要です。無効にするとモデルに欠陥が生じる可能性があります。本当にプライムタワーを無効にしますか？"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "A prime tower is required for smooth timelapse mode. There may be flaws on the model without a prime tower. Are you sure you want to disable the prime tower?"
 msgstr "スムーズタイムラプスモードにはプライムタワーが必要です。プライムタワーがない場合、モデルに欠陥が生じる可能性があります。本当にプライムタワーを無効にしますか？"
 
@@ -12085,6 +12265,7 @@ msgid "Enabling both precise Z height and the prime tower may cause slicing erro
 msgstr "正確なZ高さとプライムタワーの両方を有効にすると、スライスエラーが発生する可能性があります。それでも正確なZ高さを有効にしますか？"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Smooth timelapse needs a prime tower on every layer, which is not compatible with \"No sparse layers\". \"No sparse layers\" has been turned off."
 msgstr "スムーズタイムラプスは全積層にプライムタワーが必要なため、「スパース層なし」とは併用できません。「スパース層なし」をオフにしました。"
 
@@ -12092,6 +12273,7 @@ msgid "A prime tower is required for smooth timelapse mode. There may be flaws o
 msgstr "スムーズタイムラプスビデオを作成するにはプライムタワーが必要です。プライムタワーを有効にしますか？"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "\"No sparse layers\" is not compatible with smooth timelapse, which needs a prime tower on every layer. Timelapse has been switched to traditional mode."
 msgstr "「スパース層なし」は、全積層にプライムタワーが必要なスムーズタイムラプスとは併用できません。タイムラプスを通常モードに切り替えました。"
 
@@ -12351,8 +12533,9 @@ msgstr "推奨ノズル温度"
 msgid "Recommended nozzle temperature range of this filament. 0 means not set"
 msgstr "フィラメントの推奨ノズル温度、0は未設定との意味です"
 
+# AI Translated
 msgid "Flow ratio and Pressure Advance"
-msgstr "フロー率とPressure Advance"
+msgstr "流量比とPressure Advance"
 
 msgid "Print chamber temperature"
 msgstr "印刷チャンバー温度"
@@ -13287,9 +13470,6 @@ msgstr "フィラメントを入替える為のフラッシュ量"
 msgid "from/to"
 msgstr "変更前/変更後"
 
-msgid "Please choose the filament color"
-msgstr "フィラメントの色を選択してください"
-
 # AI Translated
 msgid "Cloud agent is not available. Please restart OrcaSlicer and try again."
 msgstr "クラウドエージェントが利用できません。OrcaSlicerを再起動して再試行してください。"
@@ -13501,8 +13681,8 @@ msgid "Left mouse"
 msgstr "マウス左ボタン"
 
 # AI Translated
-msgid "Available anywhere in the window, even while typing in a text field."
-msgstr "テキストフィールドへの入力中も含め、ウィンドウ内のどこでも使用できます。"
+msgid "Available anywhere in the window."
+msgstr "ウィンドウ内のどこでも使用できます。"
 
 # AI Translated
 msgid "Run favorite 1 to 10"
@@ -13527,9 +13707,6 @@ msgstr "準備タブの3Dビューにフォーカスがあるときに使用で�
 
 msgid "Select a part"
 msgstr "パーツを選択"
-
-msgid "Select multiple objects"
-msgstr "複数のオブジェクトを選択"
 
 msgid "Select objects by rectangle"
 msgstr "矩形でオブジェクトを選択"
@@ -13616,10 +13793,6 @@ msgstr "%sは%sに割り当てられています。%sに再割り当てします
 #, c-format, boost-format
 msgid "The default %s is assigned to %s. Reassign it to %s?"
 msgstr "デフォルトの%sは%sに割り当てられています。%sに再割り当てしますか？"
-
-# AI Translated
-msgid "Global shortcuts also apply while typing."
-msgstr "グローバルショートカットは文字入力中も有効です。"
 
 # AI Translated
 msgid "A key that types a character cannot be a global shortcut."
@@ -13899,6 +14072,7 @@ msgid "Open G-code file:"
 msgstr "G-codeファイルを開く"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Wipe tower generation failed, possibly due to empty first layer."
 msgstr "ワイプタワーの生成に失敗しました。最初の積層が空である可能性があります。"
 
@@ -14048,6 +14222,18 @@ msgid "a perimeter is fully inside a modifier, the modifier was not applied to i
 msgstr "外周がモディファイアの内部に完全に含まれているため、モディファイアは適用されませんでした (%1%)"
 
 # AI Translated
+#. TRN: %1% is the modifier type "Seam Blocked" as in the menu, %2% the modifier name, %3% the object name.
+#, boost-format
+msgid "%1% modifier \"%2%\" of \"%3%\" covers an entire perimeter"
+msgstr "「%3%」の %1% モディファイア「%2%」は外周全体を覆っています"
+
+# AI Translated
+#. TRN: %1% is the modifier type "Seam Blocked" as in the menu, %2% the modifier name, %3% the object name, %4% the number of modifiers.
+#, boost-format
+msgid "%1% modifier \"%2%\" of \"%3%\" (%4% in total) covers an entire perimeter"
+msgstr "「%3%」の %1% モディファイア「%2%」(合計%4%個) は外周全体を覆っています"
+
+# AI Translated
 #, boost-format
 msgid "modifier \"%1%\" of \"%2%\" had no effect on the seam (it might not reach the centerline of the printed perimeter)"
 msgstr "「%2%」のモディファイア「%1%」は継ぎ目に影響しませんでした (印刷される外周の中心線に届いていない可能性があります)"
@@ -14060,6 +14246,11 @@ msgstr "「%2%」のモディファイア「%1%」(合計%3%個) は継ぎ目に
 # AI Translated
 msgid "Seam placement may differ from expected."
 msgstr "継ぎ目の位置が想定と異なる可能性があります。"
+
+# AI Translated
+#, boost-format
+msgid "Failed to write the G-code statistics to %1%."
+msgstr "G-codeの統計を %1% に書き込めませんでした。"
 
 msgid "Internal Bridge"
 msgstr "内部ブリッジ"
@@ -14254,6 +14445,7 @@ msgid "%1% is too tall, and collisions will be caused."
 msgstr "%1% は高すぎます、衝突の可能性があります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "The relative position of the model and the prime tower does not meet the requirements of the \"No sparse layers\" feature. Please adjust their relative positions, lower the model height, or turn off \"No sparse layers\"."
 msgstr "モデルとプライムタワーの相対位置が「スパース層なし」機能の要件を満たしていません。相対位置を調整するか、モデルの高さを下げるか、「スパース層なし」をオフにしてください。"
 
@@ -14263,26 +14455,32 @@ msgid "%1% is too close to the clumping detection area. There may be collisions 
 msgstr "%1% がクランピング検出エリアに近すぎます。印刷中に衝突が発生する可能性があります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is too close to others, and collisions may be caused.\n"
 msgstr "プライムタワーが他のオブジェクトに近すぎるため、衝突が発生する可能性があります。\n"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is too close to an exclusion area, and collisions will be caused.\n"
 msgstr "プライムタワーが除外エリアに近すぎるため、衝突が発生します。\n"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is too close to the clumping detection area, and collisions will be caused.\n"
 msgstr "プライムタワーがクランピング検出エリアに近すぎるため、衝突が発生します。\n"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is too close to an exclusion area. There may be collisions when printing."
 msgstr "プライムタワーが除外エリアに近すぎます。印刷中に衝突が発生する可能性があります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is too close to the clumping detection area. There may be collisions when printing."
 msgstr "プライムタワーがクランピング検出エリアに近すぎます。印刷中に衝突が発生する可能性があります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Prime tower is partially outside the printable area, and it cannot be printed.\n"
 msgstr "プライムタワーが造形可能領域から一部はみ出しているため、印刷できません。\n"
 
@@ -14406,10 +14604,12 @@ msgid "Variable layer height is not supported with Organic supports."
 msgstr "可変レイヤー高さはオーガニックサポートではサポートされていません。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "The wipe tower filament cannot be a mixed filament."
 msgstr "ワイプタワーのフィラメントに混合フィラメントは使用できません。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Different nozzle diameters and different filament diameters may not work well when the prime tower is enabled. It's very experimental, so please proceed with caution."
 msgstr "ノズル径やフィラメント径が異なる場合、プライムタワーを有効にすると正しく動作しないことがあります。非常に実験的な機能ですので、慎重にお進みください。"
 
@@ -14420,6 +14620,7 @@ msgid "Ooze prevention is only supported with the wipe tower when 'single_extrud
 msgstr "オーズ防止は、'single_extruder_multi_material'がオフの場合にのみ、 ワイプタワーと併用してサポートされます。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "The prime tower is currently only supported for the Marlin, RepRap/Sprinter, RepRapFirmware and Repetier G-code flavors."
 msgstr "プライムタワーは現在、Marlin、RepRap/Sprinter、RepRapFirmware、およびRepetierのG-codeフレーバーでのみサポートされています。"
 
@@ -14439,6 +14640,7 @@ msgid "A prime tower requires that all objects are printed over the same number 
 msgstr "プライムタワーを使用するには、全てのオブジェクトが同じラフト層数を使う必要があります"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "The prime tower is only supported for multiple objects if they are printed with the same support_top_z_distance."
 msgstr "プライムタワーは、複数のオブジェクトが同じsupport_top_z_distanceで印刷される場合にのみ対応しています。"
 
@@ -15066,8 +15268,9 @@ msgstr ""
 "\n"
 "このオプションは、ソリッドインフィルを押し出す前にブリッジ性能をさらに高める「インフィル上の2層目の内部ブリッジ」オプションと組み合わせると特に効果的です。"
 
+# AI Translated
 msgid "Bridge flow ratio"
-msgstr "ブリッジ流量"
+msgstr "ブリッジ流量比"
 
 # AI Translated
 msgid ""
@@ -15089,16 +15292,17 @@ msgid ""
 "Recommended to use with a higher Bridge density or Bridge flow ratio.\n"
 "\n"
 "The maximum value is 100% or the nozzle diameter.\n"
-"If set to 0, the line width will match the Internal solid infill width."
+"If set to 0, the line width will match the Internal solid infill width, or the nozzle diameter for thick bridges."
 msgstr ""
 "ブリッジのライン幅です。%で指定した場合、ノズル径に対して計算されます。\n"
 "ブリッジ密度やブリッジ流量比を高めに設定して使用することをおすすめします。\n"
 "\n"
 "最大値は100%またはノズル径です。\n"
-"0に設定すると、ライン幅は内部ソリッドインフィルの幅と同じになります。"
+"0に設定すると、ライン幅は内部ソリッド インフィルの幅と同じになります。厚いブリッジの場合はノズル径と同じになります。"
 
+# AI Translated
 msgid "Internal bridge flow ratio"
-msgstr "内部ブリッジフロー率"
+msgstr "内部ブリッジ流量比"
 
 # AI Translated
 msgid ""
@@ -15114,8 +15318,9 @@ msgstr ""
 "\n"
 "実際に使用されるブリッジ流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Top surface flow ratio"
-msgstr "上面フロー率"
+msgstr "上面流量比"
 
 # AI Translated
 msgid ""
@@ -15127,8 +15332,9 @@ msgstr ""
 "\n"
 "実際に使用される上面の流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Bottom surface flow ratio"
-msgstr "底面フロー率"
+msgstr "底面流量比"
 
 # AI Translated
 msgid ""
@@ -15140,15 +15346,17 @@ msgstr ""
 "\n"
 "実際に使用される底面ソリッドインフィルの流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Set other flow ratios"
-msgstr "他のフロー率を設定"
+msgstr "他の流量比を設定"
 
 # AI Translated
 msgid "Change flow ratios for other extrusion path types."
 msgstr "その他の押出パスタイプの流量比を変更します。"
 
+# AI Translated
 msgid "First layer flow ratio"
-msgstr "初期レイヤーフロー率"
+msgstr "初期レイヤー流量比"
 
 # AI Translated
 msgid ""
@@ -15160,8 +15368,9 @@ msgstr ""
 "\n"
 "1層目では、各パスロールの実際の流量比 (ブリムとスカートには影響しません) にこの値が掛けられます。"
 
+# AI Translated
 msgid "Outer wall flow ratio"
-msgstr "外壁フロー率"
+msgstr "外壁流量比"
 
 # AI Translated
 msgid ""
@@ -15173,8 +15382,9 @@ msgstr ""
 "\n"
 "実際に使用される外壁の流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Inner wall flow ratio"
-msgstr "内壁フロー率"
+msgstr "内壁流量比"
 
 # AI Translated
 msgid ""
@@ -15186,8 +15396,9 @@ msgstr ""
 "\n"
 "実際に使用される内壁の流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Overhang flow ratio"
-msgstr "オーバーハングフロー率"
+msgstr "オーバーハング流量比"
 
 # AI Translated
 msgid ""
@@ -15199,8 +15410,9 @@ msgstr ""
 "\n"
 "実際に使用されるオーバーハングの流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Sparse infill flow ratio"
-msgstr "スパースインフィルフロー率"
+msgstr "スパースインフィル流量比"
 
 # AI Translated
 msgid ""
@@ -15212,8 +15424,9 @@ msgstr ""
 "\n"
 "実際に使用されるスパース インフィルの流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Internal solid infill flow ratio"
-msgstr "内部ソリッドインフィルフロー率"
+msgstr "内部ソリッドインフィル流量比"
 
 # AI Translated
 msgid ""
@@ -15225,8 +15438,9 @@ msgstr ""
 "\n"
 "実際に使用される内部ソリッドインフィルの流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Gap fill flow ratio"
-msgstr "ギャップフィルフロー率"
+msgstr "ギャップフィル流量比"
 
 # AI Translated
 msgid ""
@@ -15238,8 +15452,9 @@ msgstr ""
 "\n"
 "実際に使用される隙間充填の流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Support flow ratio"
-msgstr "サポートフロー率"
+msgstr "サポート流量比"
 
 # AI Translated
 msgid ""
@@ -15251,8 +15466,9 @@ msgstr ""
 "\n"
 "実際に使用されるサポートの流量は、この値にフィラメントの流量比を掛け、設定されている場合はオブジェクトの流量比も掛けて計算されます。"
 
+# AI Translated
 msgid "Support interface flow ratio"
-msgstr "サポートインターフェースフロー率"
+msgstr "サポートインターフェース流量比"
 
 # AI Translated
 msgid ""
@@ -15399,7 +15615,7 @@ msgid ""
 "3. If artifacts still appear, enable Extrusion Rate Smoothing (ERS) to further smooth the flow transitions.\n"
 "\n"
 "Note: When this option is enabled, overhang perimeters are treated like overhangs, meaning the overhang speed is applied even if the overhanging perimeter is part of a bridge.\n"
-"For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 100% overhang speed will be applied."
+"For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 75% overhang speed will be applied, limited by the bridge speed."
 msgstr ""
 "外周が上向きにカールしている可能性がある領域で、印刷を減速させる場合にこのオプションを有効にします。\n"
 "例えば、Benchyの船首のような鋭角部のオーバーハングを印刷する際に追加の減速が適用され、複数の層にわたって蓄積するカールを抑えられます。\n"
@@ -15411,10 +15627,10 @@ msgstr ""
 "このオプションを有効にする際の推奨事項:\n"
 "1. Pressure Advanceのスムーズ時間を0.015〜0.02に下げ、押出機が速度変化に素早く反応するようにします。\n"
 "2. 最小印刷速度を上げて減速の幅を抑え、速い区間と遅い区間の差を小さくします。\n"
-"3. それでもアーティファクトが出る場合は、Extrusion Rate Smoothing (ERS) を有効にして流量の遷移をさらに滑らかにします。\n"
+"3. それでもアーティファクトが出る場合は、押出レートスムージング (ERS) を有効にして流量の遷移をさらに滑らかにします。\n"
 "\n"
 "注意: このオプションを有効にすると、オーバーハング外周はオーバーハングとして扱われるため、オーバーハングする外周がブリッジの一部であってもオーバーハング速度が適用されます。\n"
-"例えば、外周が100%オーバーハングで下に支える壁がない場合、100%オーバーハング時の速度が適用されます。"
+"例えば、外周が100%オーバーハングで下に支える壁がない場合、75%のオーバーハング速度が適用され、ブリッジ速度で制限されます。"
 
 msgid "mm/s or %"
 msgstr "mm/s 或は %"
@@ -15423,11 +15639,11 @@ msgstr "mm/s 或は %"
 msgid ""
 "Speed of the externally visible bridge extrusions.\n"
 "\n"
-"In addition, if Slow down for curled perimeters is disabled or Classic overhang mode is enabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
+"In addition, if Slow down for curled perimeters is disabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
 msgstr ""
 "外部から見えるブリッジ押出の速度です。\n"
 "\n"
-"さらに、「カールした外周で減速」が無効、またはクラシックオーバーハングモードが有効な場合、ブリッジかオーバーハングかに関わらず、支持率13%未満のオーバーハング壁の印刷速度になります。"
+"さらに、「カールした外周のスローダウン」が無効な場合、ブリッジかオーバーハングかに関わらず、支持率13%未満のオーバーハング壁の印刷速度になります。"
 
 # AI Translated
 msgid "Speed of internal bridges. If the value is expressed as a percentage, it will be calculated based on the bridge_speed. Default value is 150%."
@@ -16010,8 +16226,8 @@ msgid "Small perimeters"
 msgstr "小さな外周"
 
 # AI Translated
-msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above. Set to zero for auto."
-msgstr "この個別の設定は、半径がsmall_perimeter_threshold以下の外周 (通常は穴) の速度に影響します。パーセント (例: 80%) で指定した場合、上の外壁速度の設定を基準に計算されます。自動にするには0を設定してください。"
+msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above."
+msgstr "この個別の設定は、半径がsmall_perimeter_threshold以下の外周 (通常は穴) の速度に影響します。パーセント (例: 80%) で指定した場合、上の外壁速度の設定を基準に計算されます。"
 
 msgid "Small perimeters threshold"
 msgstr "小さな外周のしきい値"
@@ -16025,8 +16241,8 @@ msgid "Small support perimeters"
 msgstr "小さなサポート外周"
 
 # AI Translated
-msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above. Set to zero for auto."
-msgstr "「小さな外周」と同様ですが、サポート用です。この個別の設定は、`small_support_perimeter_threshold`以下の領域のサポート速度に影響します。パーセント (例: 80%) で指定した場合、上のサポートまたはサポートインターフェースの速度設定を基準に計算されます。自動にするには0を設定してください。"
+msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above."
+msgstr "「小さな外周」と同様ですが、サポート用です。この個別の設定は、`small_support_perimeter_threshold`以下の領域のサポート速度に影響します。パーセント (例: 80%) で指定した場合、上のサポートまたはサポート接触面の速度設定を基準に計算されます。"
 
 # AI Translated
 msgid "Small support perimeters threshold"
@@ -16045,17 +16261,17 @@ msgid ""
 "\n"
 "Use Inner/Outer for best overhangs. This is because the overhanging walls can adhere to a neighbouring perimeter while printing. However, this option results in slightly reduced surface quality as the external perimeter is deformed by being squashed to the internal perimeter.\n"
 "\n"
-"Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended against the Outer/Inner option in most cases.\n"
+"Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended over the Outer/Inner option in most cases.\n"
 "\n"
 "Use Outer/Inner for the same external wall quality and dimensional accuracy benefits of Inner/Outer/Inner option. However, the Z seams will appear less consistent as the first extrusion of a new layer starts on a visible surface."
 msgstr ""
 "内壁と外壁の印刷順序です。\n"
 "\n"
-"オーバーハングを最良にするには内壁→外壁を使用します。オーバーハングする壁が印刷中に隣接する外周に密着できるためです。ただし、外周が内周に押し付けられて変形するため、表面品質はわずかに低下します。\n"
+"オーバーハングを最良にするには内側/外側を使用します。オーバーハングする壁が印刷中に隣接する外周に密着できるためです。ただし、外周が内周に押し付けられて変形するため、表面品質はわずかに低下します。\n"
 "\n"
-"外面の仕上がりと寸法精度を最良にするには内壁→外壁→内壁を使用します。外壁が内周に乱されずに印刷されるためです。ただし、外壁を印刷する際に支えとなる内周がないため、オーバーハング性能は低下します。このオプションは3本目以降の内壁を先に印刷し、次に外壁、最後に1本目の内壁を印刷するため、効果を得るには最低3本の壁が必要です。多くの場合、外壁→内壁よりこのオプションをおすすめします。\n"
+"外面の仕上がりと寸法精度を最良にするには内側/外側/内側を使用します。外壁が内周に乱されずに印刷されるためです。ただし、外壁を印刷する際に支えとなる内周がないため、オーバーハング性能は低下します。このオプションは3本目以降の内壁を先に印刷し、次に外壁、最後に1本目の内壁を印刷するため、効果を得るには最低3本の壁が必要です。多くの場合、外側/内側よりこのオプションをおすすめします。\n"
 "\n"
-"外壁→内壁は内壁→外壁→内壁と同様に外壁の品質と寸法精度の利点がありますが、新しい層の最初の押出が見える面から始まるため、Zシームの一貫性が低く見えます。"
+"外側/内側は内側/外側/内側と同様に外壁の品質と寸法精度の利点がありますが、新しい層の最初の押出が見える面から始まるため、継ぎ目の一貫性が低く見えます。"
 
 msgid "Inner/Outer"
 msgstr "内側/外側"
@@ -16525,6 +16741,7 @@ msgid "Minimal purge on wipe tower"
 msgstr "プライムタワー上最小フラッシュ量"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, Orca Slicer will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably."
 msgstr "ツール交換後は、新しくロードされたフィラメントのノズル内での正確な位置が分からず、フィラメント圧力もまだ安定していない可能性があります。プリントヘッドをインフィルや犠牲オブジェクトへパージする前に、Orca Slicerは常にこの量の材料をワイプタワーに押し出し、その後のインフィルや犠牲オブジェクトの押出を確実に行えるようにします。"
 
@@ -17049,14 +17266,16 @@ msgstr "1層目の高さ"
 msgid "Height of the first layer. Making the first layer height thicker can improve build plate adhesion."
 msgstr "1層目の高さです。高さを大きくすればプレートとの接着性が良くなります。"
 
-msgid "This is the speed for the first layer except for solid infill sections."
-msgstr "1層目を造形時に、ソリッド インフィル以外の部分の造形速度です。"
+# AI Translated
+msgid "This is the speed for the walls and brim of the first layer."
+msgstr "1層目の壁とブリムの造形速度です。"
 
 msgid "First layer infill"
 msgstr "1層目インフィル"
 
-msgid "This is the speed for solid infill parts of the first layer."
-msgstr "1層目のソリッド インフィルの造形速度です。"
+# AI Translated
+msgid "This is the speed for the first layer except for walls and brim, such as infill, gap fill and support."
+msgstr "1層目の壁とブリムを除く部分 (インフィル、隙間充填、サポートなど) の造形速度です。"
 
 # AI Translated
 msgid "First layer travel speed"
@@ -17607,6 +17826,14 @@ msgid "Enable this option to add EXCLUDE OBJECT command in G-code."
 msgstr "G-codeにEXCLUDE OBJECTコマンドを追加するには、このオプションを有効にします。"
 
 # AI Translated
+msgid "Outline tolerance"
+msgstr "アウトライン許容差"
+
+# AI Translated
+msgid "Maximum deviation of the object outline written to EXCLUDE_OBJECT_DEFINE from the original outline. Larger values give fewer points, which helps firmware that stalls while parsing G-code with many objects. 0 keeps every point."
+msgstr "EXCLUDE_OBJECT_DEFINE に書き込まれるオブジェクトのアウトラインと元のアウトラインとの最大偏差です。値を大きくすると点の数が減り、オブジェクトの多いG-codeの解析中に停止するファームウェアで効果があります。0にするとすべての点を保持します。"
+
+# AI Translated
 msgid "Verbose G-code"
 msgstr "コメント付きG-code"
 
@@ -17831,8 +18058,8 @@ msgstr "インフィル/壁面 オーバーラップ"
 
 # AI Translated
 #, no-c-format, no-boost-format
-msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
-msgstr "インフィル領域をわずかに広げて壁面と重ねることで、接着を改善します。パーセント値はスパース インフィルのライン幅に対する相対値です。過剰押出や材料の蓄積による上面のざらつきを最小限に抑えるには、この値を10〜15%程度に設定します。"
+msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to the inner wall line width. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
+msgstr "インフィル領域をわずかに広げて壁面と重ねることで、接着を改善します。パーセント値は内壁のライン幅に対する相対値です。過剰押出や材料の蓄積による上面のざらつきを最小限に抑えるには、この値を10〜15%程度に設定します。"
 
 # AI Translated
 msgid "Top/Bottom solid infill/wall overlap"
@@ -17840,8 +18067,8 @@ msgstr "上面/底面ソリッドインフィルと壁面の重なり"
 
 # AI Translated
 #, no-c-format, no-boost-format
-msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
-msgstr "上面ソリッドインフィルの領域をわずかに広げて壁面と重ねることで、接着を改善し、上面インフィルと壁面の境目にできるピンホールを目立たなくします。25〜30%が良い出発点で、ピンホールを目立たなくできます。パーセント値はスパース インフィルのライン幅に対する相対値です。"
+msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to the inner wall line width."
+msgstr "上面ソリッドインフィルの領域をわずかに広げて壁面と重ねることで、接着を改善し、上面インフィルと壁面の境目にできるピンホールを目立たなくします。25〜30%が良い出発点で、ピンホールを目立たなくできます。パーセント値は内壁のライン幅に対する相対値です。"
 
 msgid "This is the speed for internal sparse infill."
 msgstr "スパース インフィルの造形速度です。"
@@ -17868,8 +18095,9 @@ msgstr "セグメント化された領域の最大幅。値が 0 の場合、こ
 msgid "Interlocking depth of a segmented region"
 msgstr "分割領域のかみ合わせ深さ"
 
-msgid "Interlocking depth of a segmented region. It will be ignored if \"mmu_segmented_region_max_width\" is zero or if \"mmu_segmented_region_interlocking_depth\" is bigger than \"mmu_segmented_region_max_width\". Zero disables this feature."
-msgstr "セグメント化された領域の連動深さ。mmu_segmented_region_max_width \"が0か、\"mmu_segmented_region_interlocking_depth \"が \"mmu_segmented_region_max_width \"より大きい場合は無視される。ゼロはこの機能を無効にする。"
+# AI Translated
+msgid "Interlocking depth of a segmented region. On every other layer, the segmented region is limited to this depth. It will be ignored if \"interlocking_beam\" is enabled. Zero disables this feature."
+msgstr "分割領域のかみ合わせ深さです。1層おきに、分割領域がこの深さに制限されます。「interlocking_beam」が有効な場合は無視されます。0にすると、この機能は無効になります。"
 
 msgid "Use beam interlocking"
 msgstr "インターロックビームを使用する"
@@ -17982,11 +18210,11 @@ msgstr "壁面高さ最小化の角度"
 # AI Translated
 msgid ""
 "Reduce the height of top-surface perimeters to match the model edge height.\n"
-"Affects perimeters with a slope less than this angle (degrees).\n"
+"Affects perimeters with a slope greater than this angle (degrees).\n"
 "A reasonable value is 35. Set to 0 to disable."
 msgstr ""
 "上面の外周の高さを下げて、モデルの縁の高さに合わせます。\n"
-"この角度 (度) 未満の傾斜を持つ外周に影響します。\n"
+"この角度 (度) を超える傾斜を持つ外周に影響します。\n"
 "35程度が妥当な値です。0にすると無効になります。"
 
 # AI Translated
@@ -19045,8 +19273,8 @@ msgid "Use scarf joint for inner walls as well."
 msgstr "内壁にも斜め継ぎ目を使用"
 
 # AI Translated
-msgid "Role base wipe speed"
-msgstr "ロール基準のワイプ速度"
+msgid "Role based wipe speed"
+msgstr "ロール基準の拭き上げ速度"
 
 # AI Translated
 msgid "The wipe speed is determined by the speed of the current extrusion role. e.g. if a wipe action is executed immediately following an outer wall extrusion, the speed of the outer wall extrusion will be utilized for the wipe action."
@@ -19150,13 +19378,11 @@ msgstr "保護シールド"
 msgid ""
 "A draft shield is useful to protect an ABS or ASA print from warping and detaching from print bed due to wind draft. It is usually needed only with open frame printers, i.e. without an enclosure.\n"
 "\n"
-"Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used.\n"
-"Note: With the draft shield active, the skirt will be printed at skirt distance from the object. Therefore, if brims are active it may intersect with them. To avoid this, increase the skirt distance value.\n"
+"Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used."
 msgstr ""
 "保護シールドは、ABSやASAの印刷物が風によって反ったりベッドから剥がれたりするのを防ぐのに役立ちます。通常はエンクロージャーのないオープンフレームのプリンターでのみ必要です。\n"
 "\n"
-"有効 = スカートは最も高い印刷オブジェクトと同じ高さになります。それ以外の場合は「スカートの高さ」が使用されます。\n"
-"注意: 保護シールドが有効な場合、スカートはオブジェクトからスカート距離だけ離して印刷されます。そのため、ブリムが有効だと交差する可能性があります。これを避けるには、スカート距離の値を大きくしてください。\n"
+"有効 = スカートは最も高い印刷オブジェクトと同じ高さになります。それ以外の場合は「スカートの高さ」が使用されます。"
 
 msgid "Enabled"
 msgstr "有効"
@@ -19294,6 +19520,7 @@ msgid "Farthest point timelapse"
 msgstr "最遠点タイムラプス"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "When enabled, the timelapse snapshot is taken at the farthest point from camera instead of traveling to the wipe tower or excess chute. Only effective in traditional timelapse mode on non-I3 printers."
 msgstr "有効にすると、ワイプタワーや排出シュートへ移動する代わりに、カメラから最も遠い点でタイムラプスのスナップショットを撮影します。I3系以外のプリンターの従来型タイムラプスモードでのみ有効です。"
 
@@ -19480,6 +19707,7 @@ msgid "Wipe tower type"
 msgstr "ワイプタワータイプ"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Choose the wipe tower implementation for multi-material prints. Type 1 is recommended for Bambu and Qidi printers with a filament cutter. Type 2 offers better compatibility with multi-tool and MMU printers and provide overall better compatibility."
 msgstr "マルチマテリアル印刷でのワイプタワーの実装方式を選択します。フィラメントカッターを備えたBambuおよびQidiのプリンターにはタイプ1をおすすめします。タイプ2はマルチツールおよびMMUプリンターとの互換性が高く、全体的により良い互換性が得られます。"
 
@@ -19490,10 +19718,12 @@ msgid "Type 2"
 msgstr "タイプ2"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Purge in prime tower"
 msgstr "プライムタワーでフラッシュ"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Purge remaining filament into prime tower."
 msgstr "残ったフィラメントをプライムタワーにフラッシュします。"
 
@@ -19501,18 +19731,22 @@ msgid "Enable filament ramming"
 msgstr "フィラメントラミングを有効にする"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Tool change on wipe tower"
 msgstr "ワイプタワー上でツール交換"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx). Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. By default Orca skips the travel on multi-toolhead machines because the firmware handles the head swap, which can result in the Tx command being issued above the printed part. Enable this option if you want the tool change to always be issued above the wipe tower instead."
 msgstr "ツール交換コマンド (Tx) を発行する前に、ツールヘッドを強制的にワイプタワーへ移動させます。タイプ2のワイプタワーを使用するマルチ押出機 (マルチツールヘッド) プリンターにのみ関係します。デフォルトでは、マルチツールヘッド機ではファームウェアがヘッドの交換を処理するためOrcaは移動をスキップしますが、その結果Txコマンドが造形物の上で発行される場合があります。ツール交換を常にワイプタワーの上で発行したい場合は、このオプションを有効にしてください。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Wait for temperature on wipe tower"
 msgstr "ワイプタワーで温度待機"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Pick up the new tool without waiting for it to reach printing temperature, travel to the wipe tower, and wait for the temperature there, right before purging. Ooze from the heat-up lands on the tower instead of the model, and the travel overlaps with the heating. Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. The firmware or tool change macro must not wait for the temperature itself. When disabled, the temperature wait is issued right after the tool change command."
 msgstr "印刷温度に達するのを待たずに新しいツールを取り付け、ワイプタワーへ移動し、パージ直前にそこで温度を待ちます。加熱中の垂れ出しはモデルではなくタワーに落ち、移動時間が加熱と重なります。タイプ 2 のワイプタワーを使用するマルチ押出機 (マルチツールヘッド) プリンターでのみ有効です。ファームウェアやツール交換マクロ側で温度待機を行わないようにしてください。無効の場合、温度待機はツール交換コマンドの直後に出力されます。"
 
@@ -19521,6 +19755,7 @@ msgid "No sparse layers (beta)"
 msgstr "スパース層なし (ベータ)"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "If enabled, the wipe tower will not be printed on layers with no tool changes. On layers with a tool change, extruder will travel downward to print the wipe tower, so the tower ends up below the model and the toolhead has to reach down to it. Layouts where that would collide with an already printed object are rejected. Has no effect with smooth timelapse or clumping detection, which need a tower on every layer."
 msgstr "有効にすると、ツール交換のない積層ではワイプタワーを造形しません。ツール交換のある積層では押出機が下降してワイプタワーを造形するため、タワーはモデルより下に位置し、ツールヘッドがそこまで下りる必要があります。造形済みのオブジェクトと衝突するような配置は拒否されます。全積層にタワーが必要なスムーズタイムラプスやノズル付着検出では効果がありません。"
 
@@ -19529,6 +19764,7 @@ msgid "Combine sparse layers"
 msgstr "スパース層を結合"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid ""
 "If enabled, consecutive layers on which the prime tower has no filament change are printed as a single thicker tower layer instead of one thin layer each, the same way infill combination merges sparse infill. The merged layer is printed at the top of the run, at the height of everything it covers.\n"
 "\n"
@@ -19849,6 +20085,7 @@ msgid "Independent support layer height"
 msgstr "独立サポート層ピッチ"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Support layer uses layer height independent with object layer. This is to support customizing Z-gap and save print time. This option will be invalid when the prime tower is enabled."
 msgstr "サポート層はオブジェクトの層とは独立した積層ピッチを使用します。これはZ隙間のカスタマイズと印刷時間の短縮のためです。プライムタワーが有効な場合、このオプションは無効になります。"
 
@@ -20019,7 +20256,7 @@ msgid "Enable belt purge tower"
 msgstr "ベルトパージタワーを有効にする"
 
 # AI Translated
-# Needs human review: Glossary cell for Prime tower / Wipe tower is unsettled; 'wipe/prime tower' and 'wipe tower' rendered as プライムタワー.
+# Needs human review: Glossary cell for Prime tower / Wipe tower is unsettled; 'wipe/prime tower' and 'wipe tower' rendered as プライムタワー
 msgid "Belt-printer replacement for the wipe/prime tower. When enabled on a belt printer, a purge prism is automatically generated next to the printed parts and filament-change purging is routed into it (the classic wipe tower cannot be used on belt printers because its G-code bypasses the belt transform). Only available on belt printers."
 msgstr "ベルトプリンター用のプライムタワーの代替です。ベルトプリンターで有効にすると、印刷するパーツの横にパージ用の角柱が自動生成され、フィラメント交換時のフラッシュはそこで行われます (従来のプライムタワーはG-codeがベルト変換を経由しないため、ベルトプリンターでは使用できません)。ベルトプリンターでのみ使用できます。"
 
@@ -20028,7 +20265,7 @@ msgid "Belt purge tower width"
 msgstr "ベルトパージタワーの幅"
 
 # AI Translated
-# Needs human review: Glossary cell for Prime tower / Wipe tower is unsettled; 'classic wipe tower' rendered as 従来のプライムタワー.
+# Needs human review: Glossary cell for Prime tower / Wipe tower is unsettled; 'classic wipe tower' rendered as 従来のプライムタワー
 msgid "Width (machine X, across the belt) of the purge prism that is automatically generated on belt printers when the belt purge tower is enabled and multiple filaments are used. Filament-change purging is routed into this prism's extrusions instead of a classic wipe tower. Its height is computed automatically from the worst-case purge volume per layer: a wider prism results in a shorter one."
 msgstr "ベルトパージタワーが有効で複数のフィラメントを使用する場合に、ベルトプリンターで自動生成されるパージ用の角柱の幅 (マシンのX方向、ベルトを横切る方向) です。フィラメント交換時のフラッシュは、従来のプライムタワーではなくこの角柱の押し出しで行われます。高さは積層ごとの最大フラッシュ量から自動的に計算され、角柱を広くするほど低くなります。"
 
@@ -20294,6 +20531,7 @@ msgid "Enable mixed color sublayer splitting. When enabled, layers containing mi
 msgstr "混色サブレイヤーへの分割を有効にします。有効にすると、混色フィラメントを含む積層がサブレイヤーに分割され、色を混ぜる効果が得られます。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "The wiping tower can be used to clean up residue on the nozzle and stabilize the chamber pressure inside the nozzle in order to avoid appearance defects when printing objects."
 msgstr "ワイプタワーは、ノズルに残った樹脂を除去し、ノズル内のチャンバー圧力を安定させることで、オブジェクト印刷時の外観不良を防ぐために使用できます。"
 
@@ -20331,6 +20569,7 @@ msgid "Prime volume mode"
 msgstr "プライム容量モード"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Selects how the wipe-tower prime and flush volumes are computed on multi-extruder printers."
 msgstr "マルチ押出機プリンターで、ワイプタワーのプライム量とフラッシュ量をどのように計算するかを選択します。"
 
@@ -20361,45 +20600,48 @@ msgid "Angle at the apex of the cone that is used to stabilize the wipe tower. L
 msgstr "ワイプタワーを安定させるために使用される円錐の頂点の角度。角度が大きいと底面が広くなります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Maximum wipe tower print speed"
 msgstr "ワイプタワーの最大印刷速度"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid ""
 "The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. When purging, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
 "\n"
-"When printing the sparse layers, if the internal perimeter speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+"When printing the sparse layers, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
 "\n"
 "Increasing this speed may affect the tower's stability as well as increase the force with which the nozzle collides with any blobs that may have formed on the wipe tower.\n"
 "\n"
 "Before increasing this parameter beyond the default of 90 mm/s, make sure your printer can reliably bridge at the increased speeds and that ooze when tool changing is well controlled.\n"
 "\n"
-"For the wipe tower external perimeters the internal perimeter speed is used regardless of this setting."
+"For the wipe tower external perimeters the internal perimeter speed is used, also limited by this setting."
 msgstr ""
 "ワイプタワーでのパージ時、およびワイプタワーのスパース層を印刷する際の最大印刷速度です。パージ時に、スパース インフィル速度やフィラメントの最大体積速度から計算された速度の方が低い場合は、最も低い速度が使用されます。\n"
 "\n"
-"スパース層の印刷時に、内周速度やフィラメントの最大体積速度から計算された速度の方が低い場合は、最も低い速度が使用されます。\n"
+"スパース層の印刷時に、スパース インフィル速度やフィラメントの最大体積速度から計算された速度の方が低い場合は、最も低い速度が使用されます。\n"
 "\n"
 "この速度を上げるとタワーの安定性に影響する可能性があり、ワイプタワーにできたブロブにノズルが衝突する際の力も大きくなります。\n"
 "\n"
 "このパラメータをデフォルトの90 mm/sより大きくする前に、上げた速度でもプリンターが安定してブリッジでき、ツール交換時の垂れ出しが十分に制御できていることを確認してください。\n"
 "\n"
-"ワイプタワーの外周には、この設定に関わらず内周の速度が使用されます。"
+"ワイプタワーの外周には内周の速度が使用され、この設定による上限も受けます。"
 
 msgid "Wall type"
 msgstr "壁タイプ"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid ""
 "Wipe tower outer wall type.\n"
-"1. Rectangle: The default wall type, a rectangle with fixed width and height.\n"
+"1. Rectangle: A rectangle with fixed width and height.\n"
 "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
-"3. Rib: Adds four ribs to the tower wall for enhanced stability."
+"3. Rib: The default wall type, which adds four ribs to the tower wall for enhanced stability."
 msgstr ""
 "ワイプタワーの外壁タイプです。\n"
-"1. 長方形: デフォルトの壁タイプで、幅と高さが固定された長方形です。\n"
+"1. 長方形: 幅と高さが固定された長方形です。\n"
 "2. コーン: 底部にフィレットを持つ円錐形で、ワイプタワーの安定に役立ちます。\n"
-"3. リブ: タワーの壁に4本のリブを追加して安定性を高めます。"
+"3. リブ: デフォルトの壁タイプで、タワーの壁に4本のリブを追加して安定性を高めます。"
 
 msgid "Rectangle"
 msgstr "長方形"
@@ -20424,6 +20666,7 @@ msgid "Fillet wall"
 msgstr "フィレット壁"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "The wall of prime tower will fillet."
 msgstr "プライムタワーの壁にフィレットを付けます。"
 
@@ -20440,6 +20683,7 @@ msgid "Skip points"
 msgstr "スキップポイント"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "The wall of prime tower will skip the start points of wipe path."
 msgstr "プライムタワーの壁は、ワイプパスの開始点をスキップします。"
 
@@ -20447,6 +20691,7 @@ msgid "Enable tower interface features"
 msgstr "タワーインターフェース機能を有効にする"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Enable optimized prime tower interface behavior when different materials meet."
 msgstr "異なる材料が接する際のプライムタワーのインターフェース動作を最適化します。"
 
@@ -20454,6 +20699,7 @@ msgid "Cool down from interface boost during prime tower"
 msgstr "プライムタワー中のインターフェースブーストからの冷却"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "When interface-layer temperature boost is active, set the nozzle back to print temperature at the start of the prime tower so it cools down during the tower."
 msgstr "インターフェース層の温度ブーストが有効な場合、プライムタワーの開始時にノズルを印刷温度に戻し、タワーの印刷中に冷えるようにします。"
 
@@ -20467,6 +20713,7 @@ msgid "Purging after filament change will be done inside objects' infills. This 
 msgstr "廃料をオブジェクトのインフィルに使用されます。フィラメントの廃料が減り、造形時間も短縮できます。ただ、壁面の色が透明又は薄い場合は中の色が見えてしまう可能性があります。"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "プライムタワー"; align it once the term is settled.
 msgid "Purging after filament change will be done inside objects' support. This may lower the amount of waste and decrease the print time. It will not take effect unless a prime tower is enabled."
 msgstr "フィラメント交換後のパージをオブジェクトのサポート内で行います。廃棄量が減り、造形時間も短縮できます。プライムタワーが有効な場合にのみ機能します。"
 
@@ -20496,8 +20743,10 @@ msgstr "ワイプタワーのパージラインの間隔。"
 msgid "Extra flow for purging"
 msgstr "パージ用の余分の量"
 
-msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker or narrower than they normally would be. The spacing is adjusted automatically."
-msgstr "ワイプタワーのパージラインで使用される余分の量。 これによって、パージラインが通常よりも太くなったり、細くなったりします。 間隔は自動的に調整されます。"
+# AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
+msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker than they normally would be. The spacing is adjusted automatically."
+msgstr "ワイプタワーのパージラインで使用される余分の量。 これによって、パージラインが通常よりも太くなります。 間隔は自動的に調整されます。"
 
 msgid "Idle temperature"
 msgstr "アイドリング温度"
@@ -20584,6 +20833,7 @@ msgid "Use relative E distances"
 msgstr "相対E距離を使用"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Relative extrusion is recommended when using \"label_objects\" option. Some extruders work better with this option unchecked (absolute extrusion mode). Wipe tower is only compatible with relative mode. It is recommended on most printers. Default is checked."
 msgstr "「label_objects」オプションを使用する場合は相対押出をおすすめします。押出機によっては、このオプションのチェックを外した方 (絶対押出モード) がうまく動作します。ワイプタワーは相対モードにのみ対応しています。ほとんどのプリンターで推奨されます。デフォルトはチェックありです。"
 
@@ -20633,13 +20883,13 @@ msgstr "最小壁長さ"
 
 # AI Translated
 msgid ""
-"Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. Higher values remove more and longer walls.\n"
+"Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. The value is a multiple of the wall width. Higher values remove more and longer walls.\n"
 "\n"
-"NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the Advanced settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
+"NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the 'Walls and surfaces' settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
 msgstr ""
-"短く閉じていない壁が印刷されて印刷時間が増えるのを防ぐため、この値を調整します。値を大きくすると、より多くの、より長い壁が取り除かれます。\n"
+"短く閉じていない壁が印刷されて印刷時間が増えるのを防ぐため、この値を調整します。値は壁幅の倍数です。値を大きくすると、より多くの、より長い壁が取り除かれます。\n"
 "\n"
-"注意: モデル外側に視覚的な隙間が生じるのを防ぐため、底面と上面はこの値の影響を受けません。上面と見なす判定の感度は、下の詳細設定にある「1本壁のしきい値」で調整してください。「1本壁のしきい値」は、この設定がデフォルト値の0.5より大きい場合、または上面1本壁が有効な場合にのみ表示されます。"
+"注意: モデル外側に視覚的な隙間が生じるのを防ぐため、底面と上面はこの値の影響を受けません。上面と見なす判定の感度は、下の「壁と表面」の設定にある「1壁しきい値」で調整してください。「1壁しきい値」は、この設定がデフォルト値の0.5より大きい場合、または「トップ面に1層」が有効な場合にのみ表示されます。"
 
 # AI Translated
 msgid "Maximum wall resolution"
@@ -21052,6 +21302,15 @@ msgstr "出力先フォルダ"
 msgid "This is the output directory for exported files."
 msgstr "エクスポートの出力先フォルダです。"
 
+# AI Translated
+msgid "Export statistics"
+msgstr "統計をエクスポート"
+
+# AI Translated
+# Needs human review: "feature" here is the G-code feature (line) type, not the Design-tab Feature; rendered as line type, check.
+msgid "Write the statistics of each sliced plate as JSON, as plate_N.statistics.json next to its G-code in the output directory and inside the 3MF of --export-3mf: print time, filament and feature totals, and the same per layer and per object."
+msgstr "スライスした各プレートの統計をJSON形式で、出力ディレクトリ内のG-codeの隣に plate_N.statistics.json として書き出し、--export-3mf で出力する3MFにも含めます。内容は、印刷時間、フィラメントと線種ごとの合計、および積層ごと・オブジェクトごとの同じ項目です。"
+
 msgid "Debug level"
 msgstr "デバッグ レベル"
 
@@ -21357,6 +21616,7 @@ msgid "Total wipe tower cost"
 msgstr "ワイプタワーのトータルコスト"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "Total cost of the material wasted on the wipe tower. Calculated from filament_cost value in Filament Settings."
 msgstr "ワイプタワーで無駄になる材料の総コストです。フィラメント設定のfilament_cost値から計算されます。"
 
@@ -21492,6 +21752,7 @@ msgid "Size of the print bed bounding box"
 msgstr "プリントベッド境界ボックスのサイズ"
 
 # AI Translated
+# Needs human review: Unsettled glossary term (⚠) "Prime tower / Wipe tower": this entry uses "ワイプタワー"; align it once the term is settled.
 msgid "First layer center without wipe tower"
 msgstr "ワイプタワーを除いた1層目の中心"
 
@@ -23543,7 +23804,7 @@ msgstr "%s のテストを開始..."
 
 # AI Translated
 #, c-format, boost-format
-msgid "test %s ip resolved = %s"
+msgid "test %s IP resolved = %s"
 msgstr "%s のテスト: IP解決 = %s"
 
 # AI Translated
@@ -24748,9 +25009,6 @@ msgstr "スマートフィラメント割り当てを有効にする: 1つのフ
 # AI Translated
 msgid "File Saving"
 msgstr "ファイル保存"
-
-msgid "Don't remind me again"
-msgstr "再度通知しない"
 
 msgid "No further pop-up will appear. You can reopen it in 'Preferences'"
 msgstr "今後ポップアップは表示されません。「設定」から再度開くことができます"
@@ -30114,9 +30372,6 @@ msgstr "スピードダイヤルを開く"
 msgid "Slicing and printing"
 msgstr "スライスと印刷"
 
-msgid "Selection"
-msgstr "選択"
-
 # AI Translated
 msgid "Editing"
 msgstr "編集"
@@ -31018,6 +31273,1645 @@ msgid_plural "The current filament list does not contain %s. Project filaments r
 msgstr[0] "現在のフィラメントリストに%sが含まれていません。混合フィラメントに必要なプロジェクトフィラメントは、分解後に自動的に作成されます。"
 
 # AI Translated
+msgid "Color Picker"
+msgstr "カラーピッカー"
+
+# AI Translated
+msgid "Basic Colors"
+msgstr "基本色"
+
+# AI Translated
+# Needs human review: Glossary has no Palette entry; rendered as a named color collection.
+#. TRN: Keep the brand name "Orca" unchanged; translate only the palette descriptor.
+msgid "Orca Palette"
+msgstr "Orca パレット"
+
+# AI Translated
+#. TRN: Keep the standard/brand name "RAL" unchanged.
+msgid "RAL Classic"
+msgstr "RAL クラシック"
+
+# AI Translated
+# Needs human review: Name of the gradient color set tab in the color picker; check it reads right as a tab label.
+msgid "Gradients"
+msgstr "グラデーション"
+
+# AI Translated
+msgctxt "Color picker"
+msgid "Solid"
+msgstr "単色"
+
+# AI Translated
+msgid "Gradient"
+msgstr "グラデーション"
+
+# AI Translated
+msgid "Gradient start"
+msgstr "グラデーション開始"
+
+# AI Translated
+msgid "Gradient end"
+msgstr "グラデーション終了"
+
+# AI Translated
+msgid "Gradient color"
+msgstr "グラデーションの色"
+
+# AI Translated
+msgid "Add color"
+msgstr "色を追加"
+
+# AI Translated
+msgid "Remove color"
+msgstr "色を削除"
+
+# AI Translated
+msgid "Saturation"
+msgstr "彩度"
+
+# AI Translated
+msgid "Original color"
+msgstr "元の色"
+
+# AI Translated
+#. TRN: Clicking the current color preview adds it to the saved favorites.
+msgid "Save current color"
+msgstr "現在の色を保存"
+
+# AI Translated
+msgid "Palettes"
+msgstr "パレット"
+
+# AI Translated
+msgid "Search colors"
+msgstr "色を検索"
+
+# AI Translated
+msgid "Filter colors"
+msgstr "色をフィルター"
+
+# AI Translated
+msgid "No matching colors"
+msgstr "一致する色がありません"
+
+# AI Translated
+msgid "Hex color"
+msgstr "16進カラー"
+
+# AI Translated
+msgid "Opacity"
+msgstr "不透明度"
+
+# AI Translated
+msgid "Opacity percent"
+msgstr "不透明度 (%)"
+
+# AI Translated
+msgid "Save color"
+msgstr "色を保存"
+
+# AI Translated
+msgid "Enter a complete hexadecimal color"
+msgstr "16進カラーコードを最後まで入力してください"
+
+# AI Translated
+msgid "The current multi-color selection is kept until you choose a different color."
+msgstr "別の色を選択するまで、現在のマルチカラー選択が保持されます。"
+
+# AI Translated
+#, c-format, boost-format
+msgid "Up to %d colors supported."
+msgstr "最大 %d 色に対応しています。"
+
+# AI Translated
+msgid "Crimson"
+msgstr "クリムゾン"
+
+# AI Translated
+msgid "Orange red"
+msgstr "オレンジレッド"
+
+# AI Translated
+msgid "Tomato"
+msgstr "トマト"
+
+# AI Translated
+msgid "Orange"
+msgstr "オレンジ"
+
+# AI Translated
+msgid "Dark orange"
+msgstr "ダークオレンジ"
+
+# AI Translated
+msgid "Gold"
+msgstr "ゴールド"
+
+# AI Translated
+msgid "Burly wood"
+msgstr "バーリーウッド"
+
+# AI Translated
+msgid "Bisque"
+msgstr "ビスク"
+
+# AI Translated
+msgid "Misty rose"
+msgstr "ミスティローズ"
+
+# AI Translated
+msgid "Light yellow"
+msgstr "ライトイエロー"
+
+# AI Translated
+msgid "Lemon chiffon"
+msgstr "レモンシフォン"
+
+# AI Translated
+msgid "Beige"
+msgstr "ベージュ"
+
+# AI Translated
+msgid "Light golden rod yellow"
+msgstr "ライトゴールデンロッドイエロー"
+
+# AI Translated
+msgid "Pale golden rod"
+msgstr "ペールゴールデンロッド"
+
+# AI Translated
+msgid "Khaki"
+msgstr "カーキ"
+
+# AI Translated
+msgid "Dark khaki"
+msgstr "ダークカーキ"
+
+# AI Translated
+msgid "Peach puff"
+msgstr "ピーチパフ"
+
+# AI Translated
+msgid "Moccasin"
+msgstr "モカシン"
+
+# AI Translated
+msgid "Papaya whip"
+msgstr "パパイヤホイップ"
+
+# AI Translated
+msgid "Blanched almond"
+msgstr "ブランチドアーモンド"
+
+# AI Translated
+msgid "Antique white"
+msgstr "アンティークホワイト"
+
+# AI Translated
+msgid "Navajo white"
+msgstr "ナバホホワイト"
+
+# AI Translated
+msgid "Wheat"
+msgstr "ウィート"
+
+# AI Translated
+msgid "Golden rod"
+msgstr "ゴールデンロッド"
+
+# AI Translated
+msgid "Chocolate"
+msgstr "チョコレート"
+
+# AI Translated
+msgid "Peru"
+msgstr "ペルー"
+
+# AI Translated
+msgid "Fire brick"
+msgstr "ファイアブリック"
+
+# AI Translated
+msgid "Sienna"
+msgstr "シエナ"
+
+# AI Translated
+msgid "Saddle brown"
+msgstr "サドルブラウン"
+
+# AI Translated
+msgid "Brown"
+msgstr "ブラウン"
+
+# AI Translated
+msgid "Rosy brown"
+msgstr "ロージーブラウン"
+
+# AI Translated
+msgid "Salmon"
+msgstr "サーモン"
+
+# AI Translated
+msgid "Light salmon"
+msgstr "ライトサーモン"
+
+# AI Translated
+msgid "Dark salmon"
+msgstr "ダークサーモン"
+
+# AI Translated
+msgid "Sandy brown"
+msgstr "サンディブラウン"
+
+# AI Translated
+msgid "Coral"
+msgstr "コーラル"
+
+# AI Translated
+msgid "Light coral"
+msgstr "ライトコーラル"
+
+# AI Translated
+msgid "Indian red"
+msgstr "インディアンレッド"
+
+# AI Translated
+msgid "Dark red"
+msgstr "ダークレッド"
+
+# AI Translated
+msgid "Maroon"
+msgstr "マルーン"
+
+# AI Translated
+msgid "Green yellow"
+msgstr "グリーンイエロー"
+
+# AI Translated
+msgid "Yellow green"
+msgstr "イエローグリーン"
+
+# AI Translated
+msgid "Chartreuse"
+msgstr "シャルトルーズ"
+
+# AI Translated
+msgid "Lawn green"
+msgstr "ローングリーン"
+
+# AI Translated
+msgid "Lime green"
+msgstr "ライムグリーン"
+
+# AI Translated
+msgid "Spring green"
+msgstr "スプリンググリーン"
+
+# AI Translated
+msgid "Medium spring green"
+msgstr "ミディアムスプリンググリーン"
+
+# AI Translated
+msgid "Lime"
+msgstr "ライム"
+
+# AI Translated
+msgid "Forest green"
+msgstr "フォレストグリーン"
+
+# AI Translated
+msgid "Dark green"
+msgstr "ダークグリーン"
+
+# AI Translated
+msgid "Olive drab"
+msgstr "オリーブドラブ"
+
+# AI Translated
+msgid "Olive"
+msgstr "オリーブ"
+
+# AI Translated
+msgid "Dark olive green"
+msgstr "ダークオリーブグリーン"
+
+# AI Translated
+msgid "Pale green"
+msgstr "ペールグリーン"
+
+# AI Translated
+msgid "Light green"
+msgstr "ライトグリーン"
+
+# AI Translated
+msgid "Medium sea green"
+msgstr "ミディアムシーグリーン"
+
+# AI Translated
+msgid "Sea green"
+msgstr "シーグリーン"
+
+# AI Translated
+msgid "Dark sea green"
+msgstr "ダークシーグリーン"
+
+# AI Translated
+msgid "Cadet blue"
+msgstr "カデットブルー"
+
+# AI Translated
+msgid "Medium aqua marine"
+msgstr "ミディアムアクアマリン"
+
+# AI Translated
+msgid "Turquoise"
+msgstr "ターコイズ"
+
+# AI Translated
+msgid "Medium turquoise"
+msgstr "ミディアムターコイズ"
+
+# AI Translated
+msgid "Dark turquoise"
+msgstr "ダークターコイズ"
+
+# AI Translated
+msgid "Pale turquoise"
+msgstr "ペールターコイズ"
+
+# AI Translated
+msgid "Aqua"
+msgstr "アクア"
+
+# AI Translated
+msgid "Light cyan"
+msgstr "ライトシアン"
+
+# AI Translated
+msgid "Mint cream"
+msgstr "ミントクリーム"
+
+# AI Translated
+msgid "Honey dew"
+msgstr "ハニーデュー"
+
+# AI Translated
+msgid "Aquamarine"
+msgstr "アクアマリン"
+
+# AI Translated
+msgid "Light sea green"
+msgstr "ライトシーグリーン"
+
+# AI Translated
+msgid "Dark cyan"
+msgstr "ダークシアン"
+
+# AI Translated
+msgid "Teal"
+msgstr "ティール"
+
+# AI Translated
+msgid "Dark slate gray"
+msgstr "ダークスレートグレー"
+
+# AI Translated
+msgid "Light slate gray"
+msgstr "ライトスレートグレー"
+
+# AI Translated
+msgid "Slate gray"
+msgstr "スレートグレー"
+
+# AI Translated
+msgid "Deep sky blue"
+msgstr "ディープスカイブルー"
+
+# AI Translated
+msgid "Dodger Blue"
+msgstr "ドジャーブルー"
+
+# AI Translated
+msgid "Sky blue"
+msgstr "スカイブルー"
+
+# AI Translated
+msgid "Light sky blue"
+msgstr "ライトスカイブルー"
+
+# AI Translated
+msgid "Light blue"
+msgstr "ライトブルー"
+
+# AI Translated
+msgid "Powder blue"
+msgstr "パウダーブルー"
+
+# AI Translated
+msgid "Light steel blue"
+msgstr "ライトスチールブルー"
+
+# AI Translated
+msgid "Steel blue"
+msgstr "スチールブルー"
+
+# AI Translated
+msgid "Cornflower blue"
+msgstr "コーンフラワーブルー"
+
+# AI Translated
+msgid "Royal blue"
+msgstr "ロイヤルブルー"
+
+# AI Translated
+msgid "Medium blue"
+msgstr "ミディアムブルー"
+
+# AI Translated
+msgid "Midnight blue"
+msgstr "ミッドナイトブルー"
+
+# AI Translated
+msgid "Dark blue"
+msgstr "ダークブルー"
+
+# AI Translated
+msgid "Navy"
+msgstr "ネイビー"
+
+# AI Translated
+msgid "Slate blue"
+msgstr "スレートブルー"
+
+# AI Translated
+msgid "Dark slate blue"
+msgstr "ダークスレートブルー"
+
+# AI Translated
+msgid "Medium slate blue"
+msgstr "ミディアムスレートブルー"
+
+# AI Translated
+msgid "Blue violet"
+msgstr "ブルーバイオレット"
+
+# AI Translated
+msgid "Indigo"
+msgstr "インディゴ"
+
+# AI Translated
+msgid "Dark violet"
+msgstr "ダークバイオレット"
+
+# AI Translated
+msgid "Dark orchid"
+msgstr "ダークオーキッド"
+
+# AI Translated
+msgid "Medium orchid"
+msgstr "ミディアムオーキッド"
+
+# AI Translated
+msgid "Orchid"
+msgstr "オーキッド"
+
+# AI Translated
+msgid "Violet"
+msgstr "バイオレット"
+
+# AI Translated
+msgid "Medium purple"
+msgstr "ミディアムパープル"
+
+# AI Translated
+msgid "Purple"
+msgstr "パープル"
+
+# AI Translated
+msgid "Rebecca purple"
+msgstr "レベッカパープル"
+
+# AI Translated
+msgid "Medium violet red"
+msgstr "ミディアムバイオレットレッド"
+
+# AI Translated
+msgid "Pale violet red"
+msgstr "ペールバイオレットレッド"
+
+# AI Translated
+msgid "Deep pink"
+msgstr "ディープピンク"
+
+# AI Translated
+msgid "Hot pink"
+msgstr "ホットピンク"
+
+# AI Translated
+msgid "Light pink"
+msgstr "ライトピンク"
+
+# AI Translated
+msgid "Pink"
+msgstr "ピンク"
+
+# AI Translated
+msgid "Plum"
+msgstr "プラム"
+
+# AI Translated
+msgid "Thistle"
+msgstr "シスル"
+
+# AI Translated
+msgid "Fuchsia"
+msgstr "フクシア"
+
+# AI Translated
+msgid "Dark magenta"
+msgstr "ダークマゼンタ"
+
+# AI Translated
+msgid "Linen"
+msgstr "リネン"
+
+# AI Translated
+msgid "Old lace"
+msgstr "オールドレース"
+
+# AI Translated
+msgid "Sea shell"
+msgstr "シーシェル"
+
+# AI Translated
+msgid "Ivory"
+msgstr "アイボリー"
+
+# AI Translated
+msgid "Floral white"
+msgstr "フローラルホワイト"
+
+# AI Translated
+msgid "Lavender blush"
+msgstr "ラベンダーブラッシュ"
+
+# AI Translated
+msgid "Ghost white"
+msgstr "ゴーストホワイト"
+
+# AI Translated
+msgid "Alice blue"
+msgstr "アリスブルー"
+
+# AI Translated
+msgid "Lavender"
+msgstr "ラベンダー"
+
+# AI Translated
+msgid "White smoke"
+msgstr "ホワイトスモーク"
+
+# AI Translated
+msgid "Gainsboro"
+msgstr "ゲインズボロ"
+
+# AI Translated
+msgid "Black"
+msgstr "ブラック"
+
+# AI Translated
+msgid "Coral fire"
+msgstr "コーラルファイア"
+
+# AI Translated
+msgid "Sea anemone"
+msgstr "シーアネモネ"
+
+# AI Translated
+msgid "Deep abyss"
+msgstr "ディープアビス"
+
+# AI Translated
+msgid "Lobster red"
+msgstr "ロブスターレッド"
+
+# AI Translated
+msgid "Sandy clay"
+msgstr "サンディクレイ"
+
+# AI Translated
+msgid "Driftwood"
+msgstr "ドリフトウッド"
+
+# AI Translated
+msgid "Sea buckthorn"
+msgstr "シーバックソーン"
+
+# AI Translated
+msgid "Sunset reef"
+msgstr "サンセットリーフ"
+
+# AI Translated
+msgid "Tiger coral"
+msgstr "タイガーコーラル"
+
+# AI Translated
+msgid "Pink coral"
+msgstr "ピンクコーラル"
+
+# AI Translated
+msgid "Seashell glow"
+msgstr "シーシェルグロウ"
+
+# AI Translated
+msgid "Sand"
+msgstr "サンド"
+
+# AI Translated
+msgid "Golden kelp"
+msgstr "ゴールデンケルプ"
+
+# AI Translated
+msgid "Sunlit dune"
+msgstr "サンリットデューン"
+
+# AI Translated
+msgid "Amber nautilus"
+msgstr "アンバーノーチラス"
+
+# AI Translated
+msgid "Sea lemon"
+msgstr "シーレモン"
+
+# AI Translated
+msgid "Pale starfish"
+msgstr "ペールスターフィッシュ"
+
+# AI Translated
+msgid "Spring tide"
+msgstr "スプリングタイド"
+
+# AI Translated
+msgid "Lime algae"
+msgstr "ライムアルジー"
+
+# AI Translated
+msgid "Sea grass"
+msgstr "シーグラス"
+
+# AI Translated
+msgid "Neon plankton"
+msgstr "ネオンプランクトン"
+
+# AI Translated
+msgid "Kelp forest"
+msgstr "ケルプフォレスト"
+
+# AI Translated
+msgid "Emerald wave"
+msgstr "エメラルドウェーブ"
+
+# AI Translated
+msgid "Whale shadow"
+msgstr "ホエールシャドウ"
+
+# AI Translated
+msgid "Sea turtle"
+msgstr "シータートル"
+
+# AI Translated
+msgid "Lagoon"
+msgstr "ラグーン"
+
+# AI Translated
+msgid "Tropical current"
+msgstr "トロピカルカレント"
+
+# AI Translated
+msgid "Midnight trench"
+msgstr "ミッドナイトトレンチ"
+
+# AI Translated
+msgid "Dark kelp"
+msgstr "ダークケルプ"
+
+# AI Translated
+msgid "Crystal surf"
+msgstr "クリスタルサーフ"
+
+# AI Translated
+msgid "Turquoise bay"
+msgstr "ターコイズベイ"
+
+# AI Translated
+msgid "Sky over reef"
+msgstr "スカイオーバーリーフ"
+
+# AI Translated
+msgid "Shallow sky"
+msgstr "シャロースカイ"
+
+# AI Translated
+msgid "Electric blue"
+msgstr "エレクトリックブルー"
+
+# AI Translated
+msgid "Dolphin"
+msgstr "ドルフィン"
+
+# AI Translated
+msgid "Ocean depths"
+msgstr "オーシャンデプス"
+
+# AI Translated
+msgid "Whale"
+msgstr "ホエール"
+
+# AI Translated
+msgid "Indigo abyss"
+msgstr "インディゴアビス"
+
+# AI Translated
+msgid "Sea urchin"
+msgstr "シーアーチン"
+
+# AI Translated
+msgid "Lavender coral"
+msgstr "ラベンダーコーラル"
+
+# AI Translated
+msgid "Violet tide"
+msgstr "バイオレットタイド"
+
+# AI Translated
+msgid "Deep sea orchid"
+msgstr "ディープシーオーキッド"
+
+# AI Translated
+msgid "Neon jelly"
+msgstr "ネオンジェリー"
+
+# AI Translated
+msgid "Fuchsia coral"
+msgstr "フクシアコーラル"
+
+# AI Translated
+msgid "Pink jellyfish"
+msgstr "ピンクジェリーフィッシュ"
+
+# AI Translated
+msgid "Foam"
+msgstr "フォーム"
+
+# AI Translated
+msgid "Seashell white"
+msgstr "シーシェルホワイト"
+
+# AI Translated
+msgid "Pebble gray"
+msgstr "ペブルグレー"
+
+# AI Translated
+msgid "Storm cloud"
+msgstr "ストームクラウド"
+
+# AI Translated
+msgid "Ink black"
+msgstr "インクブラック"
+
+# AI Translated
+msgid "Green beige"
+msgstr "グリーンベージュ"
+
+# AI Translated
+msgid "Sand yellow"
+msgstr "サンドイエロー"
+
+# AI Translated
+msgid "Signal yellow"
+msgstr "シグナルイエロー"
+
+# AI Translated
+msgid "Golden yellow"
+msgstr "ゴールデンイエロー"
+
+# AI Translated
+msgid "Honey yellow"
+msgstr "ハニーイエロー"
+
+# AI Translated
+msgid "Maize yellow"
+msgstr "メイズイエロー"
+
+# AI Translated
+msgid "Daffodil yellow"
+msgstr "ダフォディルイエロー"
+
+# AI Translated
+msgid "Brown beige"
+msgstr "ブラウンベージュ"
+
+# AI Translated
+msgid "Lemon yellow"
+msgstr "レモンイエロー"
+
+# AI Translated
+msgid "Oyster white"
+msgstr "オイスターホワイト"
+
+# AI Translated
+msgid "Light ivory"
+msgstr "ライトアイボリー"
+
+# AI Translated
+msgid "Zinc yellow"
+msgstr "ジンクイエロー"
+
+# AI Translated
+msgid "Grey beige"
+msgstr "グレーベージュ"
+
+# AI Translated
+msgid "Olive yellow"
+msgstr "オリーブイエロー"
+
+# AI Translated
+# Needs human review: RAL name (rapeseed); check the plant name reads naturally as a color.
+msgid "Rape yellow"
+msgstr "ナタネイエロー"
+
+# AI Translated
+msgid "Traffic yellow"
+msgstr "トラフィックイエロー"
+
+# AI Translated
+msgid "Ochre yellow"
+msgstr "オーカーイエロー"
+
+# AI Translated
+msgid "Traffic orange yellow"
+msgstr "トラフィックオレンジイエロー"
+
+# AI Translated
+msgid "Curry"
+msgstr "カレー"
+
+# AI Translated
+msgid "Melon yellow"
+msgstr "メロンイエロー"
+
+# AI Translated
+# Needs human review: RAL name (broom, the plant); check the rendering.
+msgid "Broom yellow"
+msgstr "エニシダイエロー"
+
+# AI Translated
+msgid "Dahlia yellow"
+msgstr "ダリアイエロー"
+
+# AI Translated
+msgid "Pastel yellow"
+msgstr "パステルイエロー"
+
+# AI Translated
+msgid "Pearl beige"
+msgstr "パールベージュ"
+
+# AI Translated
+msgid "Pearl gold"
+msgstr "パールゴールド"
+
+# AI Translated
+msgid "Sun yellow"
+msgstr "サンイエロー"
+
+# AI Translated
+msgid "Yellow orange"
+msgstr "イエローオレンジ"
+
+# AI Translated
+msgid "Deep orange"
+msgstr "ディープオレンジ"
+
+# AI Translated
+msgid "Vermilion"
+msgstr "バーミリオン"
+
+# AI Translated
+msgid "Pearl orange"
+msgstr "パールオレンジ"
+
+# AI Translated
+msgid "Pure orange"
+msgstr "ピュアオレンジ"
+
+# AI Translated
+msgid "Luminous orange"
+msgstr "ルミナスオレンジ"
+
+# AI Translated
+msgid "Luminous bright orange"
+msgstr "ルミナスブライトオレンジ"
+
+# AI Translated
+msgid "Bright red orange"
+msgstr "ブライトレッドオレンジ"
+
+# AI Translated
+msgid "Traffic orange"
+msgstr "トラフィックオレンジ"
+
+# AI Translated
+msgid "Signal orange"
+msgstr "シグナルオレンジ"
+
+# AI Translated
+msgid "Salmon orange"
+msgstr "サーモンオレンジ"
+
+# AI Translated
+msgid "Pearl pink"
+msgstr "パールピンク"
+
+# AI Translated
+msgid "Copper orange"
+msgstr "カッパーオレンジ"
+
+# AI Translated
+msgid "Signal brown"
+msgstr "シグナルブラウン"
+
+# AI Translated
+# Needs human review: Source name is odd (RAL has Fir green); fir rendered as the tree.
+msgid "Fir orange"
+msgstr "モミオレンジ"
+
+# AI Translated
+msgid "Signal red"
+msgstr "シグナルレッド"
+
+# AI Translated
+msgid "Luminous red"
+msgstr "ルミナスレッド"
+
+# AI Translated
+msgid "Carmine red"
+msgstr "カーマインレッド"
+
+# AI Translated
+msgid "Pearl carmine red"
+msgstr "パールカーマインレッド"
+
+# AI Translated
+msgid "Pure red"
+msgstr "ピュアレッド"
+
+# AI Translated
+msgid "Luminous deep red"
+msgstr "ルミナスディープレッド"
+
+# AI Translated
+msgid "Currant red"
+msgstr "カラントレッド"
+
+# AI Translated
+msgid "Pearl ruby red"
+msgstr "パールルビーレッド"
+
+# AI Translated
+msgid "Fire red"
+msgstr "ファイアレッド"
+
+# AI Translated
+msgid "Ruby red"
+msgstr "ルビーレッド"
+
+# AI Translated
+msgid "Purple red"
+msgstr "パープルレッド"
+
+# AI Translated
+msgid "Wine red"
+msgstr "ワインレッド"
+
+# AI Translated
+msgid "Black red"
+msgstr "ブラックレッド"
+
+# AI Translated
+msgid "Oxide red"
+msgstr "オキサイドレッド"
+
+# AI Translated
+msgid "Brown red"
+msgstr "ブラウンレッド"
+
+# AI Translated
+msgid "Pine red"
+msgstr "パインレッド"
+
+# AI Translated
+msgid "Tomato red"
+msgstr "トマトレッド"
+
+# AI Translated
+msgid "Antique pink"
+msgstr "アンティークピンク"
+
+# AI Translated
+msgid "Coral red"
+msgstr "コーラルレッド"
+
+# AI Translated
+msgid "Rose"
+msgstr "ローズ"
+
+# AI Translated
+msgid "Strawberry red"
+msgstr "ストロベリーレッド"
+
+# AI Translated
+msgid "Traffic red"
+msgstr "トラフィックレッド"
+
+# AI Translated
+msgid "Salmon pink"
+msgstr "サーモンピンク"
+
+# AI Translated
+msgid "Luminous rose"
+msgstr "ルミナスローズ"
+
+# AI Translated
+msgid "Luminous bright red"
+msgstr "ルミナスブライトレッド"
+
+# AI Translated
+msgid "Raspberry red"
+msgstr "ラズベリーレッド"
+
+# AI Translated
+msgid "Orient red"
+msgstr "オリエントレッド"
+
+# AI Translated
+msgid "Pearl ruby"
+msgstr "パールルビー"
+
+# AI Translated
+msgid "Red purple"
+msgstr "レッドパープル"
+
+# AI Translated
+msgid "Red violet"
+msgstr "レッドバイオレット"
+
+# AI Translated
+msgid "Heather violet"
+msgstr "ヘザーバイオレット"
+
+# AI Translated
+msgid "Bordeaux violet"
+msgstr "ボルドーバイオレット"
+
+# AI Translated
+msgid "Mahogany"
+msgstr "マホガニー"
+
+# AI Translated
+msgid "Grey purple"
+msgstr "グレーパープル"
+
+# AI Translated
+msgid "Signal violet"
+msgstr "シグナルバイオレット"
+
+# AI Translated
+msgid "Fir green"
+msgstr "モミグリーン"
+
+# AI Translated
+# Needs human review: Source name unclear (Sabine); transliterated.
+msgid "Sabine grey"
+msgstr "サビーヌグレー"
+
+# AI Translated
+msgid "Pearl violet"
+msgstr "パールバイオレット"
+
+# AI Translated
+msgid "Pearl blackberry"
+msgstr "パールブラックベリー"
+
+# AI Translated
+msgid "Green blue"
+msgstr "グリーンブルー"
+
+# AI Translated
+msgid "Ultramarine blue"
+msgstr "ウルトラマリンブルー"
+
+# AI Translated
+msgid "Sapphire blue"
+msgstr "サファイアブルー"
+
+# AI Translated
+msgid "Black blue"
+msgstr "ブラックブルー"
+
+# AI Translated
+msgid "Signal blue"
+msgstr "シグナルブルー"
+
+# AI Translated
+msgid "Brilliant blue"
+msgstr "ブリリアントブルー"
+
+# AI Translated
+msgid "Grey blue"
+msgstr "グレーブルー"
+
+# AI Translated
+msgid "Azure blue"
+msgstr "アズールブルー"
+
+# AI Translated
+msgid "Gentian blue"
+msgstr "ゲンチアナブルー"
+
+# AI Translated
+msgid "Cobalt blue"
+msgstr "コバルトブルー"
+
+# AI Translated
+msgid "Pigeon blue"
+msgstr "ピジョンブルー"
+
+# AI Translated
+msgid "Traffic blue"
+msgstr "トラフィックブルー"
+
+# AI Translated
+msgid "Turquoise blue"
+msgstr "ターコイズブルー"
+
+# AI Translated
+msgid "Capri blue"
+msgstr "カプリブルー"
+
+# AI Translated
+msgid "Ocean blue"
+msgstr "オーシャンブルー"
+
+# AI Translated
+msgid "Water blue"
+msgstr "ウォーターブルー"
+
+# AI Translated
+msgid "Night blue"
+msgstr "ナイトブルー"
+
+# AI Translated
+msgid "Distant blue"
+msgstr "ディスタントブルー"
+
+# AI Translated
+msgid "Pastel blue"
+msgstr "パステルブルー"
+
+# AI Translated
+msgid "Pearl gentian blue"
+msgstr "パールゲンチアナブルー"
+
+# AI Translated
+msgid "Pearl midnight blue"
+msgstr "パールミッドナイトブルー"
+
+# AI Translated
+msgid "Patina green"
+msgstr "パティナグリーン"
+
+# AI Translated
+msgid "Emerald green"
+msgstr "エメラルドグリーン"
+
+# AI Translated
+msgid "Leaf green"
+msgstr "リーフグリーン"
+
+# AI Translated
+msgid "Olive green"
+msgstr "オリーブグリーン"
+
+# AI Translated
+msgid "Blue green"
+msgstr "ブルーグリーン"
+
+# AI Translated
+msgid "Moss green"
+msgstr "モスグリーン"
+
+# AI Translated
+msgid "Grey olive"
+msgstr "グレーオリーブ"
+
+# AI Translated
+msgid "Pine green"
+msgstr "パイングリーン"
+
+# AI Translated
+msgid "Pine brown"
+msgstr "パインブラウン"
+
+# AI Translated
+msgid "Grass green"
+msgstr "グラスグリーン"
+
+# AI Translated
+msgid "Reseda green"
+msgstr "レセダグリーン"
+
+# AI Translated
+msgid "Brown green"
+msgstr "ブラウングリーン"
+
+# AI Translated
+msgid "Reed green"
+msgstr "リードグリーン"
+
+# AI Translated
+msgid "Black green"
+msgstr "ブラックグリーン"
+
+# AI Translated
+msgid "Turquoise green"
+msgstr "ターコイズグリーン"
+
+# AI Translated
+msgid "May green"
+msgstr "メイグリーン"
+
+# AI Translated
+msgid "Chrome oxide green"
+msgstr "クロムオキサイドグリーン"
+
+# AI Translated
+msgid "Traffic green"
+msgstr "トラフィックグリーン"
+
+# AI Translated
+msgid "Fern green"
+msgstr "ファーングリーン"
+
+# AI Translated
+msgid "Opal green"
+msgstr "オパールグリーン"
+
+# AI Translated
+msgid "Mint green"
+msgstr "ミントグリーン"
+
+# AI Translated
+msgid "Bronze green"
+msgstr "ブロンズグリーン"
+
+# AI Translated
+msgid "Pearl green"
+msgstr "パールグリーン"
+
+# AI Translated
+msgid "Sax turquoise"
+msgstr "サックスターコイズ"
+
+# AI Translated
+msgid "Pearl turquoise"
+msgstr "パールターコイズ"
+
+# AI Translated
+msgid "Pearl jade"
+msgstr "パールジェイド"
+
+# AI Translated
+msgid "Pure green"
+msgstr "ピュアグリーン"
+
+# AI Translated
+msgid "Luminous green"
+msgstr "ルミナスグリーン"
+
+# AI Translated
+msgid "Squirrel grey"
+msgstr "スクワレルグレー"
+
+# AI Translated
+msgid "Silver grey"
+msgstr "シルバーグレー"
+
+# AI Translated
+msgid "Olive grey"
+msgstr "オリーブグレー"
+
+# AI Translated
+msgid "Moss grey"
+msgstr "モスグレー"
+
+# AI Translated
+msgid "Signal grey"
+msgstr "シグナルグレー"
+
+# AI Translated
+msgid "Mouse grey"
+msgstr "マウスグレー"
+
+# AI Translated
+msgid "Beige grey"
+msgstr "ベージュグレー"
+
+# AI Translated
+msgid "Khaki grey"
+msgstr "カーキグレー"
+
+# AI Translated
+msgid "Green grey"
+msgstr "グリーングレー"
+
+# AI Translated
+msgid "Tarpaulin grey"
+msgstr "ターポリングレー"
+
+# AI Translated
+msgid "Iron grey"
+msgstr "アイアングレー"
+
+# AI Translated
+msgid "Basalt grey"
+msgstr "バサルトグレー"
+
+# AI Translated
+msgid "Brown grey"
+msgstr "ブラウングレー"
+
+# AI Translated
+msgid "Slate grey"
+msgstr "スレートグレー"
+
+# AI Translated
+msgid "Anthracite grey"
+msgstr "アンスラサイトグレー"
+
+# AI Translated
+msgid "Light grey"
+msgstr "ライトグレー"
+
+# AI Translated
+msgid "Umber grey"
+msgstr "アンバーグレー"
+
+# AI Translated
+msgid "Concrete grey"
+msgstr "コンクリートグレー"
+
+# AI Translated
+msgid "Graphite grey"
+msgstr "グラファイトグレー"
+
+# AI Translated
+msgid "Granite grey"
+msgstr "グラナイトグレー"
+
+# AI Translated
+msgid "Stone grey"
+msgstr "ストーングレー"
+
+# AI Translated
+msgid "Pebble grey"
+msgstr "ペブルグレー"
+
+# AI Translated
+msgid "Cement grey"
+msgstr "セメントグレー"
+
+# AI Translated
+msgid "Yellow grey"
+msgstr "イエローグレー"
+
+# AI Translated
+msgid "Platinum grey"
+msgstr "プラチナグレー"
+
+# AI Translated
+msgid "Dusty grey"
+msgstr "ダスティグレー"
+
+# AI Translated
+msgid "Agate grey"
+msgstr "アゲートグレー"
+
+# AI Translated
+msgid "Quartz grey"
+msgstr "クォーツグレー"
+
+# AI Translated
+msgid "Window grey"
+msgstr "ウィンドウグレー"
+
+# AI Translated
+msgid "Traffic grey A"
+msgstr "トラフィックグレーA"
+
+# AI Translated
+msgid "Traffic grey B"
+msgstr "トラフィックグレーB"
+
+# AI Translated
+msgid "Silk grey"
+msgstr "シルクグレー"
+
+# AI Translated
+msgid "Telegrey 1"
+msgstr "テレグレー1"
+
+# AI Translated
+msgid "Telegrey 2"
+msgstr "テレグレー2"
+
+# AI Translated
+msgid "Telegrey 4"
+msgstr "テレグレー4"
+
+# AI Translated
+msgid "Pearl mouse grey"
+msgstr "パールマウスグレー"
+
+# AI Translated
+msgid "Green brown"
+msgstr "グリーンブラウン"
+
+# AI Translated
+msgid "Ochre brown"
+msgstr "オーカーブラウン"
+
+# AI Translated
+msgid "Clay brown"
+msgstr "クレイブラウン"
+
+# AI Translated
+msgid "Copper brown"
+msgstr "カッパーブラウン"
+
+# AI Translated
+msgid "Chocolate brown"
+msgstr "チョコレートブラウン"
+
+# AI Translated
+msgid "Olive brown"
+msgstr "オリーブブラウン"
+
+# AI Translated
+msgid "Nut brown"
+msgstr "ナッツブラウン"
+
+# AI Translated
+msgid "Red brown"
+msgstr "レッドブラウン"
+
+# AI Translated
+msgid "Sepia brown"
+msgstr "セピアブラウン"
+
+# AI Translated
+msgid "Chestnut brown"
+msgstr "チェスナットブラウン"
+
+# AI Translated
+msgid "Mahogany brown"
+msgstr "マホガニーブラウン"
+
+# AI Translated
+msgid "Grey brown"
+msgstr "グレーブラウン"
+
+# AI Translated
+msgid "Pearl copper"
+msgstr "パールカッパー"
+
+# AI Translated
+msgid "Beige brown"
+msgstr "ベージュブラウン"
+
+# AI Translated
+msgid "Pearl mocha brown"
+msgstr "パールモカブラウン"
+
+# AI Translated
+msgid "Earth brown"
+msgstr "アースブラウン"
+
+# AI Translated
+msgid "Pearl brown"
+msgstr "パールブラウン"
+
+# AI Translated
+msgid "Cream"
+msgstr "クリーム"
+
+# AI Translated
+msgid "Grey white"
+msgstr "グレーホワイト"
+
+# AI Translated
+msgid "Signal white"
+msgstr "シグナルホワイト"
+
+# AI Translated
+msgid "Signal black"
+msgstr "シグナルブラック"
+
+# AI Translated
+msgid "Jet black"
+msgstr "ジェットブラック"
+
+# AI Translated
+msgid "White aluminium"
+msgstr "ホワイトアルミニウム"
+
+# AI Translated
+msgid "Grey aluminium"
+msgstr "グレーアルミニウム"
+
+# AI Translated
+msgid "Pure white"
+msgstr "ピュアホワイト"
+
+# AI Translated
+msgid "Graphite black"
+msgstr "グラファイトブラック"
+
+# AI Translated
+msgid "Traffic white"
+msgstr "トラフィックホワイト"
+
+# AI Translated
+msgid "Traffic black"
+msgstr "トラフィックブラック"
+
+# AI Translated
+msgid "Papyrus white"
+msgstr "パピルスホワイト"
+
+# AI Translated
+msgid "Pearl light grey"
+msgstr "パールライトグレー"
+
+# AI Translated
+msgid "Metal: Silver"
+msgstr "メタル: シルバー"
+
+# AI Translated
+msgid "Metal: Brass"
+msgstr "メタル: ブラス"
+
+# AI Translated
+msgid "Metal: Gold"
+msgstr "メタル: ゴールド"
+
+# AI Translated
+msgid "Metal: Copper"
+msgstr "メタル: カッパー"
+
+# AI Translated
+msgid "Metal: Bronze"
+msgstr "メタル: ブロンズ"
+
+# AI Translated
+msgid "Nature: Pearl"
+msgstr "ネイチャー: パール"
+
+# AI Translated
+msgid "Nature: Rainbow"
+msgstr "ネイチャー: レインボー"
+
+# AI Translated
+msgid "Nature: Clear Sky"
+msgstr "ネイチャー: クリアスカイ"
+
+# AI Translated
+msgid "Nature: Sunset"
+msgstr "ネイチャー: サンセット"
+
+# AI Translated
+msgid "Wood: Dark"
+msgstr "ウッド: ダーク"
+
+# AI Translated
+msgid "Wood: Medium"
+msgstr "ウッド: ミディアム"
+
+# AI Translated
+msgid "Wood: Light"
+msgstr "ウッド: ライト"
+
+# AI Translated
 msgid "Alternate nozzles:"
 msgstr "その他のノズル:"
 
@@ -31491,12 +33385,24 @@ msgid "Built-in"
 msgstr "内蔵"
 
 # AI Translated
+msgid "My textures"
+msgstr "マイテクスチャ"
+
+# AI Translated
 msgid "No textures found."
 msgstr "テクスチャが見つかりません。"
 
 # AI Translated
-msgid "My textures"
-msgstr "マイテクスチャ"
+msgid "Texture libraries"
+msgstr "テクスチャライブラリ"
+
+# AI Translated
+msgid "Explore more texture libraries"
+msgstr "さらにテクスチャライブラリを探す"
+
+# AI Translated
+msgid "Opens OrcaCloud in the Home page to browse for plugins."
+msgstr "ホームページで OrcaCloud を開き、プラグインを探します。"
 
 # AI Translated
 msgid "Import your own image as a height map. It is converted to the format the slicer bakes from and saved to your personal texture folder, kept separate from the textures shipped with OrcaSlicer."
@@ -31900,6 +33806,16 @@ msgid "How wide one copy of the texture is on the model. Smaller repeats the pat
 msgstr "モデル上でのテクスチャ1枚分の幅です。小さくするとパターンの繰り返しが増え、ディテールが細かくなります。「タイル」がオフの場合は、1枚だけ配置されるテクスチャのサイズになります。"
 
 # AI Translated
+# Needs human review: Image caption in the tile-size tip (larger tiles); check wording.
+msgid "Larger"
+msgstr "大きい"
+
+# AI Translated
+# Needs human review: Image caption in the tile-size tip (smaller tiles); check wording.
+msgid "Smaller"
+msgstr "小さい"
+
+# AI Translated
 msgid "Turns the texture on the surface, in degrees - for lining a pattern up with an edge of the model."
 msgstr "表面上でテクスチャを回転させます (度)。パターンをモデルのエッジに揃えるときに使用します。"
 
@@ -31972,6 +33888,16 @@ msgstr "混合色"
 # AI Translated
 msgid "The most mixed filaments a bake may add. They are picked from the texture's colors, and only the ones the bake actually uses are created."
 msgstr "焼付けで追加できる混合フィラメントの最大数です。テクスチャの色から選ばれ、焼付けで実際に使用されるものだけが作成されます。"
+
+# AI Translated
+# Needs human review: Image caption comparing few vs many mixed colors; check wording.
+msgid "Few"
+msgstr "少ない"
+
+# AI Translated
+# Needs human review: Image caption comparing few vs many mixed colors; check wording.
+msgid "Many"
+msgstr "多い"
 
 # AI Translated
 #. TRN The %2% part of "%1% printable colors %2%"; %1% is the number of filaments.
@@ -32093,10 +34019,6 @@ msgstr "投影フレーム"
 # AI Translated
 msgid "Opens a window you drag over the model. Whatever you can see through it is what gets the texture, and its border becomes the edge of the projection."
 msgstr "モデル上にドラッグするウィンドウを開きます。そのウィンドウを通して見える部分にテクスチャが適用され、ウィンドウの枠が投影の境界になります。"
-
-# AI Translated
-msgid "Opacity"
-msgstr "不透明度"
 
 # AI Translated
 msgid "How solid the frame window looks while you place it. Lower to see the model through it; it does not affect the result."
@@ -32325,6 +34247,16 @@ msgstr "リメッシュ"
 # AI Translated
 msgid "Triangle size the whole model is rebuilt with, in millimetres. Displacement works best on an even mesh; this is what makes one out of an uneven import."
 msgstr "モデル全体を再構築する際の三角形のサイズ (mm) です。変位は均一なメッシュで最もよく機能します。不均一なインポートモデルから均一なメッシュを作るための設定です。"
+
+# AI Translated
+# Needs human review: Image caption of the remesh comparison (before/after remeshing); check wording.
+msgid "Before"
+msgstr "前"
+
+# AI Translated
+# Needs human review: Image caption of the remesh comparison (before/after remeshing); check wording.
+msgid "After"
+msgstr "後"
 
 # AI Translated
 msgid "Keep sharp edges"
@@ -34173,6 +36105,10 @@ msgid "Slicing Pipeline"
 msgstr "スライスパイプライン"
 
 # AI Translated
+msgid "Resource Texture"
+msgstr "リソーステクスチャ"
+
+# AI Translated
 msgid "The plugin's configuration UI was empty. Showing the default editor."
 msgstr "プラグインの設定UIが空でした。デフォルトのエディターを表示します。"
 
@@ -34318,6 +36254,30 @@ msgstr "プラグインのディレクトリに.pyと.whlの両方のエント�
 # AI Translated
 msgid "Plugin directory does not contain a .py or .whl entry file"
 msgstr "プラグインのディレクトリに.pyまたは.whlのエントリファイルがありません"
+
+# AI Translated
+msgid "Resource texture directory is not set"
+msgstr "リソーステクスチャのディレクトリが設定されていません"
+
+# AI Translated
+msgid "Resource texture directory could not be resolved"
+msgstr "リソーステクスチャのディレクトリを特定できませんでした"
+
+# AI Translated
+msgid "Resource texture path is not a directory"
+msgstr "リソーステクスチャのパスがディレクトリではありません"
+
+# AI Translated
+msgid "Plugin folder could not be resolved"
+msgstr "プラグインフォルダーを特定できませんでした"
+
+# AI Translated
+msgid "Resource texture directory is outside the plugin folder"
+msgstr "リソーステクスチャのディレクトリがプラグインフォルダーの外にあります"
+
+# AI Translated
+msgid "Resource texture directory could not be read"
+msgstr "リソーステクスチャのディレクトリを読み取れませんでした"
 
 # AI Translated
 #, boost-format
@@ -34777,7 +36737,7 @@ msgstr "設定ファイル「%1%」の読み込みに失敗しました: %2%"
 # AI Translated
 #. TRN %1% is the application name.
 #, boost-format
-msgid "Not a gcode file generated by %1%."
+msgid "Not a G-code file generated by %1%."
 msgstr "%1%で生成されたG-codeファイルではありません。"
 
 # AI Translated
@@ -34897,7 +36857,7 @@ msgid "Failed making a temporary copy of G-code file %1% before running a post-p
 msgstr "後処理スクリプトの実行前にG-codeファイル%1%の一時コピーを作成できませんでした: %2%"
 
 # AI Translated
-msgid "Post-processor can't find exported gcode file"
+msgid "Post-processor can't find exported G-code file"
 msgstr "後処理でエクスポートされたG-codeファイルが見つかりません"
 
 # AI Translated
@@ -35426,14 +37386,6 @@ msgid "Forca Academy folder"
 msgstr "Forca Academy フォルダー"
 
 # AI Translated
-msgid "Where the print journal is kept: plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
-msgstr "プリントジャーナルの保存先: シンプルな Markdown と JSON ファイルです。AI は AGENTS.md から読み始めます。"
-
-# AI Translated
-msgid "Choose the Forca Academy folder"
-msgstr "Forca Academy フォルダーを選択"
-
-# AI Translated
 msgid "Open the Forca Academy folder (creating it and its starter files if needed)."
 msgstr "Forca Academy フォルダーを開きます (必要なら初期ファイルと一緒に作成します)。"
 
@@ -35630,6 +37582,278 @@ msgid "How many of the latest prints with an outcome, per printer and filament, 
 msgstr "傾向のルールが、プリンターとフィラメントごとに結果のある最近のプリントを何件まで見るか。"
 
 # AI Translated
+msgid "The AI did not send this print"
+msgstr "AI はこのプリントを送信しませんでした"
+
+# AI Translated
+msgid "The AI is sending this print in %d s (print grant #%d)."
+msgstr "AI は %d 秒後にこのプリントを送信します（プリント許可 #%d）。"
+
+# AI Translated
+msgid "Share a printer with the AI first (the printer list in this window)."
+msgstr "先にプリンターを AI と共有してください（このウィンドウのプリンター一覧）。"
+
+# AI Translated
+msgid "Let the AI print on its own"
+msgstr "AI に単独でプリントさせる"
+
+# AI Translated
+msgid "Within this grant the AI may start prints itself, with no click from you: Forca opens its print dialog, counts down 10 seconds (you can cancel) and presses Send. It only sends to an idle printer whose bed is clear, and only when the print dialog has nothing to ask you. A wrong print can still damage your printer or waste filament, and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca."
+msgstr "この許可の範囲内で、AI はあなたのクリックなしに自らプリントを開始できます。Forca がプリントダイアログを開き、10 秒カウントダウンし（キャンセル可能）、送信を押します。送信先はベッドが空いているアイドル状態のプリンターだけで、プリントダイアログに確認事項がない場合に限ります。それでも誤ったプリントでプリンターが損傷したりフィラメントが無駄になったりすることがあり、無人で動くプリンターは火災の危険があります。安心できる範囲だけ許可してください。許可は使い切ったとき、時間切れのとき、取り消したとき、Guarded を選んだとき、または Forca を再起動したときに終了します。"
+
+# AI Translated
+msgid "Printers:"
+msgstr "プリンター:"
+
+# AI Translated
+msgid "What to print (optional - without files, any plate):"
+msgstr "プリントするもの（任意 - ファイルなしなら任意のプレート）:"
+
+# AI Translated
+msgid "Note for the AI"
+msgstr "AI へのメモ"
+
+# AI Translated
+msgid "Add files..."
+msgstr "ファイルを追加..."
+
+# AI Translated
+msgid "Files the AI should print"
+msgstr "AI にプリントさせるファイル"
+
+# AI Translated
+msgid "Copies..."
+msgstr "部数..."
+
+# AI Translated
+msgid "How many copies of this file?"
+msgstr "このファイルを何部プリントしますか？"
+
+# AI Translated
+msgid "Note..."
+msgstr "メモ..."
+
+# AI Translated
+msgid "Instructions for the AI for this file (orientation, material, settings...):"
+msgstr "このファイルについての AI への指示（向き、材料、設定など）:"
+
+# AI Translated
+msgid "Prints the AI may start:"
+msgstr "AI が開始できるプリント数:"
+
+# AI Translated
+msgid "For the next (hours):"
+msgstr "有効期間（時間）:"
+
+# AI Translated
+msgid "Longest print (hours):"
+msgstr "最長プリント時間（時間）:"
+
+# AI Translated
+msgid "The bed of these printers is clear now"
+msgstr "これらのプリンターのベッドは今空いています"
+
+# AI Translated
+msgid "Also let the AI decide by camera that a bed is clear"
+msgstr "カメラでベッドが空いているかを AI が判断することも許可する"
+
+# AI Translated
+msgid "Off: a bed counts as clear only after you click 'Bed is clear' in this window, once per print. On: the AI may also judge a fresh camera picture itself (Forca keeps the picture), so prints can follow each other while you are away. If it misses something on the bed, the printer will print into it."
+msgstr "オフ: このウィンドウで「ベッドは空いています」をクリックした後にのみ、プリントごとに 1 回ベッドが空いているとみなされます。オン: AI が最新のカメラ画像を自ら判断することもでき（Forca は画像を保存します）、あなたが不在の間もプリントを続けられます。ベッド上の何かを見落とした場合、プリンターはその上にプリントします。"
+
+# AI Translated
+msgid "Give grant"
+msgstr "許可を与える"
+
+# AI Translated
+msgid "Tick at least one printer."
+msgstr "少なくとも 1 台のプリンターにチェックを入れてください。"
+
+# AI Translated
+msgid "Let an AI assistant (for example Claude Code) see and work in Forca. It connects only from this computer, using the key below. At the Guarded level Forca never lets the AI save over your files, and never sends anything to a printer without your approval here in Forca."
+msgstr "AI アシスタント（例: Claude Code）が Forca を見て作業できるようにします。接続はこのコンピューターからのみ、下のキーを使って行われます。Guarded レベルでは、Forca は AI にあなたのファイルを上書き保存させず、Forca でのあなたの承認なしにプリンターへ何も送信しません。"
+
+# AI Translated
+msgid "Let an AI connect to Forca"
+msgstr "AI が Forca に接続できるようにする"
+
+# AI Translated
+msgid "How much the AI may do:"
+msgstr "AI に許可する範囲:"
+
+# AI Translated
+msgid "Guarded (recommended) - new files only; you approve every print request"
+msgstr "Guarded（推奨）- 新規ファイルのみ。すべてのプリント依頼をあなたが承認します"
+
+# AI Translated
+msgid "Advanced - may overwrite your files and presets; no approval card"
+msgstr "Advanced - あなたのファイルとプリセットを上書きできます。承認カードなし"
+
+# AI Translated
+msgid "Unless you give it a print grant below, you press Send yourself. At every level the AI never deletes files or discards your unsaved edits, and it cannot heat, move or change your printers."
+msgstr "下でプリント許可を与えない限り、送信はあなた自身が押します。どのレベルでも、AI がファイルを削除したり未保存の編集を破棄したりすることはなく、プリンターを加熱、移動、変更することもできません。"
+
+# AI Translated
+msgid "Advanced lets the AI save over your own files and change your own presets. Forca copies each file into Documents\\Forca AI\\Backups before the AI overwrites it, but a mistake can still cost you work.\n\nPrint requests will open the print dialog straight away, without an approval card. Nothing prints until you press Send, so check the plate, printer and filament before you do: a wrong print can damage your printer, and never leave a printer running unattended.\n\nSwitch to Advanced?"
+msgstr "Advanced では、AI があなた自身のファイルを上書き保存し、あなた自身のプリセットを変更できます。Forca は AI が上書きする前に各ファイルを Documents\\Forca AI\\Backups にコピーしますが、ミスで作業が失われることはあり得ます。\n\nプリント依頼は承認カードなしで、すぐにプリントダイアログを開きます。送信を押すまで何もプリントされないので、その前にプレート、プリンター、フィラメントを確認してください。誤ったプリントはプリンターを損傷することがあります。また、プリンターを無人で動かしたままにしないでください。\n\nAdvanced に切り替えますか？"
+
+# AI Translated
+msgid "To connect Claude Code, run this once in a terminal:"
+msgstr "Claude Code を接続するには、ターミナルでこれを一度実行してください:"
+
+# AI Translated
+msgid "Copy command"
+msgstr "コマンドをコピー"
+
+# AI Translated
+msgid "Make a new key"
+msgstr "新しいキーを作成"
+
+# AI Translated
+msgid "Stops every AI that uses the old key; connect them again with the new command."
+msgstr "古いキーを使うすべての AI を停止します。新しいコマンドで再接続してください。"
+
+# AI Translated
+msgid "Make a new key? Every AI connected with the old key stops working until you connect it again with the new command."
+msgstr "新しいキーを作成しますか？古いキーで接続しているすべての AI は、新しいコマンドで再接続するまで動作しなくなります。"
+
+# AI Translated
+msgid "Printers the AI may use (it cannot see the others):"
+msgstr "AI が使えるプリンター（他のプリンターは AI からは見えません）:"
+
+# AI Translated
+msgid "Printers the AI may also PAUSE when its camera shows a problem (it can resume only its own pause):"
+msgstr "カメラに問題が映ったときに AI が一時停止もできるプリンター（再開できるのは AI 自身の一時停止のみ）:"
+
+# AI Translated
+msgid "Printing on its own:"
+msgstr "単独プリント:"
+
+# AI Translated
+msgid "Give a print grant..."
+msgstr "プリント許可を与える..."
+
+# AI Translated
+msgid "Bed is clear..."
+msgstr "ベッドは空いています..."
+
+# AI Translated
+msgid "Revoke"
+msgstr "取り消す"
+
+# AI Translated
+msgid "Which printer's bed is clear?"
+msgstr "どのプリンターのベッドが空いていますか？"
+
+# AI Translated
+msgid "What the AI has done (newest first):"
+msgstr "AI が行ったこと（新しい順）:"
+
+# AI Translated
+msgid "Needs the Advanced level."
+msgstr "Advanced レベルが必要です。"
+
+# AI Translated
+msgid "No print grant: the AI cannot start a print by itself."
+msgstr "プリント許可なし: AI は自分でプリントを開始できません。"
+
+# AI Translated
+msgid "Print grant #%d - prints left: %d, until %s, each up to %d h. Camera bed check: %s."
+msgstr "プリント許可 #%d: 残りプリント数 %d、期限 %s、各 %d 時間まで。カメラによるベッド確認: %s。"
+
+# AI Translated
+msgid "on"
+msgstr "オン"
+
+# AI Translated
+msgid "off"
+msgstr "オフ"
+
+# AI Translated
+msgid "bed marked clear"
+msgstr "ベッドは空きとしてマーク済み"
+
+# AI Translated
+msgid "bed not marked clear"
+msgstr "ベッドは空きとしてマークされていません"
+
+# AI Translated
+msgid "%d of %d sent"
+msgstr "%d / %d 送信済み"
+
+# AI Translated
+msgid "(turn Forca AI on to see the command)"
+msgstr "（コマンドを表示するには Forca AI をオンにしてください）"
+
+# AI Translated
+msgid "(no printers yet -- connect one in the Device tab)"
+msgstr "（プリンターはまだありません -- デバイスタブで接続してください）"
+
+# AI Translated
+msgid "(no printers yet)"
+msgstr "（プリンターはまだありません）"
+
+# AI Translated
+msgid "Forca AI - print request"
+msgstr "Forca AI - プリント依頼"
+
+# AI Translated
+msgid "The AI asks to print this plate"
+msgstr "AI がこのプレートのプリントを依頼しています"
+
+# AI Translated
+msgid "Printer preset"
+msgstr "プリンタープリセット"
+
+# AI Translated
+msgid "Print time"
+msgstr "プリント時間"
+
+# AI Translated
+msgid "The AI says"
+msgstr "AI からのメッセージ"
+
+# AI Translated
+msgid "Approve opens Forca's print dialog for this plate, where you choose the printer and filament slots and press Send. The approval works once, and only for this exact slice."
+msgstr "承認すると、このプレートの Forca プリントダイアログが開き、プリンターとフィラメントスロットを選んで送信を押します。承認は 1 回限りで、このスライス結果にのみ有効です。"
+
+# AI Translated
+msgid "Decline"
+msgstr "拒否"
+
+# AI Translated
+msgid "Approve"
+msgstr "承認"
+
+# AI Translated
+msgid "Forca AI - print paused"
+msgstr "Forca AI - プリント一時停止"
+
+# AI Translated
+msgid "The AI paused a print"
+msgstr "AI がプリントを一時停止しました"
+
+# AI Translated
+msgid "Job"
+msgstr "ジョブ"
+
+# AI Translated
+msgid "Why"
+msgstr "理由"
+
+# AI Translated
+msgid "Check the print. Resume it here or on the printer, or stop it on the printer. The AI may resume only this pause, and only while the print stays paused."
+msgstr "プリントを確認してください。ここかプリンターで再開するか、プリンターで停止してください。AI が再開できるのはこの一時停止だけで、プリントが一時停止中の間に限ります。"
+
+# AI Translated
+msgid "Keep paused"
+msgstr "一時停止のままにする"
+
+# AI Translated
+msgid "Resume print"
+msgstr "プリントを再開"
+
+# AI Translated
 msgid "Metal stickiness"
 msgstr "金属への付着性"
 
@@ -35782,16 +38006,24 @@ msgid "Bottom paint penetration layers"
 msgstr "底面の塗装浸透層数"
 
 # AI Translated
-msgid "How many layers deep a color painted on a top surface goes into the part. 0 means the same as the top shell layers."
-msgstr "上面に塗った色がパーツ内部に何層まで浸透するか。0 はトップ面層数と同じです。"
-
-# AI Translated
-msgid "How many layers deep a color painted on a bottom surface goes into the part. 0 means the same as the bottom shell layers."
-msgstr "底面に塗った色がパーツ内部に何層まで浸透するか。0 は底面層数と同じです。"
-
-# AI Translated
 msgid "The overhang and bridge speeds above don't apply to %1%, which use their own (filament settings, Filament page, Overhang speed)."
 msgstr "上記のオーバーハング速度とブリッジ速度は %1% には適用されません。これらのフィラメントは独自の速度を使用します（フィラメント設定、フィラメントページ、オーバーハング速度）。"
+
+# AI Translated
+msgid "Bambu Studio project"
+msgstr "Bambu Studio プロジェクト"
+
+# AI Translated
+msgid "This project was made with Bambu Studio %s. Forca doesn't know the following settings from it and ignores them:"
+msgstr "このプロジェクトは Bambu Studio %s で作成されました。Forca は次の設定を認識できないため無視します:"
+
+# AI Translated
+msgid "Earlier prints here were tagged Bridging, and Thick external bridges is off. In Forca's tests, turning it on (Quality > Bridging) fixed sagging and torn bridges."
+msgstr "ここでの以前のプリントに「ブリッジング」のタグが付いていますが、厚い外部ブリッジはオフです。Forca のテストでは、これをオンにする（品質 > ブリッジング）ことで、垂れたり切れたりするブリッジが解消されました。"
+
+# AI Translated
+msgid "Thick external bridges\nDid you know that turning on Thick external bridges (Quality > Bridging) prints round, full-height bridge lines that sag and tear far less? In Forca's tests on two printers it made the biggest difference to bridges."
+msgstr "厚い外部ブリッジ\n厚い外部ブリッジ（品質 > ブリッジング）をオンにすると、丸くて高さいっぱいのブリッジラインがプリントされ、垂れや切れが大幅に減ることをご存知ですか？2 台のプリンターでの Forca のテストでは、これがブリッジを最も改善しました。"
 
 # AI Translated
 msgid "Preparing"
@@ -35836,6 +38068,414 @@ msgstr "このWebインターフェースをデバイスタブに表示:"
 # AI Translated
 msgid "Plate is clear"
 msgstr "プレートは空です"
+
+# AI Translated
+msgid "Plan an experiment"
+msgstr "実験を計画"
+
+# AI Translated
+msgid "Change one setting and keep everything else the same. Forca builds a test plate in a new project with one copy per value: A keeps the current value (the baseline), the others try the new values. Print it and compare each copy with A."
+msgstr "設定を1つだけ変え、それ以外はすべて同じにします。Forcaは新しいプロジェクトにテストプレートを作成し、値ごとに1つずつコピーを配置します。Aは現在の値（基準）のままで、ほかのコピーで新しい値を試します。印刷して、各コピーをAと比べてください。"
+
+# AI Translated
+msgid "The plate is for the presets selected now: %1% / %2% / %3%."
+msgstr "このプレートは現在選択中のプリセット用です: %1% / %2% / %3%"
+
+# AI Translated
+msgid "Setting to change"
+msgstr "変更する設定"
+
+# AI Translated
+msgid "Another setting"
+msgstr "別の設定"
+
+# AI Translated
+msgid "Now (copy A)"
+msgstr "現在（コピーA）"
+
+# AI Translated
+msgid "Values to try"
+msgstr "試す値"
+
+# AI Translated
+msgid "Hypothesis"
+msgstr "仮説"
+
+# AI Translated
+msgid "Bridge test (built in)"
+msgstr "ブリッジテスト（内蔵）"
+
+# AI Translated
+msgid "Overhang test (built in)"
+msgstr "オーバーハングテスト（内蔵）"
+
+# AI Translated
+msgid "Stringing test: two towers (built in)"
+msgstr "糸引きテスト: 2本のタワー（内蔵）"
+
+# AI Translated
+msgid "Object in this project: %1%"
+msgstr "このプロジェクトのオブジェクト: %1%"
+
+# AI Translated
+msgid "To find a value from scratch, use a Calibration Wizard test instead: it sweeps the value on one print."
+msgstr "値を一から見つけるには、代わりにキャリブレーションウィザードのテストを使ってください。1回の印刷で値を順に変えて試せます。"
+
+# AI Translated
+msgid "Create the test plate"
+msgstr "テストプレートを作成"
+
+# AI Translated
+msgid "Only settings that can differ between objects on one plate are listed."
+msgstr "1つのプレート上でオブジェクトごとに変えられる設定だけを表示しています。"
+
+# AI Translated
+msgid "Changing %1% from %2% to %3% gives a better print."
+msgstr "%1%を%2%から%3%に変えると、印刷が良くなる。"
+
+# AI Translated
+msgid "Changing %1% from %2% to %3% reduces this problem: %4%."
+msgstr "%1%を%2%から%3%に変えると、この問題が減る: %4%"
+
+# AI Translated
+msgid "Enter at least one value to try that differs from the current one."
+msgstr "現在の値と異なる、試す値を1つ以上入力してください。"
+
+# AI Translated
+msgid "%1% is not a valid value for %2%."
+msgstr "%1%は%2%の有効な値ではありません。"
+
+# AI Translated
+msgid "Could not save a copy of the object."
+msgstr "オブジェクトのコピーを保存できませんでした。"
+
+# AI Translated
+msgid "The test model is missing from Forca's resources folder."
+msgstr "Forcaのリソースフォルダにテストモデルがありません。"
+
+# AI Translated
+msgid "The test model does not fit on the bed."
+msgstr "テストモデルがベッドに収まりません。"
+
+# AI Translated
+msgid "Not all copies fit on the bed (copies that fit: %1%). Try fewer values or a smaller model."
+msgstr "すべてのコピーはベッドに収まりません（収まるコピー数: %1%）。値を減らすか、小さいモデルを使ってください。"
+
+# AI Translated
+msgid "Forca could not load the test model."
+msgstr "Forcaはテストモデルを読み込めませんでした。"
+
+# AI Translated
+msgid "Test one setting for this problem: Forca builds a plate with one copy per value to compare."
+msgstr "この問題に対して設定を1つ試します。Forcaが値ごとに1つずつコピーを並べたプレートを作成し、比べられるようにします。"
+
+# AI Translated
+msgid "Test one setting for a problem: Forca builds a plate with one copy per value to compare."
+msgstr "問題に対して設定を1つ試します。Forcaが値ごとに1つずつコピーを並べたプレートを作成し、比べられるようにします。"
+
+# AI Translated
+msgid "No particular problem"
+msgstr "特定の問題なし"
+
+# AI Translated
+msgid "Compare the copies"
+msgstr "コピーを比較"
+
+# AI Translated
+msgid "How did each copy come out compared with A, the baseline? Hypothesis: %1%"
+msgstr "各コピーの仕上がりは、基準のAと比べてどうでしたか？仮説: %1%"
+
+# AI Translated
+msgid "No print of this plate has been recorded yet. You can still compare the copies."
+msgstr "このプレートの印刷はまだ記録されていません。それでもコピーを比較できます。"
+
+# AI Translated
+msgid "Recorded prints of this plate: %1%"
+msgstr "このプレートの記録された印刷: %1%"
+
+# AI Translated
+msgid "Better than A"
+msgstr "Aより良い"
+
+# AI Translated
+msgid "About the same"
+msgstr "ほぼ同じ"
+
+# AI Translated
+msgid "Worse than A"
+msgstr "Aより悪い"
+
+# AI Translated
+msgid "(baseline)"
+msgstr "（基準）"
+
+# AI Translated
+msgid "Note (optional)"
+msgstr "メモ（任意）"
+
+# AI Translated
+msgid "Works best"
+msgstr "最も良い"
+
+# AI Translated
+msgid "Copy photos of the printed plate into the experiment's folder."
+msgstr "印刷したプレートの写真を実験のフォルダにコピーします。"
+
+# AI Translated
+msgid "Save the comparison"
+msgstr "比較を保存"
+
+# AI Translated
+msgid "Apply to preset"
+msgstr "プリセットに適用"
+
+# AI Translated
+msgid "Set the winning value in the preset you are editing. It isn't saved: you decide whether to save the preset."
+msgstr "編集中のプリセットに最も良かった値を設定します。保存はされません。プリセットを保存するかどうかはご自身で決めてください。"
+
+# AI Translated
+msgid "Plan the next experiment"
+msgstr "次の実験を計画"
+
+# AI Translated
+msgid "Forca drafted this lesson from the comparison. Edit it, then add it to lessons.md."
+msgstr "Forcaが比較からこの教訓の下書きを作成しました。編集してから lessons.md に追加してください。"
+
+# AI Translated
+msgid "The lesson was added to lessons.md."
+msgstr "教訓を lessons.md に追加しました。"
+
+# AI Translated
+msgid "%1% is now %2% in the preset \"%3%\". It isn't saved yet: save the preset to keep it."
+msgstr "プリセット「%3%」の%1%が%2%になりました。まだ保存されていません。残すにはプリセットを保存してください。"
+
+# AI Translated
+msgid "This experiment's plan.json is missing or damaged."
+msgstr "この実験の plan.json が見つからないか、壊れています。"
+
+# AI Translated
+msgid "Rate each copy of a planned experiment against the baseline and pick the winner."
+msgstr "計画した実験の各コピーを基準と比べて評価し、最も良いものを選びます。"
+
+# AI Translated
+msgid "Select two prints in the journal and press Compare to start one, or plan one from a possible pattern. Double-click an experiment to open its page."
+msgstr "ジャーナルで印刷を2つ選んで「比較」を押すと実験を始められます。可能性のあるパターンから計画することもできます。実験をダブルクリックするとそのページが開きます。"
+
+# AI Translated
+msgid "Not printed yet"
+msgstr "未印刷"
+
+# AI Translated
+msgid "Printed, not compared yet"
+msgstr "印刷済み、未比較"
+
+# AI Translated
+msgid "Compared"
+msgstr "比較済み"
+
+# AI Translated
+msgid "Open page"
+msgstr "ページを開く"
+
+# AI Translated
+msgid "Open the experiment's page: the plan, the prints, the comparison and your result."
+msgstr "実験のページ（計画、印刷、比較、あなたの結果）を開きます。"
+
+# AI Translated
+msgid "Forca prints the test plate by object: each copy prints on its own, start to finish, so no copy's travel, strings or temperature reaches another. The copies are spaced so the print head clears them, on more than one plate if they don't all fit on one."
+msgstr "Forcaはテストプレートをオブジェクト順で印刷します。各コピーは最初から最後まで単独で印刷されるため、あるコピーの移動、糸引き、温度がほかのコピーに及びません。コピーはツールヘッドがぶつからない間隔で配置され、1枚のプレートに収まらない場合は複数のプレートに分けられます。"
+
+# AI Translated
+msgid "The test plate is ready. It prints by object (set in the plate's settings; the process preset is unchanged). Print it, then compare each copy with A, the baseline. The plan is saved in Forca Academy: %1%"
+msgstr "テストプレートの準備ができました。オブジェクト順で印刷されます（プレート設定で指定。プロセスプリセットは変更されません）。印刷してから、各コピーを基準のAと比べてください。計画はForca Academyに保存されています: %1%"
+
+# AI Translated
+msgid "Not all copies fit on one plate printed by object, so the test is spread over more than one (plates: %1%). Each plate prints by object (set in the plate's settings; the process preset is unchanged). Print every plate, then compare each copy with A, the baseline. The plan is saved in Forca Academy: %2%"
+msgstr "オブジェクト順で印刷するプレート1枚にすべてのコピーが収まらないため、テストを複数のプレートに分けました（プレート: %1%）。各プレートはオブジェクト順で印刷されます（プレート設定で指定。プロセスプリセットは変更されません）。すべてのプレートを印刷してから、各コピーを基準のAと比べてください。計画はForca Academyに保存されています: %2%"
+
+# AI Translated
+msgid "Hole size (optional)"
+msgstr "穴のサイズ (任意)"
+
+# AI Translated
+msgid "Hole size"
+msgstr "穴のサイズ"
+
+# AI Translated
+msgid "This prints a bar with a row of round holes (%s mm), smallest at the notched end. X-Y hole compensation is turned off for this test, so the result starts from the holes as modelled. Do Shrinkage first: it changes hole sizes too. Let the bar cool, then measure each hole's diameter -- a pin gauge or drill shank that just fits is more exact than caliper jaws in small holes. The result page turns those into X-Y hole compensation (mm and %% of size) in your process preset."
+msgstr "丸穴を一列に並べたバー（%s mm）を印刷します。最も小さい穴は切り欠きのある端です。このテストではホール補正 X-Yをオフにするため、結果はモデルどおりの穴から始まります。先に収縮を行ってください。穴のサイズも変わります。バーを冷ましてから各穴の直径を測ります。小さな穴では、ノギスの爪よりもちょうど入るピンゲージやドリルのシャンクのほうが正確です。結果ページで、これをプロセスプリセットのホール補正 X-Y（mm とサイズの%%）に変換します。"
+
+# AI Translated
+msgid "I have already printed the bar - enter measurements"
+msgstr "バーは印刷済み - 測定値を入力"
+
+# AI Translated
+msgid "Measured %g mm hole:"
+msgstr "%g mm 穴の測定値:"
+
+# AI Translated
+msgid "hole compensation %.2f%% of size"
+msgstr "穴補正 サイズの%.2f%%"
+
+# AI Translated
+msgid "Apply to process preset"
+msgstr "プロセスプリセットに適用"
+
+# AI Translated
+msgid "Enter each hole's measured diameter in mm. Leave a hole empty if you can't measure it (at least two are needed). The process preset now has X-Y hole compensation %.2f mm and %.2f%% of size; the test printed without them, and the result replaces both."
+msgstr "各穴の測定した直径を mm で入力します。測れない穴は空欄のままにします（少なくとも 2 つ必要です）。プロセスプリセットの現在のホール補正 X-Yは %.2f mm とサイズの %.2f%% です。テストはこれらなしで印刷され、結果は両方を置き換えます。"
+
+# AI Translated
+msgid "Hole size test"
+msgstr "穴のサイズテスト"
+
+# AI Translated
+msgid "Forca hole plate"
+msgstr "Forca 穴プレート"
+
+# AI Translated
+msgid "That completes the calibrations. Optionally, calibrate hole sizes next, then print the final check to confirm the whole profile."
+msgstr "これでキャリブレーションは完了です。必要なら、次に穴のサイズをキャリブレーションし、最終確認を印刷してプロファイル全体を確認してください。"
+
+# AI Translated
+msgid "Please enter each measured diameter in mm, or leave it empty."
+msgstr "測定した各直径を mm で入力するか、空欄のままにしてください。"
+
+# AI Translated
+msgid "Please measure at least two holes of different sizes."
+msgstr "サイズの異なる穴を少なくとも 2 つ測ってください。"
+
+# AI Translated
+msgid "At least one measurement is far from its hole's size. Please re-check the numbers (for example a missing decimal point)."
+msgstr "少なくとも 1 つの測定値が穴のサイズから大きく外れています。数値を確認してください（小数点の抜けなど）。"
+
+# AI Translated
+msgid "Suggested settings:\nX-Y hole compensation: %.2f mm\nX-Y hole compensation (%% of size): %.2f%%"
+msgstr "推奨設定:\nホール補正 X-Y: %.2f mm\nホール補正 X-Y（サイズの%%）: %.2f%%"
+
+# AI Translated
+msgid "With them, the measured holes should be within %.2f mm of their size."
+msgstr "これらを使うと、測定した穴はサイズとの差が %.2f mm 以内になるはずです。"
+
+# AI Translated
+msgid "A value was limited to the setting's range, so holes may still be off. Re-check the measurements and the filament's shrinkage."
+msgstr "値が設定の範囲内に制限されたため、穴はまだずれている可能性があります。測定値とフィラメントの収縮を確認してください。"
+
+# AI Translated
+msgid "Put them into the process preset \"%s\"? It isn't saved until you save the preset."
+msgstr "プロセスプリセット \"%s\" に入れますか？ プリセットを保存するまで保存されません。"
+
+# AI Translated
+msgid "The hole settings are in the process preset \"%s\". Save the preset to keep them."
+msgstr "穴の設定はプロセスプリセット \"%s\" に入っています。保持するにはプリセットを保存してください。"
+
+# AI Translated
+msgid "Optionally, print the final check to confirm the whole profile."
+msgstr "必要なら、最終確認を印刷してプロファイル全体を確認してください。"
+
+# AI Translated
+msgid "X-Y hole compensation (% of size)"
+msgstr "ホール補正 X-Y（サイズの%）"
+
+# AI Translated
+msgid "Holes in objects will expand or contract in the XY plane by this percentage of each hole's own diameter, on top of X-Y hole compensation. Positive values make holes bigger and negative values make holes smaller. Use it when holes shrink in proportion to their size, so that small and large holes need different compensation (for example, 1% makes a 10 mm hole 0.1 mm wider and a 3 mm hole 0.03 mm wider)."
+msgstr "オブジェクトの穴を、ホール補正 X-Yに加えて、各穴の直径に対するこの割合だけXY平面で拡大または縮小します。正数は穴を大きくし、負数は穴を小さくします。穴が大きさに比例して縮み、小さな穴と大きな穴で必要な補正が異なる場合に使います（例: 1%では10 mmの穴が0.1 mm、3 mmの穴が0.03 mm広がります）。"
+
+# AI Translated
+msgid "Filament overrides"
+msgstr "フィラメントの上書き"
+
+# AI Translated
+msgid "Retraction length (this object)"
+msgstr "リトラクション長（このオブジェクト）"
+
+# AI Translated
+msgid "Retraction speed (this object)"
+msgstr "リトラクション速度（このオブジェクト）"
+
+# AI Translated
+msgid "Deretraction speed (this object)"
+msgstr "復帰速度（このオブジェクト）"
+
+# AI Translated
+msgid "Z-hop height (this object)"
+msgstr "Zホップの高さ（このオブジェクト）"
+
+# AI Translated
+msgid "Pressure advance (this object)"
+msgstr "Pressure Advance（このオブジェクト）"
+
+# AI Translated
+msgid "Retraction length while this object prints, in place of the filament's (or printer's) value. It also applies when the nozzle leaves this object for another one. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中のリトラクション長で、フィラメント（またはプリンター）の値の代わりに使われます。ノズルがこのオブジェクトから別のオブジェクトへ移るときにも適用されます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Retraction speed while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中のリトラクション速度で、フィラメント（またはプリンター）の値の代わりに使われます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Speed for loading the filament back after a retraction while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中、リトラクション後にフィラメントを戻す速度で、フィラメント（またはプリンター）の値の代わりに使われます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Z-hop height for retractions while this object prints, in place of the filament's (or printer's) value. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中、リトラクション時の Zホップの高さで、フィラメント（またはプリンター）の値の代わりに使われます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Pressure advance while this object prints, in place of the filament's value; adaptive pressure advance is not used inside this object. Objects without this override print with the filament's pressure advance. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中の Pressure Advance で、フィラメントの値の代わりに使われます。このオブジェクト内ではアダプティブ Pressure Advance は使われません。この上書きのないオブジェクトはフィラメントの Pressure Advance でプリントされます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Max volumetric speed (this object)"
+msgstr "最大体積速度（このオブジェクト）"
+
+# AI Translated
+msgid "The most filament volume per second this object may print (its supports included), in place of the filament's max volumetric speed. Faster print speeds are lowered to stay within it. Set to -1 to use the filament's value."
+msgstr "このオブジェクト（サポートを含む）が 1 秒あたりにプリントできるフィラメントの最大体積で、フィラメントの最大体積速度の代わりに使われます。これを超える速いプリント速度は下げられます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Nozzle temperature (this object)"
+msgstr "ノズル温度（このオブジェクト）"
+
+# AI Translated
+msgid "Nozzle temperature, first layer (this object)"
+msgstr "ノズル温度、1層目（このオブジェクト）"
+
+# AI Translated
+msgid "Min fan speed (this object)"
+msgstr "最小ファン速度（このオブジェクト）"
+
+# AI Translated
+msgid "Max fan speed (this object)"
+msgstr "最大ファン速度（このオブジェクト）"
+
+# AI Translated
+msgid "Overhang fan speed (this object)"
+msgstr "オーバーハングのファン速度（このオブジェクト）"
+
+# AI Translated
+msgid "Nozzle temperature for this object after its first layer, in place of the filament's. Only used when printing by object: Forca heats to it before the object starts and waits. Set to -1 to use the filament's value."
+msgstr "1層目以降のこのオブジェクトのノズル温度で、フィラメントの値の代わりに使われます。オブジェクト順の造形でのみ使用され、Forca はオブジェクトの開始前にこの温度まで加熱して待機します。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Nozzle temperature for this object's first layer, in place of the filament's. Only used when printing by object. Set to -1 to use the object's nozzle temperature above, or the filament's."
+msgstr "このオブジェクトの1層目のノズル温度で、フィラメントの値の代わりに使われます。オブジェクト順の造形でのみ使用されます。-1 にすると上のオブジェクトのノズル温度、またはフィラメントの値を使います。"
+
+# AI Translated
+msgid "Minimum part cooling fan speed while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中のパーツ冷却ファンの最小速度で、フィラメントの値の代わりに使われます。オブジェクト順の造形でのみ使用されます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Maximum part cooling fan speed while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中のパーツ冷却ファンの最大速度で、フィラメントの値の代わりに使われます。オブジェクト順の造形でのみ使用されます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "Part cooling fan speed for overhangs and bridges while this object prints, in place of the filament's. Only used when printing by object. Set to -1 to use the filament's value."
+msgstr "このオブジェクトのプリント中、オーバーハングとブリッジに使うパーツ冷却ファン速度で、フィラメントの値の代わりに使われます。オブジェクト順の造形でのみ使用されます。-1 にするとフィラメントの値を使います。"
+
+# AI Translated
+msgid "This object's fan and nozzle temperature overrides are only used when printing by object (Print sequence: By object)."
+msgstr "このオブジェクトのファンとノズル温度の上書きは、オブジェクト順の造形でのみ使用されます（造形シーケンス: オブジェクト順）。"
 
 # AI Translated
 msgid "Network plug-in"
@@ -35934,6 +38574,18 @@ msgid "Close and reopen Forca to finish switching."
 msgstr "切り替えを完了するには、Forca を閉じてもう一度開いてください。"
 
 # AI Translated
+msgid "You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences."
+msgstr "Open Bamboo Networking (OBN) を使用しています。このバージョンの Forca は Bambu Lab のネットワークプラグイン %s を使用しますが、このコンピューターにある OBN のファイルは以前のバージョン用です。\n\n%s 用の最新の OBN リリースを今すぐダウンロードしますか？ダウンロードしない場合、Forca は Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。"
+
+# AI Translated
+msgid "Could not get Open Bamboo Networking for this plug-in:"
+msgstr "このプラグイン用の Open Bamboo Networking を取得できませんでした:"
+
+# AI Translated
+msgid "Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences."
+msgstr "Forca は当面 Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。"
+
+# AI Translated
 msgid "%1% %2% (preset %3%)"
 msgstr "%1% %2%（プリセット %3%）"
 
@@ -36004,6 +38656,118 @@ msgstr "送信時に「印刷の前に」を表示"
 # AI Translated
 msgid "The send dialog lists the settings you changed and didn't save, the values that most often decide a print and, with the print journal on, how earlier prints with the same printer and filament went. It never stops a print from being sent."
 msgstr "送信ダイアログには、変更して保存していない設定、印刷の結果を最も左右する値、そしてプリントジャーナルがオンのときは同じプリンターとフィラメントでの過去の印刷結果が表示されます。印刷の送信を止めることはありません。"
+
+# AI Translated
+msgid "%1% (prints: %2%, successful: %3%)"
+msgstr "%1%（プリント: %2%、成功: %3%）"
+
+# AI Translated
+msgid "%1% of the last %2% (successful: %3%)"
+msgstr "直近 %2% 件中 %1% 件（成功: %3%）"
+
+# AI Translated
+msgid "Reset Forca data"
+msgstr "Forca のデータをリセット"
+
+# AI Translated
+msgid "Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration Wizard history or all of Forca. Everything moves to a backup folder first."
+msgstr "最初からやり直します: プリントジャーナル、Forca AI、AI が保存したプロジェクト、キャリブレーションウィザードの履歴、または Forca 全体。すべて先にバックアップフォルダーへ移動します。"
+
+# AI Translated
+msgid "Forca was reset, but some files could not be moved to the backup folder:"
+msgstr "Forca はリセットされましたが、一部のファイルをバックアップフォルダーに移動できませんでした:"
+
+# AI Translated
+msgid "Start again from scratch. Nothing is deleted: everything you tick moves to a backup folder in your Documents (Forca reset backups), where you can copy things back or delete it later. Forca closes, and the reset happens when you open it again."
+msgstr "最初からやり直します。何も削除されません: チェックした項目はすべて「ドキュメント」内のバックアップフォルダー (Forca reset backups) に移動され、そこから戻したり後で削除したりできます。Forca が閉じ、次に開いたときにリセットされます。"
+
+# AI Translated
+msgid "Forca itself (like a fresh install)"
+msgstr "Forca 本体（新規インストールと同じ状態）"
+
+# AI Translated
+msgid "All settings, your own presets, printers, network plug-ins and logs. Forca opens as on the first day, so this also covers the AI and Calibration Wizard data below."
+msgstr "すべての設定、独自のプリセット、プリンター、ネットワークプラグイン、ログ。Forca は初日と同じ状態で開くので、下の AI とキャリブレーションウィザードのデータも含まれます。"
+
+# AI Translated
+msgid "Forca Academy print journal"
+msgstr "Forca Academy のプリントジャーナル"
+
+# AI Translated
+msgid "Every print record, note, photo, lesson, playbook and experiment in the Academy folder."
+msgstr "Academy フォルダー内のすべてのプリント記録、メモ、写真、教訓、プレイブック、実験。"
+
+# AI Translated
+msgid "A new key (AI clients must be connected again), no shared printers or pause permission, the Guarded level, Forca AI switched off, and its activity log."
+msgstr "新しいキー（AI クライアントは再接続が必要）、共有プリンターと一時停止の許可なし、Guarded レベル、Forca AI はオフ、そのアクティビティログ。"
+
+# AI Translated
+msgid "Projects saved by the AI"
+msgstr "AI が保存したプロジェクト"
+
+# AI Translated
+msgid "The Forca AI folder in your Documents: AI-saved projects, backups and bed-check pictures."
+msgstr "「ドキュメント」内の Forca AI フォルダー: AI が保存したプロジェクト、バックアップ、ベッド確認画像。"
+
+# AI Translated
+msgid "Calibration Wizard history"
+msgstr "キャリブレーションウィザードの履歴"
+
+# AI Translated
+msgid "The wizard's progress and results history. Values you saved to your presets stay."
+msgstr "ウィザードの進行状況と結果の履歴。プリセットに保存した値はそのまま残ります。"
+
+# AI Translated
+msgid "Reset and close Forca"
+msgstr "リセットして Forca を閉じる"
+
+# AI Translated
+msgid "Forca closes now and resets the ticked parts when you open it again. Everything goes to the backup folder first. Continue?"
+msgstr "Forca を今すぐ閉じ、次に開いたときにチェックした項目をリセットします。すべて先にバックアップフォルダーへ移動します。続行しますか？"
+
+# AI Translated
+msgid "Choose where to keep the Forca Academy folder"
+msgstr "Forca Academy フォルダーの保存場所を選択"
+
+# AI Translated
+msgid "Where the print journal is kept: a Forca Academy folder in the place you choose, with plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
+msgstr "プリントジャーナルの保存場所: 選んだ場所に作られる Forca Academy フォルダー（シンプルな Markdown と JSON ファイル）。読み取る AI は AGENTS.md から始めます。"
+
+# AI Translated
+msgid "Support Interface Regions"
+msgstr "サポート接触面の領域"
+
+# AI Translated
+msgid "On overhangs only"
+msgstr "オーバーハングのみ"
+
+# AI Translated
+msgid "Paint region"
+msgstr "領域をペイント"
+
+# AI Translated
+msgid "Interface filament"
+msgstr "接触面のフィラメント"
+
+# AI Translated
+msgid "Paint only on overhang faces, per the Highlight overhangs angle below."
+msgstr "下の「オーバーハングをハイライト」の角度に従い、オーバーハング面にのみペイントします。"
+
+# AI Translated
+msgid "Unselect all"
+msgstr "すべて選択解除"
+
+# AI Translated
+msgid "Paint support-interface region"
+msgstr "サポート接触面の領域をペイント"
+
+# AI Translated
+msgid "Erase support-interface region"
+msgstr "サポート接触面の領域を消去"
+
+# AI Translated
+msgid "Note"
+msgstr "メモ"
 
 # AI Translated
 msgid "Retraction length"
@@ -36682,14 +39446,6 @@ msgid "Setting"
 msgstr "設定"
 
 # AI Translated
-msgid "Before"
-msgstr "前"
-
-# AI Translated
-msgid "After"
-msgstr "後"
-
-# AI Translated
 msgid "Change"
 msgstr "変化"
 
@@ -37178,372 +39934,202 @@ msgid "none"
 msgstr "なし"
 
 # AI Translated
-msgid "You use Open Bamboo Networking (OBN). This version of Forca uses Bambu Lab's network plug-in %s, and the OBN files on this computer are for an earlier one.\n\nDownload the latest OBN release for %s now? If you don't, Forca uses Bambu Lab's network plug-in, and you can choose OBN again in Preferences."
-msgstr "Open Bamboo Networking (OBN) を使用しています。このバージョンの Forca は Bambu Lab のネットワークプラグイン %s を使用しますが、このコンピューターにある OBN のファイルは以前のバージョン用です。\n\n%s 用の最新の OBN リリースを今すぐダウンロードしますか？ダウンロードしない場合、Forca は Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。"
-
-# AI Translated
-msgid "Could not get Open Bamboo Networking for this plug-in:"
-msgstr "このプラグイン用の Open Bamboo Networking を取得できませんでした:"
-
-# AI Translated
-msgid "Forca uses Bambu Lab's network plug-in for now. You can choose OBN again in Preferences."
-msgstr "Forca は当面 Bambu Lab のネットワークプラグインを使用します。OBN は環境設定で再び選択できます。"
-
-# AI Translated
-msgid "%1% (prints: %2%, successful: %3%)"
-msgstr "%1%（プリント: %2%、成功: %3%）"
-
-# AI Translated
-msgid "%1% of the last %2% (successful: %3%)"
-msgstr "直近 %2% 件中 %1% 件（成功: %3%）"
-
-# AI Translated
-msgid "Reset Forca data"
-msgstr "Forca のデータをリセット"
-
-# AI Translated
-msgid "Start again from scratch: the print journal, Forca AI, AI-saved projects, Calibration Wizard history or all of Forca. Everything moves to a backup folder first."
-msgstr "最初からやり直します: プリントジャーナル、Forca AI、AI が保存したプロジェクト、キャリブレーションウィザードの履歴、または Forca 全体。すべて先にバックアップフォルダーへ移動します。"
-
-# AI Translated
-msgid "Forca was reset, but some files could not be moved to the backup folder:"
-msgstr "Forca はリセットされましたが、一部のファイルをバックアップフォルダーに移動できませんでした:"
-
-# AI Translated
-msgid "Start again from scratch. Nothing is deleted: everything you tick moves to a backup folder in your Documents (Forca reset backups), where you can copy things back or delete it later. Forca closes, and the reset happens when you open it again."
-msgstr "最初からやり直します。何も削除されません: チェックした項目はすべて「ドキュメント」内のバックアップフォルダー (Forca reset backups) に移動され、そこから戻したり後で削除したりできます。Forca が閉じ、次に開いたときにリセットされます。"
-
-# AI Translated
-msgid "Forca itself (like a fresh install)"
-msgstr "Forca 本体（新規インストールと同じ状態）"
-
-# AI Translated
-msgid "All settings, your own presets, printers, network plug-ins and logs. Forca opens as on the first day, so this also covers the AI and Calibration Wizard data below."
-msgstr "すべての設定、独自のプリセット、プリンター、ネットワークプラグイン、ログ。Forca は初日と同じ状態で開くので、下の AI とキャリブレーションウィザードのデータも含まれます。"
-
-# AI Translated
-msgid "Forca Academy print journal"
-msgstr "Forca Academy のプリントジャーナル"
-
-# AI Translated
-msgid "Every print record, note, photo, lesson, playbook and experiment in the Academy folder."
-msgstr "Academy フォルダー内のすべてのプリント記録、メモ、写真、教訓、プレイブック、実験。"
-
-# AI Translated
-msgid "A new key (AI clients must be connected again), no shared printers or pause permission, the Guarded level, Forca AI switched off, and its activity log."
-msgstr "新しいキー（AI クライアントは再接続が必要）、共有プリンターと一時停止の許可なし、Guarded レベル、Forca AI はオフ、そのアクティビティログ。"
-
-# AI Translated
-msgid "Projects saved by the AI"
-msgstr "AI が保存したプロジェクト"
-
-# AI Translated
-msgid "The Forca AI folder in your Documents: AI-saved projects, backups and bed-check pictures."
-msgstr "「ドキュメント」内の Forca AI フォルダー: AI が保存したプロジェクト、バックアップ、ベッド確認画像。"
-
-# AI Translated
-msgid "Calibration Wizard history"
-msgstr "キャリブレーションウィザードの履歴"
-
-# AI Translated
-msgid "The wizard's progress and results history. Values you saved to your presets stay."
-msgstr "ウィザードの進行状況と結果の履歴。プリセットに保存した値はそのまま残ります。"
-
-# AI Translated
-msgid "Reset and close Forca"
-msgstr "リセットして Forca を閉じる"
-
-# AI Translated
-msgid "Forca closes now and resets the ticked parts when you open it again. Everything goes to the backup folder first. Continue?"
-msgstr "Forca を今すぐ閉じ、次に開いたときにチェックした項目をリセットします。すべて先にバックアップフォルダーへ移動します。続行しますか？"
-
-# AI Translated
-msgid "Choose where to keep the Forca Academy folder"
-msgstr "Forca Academy フォルダーの保存場所を選択"
-
-# AI Translated
-msgid "Where the print journal is kept: a Forca Academy folder in the place you choose, with plain Markdown and JSON files. An AI reading it starts with AGENTS.md."
-msgstr "プリントジャーナルの保存場所: 選んだ場所に作られる Forca Academy フォルダー（シンプルな Markdown と JSON ファイル）。読み取る AI は AGENTS.md から始めます。"
-
-# AI Translated
-msgid "The AI did not send this print"
-msgstr "AI はこのプリントを送信しませんでした"
-
-# AI Translated
-msgid "The AI is sending this print in %d s (print grant #%d)."
-msgstr "AI は %d 秒後にこのプリントを送信します（プリント許可 #%d）。"
-
-# AI Translated
-msgid "Share a printer with the AI first (the printer list in this window)."
-msgstr "先にプリンターを AI と共有してください（このウィンドウのプリンター一覧）。"
-
-# AI Translated
-msgid "Let the AI print on its own"
-msgstr "AI に単独でプリントさせる"
-
-# AI Translated
-msgid "Within this grant the AI may start prints itself, with no click from you: Forca opens its print dialog, counts down 10 seconds (you can cancel) and presses Send. It only sends to an idle printer whose bed is clear, and only when the print dialog has nothing to ask you. A wrong print can still damage your printer or waste filament, and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca."
-msgstr "この許可の範囲内で、AI はあなたのクリックなしに自らプリントを開始できます。Forca がプリントダイアログを開き、10 秒カウントダウンし（キャンセル可能）、送信を押します。送信先はベッドが空いているアイドル状態のプリンターだけで、プリントダイアログに確認事項がない場合に限ります。それでも誤ったプリントでプリンターが損傷したりフィラメントが無駄になったりすることがあり、無人で動くプリンターは火災の危険があります。安心できる範囲だけ許可してください。許可は使い切ったとき、時間切れのとき、取り消したとき、Guarded を選んだとき、または Forca を再起動したときに終了します。"
-
-# AI Translated
-msgid "Printers:"
-msgstr "プリンター:"
-
-# AI Translated
-msgid "What to print (optional - without files, any plate):"
-msgstr "プリントするもの（任意 - ファイルなしなら任意のプレート）:"
-
-# AI Translated
-msgid "Note for the AI"
-msgstr "AI へのメモ"
-
-# AI Translated
-msgid "Add files..."
-msgstr "ファイルを追加..."
-
-# AI Translated
-msgid "Files the AI should print"
-msgstr "AI にプリントさせるファイル"
-
-# AI Translated
-msgid "Copies..."
-msgstr "部数..."
-
-# AI Translated
-msgid "How many copies of this file?"
-msgstr "このファイルを何部プリントしますか？"
-
-# AI Translated
-msgid "Note..."
-msgstr "メモ..."
-
-# AI Translated
-msgid "Instructions for the AI for this file (orientation, material, settings...):"
-msgstr "このファイルについての AI への指示（向き、材料、設定など）:"
-
-# AI Translated
-msgid "Prints the AI may start:"
-msgstr "AI が開始できるプリント数:"
-
-# AI Translated
-msgid "For the next (hours):"
-msgstr "有効期間（時間）:"
-
-# AI Translated
-msgid "Longest print (hours):"
-msgstr "最長プリント時間（時間）:"
-
-# AI Translated
-msgid "The bed of these printers is clear now"
-msgstr "これらのプリンターのベッドは今空いています"
-
-# AI Translated
-msgid "Also let the AI decide by camera that a bed is clear"
-msgstr "カメラでベッドが空いているかを AI が判断することも許可する"
-
-# AI Translated
-msgid "Off: a bed counts as clear only after you click 'Bed is clear' in this window, once per print. On: the AI may also judge a fresh camera picture itself (Forca keeps the picture), so prints can follow each other while you are away. If it misses something on the bed, the printer will print into it."
-msgstr "オフ: このウィンドウで「ベッドは空いています」をクリックした後にのみ、プリントごとに 1 回ベッドが空いているとみなされます。オン: AI が最新のカメラ画像を自ら判断することもでき（Forca は画像を保存します）、あなたが不在の間もプリントを続けられます。ベッド上の何かを見落とした場合、プリンターはその上にプリントします。"
-
-# AI Translated
-msgid "Give grant"
-msgstr "許可を与える"
-
-# AI Translated
-msgid "Tick at least one printer."
-msgstr "少なくとも 1 台のプリンターにチェックを入れてください。"
-
-# AI Translated
-msgid "Let an AI assistant (for example Claude Code) see and work in Forca. It connects only from this computer, using the key below. At the Guarded level Forca never lets the AI save over your files, and never sends anything to a printer without your approval here in Forca."
-msgstr "AI アシスタント（例: Claude Code）が Forca を見て作業できるようにします。接続はこのコンピューターからのみ、下のキーを使って行われます。Guarded レベルでは、Forca は AI にあなたのファイルを上書き保存させず、Forca でのあなたの承認なしにプリンターへ何も送信しません。"
-
-# AI Translated
-msgid "Let an AI connect to Forca"
-msgstr "AI が Forca に接続できるようにする"
-
-# AI Translated
-msgid "How much the AI may do:"
-msgstr "AI に許可する範囲:"
-
-# AI Translated
-msgid "Guarded (recommended) - new files only; you approve every print request"
-msgstr "Guarded（推奨）- 新規ファイルのみ。すべてのプリント依頼をあなたが承認します"
-
-# AI Translated
-msgid "Advanced - may overwrite your files and presets; no approval card"
-msgstr "Advanced - あなたのファイルとプリセットを上書きできます。承認カードなし"
-
-# AI Translated
-msgid "Unless you give it a print grant below, you press Send yourself. At every level the AI never deletes files or discards your unsaved edits, and it cannot heat, move or change your printers."
-msgstr "下でプリント許可を与えない限り、送信はあなた自身が押します。どのレベルでも、AI がファイルを削除したり未保存の編集を破棄したりすることはなく、プリンターを加熱、移動、変更することもできません。"
-
-# AI Translated
-msgid "Advanced lets the AI save over your own files and change your own presets. Forca copies each file into Documents\\Forca AI\\Backups before the AI overwrites it, but a mistake can still cost you work.\n\nPrint requests will open the print dialog straight away, without an approval card. Nothing prints until you press Send, so check the plate, printer and filament before you do: a wrong print can damage your printer, and never leave a printer running unattended.\n\nSwitch to Advanced?"
-msgstr "Advanced では、AI があなた自身のファイルを上書き保存し、あなた自身のプリセットを変更できます。Forca は AI が上書きする前に各ファイルを Documents\\Forca AI\\Backups にコピーしますが、ミスで作業が失われることはあり得ます。\n\nプリント依頼は承認カードなしで、すぐにプリントダイアログを開きます。送信を押すまで何もプリントされないので、その前にプレート、プリンター、フィラメントを確認してください。誤ったプリントはプリンターを損傷することがあります。また、プリンターを無人で動かしたままにしないでください。\n\nAdvanced に切り替えますか？"
-
-# AI Translated
-msgid "To connect Claude Code, run this once in a terminal:"
-msgstr "Claude Code を接続するには、ターミナルでこれを一度実行してください:"
-
-# AI Translated
-msgid "Copy command"
-msgstr "コマンドをコピー"
-
-# AI Translated
-msgid "Make a new key"
-msgstr "新しいキーを作成"
-
-# AI Translated
-msgid "Stops every AI that uses the old key; connect them again with the new command."
-msgstr "古いキーを使うすべての AI を停止します。新しいコマンドで再接続してください。"
-
-# AI Translated
-msgid "Make a new key? Every AI connected with the old key stops working until you connect it again with the new command."
-msgstr "新しいキーを作成しますか？古いキーで接続しているすべての AI は、新しいコマンドで再接続するまで動作しなくなります。"
-
-# AI Translated
-msgid "Printers the AI may use (it cannot see the others):"
-msgstr "AI が使えるプリンター（他のプリンターは AI からは見えません）:"
-
-# AI Translated
-msgid "Printers the AI may also PAUSE when its camera shows a problem (it can resume only its own pause):"
-msgstr "カメラに問題が映ったときに AI が一時停止もできるプリンター（再開できるのは AI 自身の一時停止のみ）:"
-
-# AI Translated
-msgid "Printing on its own:"
-msgstr "単独プリント:"
-
-# AI Translated
-msgid "Give a print grant..."
-msgstr "プリント許可を与える..."
-
-# AI Translated
-msgid "Bed is clear..."
-msgstr "ベッドは空いています..."
-
-# AI Translated
-msgid "Revoke"
-msgstr "取り消す"
-
-# AI Translated
-msgid "Which printer's bed is clear?"
-msgstr "どのプリンターのベッドが空いていますか？"
-
-# AI Translated
-msgid "What the AI has done (newest first):"
-msgstr "AI が行ったこと（新しい順）:"
-
-# AI Translated
-msgid "Needs the Advanced level."
-msgstr "Advanced レベルが必要です。"
-
-# AI Translated
-msgid "No print grant: the AI cannot start a print by itself."
-msgstr "プリント許可なし: AI は自分でプリントを開始できません。"
-
-# AI Translated
-msgid "Print grant #%d: %d print(s) left, until %s, each up to %d h. Camera bed check: %s."
-msgstr "プリント許可 #%d: 残りプリント数 %d、期限 %s、各 %d 時間まで。カメラによるベッド確認: %s。"
-
-# AI Translated
-msgid "on"
-msgstr "オン"
-
-# AI Translated
-msgid "off"
-msgstr "オフ"
-
-# AI Translated
-msgid "bed marked clear"
-msgstr "ベッドは空きとしてマーク済み"
-
-# AI Translated
-msgid "bed not marked clear"
-msgstr "ベッドは空きとしてマークされていません"
-
-# AI Translated
-msgid "%d of %d sent"
-msgstr "%d / %d 送信済み"
-
-# AI Translated
-msgid "(turn Forca AI on to see the command)"
-msgstr "（コマンドを表示するには Forca AI をオンにしてください）"
-
-# AI Translated
-msgid "(no printers yet -- connect one in the Device tab)"
-msgstr "（プリンターはまだありません -- デバイスタブで接続してください）"
-
-# AI Translated
-msgid "(no printers yet)"
-msgstr "（プリンターはまだありません）"
-
-# AI Translated
-msgid "Forca AI - print request"
-msgstr "Forca AI - プリント依頼"
-
-# AI Translated
-msgid "The AI asks to print this plate"
-msgstr "AI がこのプレートのプリントを依頼しています"
-
-# AI Translated
-msgid "Printer preset"
-msgstr "プリンタープリセット"
-
-# AI Translated
-msgid "Print time"
-msgstr "プリント時間"
-
-# AI Translated
-msgid "The AI says"
-msgstr "AI からのメッセージ"
-
-# AI Translated
-msgid "Approve opens Forca's print dialog for this plate, where you choose the printer and filament slots and press Send. The approval works once, and only for this exact slice."
-msgstr "承認すると、このプレートの Forca プリントダイアログが開き、プリンターとフィラメントスロットを選んで送信を押します。承認は 1 回限りで、このスライス結果にのみ有効です。"
-
-# AI Translated
-msgid "Decline"
-msgstr "拒否"
-
-# AI Translated
-msgid "Approve"
-msgstr "承認"
-
-# AI Translated
-msgid "Forca AI - print paused"
-msgstr "Forca AI - プリント一時停止"
-
-# AI Translated
-msgid "The AI paused a print"
-msgstr "AI がプリントを一時停止しました"
-
-# AI Translated
-msgid "Job"
-msgstr "ジョブ"
-
-# AI Translated
-msgid "Why"
-msgstr "理由"
-
-# AI Translated
-msgid "Check the print. Resume it here or on the printer, or stop it on the printer. The AI may resume only this pause, and only while the print stays paused."
-msgstr "プリントを確認してください。ここかプリンターで再開するか、プリンターで停止してください。AI が再開できるのはこの一時停止だけで、プリントが一時停止中の間に限ります。"
-
-# AI Translated
-msgid "Keep paused"
-msgstr "一時停止のままにする"
-
-# AI Translated
-msgid "Resume print"
-msgstr "プリントを再開"
-
-# AI Translated
-msgid "Bambu Studio project"
-msgstr "Bambu Studio プロジェクト"
-
-# AI Translated
-msgid "This project was made with Bambu Studio %s. Forca doesn't know the following settings from it and ignores them:"
-msgstr "このプロジェクトは Bambu Studio %s で作成されました。Forca は次の設定を認識できないため無視します:"
+#~ msgid "Dalmatian yellow"
+#~ msgstr "ダルメシアンイエロー"
+
+# AI Translated
+#~ msgid "Capsanthin violet"
+#~ msgstr "カプサンチンバイオレット"
+
+# AI Translated
+#~ msgid "Olivestone"
+#~ msgstr "オリーブストーン"
+
+# AI Translated
+#~ msgid "Available anywhere in the window, even while typing in a text field."
+#~ msgstr "テキストフィールドへの入力中も含め、ウィンドウ内のどこでも使用できます。"
+
+# AI Translated
+#~ msgid "Global shortcuts also apply while typing."
+#~ msgstr "グローバルショートカットは文字入力中も有効です。"
+
+#~ msgid "Please choose the filament color"
+#~ msgstr "フィラメントの色を選択してください"
+
+# AI Translated
+#~ msgid ""
+#~ "Line width of the Bridge. If expressed as a %, it will be computed over the nozzle diameter.\n"
+#~ "Recommended to use with a higher Bridge density or Bridge flow ratio.\n"
+#~ "\n"
+#~ "The maximum value is 100% or the nozzle diameter.\n"
+#~ "If set to 0, the line width will match the Internal solid infill width."
+#~ msgstr ""
+#~ "ブリッジのライン幅です。%で指定した場合、ノズル径に対して計算されます。\n"
+#~ "ブリッジ密度やブリッジ流量比を高めに設定して使用することをおすすめします。\n"
+#~ "\n"
+#~ "最大値は100%またはノズル径です。\n"
+#~ "0に設定すると、ライン幅は内部ソリッドインフィルの幅と同じになります。"
+
+# AI Translated
+#, no-c-format, no-boost-format
+#~ msgid ""
+#~ "Enable this option to slow down printing in areas where perimeters may have curled upwards.\n"
+#~ "For example, additional slowdown will be applied when printing overhangs on sharp corners like the front of the Benchy hull, reducing curling which compounds over multiple layers.\n"
+#~ "\n"
+#~ "It is generally recommended to have this option switched on unless your printer cooling is powerful enough or the print speed is slow enough that perimeter curling does not happen. \n"
+#~ "If printing with a high external perimeter speed, this parameter may introduce wall artifacts when slowing down, due to the potentially large variance in print speeds causing the extruder to be unable to keep up with the requested flow change.\n"
+#~ "Root cause of these artifacts is most likely PA tuning being slightly off, especially when combined with a high PA smooth time.\n"
+#~ "\n"
+#~ "Recommendations when enabling this option:\n"
+#~ "1. Reduce Pressure Advance smooth time to 0.015 - 0.02 so the extruder reacts quickly to the speed changes.\n"
+#~ "2. Increase the minimum print speeds to limit the magnitude of the slowdown and reduce the variance between fast and slow segments.\n"
+#~ "3. If artifacts still appear, enable Extrusion Rate Smoothing (ERS) to further smooth the flow transitions.\n"
+#~ "\n"
+#~ "Note: When this option is enabled, overhang perimeters are treated like overhangs, meaning the overhang speed is applied even if the overhanging perimeter is part of a bridge.\n"
+#~ "For example, when the perimeters are 100% overhanging, with no wall supporting them from underneath, the 100% overhang speed will be applied."
+#~ msgstr ""
+#~ "外周が上向きにカールしている可能性がある領域で、印刷を減速させる場合にこのオプションを有効にします。\n"
+#~ "例えば、Benchyの船首のような鋭角部のオーバーハングを印刷する際に追加の減速が適用され、複数の層にわたって蓄積するカールを抑えられます。\n"
+#~ "\n"
+#~ "プリンターの冷却が十分に強力であるか、印刷速度が十分に遅く外周のカールが起きない場合を除き、通常はこのオプションを有効にすることをおすすめします。 \n"
+#~ "外壁速度が高い状態で印刷している場合、印刷速度の差が大きくなり押出機が要求された流量変化に追随できなくなるため、減速時に壁面のアーティファクトが生じることがあります。\n"
+#~ "これらのアーティファクトの根本原因は、多くの場合PAの調整がわずかにずれていることであり、特にPAスムーズ時間が長い場合に顕著です。\n"
+#~ "\n"
+#~ "このオプションを有効にする際の推奨事項:\n"
+#~ "1. Pressure Advanceのスムーズ時間を0.015〜0.02に下げ、押出機が速度変化に素早く反応するようにします。\n"
+#~ "2. 最小印刷速度を上げて減速の幅を抑え、速い区間と遅い区間の差を小さくします。\n"
+#~ "3. それでもアーティファクトが出る場合は、Extrusion Rate Smoothing (ERS) を有効にして流量の遷移をさらに滑らかにします。\n"
+#~ "\n"
+#~ "注意: このオプションを有効にすると、オーバーハング外周はオーバーハングとして扱われるため、オーバーハングする外周がブリッジの一部であってもオーバーハング速度が適用されます。\n"
+#~ "例えば、外周が100%オーバーハングで下に支える壁がない場合、100%オーバーハング時の速度が適用されます。"
+
+# AI Translated
+#~ msgid ""
+#~ "Speed of the externally visible bridge extrusions.\n"
+#~ "\n"
+#~ "In addition, if Slow down for curled perimeters is disabled or Classic overhang mode is enabled, it will be the print speed of overhang walls that are supported by less than 13%, whether they are part of a bridge or an overhang."
+#~ msgstr ""
+#~ "外部から見えるブリッジ押出の速度です。\n"
+#~ "\n"
+#~ "さらに、「カールした外周で減速」が無効、またはクラシックオーバーハングモードが有効な場合、ブリッジかオーバーハングかに関わらず、支持率13%未満のオーバーハング壁の印刷速度になります。"
+
+# AI Translated
+#~ msgid "This separate setting will affect the speed of perimeters having radius <= small_perimeter_threshold (usually holes). If expressed as percentage (for example: 80%) it will be calculated on the outer wall speed setting above. Set to zero for auto."
+#~ msgstr "この個別の設定は、半径がsmall_perimeter_threshold以下の外周 (通常は穴) の速度に影響します。パーセント (例: 80%) で指定した場合、上の外壁速度の設定を基準に計算されます。自動にするには0を設定してください。"
+
+# AI Translated
+#~ msgid "Same as \"Small perimeters\", but for supports. This separate setting will affect the speed of support for areas <= `small_support_perimeter_threshold`. If expressed as a percentage (for example: 80%), it will be calculated on the support or support interface speed setting above. Set to zero for auto."
+#~ msgstr "「小さな外周」と同様ですが、サポート用です。この個別の設定は、`small_support_perimeter_threshold`以下の領域のサポート速度に影響します。パーセント (例: 80%) で指定した場合、上のサポートまたはサポートインターフェースの速度設定を基準に計算されます。自動にするには0を設定してください。"
+
+# AI Translated
+#~ msgid ""
+#~ "Print sequence of the internal (inner) and external (outer) walls.\n"
+#~ "\n"
+#~ "Use Inner/Outer for best overhangs. This is because the overhanging walls can adhere to a neighbouring perimeter while printing. However, this option results in slightly reduced surface quality as the external perimeter is deformed by being squashed to the internal perimeter.\n"
+#~ "\n"
+#~ "Use Inner/Outer/Inner for the best external surface finish and dimensional accuracy as the external wall is printed undisturbed from an internal perimeter. However, overhang performance will reduce as there is no internal perimeter to print the external wall against. This option requires a minimum of 3 walls to be effective as it prints the internal walls from the 3rd perimeter onwards first, then the external perimeter and, finally, the first internal perimeter. This option is recommended against the Outer/Inner option in most cases.\n"
+#~ "\n"
+#~ "Use Outer/Inner for the same external wall quality and dimensional accuracy benefits of Inner/Outer/Inner option. However, the Z seams will appear less consistent as the first extrusion of a new layer starts on a visible surface."
+#~ msgstr ""
+#~ "内壁と外壁の印刷順序です。\n"
+#~ "\n"
+#~ "オーバーハングを最良にするには内壁→外壁を使用します。オーバーハングする壁が印刷中に隣接する外周に密着できるためです。ただし、外周が内周に押し付けられて変形するため、表面品質はわずかに低下します。\n"
+#~ "\n"
+#~ "外面の仕上がりと寸法精度を最良にするには内壁→外壁→内壁を使用します。外壁が内周に乱されずに印刷されるためです。ただし、外壁を印刷する際に支えとなる内周がないため、オーバーハング性能は低下します。このオプションは3本目以降の内壁を先に印刷し、次に外壁、最後に1本目の内壁を印刷するため、効果を得るには最低3本の壁が必要です。多くの場合、外壁→内壁よりこのオプションをおすすめします。\n"
+#~ "\n"
+#~ "外壁→内壁は内壁→外壁→内壁と同様に外壁の品質と寸法精度の利点がありますが、新しい層の最初の押出が見える面から始まるため、Zシームの一貫性が低く見えます。"
+
+#~ msgid "This is the speed for the first layer except for solid infill sections."
+#~ msgstr "1層目を造形時に、ソリッド インフィル以外の部分の造形速度です。"
+
+#~ msgid "This is the speed for solid infill parts of the first layer."
+#~ msgstr "1層目のソリッド インフィルの造形速度です。"
+
+# AI Translated
+#, no-c-format, no-boost-format
+#~ msgid "This allows the infill area to be enlarged slightly to overlap with walls for better bonding. The percentage value is relative to line width of sparse infill. Set this value to ~10-15% to minimize potential over extrusion and accumulation of material resulting in rough top surfaces."
+#~ msgstr "インフィル領域をわずかに広げて壁面と重ねることで、接着を改善します。パーセント値はスパース インフィルのライン幅に対する相対値です。過剰押出や材料の蓄積による上面のざらつきを最小限に抑えるには、この値を10〜15%程度に設定します。"
+
+# AI Translated
+#, no-c-format, no-boost-format
+#~ msgid "Top solid infill area is enlarged slightly to overlap with wall for better bonding and to minimize the appearance of pinholes where the top infill meets the walls. A value of 25-30% is a good starting point, minimizing the appearance of pinholes. The percentage value is relative to line width of sparse infill."
+#~ msgstr "上面ソリッドインフィルの領域をわずかに広げて壁面と重ねることで、接着を改善し、上面インフィルと壁面の境目にできるピンホールを目立たなくします。25〜30%が良い出発点で、ピンホールを目立たなくできます。パーセント値はスパース インフィルのライン幅に対する相対値です。"
+
+#~ msgid "Interlocking depth of a segmented region. It will be ignored if \"mmu_segmented_region_max_width\" is zero or if \"mmu_segmented_region_interlocking_depth\" is bigger than \"mmu_segmented_region_max_width\". Zero disables this feature."
+#~ msgstr "セグメント化された領域の連動深さ。mmu_segmented_region_max_width \"が0か、\"mmu_segmented_region_interlocking_depth \"が \"mmu_segmented_region_max_width \"より大きい場合は無視される。ゼロはこの機能を無効にする。"
+
+# AI Translated
+#~ msgid ""
+#~ "Reduce the height of top-surface perimeters to match the model edge height.\n"
+#~ "Affects perimeters with a slope less than this angle (degrees).\n"
+#~ "A reasonable value is 35. Set to 0 to disable."
+#~ msgstr ""
+#~ "上面の外周の高さを下げて、モデルの縁の高さに合わせます。\n"
+#~ "この角度 (度) 未満の傾斜を持つ外周に影響します。\n"
+#~ "35程度が妥当な値です。0にすると無効になります。"
+
+# AI Translated
+#~ msgid "Role base wipe speed"
+#~ msgstr "ロール基準のワイプ速度"
+
+# AI Translated
+#~ msgid ""
+#~ "A draft shield is useful to protect an ABS or ASA print from warping and detaching from print bed due to wind draft. It is usually needed only with open frame printers, i.e. without an enclosure.\n"
+#~ "\n"
+#~ "Enabled = skirt is as tall as the highest printed object. Otherwise 'Skirt height' is used.\n"
+#~ "Note: With the draft shield active, the skirt will be printed at skirt distance from the object. Therefore, if brims are active it may intersect with them. To avoid this, increase the skirt distance value.\n"
+#~ msgstr ""
+#~ "保護シールドは、ABSやASAの印刷物が風によって反ったりベッドから剥がれたりするのを防ぐのに役立ちます。通常はエンクロージャーのないオープンフレームのプリンターでのみ必要です。\n"
+#~ "\n"
+#~ "有効 = スカートは最も高い印刷オブジェクトと同じ高さになります。それ以外の場合は「スカートの高さ」が使用されます。\n"
+#~ "注意: 保護シールドが有効な場合、スカートはオブジェクトからスカート距離だけ離して印刷されます。そのため、ブリムが有効だと交差する可能性があります。これを避けるには、スカート距離の値を大きくしてください。\n"
+
+# AI Translated
+#~ msgid ""
+#~ "The maximum print speed when purging in the wipe tower and printing the wipe tower sparse layers. When purging, if the sparse infill speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+#~ "\n"
+#~ "When printing the sparse layers, if the internal perimeter speed or calculated speed from the filament max volumetric speed is lower, the lowest will be used instead.\n"
+#~ "\n"
+#~ "Increasing this speed may affect the tower's stability as well as increase the force with which the nozzle collides with any blobs that may have formed on the wipe tower.\n"
+#~ "\n"
+#~ "Before increasing this parameter beyond the default of 90 mm/s, make sure your printer can reliably bridge at the increased speeds and that ooze when tool changing is well controlled.\n"
+#~ "\n"
+#~ "For the wipe tower external perimeters the internal perimeter speed is used regardless of this setting."
+#~ msgstr ""
+#~ "ワイプタワーでのパージ時、およびワイプタワーのスパース層を印刷する際の最大印刷速度です。パージ時に、スパース インフィル速度やフィラメントの最大体積速度から計算された速度の方が低い場合は、最も低い速度が使用されます。\n"
+#~ "\n"
+#~ "スパース層の印刷時に、内周速度やフィラメントの最大体積速度から計算された速度の方が低い場合は、最も低い速度が使用されます。\n"
+#~ "\n"
+#~ "この速度を上げるとタワーの安定性に影響する可能性があり、ワイプタワーにできたブロブにノズルが衝突する際の力も大きくなります。\n"
+#~ "\n"
+#~ "このパラメータをデフォルトの90 mm/sより大きくする前に、上げた速度でもプリンターが安定してブリッジでき、ツール交換時の垂れ出しが十分に制御できていることを確認してください。\n"
+#~ "\n"
+#~ "ワイプタワーの外周には、この設定に関わらず内周の速度が使用されます。"
+
+# AI Translated
+#~ msgid ""
+#~ "Wipe tower outer wall type.\n"
+#~ "1. Rectangle: The default wall type, a rectangle with fixed width and height.\n"
+#~ "2. Cone: A cone with a fillet at the bottom to help stabilize the wipe tower.\n"
+#~ "3. Rib: Adds four ribs to the tower wall for enhanced stability."
+#~ msgstr ""
+#~ "ワイプタワーの外壁タイプです。\n"
+#~ "1. 長方形: デフォルトの壁タイプで、幅と高さが固定された長方形です。\n"
+#~ "2. コーン: 底部にフィレットを持つ円錐形で、ワイプタワーの安定に役立ちます。\n"
+#~ "3. リブ: タワーの壁に4本のリブを追加して安定性を高めます。"
+
+#~ msgid "Extra flow used for the purging lines on the wipe tower. This makes the purging lines thicker or narrower than they normally would be. The spacing is adjusted automatically."
+#~ msgstr "ワイプタワーのパージラインで使用される余分の量。 これによって、パージラインが通常よりも太くなったり、細くなったりします。 間隔は自動的に調整されます。"
+
+# AI Translated
+#~ msgid ""
+#~ "Adjust this value to prevent short, unclosed walls from being printed, which could increase print time. Higher values remove more and longer walls.\n"
+#~ "\n"
+#~ "NOTE: Bottom and top surfaces will not be affected by this value to prevent visual gaps on the outside of the model. Adjust 'One wall threshold' in the Advanced settings below to adjust the sensitivity of what is considered a top-surface. 'One wall threshold' is only visible if this setting is set above the default value of 0.5, or if single-wall top surfaces is enabled."
+#~ msgstr ""
+#~ "短く閉じていない壁が印刷されて印刷時間が増えるのを防ぐため、この値を調整します。値を大きくすると、より多くの、より長い壁が取り除かれます。\n"
+#~ "\n"
+#~ "注意: モデル外側に視覚的な隙間が生じるのを防ぐため、底面と上面はこの値の影響を受けません。上面と見なす判定の感度は、下の詳細設定にある「1本壁のしきい値」で調整してください。「1本壁のしきい値」は、この設定がデフォルト値の0.5より大きい場合、または上面1本壁が有効な場合にのみ表示されます。"
 
 # AI Translated
 #, boost-format
@@ -37852,9 +40438,6 @@ msgstr "このプロジェクトは Bambu Studio %s で作成されました。F
 #~ msgid "no configured tool"
 #~ msgstr "未設定のツール"
 
-#~ msgid "Add end G-Code when finishing the entire print."
-#~ msgstr "造形完了時のG-codeを追加"
-
 #~ msgid "Maximum X speed"
 #~ msgstr "最大速度 X"
 
@@ -37872,25 +40455,9 @@ msgstr "このプロジェクトは Bambu Studio %s で作成されました。F
 #~ msgstr "スライスパイプラインの各ステップで呼び出され、中間のスライスデータを読み取り・変更するPythonプラグインです。最終的なG-codeの後処理ステップも含みます。研究/実験用です。"
 
 # AI Translated
-#~ msgid "When enabled, the slicer emits g-code with the primary zone's contents centered on bed origin (0,0). The printer firmware is responsible for placing copies/mirrors at each physical zone position. Enable only on printers whose firmware applies its own zone offsets in copy/mirror mode (e.g. RepRapFirmware IDEX duplication mode). Has no effect in Primary mode."
-#~ msgstr "有効にすると、スライサーはプライマリゾーンの内容をベッド原点 (0,0) を中心に配置したG-codeを出力します。各物理ゾーン位置へのコピー/ミラーの配置はプリンターのファームウェアが行います。コピー/ミラーモードでファームウェアが独自のゾーンオフセットを適用するプリンター (例: RepRapFirmwareのIDEX複製モード) でのみ有効にしてください。プライマリ (Primary) モードでは効果がありません。"
-
-# AI Translated
 # Needs human review: 'pem-inversion' is developer jargon (inverse of the physical extruder map); check the wording is understandable.
 #~ msgid "Per-plate override mapping physical heads to filament slots (1-based). Empty means use pem-inversion defaults."
 #~ msgstr "物理ヘッドをフィラメントスロットに対応付ける、プレートごとのオーバーライドです (1始まり)。空の場合はpem反転によるデフォルトを使用します。"
-
-# AI Translated
-#~ msgid "Axis the mesh is rotated about before slicing. This is the belt printer's tilt: an isometric (no distortion) rotation that also drives bed rendering and support gravity tilt, and that the g-code back-transform inverts before the machine-frame shear/scale and remap. X is the typical gantry tilt (belt travels along Y)."
-#~ msgstr "スライス前にメッシュを回転させる軸です。これはベルトプリンターの傾斜で、歪みのない等長回転です。ベッドの描画とサポートの重力方向の傾斜にも使用され、G-codeの逆変換では、機械座標系のせん断/スケールとリマップの前にこの回転が元に戻されます。一般的なガントリーの傾斜はXです (ベルトはY方向に移動)。"
-
-# AI Translated
-#~ msgid "Expert override: set the machine-frame (g-code shear/scale) tilt angle independently of the pre-slice rotation angle. When disabled, the machine-frame transform is derived from the belt tilt angle, so a single angle drives both stages. Enable only to compensate for a machine whose physical gantry tilt differs from the slicing rotation."
-#~ msgstr "エキスパート向けの上書き設定: 機械座標系 (G-codeのせん断/スケール) の傾斜角度を、スライス前の回転角度とは独立して設定します。無効の場合、機械座標系の変換はベルト傾斜角度から導出されるため、1つの角度で両方の段階を制御します。物理的なガントリーの傾斜がスライス時の回転と異なるマシンを補正する場合にのみ有効にしてください。"
-
-# AI Translated
-#~ msgid "The maximum deviation allowed when reducing the resolution for the 'Maximum wall resolution' setting. If you increase this, the print will be less accurate, but the G-Code will be smaller. 'Maximum wall deviation' limits 'Maximum wall resolution', so if the two conflict, 'Maximum wall deviation' takes precedence."
-#~ msgstr "「最大壁解像度」設定で解像度を下げる際に許容される最大偏差です。これを大きくすると印刷の精度は下がりますが、G-Codeは小さくなります。「最大壁偏差」は「最大壁解像度」を制限するため、両者が競合する場合は「最大壁偏差」が優先されます。"
 
 #~ msgid " not in range "
 #~ msgstr "範囲外 "
@@ -38687,9 +41254,6 @@ msgstr "このプロジェクトは Bambu Studio %s で作成されました。F
 
 #~ msgid "Reset mapped extruders."
 #~ msgstr "マッピングされたエクストルーダーをリセット。"
-
-#~ msgid "Note"
-#~ msgstr "注意"
 
 #~ msgid ""
 #~ "The color has been selected, you can choose OK \n"

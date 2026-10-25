@@ -1,12 +1,14 @@
 #include <catch2/catch_all.hpp>
 
 #include <cmath>
+#include <libslic3r/Print.hpp>
 #include <numeric>
 #include <sstream>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include "catch2/matchers/catch_matchers.hpp"
 #include "test_helpers.hpp" // get access to init_print, etc
 
 #include "libslic3r/Config.hpp"

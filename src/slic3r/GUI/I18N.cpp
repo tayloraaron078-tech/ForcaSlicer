@@ -1,4 +1,5 @@
 #include "I18N.hpp"
+#include <cstddef>
 #include <wx/string.h>
 #include <string>
 #include <wx/translation.h>

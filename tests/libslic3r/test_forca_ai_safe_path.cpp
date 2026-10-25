@@ -1,11 +1,17 @@
 // Forca AI rule R1: the AI never saves over the user's files (libslic3r/ForcaAISafePath).
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "libslic3r/ForcaAISafePath.hpp"
 #include "test_utils.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <string>
+#include <ios>
+#include <iterator>
 
 using namespace Slic3r;
 namespace fs = boost::filesystem;

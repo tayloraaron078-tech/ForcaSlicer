@@ -46,6 +46,7 @@
 #include "slic3r/GUI/DeviceCore/DevConfigUtil.h"
 #include <deque>
 #include <exception>
+#include <stdexcept>
 #include "libslic3r/LifecycleEvents.hpp"
 #include "libslic3r/Point.hpp"
 #include "slic3r/GUI/SettingsIndex.hpp"
@@ -81,6 +82,7 @@
 #include "wxExtensions.hpp"
 #include "PresetComboBoxes.hpp"
 #include <wx/wupdlock.h>
+#include <limits>
 
 #include "GUI_App.hpp"
 #include "GUI_ObjectList.hpp"
@@ -1647,6 +1649,138 @@ void Tab::load_config(const DynamicPrintConfig& config)
     }
 }
 
+// The option keys a preset of `type` may hold. The tab's config shares the global
+// print_config_def with every other preset type, so membership has to be checked against the
+// preset type's own key list instead of the config definition, or a printer setting could be
+// written into the process preset.
+static const std::vector<std::string>& preset_type_options(Preset::Type type)
+{
+    static const std::vector<std::string> none;
+    switch (type) {
+    case Preset::TYPE_PRINT:    return Preset::print_options();
+    case Preset::TYPE_FILAMENT: return Preset::filament_options();
+    case Preset::TYPE_PRINTER:  return Preset::printer_options();
+    default:                    return none;
+    }
+}
+
+static const char* preset_type_name(Preset::Type type)
+{
+    switch (type) {
+    case Preset::TYPE_PRINT:    return "process";
+    case Preset::TYPE_FILAMENT: return "filament";
+    case Preset::TYPE_PRINTER:  return "printer";
+    default:                    return "preset";
+    }
+}
+
+// Commit one option whose new value already sits in m_config through the same path a hand edit
+// runs. The key-specific behaviour (ConfigOptionsGroup::on_change_OG, including the printer_agent
+// canonicalization, the group's pre-checks and Tab::on_value_change()) runs exactly as for a hand
+// edit. A built field supplies the field's typed/clamped value; otherwise the owning
+// ConfigOptionsGroup builds the value from the config it edits and dispatches the same
+// on_change_OG(). The option's page is reloaded from the config just committed first, so a built
+// field reports the committed value rather than a stale one. No tab-wide refresh happens here: the
+// caller does it once for the whole batch.
+bool Tab::commit_preset_config_value(const std::string& opt_key)
+{
+    if (Page* field_page = nullptr; Field* field = get_field(opt_key, &field_page)) {
+        field_page->reload_config();
+        field->field_changed();
+        return true;
+    }
+    for (const PageShp& page : m_pages)
+        for (const ConfigOptionsGroupShp& group : page->m_optgroups)
+            if (group->commit_config_value(opt_key))
+                return true;
+    return false;
+}
+
+// Set one option of the currently edited preset from its serialized string form, then run the
+// same update path a hand edit runs. The edited preset is not saved: it only becomes dirty,
+// exactly as if the field had been edited by hand.
+void Tab::apply_preset_config_value(const std::string& opt_key, const std::string& value)
+{
+    apply_preset_config_values({{opt_key, value}});
+}
+
+// Apply a batch of settings as one transaction: parse and validate the whole batch first, then
+// commit it through the same per-setting path apply_preset_config_value() uses, restoring the edited
+// preset and the state derived from it if a setting fails. See the header for the contract and its
+// limits.
+void Tab::apply_preset_config_values(const std::vector<std::pair<std::string, std::string>>& values)
+{
+    if (m_config == nullptr)
+        throw std::runtime_error("The preset configuration is not available");
+    if (wxGetApp().plater() == nullptr)
+        throw std::runtime_error("OrcaSlicer main window is not available");
+
+    if (values.empty())
+        return;
+
+    const std::vector<std::string>& options = preset_type_options(m_type);
+
+    // Preparation: reject every batch that cannot be applied before touching the edited preset, so a
+    // bad key or value fails without a partial write. The key must belong to this preset type, it must
+    // not repeat, and each value is strict-parsed into a scratch copy (the strict deserializer can
+    // already have mutated an option when it rejects a bad value, so the check has to run somewhere
+    // the edited preset is not affected). Callback failures cannot be prepared this way: a setting's
+    // on_change callback is a GUI method, not a pure function of the config, so whether it throws is
+    // only known by running it. That residual case is handled by the rollback below.
+    std::set<std::string>   seen;
+    DynamicPrintConfig      scratch(*m_config);
+    for (const auto& kv : values) {
+        const std::string& opt_key = kv.first;
+        if (std::find(options.begin(), options.end(), opt_key) == options.end())
+            throw std::invalid_argument(format("Unknown %1% preset setting \"%2%\"", preset_type_name(m_type), opt_key));
+        if (!seen.insert(opt_key).second)
+            throw std::invalid_argument(format("%1% preset setting \"%2%\" is set more than once in the same update",
+                                               preset_type_name(m_type), opt_key));
+        try {
+            scratch.set_deserialize_strict(opt_key, kv.second);
+        } catch (const ConfigurationError& err) {
+            throw std::invalid_argument(err.what());
+        }
+    }
+
+    // Rollback boundary: snapshot the whole edited config, not just the keys the batch names, because a
+    // key-specific callback can adjust related settings of the edited preset (mutually exclusive
+    // options, compatibility, and so on). A failure restores this config and then recomputes the state
+    // derived from it.
+    DynamicPrintConfig before(*m_config);
+    try {
+        for (const auto& kv : values) {
+            m_config->set_deserialize_strict(kv.first, kv.second);
+            if (!commit_preset_config_value(kv.first))
+                // The GUI edits this setting through a custom widget rather than a group (e.g.
+                // compatible_printers), so take the same shared no-field commit path the widget uses.
+                // The value was written above, so saved mode skips the write and keeps the path's
+                // compatibility recompute, dirty flag, preset-combo and plater updates.
+                load_key_value(kv.first, boost::any(), /*saved_value=*/true);
+        }
+    } catch (...) {
+        *m_config = before;
+        // A callback can rewrite state derived from the config (compatibility marks, the preset
+        // selector, dependent tabs, the Plater and, on the printer tab, the printer agent) before it
+        // throws. Recompute that derived state from the restored config so none of it is left
+        // reflecting the failed batch. Effects that are not a function of the config (a dialog the
+        // user already accepted, an undo snapshot, a command already sent to a device, the target
+        // selection) cannot be reversed here; see the header.
+        m_preset_bundle->update_compatible(PresetSelectCompatibleType::Never);
+        reload_config();
+        update_dirty();
+        update();
+        throw;
+    }
+
+    // Apply the batch's final state once. The commit paths above already maintained the dirty flag,
+    // preset combo and, on the printer tab, the printer-agent switch; this reloads the visible page
+    // and pushes the config to the Plater.
+    reload_config();
+    update_dirty();
+    update();
+}
+
 // Reload current $self->{config} (aka $self->{presets}->edited_preset->config) into the UI fields.
 void Tab::reload_config()
 {
@@ -1946,6 +2080,36 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         return;
     }
 
+    // The bed-area point option cannot store collision-volume syntax. Offer to
+    // copy it to the volume setting while retaining the area's previous value.
+    if (opt_key == "bed_exclude_area" && m_type == Preset::TYPE_PRINTER) {
+        const std::string *definition = boost::any_cast<std::string>(&value);
+        if (definition != nullptr && is_bed_exclusion_volume_syntax(*definition)) {
+            const double printable_height = m_config->opt_float("printable_height");
+            if (!is_valid_bed_exclude_volumes_string(*definition, printable_height)) {
+                show_error(wxGetApp().plater(), _L("Invalid collision volume format. Use XxY, XxY, ... or ZMIN..ZMAX;XxY, XxY, ... and separate multiple volumes with |."));
+                reload_config();
+                return;
+            }
+
+            MessageDialog dialog(
+                wxGetApp().plater(),
+                _L("This definition contains collision-volume syntax. Add it to the toolhead collision volumes for G-code checking and travel avoidance? The existing excluded bed area will be preserved."),
+                _L("Add collision volumes"), wxICON_QUESTION | wxYES | wxNO);
+            if (dialog.ShowModal() == wxID_YES) {
+                DynamicPrintConfig converted = *m_config;
+                append_bed_exclude_volumes(converted, *definition);
+                load_config(converted);
+                reload_config();
+                on_presets_changed();
+                wxGetApp().plater()->update();
+            } else {
+                reload_config();
+            }
+            return;
+        }
+    }
+
     // Keep this preset's "plugins" manifest in sync when a plugin picker changes, so full_config() and
     // save_to_json() always find resolved "name;uuid;capability" references and rebuild it nowhere else.
     // Also drop any plugin config override entries for a capability the change just stopped
@@ -1966,6 +2130,25 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
     if (opt_key == "gcode_flavor" && m_type == Preset::TYPE_PRINTER) {
         if (auto printer_tab = dynamic_cast<TabPrinter*>(this))
             printer_tab->on_gcode_flavor_changed();
+    }
+
+    if (opt_key == "bed_exclude_volume_mode" && m_type == Preset::TYPE_PRINTER &&
+        m_config->opt_enum<BedExcludeVolumeMode>("bed_exclude_volume_mode") == BedExcludeVolumeMode::PerExtruder) {
+        auto *per_extruder = m_config->option<ConfigOptionStrings>("extruder_bed_exclude_volumes");
+        const auto *shared = m_config->option<ConfigOptionString>("bed_exclude_volumes");
+        const size_t extruder_count = m_config->option<ConfigOptionFloats>("nozzle_diameter")->size();
+        const bool definitions_empty = per_extruder == nullptr ||
+            std::all_of(per_extruder->values.begin(), per_extruder->values.end(), [](const std::string &entry) { return entry.empty(); });
+
+        if (definitions_empty && shared != nullptr && extruder_count > 0) {
+            const std::string serialized = shared->value;
+            const bool valid_shared_definition =
+                is_valid_bed_exclude_volumes_string(serialized, std::numeric_limits<double>::max());
+            DynamicPrintConfig new_conf = *m_config;
+            new_conf.set_key_value("extruder_bed_exclude_volumes",
+                new ConfigOptionStrings(std::vector<std::string>(extruder_count, valid_shared_definition ? serialized : std::string{})));
+            m_config_manipulation.apply(m_config, &new_conf);
+        }
     }
 
     if (opt_key == "compatible_prints")
@@ -2054,17 +2237,19 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
                 }
             }
         }
-        if (!boost::any_cast<bool>(value) && timelapse_enabled) {
+        bool enable_wrapping = m_config->option<ConfigOptionBool>("enable_wrapping_detection")->value;
+        if (!boost::any_cast<bool>(value) && (timelapse_enabled || enable_wrapping)) {
             bool set_enable_prime_tower = false;
-            MessageDialog dlg(wxGetApp().plater(), _L("A prime tower is required for smooth timelapse mode. There may be flaws on the model without a prime tower. Are you sure you want to disable the prime tower\?"),
-                              _L("Warning"), wxICON_WARNING | wxYES | wxNO);
-            if (dlg.ShowModal() == wxID_NO) {
-                DynamicPrintConfig new_conf = *m_config;
-                new_conf.set_key_value("enable_prime_tower", new ConfigOptionBool(true));
-                m_config_manipulation.apply(m_config, &new_conf);
-                set_enable_prime_tower = true;
+            if (timelapse_enabled) {
+                MessageDialog dlg(wxGetApp().plater(), _L("A prime tower is required for smooth timelapse mode. There may be flaws on the model without a prime tower. Are you sure you want to disable the prime tower\?"),
+                                  _L("Warning"), wxICON_WARNING | wxYES | wxNO);
+                if (dlg.ShowModal() == wxID_NO) {
+                    DynamicPrintConfig new_conf = *m_config;
+                    new_conf.set_key_value("enable_prime_tower", new ConfigOptionBool(true));
+                    m_config_manipulation.apply(m_config, &new_conf);
+                    set_enable_prime_tower = true;
+                }
             }
-            bool enable_wrapping = m_config->option<ConfigOptionBool>("enable_wrapping_detection")->value;
             if (enable_wrapping && !set_enable_prime_tower) {
                 MessageDialog dlg(wxGetApp().plater(),
                         _L("A prime tower is required for clumping detection. There may be flaws on the model without prime tower. Are you sure you want to disable prime tower?"),
@@ -2846,6 +3031,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("resolution", "quality_settings_precision#resolution");
         optgroup->append_single_option_line("enable_arc_fitting", "quality_settings_precision#arc-fitting");
         optgroup->append_single_option_line("xy_hole_compensation", "quality_settings_precision#x-y-compensation");
+        optgroup->append_single_option_line("xy_hole_compensation_percent", "quality_settings_precision#x-y-compensation"); // Forca
         optgroup->append_single_option_line("xy_contour_compensation", "quality_settings_precision#x-y-compensation");
         optgroup->append_single_option_line("elefant_foot_compensation", "quality_settings_precision#elephant-foot-compensation");
         optgroup->append_single_option_line("elefant_foot_layers_density", "quality_settings_precision#elephant-foot-compensation-density");
@@ -2853,9 +3039,9 @@ void TabPrint::build()
         optgroup->append_single_option_line("precise_outer_wall", "quality_settings_precision#precise-wall");
         optgroup->append_single_option_line("precise_z_height", "quality_settings_precision#precise-z-height");
         optgroup->append_single_option_line("hole_to_polyhole", "quality_settings_precision#polyholes");
-        optgroup->append_single_option_line("hole_to_polyhole_threshold", "quality_settings_precision#polyholes");
-        optgroup->append_single_option_line("hole_to_polyhole_twisted", "quality_settings_precision#polyholes");
-        optgroup->append_single_option_line("hole_to_polyhole_max_edges", "quality_settings_precision#polyholes");
+        optgroup->append_single_option_line("hole_to_polyhole_threshold", "quality_settings_precision#polyhole-detection-margin");
+        optgroup->append_single_option_line("hole_to_polyhole_twisted", "quality_settings_precision#polyhole-twist");
+        optgroup->append_single_option_line("hole_to_polyhole_max_edges", "quality_settings_precision#maximum-polyhole-edge-count");
 
         optgroup = page->new_optgroup(L("Ironing"), L"param_ironing");
         optgroup->append_single_option_line("ironing_type", "quality_settings_ironing#type");
@@ -2876,7 +3062,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Wall generator"), L"param_wall_generator");
         optgroup->append_single_option_line("wall_generator", "quality_settings_wall_generator");
-        optgroup->append_single_option_line("wall_transition_angle", "quality_settings_wall_generator#wall-transitioning-threshhold-angle");
+        optgroup->append_single_option_line("wall_transition_angle", "quality_settings_wall_generator#wall-transitioning-threshold-angle");
         optgroup->append_single_option_line("wall_transition_filter_deviation", "quality_settings_wall_generator#wall-transitioning-filter-margin");
         optgroup->append_single_option_line("wall_transition_length", "quality_settings_wall_generator#wall-transitioning-length");
         optgroup->append_single_option_line("wall_distribution_count", "quality_settings_wall_generator#wall-distribution-count");
@@ -2950,6 +3136,7 @@ void TabPrint::build()
 
         optgroup->append_single_option_line("top_shell_layers", "strength_settings_top_bottom_shells#shell-layers");
         optgroup->append_single_option_line("top_shell_thickness", "strength_settings_top_bottom_shells#shell-thickness");
+        optgroup->append_single_option_line("top_color_penetration_layers", "strength_settings_top_bottom_shells#paint-penetration-layers");
         optgroup->append_single_option_line("top_surface_density", "strength_settings_top_bottom_shells#surface-density");
         optgroup->append_single_option_line("top_surface_pattern", "strength_settings_top_bottom_shells#surface-pattern");
         optgroup->append_single_option_line("top_surface_fill_order", "strength_settings_top_bottom_shells#fill-order");
@@ -2959,12 +3146,11 @@ void TabPrint::build()
         optgroup->append_single_option_line("top_surface_expansion_direction", "strength_settings_top_bottom_shells#surface-expansion-direction");
         optgroup->append_single_option_line("bottom_shell_layers", "strength_settings_top_bottom_shells#shell-layers");
         optgroup->append_single_option_line("bottom_shell_thickness", "strength_settings_top_bottom_shells#shell-thickness");
+        optgroup->append_single_option_line("bottom_color_penetration_layers", "strength_settings_top_bottom_shells#paint-penetration-layers");
         optgroup->append_single_option_line("bottom_surface_density", "strength_settings_top_bottom_shells#surface-density");
         optgroup->append_single_option_line("bottom_surface_pattern", "strength_settings_top_bottom_shells#surface-pattern");
         optgroup->append_single_option_line("bottom_surface_fill_order", "strength_settings_top_bottom_shells#fill-order");
         optgroup->append_single_option_line("bottom_layer_direction", "strength_settings_infill#top-bottom-direction");
-        optgroup->append_single_option_line("top_color_penetration_layers");    // BBS
-        optgroup->append_single_option_line("bottom_color_penetration_layers"); // BBS
         optgroup->append_single_option_line("center_of_surface_pattern", "strength_settings_top_bottom_shells#center-surface-pattern-on");
         optgroup->append_single_option_line("top_bottom_infill_wall_overlap", "strength_settings_top_bottom_shells#infillwall-overlap");
 
@@ -2972,9 +3158,9 @@ void TabPrint::build()
         optgroup->append_single_option_line("sparse_infill_density", "strength_settings_infill#sparse-infill-density");
         optgroup->append_single_option_line("fill_multiline", "strength_settings_infill#fill-multiline");
         optgroup->append_single_option_line("sparse_infill_pattern", "strength_settings_infill#sparse-infill-pattern");
-        optgroup->append_single_option_line("tpms_adaptive", "strength_settings_patterns#adaptive-density");
-        optgroup->append_single_option_line("tpms_interior_density", "strength_settings_patterns#interior-density");
-        optgroup->append_single_option_line("tpms_adaptive_gradient", "strength_settings_patterns#adaptive-gradient");
+        optgroup->append_single_option_line("adaptive_infill_mode", "strength_settings_patterns#adaptive-density");
+        optgroup->append_single_option_line("adaptive_infill_interior_density", "strength_settings_patterns#interior-density");
+        optgroup->append_single_option_line("adaptive_infill_gradient", "strength_settings_patterns#adaptive-gradient");
         optgroup->append_single_option_line("gyroid_optimized", "strength_settings_patterns#gyroid-optimized");
         optgroup->append_single_option_line("sparse_infill_smooth_factor", "strength_settings_infill#sparse-infill-smooth-factor");
         optgroup->append_single_option_line("infill_direction", "strength_settings_infill#direction");
@@ -2987,7 +3173,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("skeleton_infill_line_width", "strength_settings_patterns#locked-zag");
         optgroup->append_single_option_line("symmetric_infill_y_axis", "strength_settings_infill#symmetric-infill-y-axis");
         optgroup->append_single_option_line("infill_complete_top", "strength_settings_patterns#fill-pattern-tops");
-        optgroup->append_single_option_line("infill_shift_step", "strength_settings_patterns#cross-hatch");
+        optgroup->append_single_option_line("infill_shift_step", "strength_settings_patterns#cross-zag");
         optgroup->append_single_option_line("lateral_lattice_angle_1", "strength_settings_patterns#lateral-lattice");
         optgroup->append_single_option_line("lateral_lattice_angle_2", "strength_settings_patterns#lateral-lattice");
         optgroup->append_single_option_line("infill_overhang_angle", "strength_settings_patterns#lateral-honeycomb");
@@ -3084,8 +3270,8 @@ void TabPrint::build()
         optgroup->append_single_option_line("top_surface_acceleration", "speed_settings_acceleration#top-surface", 0);
         optgroup->append_single_option_line("travel_acceleration", "speed_settings_acceleration#travel", 0);
         optgroup->append_single_option_line("travel_short_distance_acceleration", "", 0);
-        optgroup->append_single_option_line("accel_to_decel_enable", "speed_settings_acceleration");
-        optgroup->append_single_option_line("accel_to_decel_factor", "speed_settings_acceleration");
+        optgroup->append_single_option_line("accel_to_decel_enable", "speed_settings_acceleration#enable-accel-to-decel");
+        optgroup->append_single_option_line("accel_to_decel_factor", "speed_settings_acceleration#accel-to-decel");
 
         optgroup = page->new_optgroup(L("Junction Deviation"), L"param_junction_deviation", 15);
         optgroup->append_single_option_line("default_junction_deviation", "speed_settings_jerk_xy#junction-deviation", 0);
@@ -3103,7 +3289,7 @@ void TabPrint::build()
         optgroup = page->new_optgroup(L("Advanced"), L"param_advanced", 15);
         optgroup->append_single_option_line("max_volumetric_extrusion_rate_slope", "speed_settings_advanced");
         optgroup->append_single_option_line("max_volumetric_extrusion_rate_slope_segment_length", "speed_settings_advanced");
-        optgroup->append_single_option_line("extrusion_rate_smoothing_external_perimeter_only", "speed_settings_advanced");
+        optgroup->append_single_option_line("extrusion_rate_smoothing_external_perimeter_only", "speed_settings_advanced#apply-only-on-external-features");
 
     page = add_options_page(L("Support"), "custom-gcode_support"); // ORCA: icon only visible on placeholders
         optgroup = page->new_optgroup(L("Support"), L"param_support");
@@ -3159,7 +3345,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("support_object_xy_distance", "support_settings_advanced#supportobject-xy-distance");
         optgroup->append_single_option_line("support_object_first_layer_gap", "support_settings_advanced#supportobject-first-layer-gap");
         optgroup->append_single_option_line("bridge_no_support", "support_settings_advanced#dont-support-bridges");
-        optgroup->append_single_option_line("max_bridge_length", "support_settings_advanced");
+        optgroup->append_single_option_line("max_bridge_length", "support_settings_advanced#max-bridge-length");
         optgroup->append_single_option_line("independent_support_layer_height", "support_settings_advanced#independent-support-layer-height");
 
         optgroup = page->new_optgroup(L("Tree supports"), L"param_support_tree");
@@ -3173,21 +3359,21 @@ void TabPrint::build()
         optgroup->append_single_option_line("tree_support_branch_angle", "support_settings_tree#branch-angle");
         optgroup->append_single_option_line("tree_support_branch_angle_organic", "support_settings_tree#branch-angle");
         optgroup->append_single_option_line("tree_support_angle_slow", "support_settings_tree#preferred-branch-angle");
-        optgroup->append_single_option_line("tree_support_auto_brim", "support_settings_tree");
-        optgroup->append_single_option_line("tree_support_brim_width", "support_settings_tree");
+        optgroup->append_single_option_line("tree_support_auto_brim", "support_settings_tree#auto-brim-width");
+        optgroup->append_single_option_line("tree_support_brim_width", "support_settings_tree#tree-support-brim-width");
 
     page = add_options_page(L("Multimaterial"), "custom-gcode_multi_material"); // ORCA: icon only visible on placeholders
         optgroup = page->new_optgroup(L("Prime tower"), L"param_tower");
         optgroup->append_single_option_line("enable_prime_tower", "multimaterial_settings_prime_tower");
-        optgroup->append_single_option_line("prime_tower_skip_points", "multimaterial_settings_prime_tower");
-        optgroup->append_single_option_line("enable_tower_interface_features", "multimaterial_settings_prime_tower");
-        optgroup->append_single_option_line("enable_tower_interface_cooldown_during_tower", "multimaterial_settings_prime_tower");
-        optgroup->append_single_option_line("prime_tower_enable_framework", "multimaterial_settings_prime_tower");
+        optgroup->append_single_option_line("prime_tower_skip_points", "multimaterial_settings_prime_tower#skip-points");
+        optgroup->append_single_option_line("enable_tower_interface_features", "multimaterial_settings_prime_tower#enable-tower-interface-features");
+        optgroup->append_single_option_line("enable_tower_interface_cooldown_during_tower", "multimaterial_settings_prime_tower#cool-down-from-interface-boost-during-prime-tower");
+        optgroup->append_single_option_line("prime_tower_enable_framework", "multimaterial_settings_prime_tower#internal-ribs");
         optgroup->append_single_option_line("prime_tower_width", "multimaterial_settings_prime_tower#width");
         optgroup->append_single_option_line("belt_purge_tower_width", "multimaterial_settings_prime_tower#belt-purge-tower-width");
-        optgroup->append_single_option_line("prime_volume", "multimaterial_settings_prime_tower");
+        optgroup->append_single_option_line("prime_volume", "multimaterial_settings_prime_tower#prime-volume");
         optgroup->append_single_option_line("prime_tower_brim_width", "multimaterial_settings_prime_tower#brim-width");
-        optgroup->append_single_option_line("prime_tower_infill_gap", "multimaterial_settings_prime_tower");
+        optgroup->append_single_option_line("prime_tower_infill_gap", "multimaterial_settings_prime_tower#infill-gap");
         optgroup->append_single_option_line("wipe_tower_rotation_angle", "multimaterial_settings_prime_tower#wipe-tower-rotation-angle");
         optgroup->append_single_option_line("wipe_tower_bridging", "multimaterial_settings_prime_tower#maximal-bridging-distance");
         optgroup->append_single_option_line("wipe_tower_extra_spacing", "multimaterial_settings_prime_tower#wipe-tower-purge-lines-spacing");
@@ -3200,7 +3386,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("wipe_tower_fillet_wall", "multimaterial_settings_prime_tower#fillet-wall");
         optgroup->append_single_option_line("wipe_tower_no_sparse_layers", "multimaterial_settings_prime_tower#no-sparse-layers");
         optgroup->append_single_option_line("wipe_tower_sparse_layers_combination", "multimaterial_settings_prime_tower#combine-sparse-layers");
-        optgroup->append_single_option_line("single_extruder_multi_material_priming", "multimaterial_settings_prime_tower");
+        optgroup->append_single_option_line("single_extruder_multi_material_priming", "multimaterial_settings_prime_tower#prime-all-printing-extruders");
 
         optgroup = page->new_optgroup(L("Filament for Features"), L"param_filament_for_features");
         optgroup->append_single_option_line("outer_wall_filament_id", "multimaterial_settings_filament_for_features#outer-walls");
@@ -3219,7 +3405,7 @@ void TabPrint::build()
 
         optgroup = page->new_optgroup(L("Flush options"), L"param_flush");
         optgroup->append_single_option_line("flush_into_infill", "multimaterial_settings_flush_options#flush-into-objects-infill");
-        optgroup->append_single_option_line("flush_into_objects", "multimaterial_settings_flush_options");
+        optgroup->append_single_option_line("flush_into_objects", "multimaterial_settings_flush_options#flush-into-this-object");
         optgroup->append_single_option_line("flush_into_support", "multimaterial_settings_flush_options#flush-into-objects-support");
         optgroup = page->new_optgroup(L("Advanced"), L"advanced");
         optgroup->append_single_option_line("interlocking_beam", "multimaterial_settings_advanced#interlocking-beam");
@@ -3271,11 +3457,11 @@ void TabPrint::build()
         optgroup->append_single_option_line("spiral_finishing_flow_ratio", "others_settings_special_mode#spiral-finishing-flow-ratio");
 
         optgroup->append_single_option_line("timelapse_type", "others_settings_special_mode#timelapse");
-        optgroup->append_single_option_line("enable_wrapping_detection");
+        optgroup->append_single_option_line("enable_wrapping_detection", "others_settings_special_mode#enable-clumping-detection");
 
         optgroup = page->new_optgroup(L("Fuzzy skin"), L"fuzzy_skin");
-        optgroup->append_single_option_line("fuzzy_skin", "others_settings_fuzzy_skin");
-        optgroup->append_single_option_line("fuzzy_skin_mode", "others_settings_fuzzy_skin#fuzzy-skin-mode");
+        optgroup->append_single_option_line("fuzzy_skin", "others_settings_fuzzy_skin#fuzzy-skin-mode");
+        optgroup->append_single_option_line("fuzzy_skin_mode", "others_settings_fuzzy_skin#fuzzy-skin-generator-mode");
         optgroup->append_single_option_line("fuzzy_skin_noise_type", "others_settings_fuzzy_skin#noise-type");
         optgroup->append_single_option_line("fuzzy_skin_point_distance", "others_settings_fuzzy_skin#point-distance");
         optgroup->append_single_option_line("fuzzy_skin_thickness", "others_settings_fuzzy_skin#skin-thickness");
@@ -3293,6 +3479,7 @@ void TabPrint::build()
         optgroup->append_single_option_line("gcode_comments", "others_settings_g_code_output#verbose-g-code");
         optgroup->append_single_option_line("gcode_label_objects", "others_settings_g_code_output#label-objects");
         optgroup->append_single_option_line("exclude_object", "others_settings_g_code_output#exclude-objects");
+        optgroup->append_single_option_line("exclude_object_tolerance", "others_settings_g_code_output#outline-tolerance");
         option = optgroup->get_option("filename_format");
         // option.opt.full_width = true;
         option.opt.is_code = true;
@@ -3309,7 +3496,7 @@ void TabPrint::build()
         option.opt.full_width = true;
         option.opt.is_code = true;
         option.opt.height = 15;
-        optgroup->append_single_option_line(option);
+        optgroup->append_single_option_line(option, "others_settings_g_code_output#change-extrusion-role-g-code");
 
         optgroup = page->new_optgroup(L("Post-processing Scripts"), L"param_gcode", 0);
         option = optgroup->get_option("post_process");
@@ -3322,12 +3509,29 @@ void TabPrint::build()
         optgroup->hide_labels();
         option = optgroup->get_option("slicing_pipeline_plugin");
         option.opt.full_width = true;
-        optgroup->append_single_option_line(option, "others_settings_plugin_picker");
+        optgroup->append_single_option_line(option, "plugins_types#slicing-pipeline");
 
         // Its own group: the one above hides its labels, and this row needs its label — and the revert
         // arrow beside it — to show. No label-width override either, as a 0 there means "no label column".
         optgroup = page->new_optgroup(L("Plugin Configuration"), L"param_gcode");
         optgroup->append_single_option_line("print_plugin_config_overrides");
+
+        // Forca: per-object filament overrides (docs/HLSD/per-object-filament-overrides.md). Only in an object's process
+        // settings (Edit Process Settings); in the process preset they would apply to every object.
+        if (m_type == Preset::TYPE_MODEL) {
+            optgroup = page->new_optgroup(L("Filament overrides"), L"param_retraction");
+            optgroup->append_single_option_line("object_retraction_length");
+            optgroup->append_single_option_line("object_retraction_speed");
+            optgroup->append_single_option_line("object_deretraction_speed");
+            optgroup->append_single_option_line("object_z_hop");
+            optgroup->append_single_option_line("object_pressure_advance");
+            optgroup->append_single_option_line("object_max_volumetric_speed");
+            optgroup->append_single_option_line("object_nozzle_temperature");
+            optgroup->append_single_option_line("object_nozzle_temperature_initial_layer");
+            optgroup->append_single_option_line("object_fan_min_speed");
+            optgroup->append_single_option_line("object_fan_max_speed");
+            optgroup->append_single_option_line("object_overhang_fan_speed");
+        }
 
         optgroup = page->new_optgroup(L("Notes"), "note", 0);
         option = optgroup->get_option("notes");
@@ -3610,7 +3814,7 @@ void TabPrintModel::build()
         auto optgroup = page->new_optgroup("");
             optgroup->append_single_option_line("layer_height", "quality_settings_layer_height");
             optgroup->append_single_option_line("sparse_infill_density", "strength_settings_infill#sparse-infill-density");
-            optgroup->append_single_option_line("wall_loops", "strength_settings_walls");
+            optgroup->append_single_option_line("wall_loops", "strength_settings_walls#wall-loops");
             optgroup->append_single_option_line("enable_support", "support_settings_support");
     m_pages.pop_back();
     m_pages.insert(m_pages.begin(), page);
@@ -4939,7 +5143,7 @@ void TabFilament::build()
 
         option = optgroup->get_option("compatible_printers_condition");
         option.opt.full_width = true;
-        optgroup->append_single_option_line(option, "material_dependencies#compatible-printers");
+        optgroup->append_single_option_line(option, "material_dependencies#printer-condition");
 
         optgroup = page->new_optgroup(L("Compatible process profiles"), "param_dependencies_presets");
         create_line_with_widget(optgroup.get(), "compatible_prints", "", [this](wxWindow* parent) {
@@ -4948,7 +5152,7 @@ void TabFilament::build()
 
         option = optgroup->get_option("compatible_prints_condition");
         option.opt.full_width = true;
-        optgroup->append_single_option_line(option, "material_dependencies#compatible-process-profiles");
+        optgroup->append_single_option_line(option, "material_dependencies#process-condition");
 
     page = add_options_page(L("Notes"), "custom-gcode_note"); // ORCA: icon only visible on placeholders
         optgroup = page->new_optgroup(L("Notes"),"note", 0);
@@ -5336,11 +5540,15 @@ void TabPrinter::build_fff()
         Option option = optgroup->get_option("bed_exclude_area");
         option.opt.full_width = true;
         optgroup->append_single_option_line(option, "printer_basic_information_printable_space#excluded-bed-area");
-        // optgroup->append_single_option_line("printable_area");
+
+        option = optgroup->get_option("bed_exclude_volumes");
+        option.opt.full_width = true;
+        optgroup->append_single_option_line(option, "printer_basic_information_printable_space#toolhead-collision-volumes");
+        optgroup->append_single_option_line("bed_exclude_volume_mode", "printer_basic_information_printable_space#toolhead-collision-volumes");
+
         optgroup->append_single_option_line("printable_height", "printer_basic_information_printable_space#printable-height");
-        optgroup->append_single_option_line("support_multi_bed_types","printer_basic_information_printable_space#support-multi-bed-types");
+        optgroup->append_single_option_line("support_multi_bed_types", "printer_basic_information_printable_space#support-multi-bed-types");
         optgroup->append_single_option_line("best_object_pos", "printer_basic_information_printable_space#best-object-position");
-        // todo: for multi_extruder test
         optgroup->append_single_option_line("z_offset", "printer_basic_information_printable_space#z-offset");
         optgroup->append_single_option_line("preferred_orientation", "printer_basic_information_printable_space#preferred-orientation");
 
@@ -5365,7 +5573,7 @@ void TabPrinter::build_fff()
                 option.opt.width = Field::def_width_wider();
                 option.opt.tooltip = L("Select the network agent implementation for printer communication. "
                     "Available agents are registered at startup.");
-                optgroup->append_single_option_line(option);
+                optgroup->append_single_option_line(option, "printer_basic_information_advanced#printer-agent");
             }
         }
 
@@ -5728,9 +5936,7 @@ void TabPrinter::append_option_line(ConfigOptionsGroupShp optgroup, const std::s
     auto line = Line{ option.opt.full_label, "" };
     line.label_path = label_path;
     line.append_option(option);
-    if (m_use_silent_mode
-        || m_printer_technology == ptSLA // just for first build, if SLA printer preset is selected
-        )
+    if (m_printer_technology == ptSLA) // just for first build, if SLA printer preset is selected
         line.append_option(optgroup->get_option(opt_key, 1));
     optgroup->append_line(line);
 }
@@ -5739,29 +5945,6 @@ PageShp TabPrinter::build_kinematics_page()
 {
     auto page = add_options_page(L("Motion ability"), "custom-gcode_motion", true); // ORCA: icon only visible on placeholders
 
-    if (m_use_silent_mode) {
-        // Legend for OptionsGroups
-        auto optgroup = page->new_optgroup("");
-        auto line = Line{ "", "" };
-
-        ConfigOptionDef def;
-        def.type = coString;
-        def.width = Field::def_width();
-        def.gui_type = ConfigOptionDef::GUIType::legend;
-        def.mode = comDevelop;
-        //def.tooltip = L("Values in this column are for Normal mode");
-        def.set_default_value(new ConfigOptionString{ _(L("Normal")).ToUTF8().data() });
-
-        auto option = Option(def, "full_power_legend");
-        line.append_option(option);
-
-        //def.tooltip = L("Values in this column are for Stealth mode");
-        def.set_default_value(new ConfigOptionString{ _(L("Silent")).ToUTF8().data() });
-        option = Option(def, "silent_legend");
-        line.append_option(option);
-
-        optgroup->append_line(line);
-    }
     auto optgroup = page->new_optgroup(L("Advanced"), "param_advanced");
     optgroup->append_single_option_line("emit_machine_limits_to_gcode", "printer_motion_ability#emit-limits-to-g-code");
 
@@ -5861,13 +6044,9 @@ void TabPrinter::build_unregular_pages(bool from_initial_build/* = false*/)
     size_t existed_page = 0;
     for (size_t i = n_before_extruders; i < m_pages.size(); ++i) // first make sure it's not there already
         if (m_pages[i]->title().find(L("Motion ability")) != std::string::npos) {
-            if (m_rebuild_kinematics_page)
-                m_pages.erase(m_pages.begin() + i);
-            else
-                existed_page = i;
+            existed_page = i;
             break;
         }
-    m_rebuild_kinematics_page = false;
 
     if (existed_page < n_before_extruders && (is_marlin_flavor || from_initial_build)) {
         auto page = build_kinematics_page();
@@ -6152,7 +6331,11 @@ if (is_marlin_flavor)
             optgroup->append_single_option_line("extruder_printable_height", "printer_extruder_basic_information#extruder-layer-height-limits", extruder_idx);
             Option option         = optgroup->get_option("extruder_printable_area", extruder_idx);
             option.opt.full_width = true;
-            optgroup->append_single_option_line(option, "printer_extruder_basic_information#extruder-offset-position");
+            optgroup->append_single_option_line(option, "printer_extruder_basic_information#extruder-printable-area");
+
+            Option exclusion_option = optgroup->get_option("extruder_bed_exclude_volumes", extruder_idx);
+            exclusion_option.opt.full_width = true;
+            optgroup->append_single_option_line(exclusion_option, "printer_basic_information_printable_space#toolhead-collision-volumes");
 
             optgroup->m_on_change = [this](const t_config_option_key& opt_key, boost::any value)
             {
@@ -6635,6 +6818,16 @@ void TabPrinter::toggle_options()
         const bool support_parallel_printheads = printer_cfg.opt_bool("support_parallel_printheads");
         toggle_line("parallel_printheads_count", support_parallel_printheads);
 
+        const size_t exclusion_extruder_count = m_preset_bundle->get_printer_extruder_count();
+        // UI visibility follows the selected mode even before any volumes are
+        // entered. The runtime resolver still ignores empty configurations.
+        const BedExcludeVolumeMode exclusion_mode = m_config->opt_enum<BedExcludeVolumeMode>("bed_exclude_volume_mode");
+        // Legacy areas and collision volumes are additive. Keep the established
+        // material keep-out editable while the opt-in motion constraints exist.
+        toggle_option("bed_exclude_area", true);
+        toggle_line("bed_exclude_volume_mode", exclusion_extruder_count > 1);
+        toggle_line("bed_exclude_volumes", exclusion_extruder_count <= 1 || exclusion_mode != BedExcludeVolumeMode::PerExtruder);
+
         toggle_line("fan_direction", m_config->opt_bool("auxiliary_fan"));
 
         // The cooling filter and air filtration are alternative accessories: show only the one the printer supports.
@@ -6751,6 +6944,9 @@ void TabPrinter::toggle_options()
 
         toggle_option("extruder_printable_area", false, i);          // disable
         toggle_line("extruder_printable_area", m_preset_bundle->get_printer_extruder_count() == 2, i);  //hide
+        const bool per_extruder_exclusions =
+            m_config->opt_enum<BedExcludeVolumeMode>("bed_exclude_volume_mode") == BedExcludeVolumeMode::PerExtruder;
+        toggle_line("extruder_bed_exclude_volumes", m_preset_bundle->get_printer_extruder_count() > 1 && per_extruder_exclusions, i);
         toggle_option("extruder_printable_height", false, i);
         toggle_line("extruder_printable_height", m_preset_bundle->get_printer_extruder_count() == 2, i);
 
@@ -6839,13 +7035,9 @@ void TabPrinter::toggle_options()
         const bool gcf_is_klipper = gcf == GCodeFlavor::gcfKlipper;
         const bool gcf_is_reprap_firmware = gcf == GCodeFlavor::gcfRepRapFirmware;
 
-        bool silent_mode = m_config->opt_bool("silent_mode");
-        int  max_field   = silent_mode ? 2 : 1;
-        for (int i = 0; i < max_field; ++i)
-            toggle_option("machine_max_acceleration_travel", !gcf_is_marlin_legacy && !gcf_is_klipper, i);
+        toggle_option("machine_max_acceleration_travel", !gcf_is_marlin_legacy && !gcf_is_klipper, 0);
         toggle_line("machine_max_acceleration_travel", !gcf_is_marlin_legacy && !gcf_is_klipper);
-        for (int i = 0; i < max_field; ++i)
-            toggle_option("machine_max_junction_deviation", gcf_is_marlin_firmware, i);
+        toggle_option("machine_max_junction_deviation", gcf_is_marlin_firmware, 0);
         toggle_line("machine_max_junction_deviation", gcf_is_marlin_firmware);
 
         // Check if junction deviation value is non-zero and firmware is Marlin
@@ -6859,12 +7051,10 @@ void TabPrinter::toggle_options()
                 enable_jerk = true;
             }
         }
-        for (int i = 0; i < max_field; ++i) {
-            toggle_option("machine_max_jerk_x", enable_jerk, i);
-            toggle_option("machine_max_jerk_y", enable_jerk, i);
-            toggle_option("machine_max_jerk_z", enable_jerk, i);
-            toggle_option("machine_max_jerk_e", enable_jerk, i);
-        }
+        toggle_option("machine_max_jerk_x", enable_jerk, 0);
+        toggle_option("machine_max_jerk_y", enable_jerk, 0);
+        toggle_option("machine_max_jerk_z", enable_jerk, 0);
+        toggle_option("machine_max_jerk_e", enable_jerk, 0);
 
         bool emittable_limits = gcf_is_marlin_legacy || gcf_is_marlin_firmware || gcf_is_reprap_firmware;
         toggle_option("emit_machine_limits_to_gcode", emittable_limits);
@@ -6969,11 +7159,6 @@ void TabPrinter::update()
 
 void TabPrinter::update_fff()
 {
-    if (m_use_silent_mode != m_config->opt_bool("silent_mode"))	{
-        m_rebuild_kinematics_page = true;
-        m_use_silent_mode = m_config->opt_bool("silent_mode");
-    }
-
     // Sync IDEX/IQEX tool grid whenever carriage configuration changes.
     // set_grid_size() is a no-op when dimensions and layout are unchanged.
     // load_from_config() is gated on matches_config() — without that guard,

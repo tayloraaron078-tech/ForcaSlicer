@@ -1,13 +1,18 @@
 // Forca: Open Bamboo Networking as a network plug-in choice (src/slic3r/Utils/ForcaOBN.cpp) -- the parts that decide
 // what Forca downloads, unpacks and trusts.
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <catch2/catch_all.hpp>
 
+#include "catch2/catch_test_macros.hpp"
 #include "slic3r/Utils/ForcaOBN.hpp"
 
 #include "plugin_test_utils.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <cstddef>
+#include <ios>
 #include <miniz.h>
 
 #include <iterator>
