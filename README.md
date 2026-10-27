@@ -40,6 +40,10 @@ Orca a great slicer and adds:
 8. **Forca AI (experimental, optional)** — let *your own* AI assistant, such as Claude, work in the slicer with you,
    under safety rules built into Forca. **Forca has no AI built in:** no AI model, no AI account, nothing sent to an
    AI service. If you don't bring one, there is no AI.
+9. **OpenSCAD files** — open a `.scad` model directly, change its Customizer parameters and render it again in place,
+   with a small editor for quick fixes. Forca uses your own OpenSCAD.
+10. **Filament profile import with a review** — bring filament profiles from OrcaSlicer, Bambu Studio and Forca in,
+    see what each one changes first, and repair presets whose base is gone.
 
 Plus a set of smaller changes, listed [at the end of this section](#smaller-changes). Projects (`.3mf`) and
 printer/filament profiles are OrcaSlicer's formats, so your files open in both.
@@ -179,6 +183,28 @@ See [SECURITY.md](SECURITY.md) for how it's protected.
   </tr>
 </table>
 
+## OpenSCAD files
+Open a parametric OpenSCAD model (`.scad`) with **File → Import** or by dropping it on the window: Forca has your
+OpenSCAD render it and puts the model on the plate, named after the file. Right-click it → **OpenSCAD parameters...**
+shows the file's Customizer (groups, captions, dropdowns, checkboxes) inside Forca; **Render model** replaces the model
+in place, keeping its position, modifiers and per-part settings, as one undo step. The project remembers the file, its
+text and your values, so it re-renders on another computer or after the file is renamed. **Edit source...** opens the
+file in a small editor with OpenSCAD's messages under it and the lines with a problem marked, for a quick fix without
+leaving Forca.
+
+Forca doesn't include OpenSCAD: it runs the one you install (a development snapshot from 2025 or later; choose it in
+**Preferences → OpenSCAD**). **[OpenSCAD in Forca: the guide](docs/forca/openscad.md)** shows every step.
+
+<img width="649" alt="OpenSCAD parameters in Forca" src="docs/forca/images/openscad/parameters.png" />
+
+## Filament profile import
+**File → Import → Import Configs** (or dropping the files on the window) now shows a review before anything is saved:
+for each filament profile from OrcaSlicer, Bambu Studio or Forca, the preset it's based on (with a suggestion when Forca
+doesn't have it), the printer it's for, and which settings it changes, which Forca names differently and which Forca
+doesn't have (those are kept in the preset's notes). Bambu Studio preset bundles (`.bbsflmt`, `.bbscfg`) import too.
+When a filament preset of yours can't load because the preset it was based on is gone, Forca says so at start-up and
+lets you pick a new one.
+
 ## Smaller changes
 - **Its own settings folder** (`%APPDATA%\ForcaSlicer`). On first start Forca offers to copy your OrcaSlicer
   settings; it never changes OrcaSlicer's.
@@ -207,6 +233,11 @@ See [SECURITY.md](SECURITY.md) for how it's protected.
   deleted: it all moves to `Documents\Forca reset backups`.
 - **Clearer logs for Klipper (Moonraker) connection problems:** a failed server, lane data or Happy Hare query logs
   the address, which server answered and the start of its reply (never the API key).
+- **Bambu Studio filament profiles with "nil" values import.** Bambu Studio writes "nil" where a nozzle variant
+  keeps its base profile's value; OrcaSlicer rejected such files (many H2S, H2D and X1E profiles) and even deleted
+  them from its user folder at start-up. Forca takes the base profile's value.
+- **The import result says why a file wasn't imported** (unreadable, base profile missing, or a system profile has
+  its name) instead of always suggesting a missing printer.
 
 
 # Install (Windows)
@@ -248,7 +279,7 @@ next release, with credit to you.
 
 # Built on OrcaSlicer
 Everything not listed above is OrcaSlicer, and Orca's documentation applies:
-<https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to mid-October
+<https://www.orcaslicer.com/wiki>. Forca is built on OrcaSlicer's 2.5.0 development line (merged up to 25 October
 2026, the code OrcaSlicer is releasing as 2.5.0-alpha) and merges newer Orca occasionally, not continuously. That includes OrcaSlicer's own experimental
 **Design (CAD) tab**, which stays off until you enable it in Preferences.
 
@@ -278,4 +309,6 @@ every option). `build_forca_release.ps1 -Config Release` packages a portable zip
 - **Open Bamboo Networking** ([github.com/ClusterM/open-bamboo-networking](https://github.com/ClusterM/open-bamboo-networking),
   AGPL-3.0) is an optional open-source replacement for that plug-in. Forca downloads it only if you choose it in
   Preferences.
+- **OpenSCAD** (GPL-2.0 or later) is not part of Forca: Forca runs the OpenSCAD you install as a separate program, only when
+  you open a `.scad` file.
 - No warranty (see the license). You are responsible for what you print — check the preview and the first layers.

@@ -196,6 +196,7 @@
 #include "Plater.hpp"
 #include "ForcaAI.hpp"
 #include "ForcaObnChoice.hpp"
+#include "ForcaPresetImportDialog.hpp"
 #include "ForcaReset.hpp"
 #include "ForcaAcademy.hpp"
 #include "GLCanvas3D.hpp"
@@ -299,6 +300,7 @@ typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS2)(
 #endif // __WINDOWS__
 
 #endif
+#include <nlohmann/json.hpp>
 #ifdef _WIN32
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <direct.h>
@@ -1166,6 +1168,10 @@ void GUI_App::post_init()
         plater_->get_notification_manager()->push_hint_notification(false);
     }
 #endif
+
+    // Forca: offer to repair user filament presets whose parent is missing (they are not loaded).
+    if (!is_gcode_viewer())
+        forca_offer_preset_repair();
 
     hms_query = new HMSQuery();
 
@@ -5353,10 +5359,17 @@ void GUI_App::import_model(wxWindow *parent, wxArrayString& input_files) const
     for (const std::string_view& ext : file_wildcards_by_type[FT_MODEL].file_extensions)
         if (ext != ".3mf")
             without_3mf.file_extensions.push_back(ext);
-    const wxString wildcards = file_wildcards(FT_MODEL) + "|" + format_wildcards(without_3mf, {}) + "|" +
+    // Forca: OpenSCAD files are imported here too (rendered by OpenSCAD, ForcaOpenScadImport), but are not in FT_MODEL,
+    // which "Replace with" and reload-from-disk also use and which must stay meshes. Their own filter goes last, so a
+    // remembered filter index keeps pointing at the same filter.
+    FileWildcards supported = file_wildcards_by_type[FT_MODEL];
+    supported.file_extensions.push_back(".scad"sv);
+    without_3mf.file_extensions.push_back(".scad"sv);
+    const FileWildcards openscad{L("OpenSCAD files"), {".scad"sv}};
+    const wxString wildcards = format_wildcards(supported, {}) + "|" + format_wildcards(without_3mf, {}) + "|" +
                                file_wildcards(FT_3MF) + "|" + file_wildcards(FT_STL) + "|" + file_wildcards(FT_STEP) + "|" +
-                               file_wildcards(FT_OBJ);
-    constexpr int filter_count = 6;
+                               file_wildcards(FT_OBJ) + "|" + format_wildcards(openscad, {});
+    constexpr int filter_count = 7;
 
     wxFileDialog dialog(parent ? parent : GetTopWindow(),
 #ifdef __APPLE__

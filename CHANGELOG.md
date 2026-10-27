@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
 All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `main`
-`a26501c0ed` on 2026-10-24; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+`baff031626` on 2026-10-25; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -13,6 +13,42 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
 ## Unreleased
+
+## 0.1.0-alpha.8 — 2026-10-26
+
+### Added
+- **Open OpenSCAD files** (.scad) with File > Import or by dropping them on the window: Forca renders them with your
+  own OpenSCAD (a development snapshot from 2025 or later) and puts the model on the plate, named after the file.
+  Choose or download OpenSCAD in Preferences > OpenSCAD. Right-click the model > **OpenSCAD parameters...** to
+  change the file's Customizer values and render it again in place; the project keeps the values and the file's
+  text, so it re-renders on another computer too. **Edit source...** there opens the file in a small editor with
+  OpenSCAD's messages under it, marking the lines a warning or error names, for a quick fix without leaving Forca.
+  [The guide](docs/forca/openscad.md) shows every step.
+- **Import filament profiles from OrcaSlicer, Bambu Studio and Forca with a review first** (File > Import > Import
+  Configs, or drop the files on the window). For each file Forca shows the preset it's based on (and suggests one
+  when Forca doesn't have it), the printer it's for (an installed one when none of its printers is), and which
+  settings it changes, which Forca names differently and which Forca doesn't have; those are kept in the preset's
+  notes. Nothing is saved until you press Import.
+- **Bambu Studio preset bundles** (.bbsflmt, .bbscfg) can be imported: their filaments go through the review, their
+  process presets import directly.
+- **Preset repair:** when a filament preset of yours can't be loaded because the preset it's based on is gone, Forca
+  says so at start-up and lets you pick a new one.
+
+### Changed
+- **Merged OrcaSlicer up to `main` `baff031626` (2026-10-25)**: fixes for a crash from the Russian extruder range
+  warning, a filament flow ratio of 0 (no more NaN extrusion), the prime tower reading past its settings, a deleted
+  filament coming back on dual-nozzle printers, the Creality print host hanging, Moonraker over https and seam
+  alignment; a rebuilt right-click menu, experimental high precision G-code export, libpng 1.6.59 and no FreeType
+  dependency. Forca's support-interface menu items sit where Change Filament goes in the new menu.
+
+### Fixed
+- **Many Bambu Studio filament profiles couldn't be imported** (File > Import > Import Configs), for example ones for
+  the H2S, H2D or X1E. Bambu Studio writes "nil" where a nozzle variant keeps the value of the profile it's based on,
+  and Forca rejected the whole file over a nil nozzle temperature or max volumetric speed. It now takes the base
+  profile's value for that variant. The same file in Forca's user folder was even deleted at start-up; it now loads.
+  (An OrcaSlicer bug.)
+- **The import result now says why a file wasn't imported** (it can't be read, the profile it's based on is missing,
+  or a system profile has its name) instead of always suggesting that the printer is missing.
 
 ## 0.1.0-alpha.7 — 2026-10-25
 

@@ -728,6 +728,7 @@ set(SLIC3R_GUI_SOURCES
     pchheader.hpp
     Utils/ASCIIFolding.cpp
     Utils/ASCIIFolding.hpp
+    Utils/AsioUtils.hpp
     Utils/AstroBox.cpp
     Utils/AstroBox.hpp
     Utils/bambu_networking.hpp
@@ -890,6 +891,8 @@ if (APPLE)
             GUI/DeepLinkHandlerMac.mm
             GUI/DeepLinkHandlerMac.h
             GUI/GUI_UtilsMac.mm
+            GUI/MacIME.mm
+            GUI/MacIME.hpp
         )
     FIND_LIBRARY(DISKARBITRATION_LIBRARY DiskArbitration)
 endif ()
@@ -1099,6 +1102,14 @@ set(FORCA_GUI_SOURCES
     GUI/ForcaObnChoice.hpp
     GUI/ForcaPrintJournal.cpp
     GUI/ForcaPrintJournal.hpp
+    GUI/ForcaPresetImportDialog.cpp
+    GUI/ForcaPresetImportDialog.hpp
+    GUI/ForcaOpenScadImport.cpp
+    GUI/ForcaOpenScadImport.hpp
+    GUI/ForcaOpenScadDialog.cpp
+    GUI/ForcaOpenScadDialog.hpp
+    GUI/ForcaOpenScadEditor.cpp
+    GUI/ForcaOpenScadEditor.hpp
     GUI/ForcaReset.cpp
     GUI/ForcaReset.hpp
     GUI/ForcaAITools.cpp

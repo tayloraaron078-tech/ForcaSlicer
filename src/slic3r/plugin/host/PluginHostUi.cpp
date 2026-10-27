@@ -38,6 +38,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <future>
 #include <memory>
@@ -239,10 +240,18 @@ private:
     int                                  m_next_id{1};
 };
 
+// wxTheApp is rechecked because it goes null while a worker may still be waiting on the UI thread.
+bool app_closing() { return wxTheApp == nullptr || GUI::wxGetApp().is_closing(); }
+
 // --------------------------------------------------------------------------
 // Run a (pure C++/wx) callable on the main/UI thread, blocking the caller until
 // it completes, with the GIL released across the wait. If already on the main
 // thread, run inline (also with the GIL released so other Python threads run).
+//
+// A worker thread gives up with a RuntimeError once the app is closing and the
+// UI thread has not picked the call up yet: the UI thread may be waiting for
+// that worker (a printer agent joining it in disconnect_printer()), or its event
+// loop may never run again.
 // --------------------------------------------------------------------------
 template<typename Fn>
 auto run_on_ui_blocking(Fn&& fn) -> std::invoke_result_t<Fn&>
@@ -256,22 +265,44 @@ auto run_on_ui_blocking(Fn&& fn) -> std::invoke_result_t<Fn&>
         return fn();
     }
 
-    std::promise<R> prom;
-    std::future<R>  fut = prom.get_future();
+    if (app_closing())
+        throw std::runtime_error("OrcaSlicer is closing");
+
+    enum : int { Pending, Claimed, Abandoned };
+    // Shared with the queued task, which can outlive an abandoned wait. The task only touches fn
+    // after claiming the call, and a claimed call is always waited for, so fn is still alive then.
+    struct Call
+    {
+        std::promise<R>  prom;
+        std::atomic<int> state;
+    };
+    auto           call = std::make_shared<Call>();
+    // Forca: set here, not as the member's initializer: MSVC doesn't find the function's local enum from a local
+    // class's default member initializer in a template (C2065).
+    call->state.store(Pending);
+    std::future<R> fut  = call->prom.get_future();
 
     py::gil_scoped_release nogil;
-    GUI::wxGetApp().CallAfter([&prom, &fn]() {
+    GUI::wxGetApp().CallAfter([call, &fn]() {
+        int expected = Pending;
+        if (!call->state.compare_exchange_strong(expected, Claimed))
+            return;
         try {
             if constexpr (std::is_void_v<R>) {
                 fn();
-                prom.set_value();
+                call->prom.set_value();
             } else {
-                prom.set_value(fn());
+                call->prom.set_value(fn());
             }
         } catch (...) {
-            prom.set_exception(std::current_exception());
+            call->prom.set_exception(std::current_exception());
         }
     });
+    while (fut.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
+        int expected = Pending;
+        if (app_closing() && call->state.compare_exchange_strong(expected, Abandoned))
+            throw std::runtime_error("OrcaSlicer is closing");
+    }
     return fut.get();
 }
 
@@ -661,7 +692,8 @@ void PluginHostUi::RegisterBindings(pybind11::module_& host)
         "thread (marshaled from the plugin thread). See the plugin docs for the window.orca bridge. "
         "Do not call these from a slicing pipeline hook (SlicingPipeline capability): that hook runs "
         "on the slicing worker thread, which the UI thread can itself be blocked waiting on, so a "
-        "marshaled UI call from there can deadlock the application.");
+        "marshaled UI call from there can deadlock the application. Once the application is closing, a "
+        "call from a background thread raises RuntimeError instead of waiting for the UI thread.");
 
     ui.def("message", &ui_message, py::arg("text"), py::arg("title") = "Forca Slicer", py::arg("buttons") = "ok", // Forca
            py::arg("icon") = "info",

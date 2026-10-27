@@ -415,6 +415,17 @@ public:
     std::string get_current_printer_type(PresetBundle *preset_bundle); // get current preset type
 
     static void get_extruder_names_and_keysets(Type type, std::string& extruder_id_name, std::string& extruder_variant_name, std::set<std::string>** p_key_set1, std::set<std::string>** p_key_set2);
+    // Forca: the nozzle variants a preset's config lists (filament_extruder_variant etc.), empty when it lists none.
+    static std::vector<std::string> extruder_variants(Type type, const DynamicPrintConfig &config);
+    // Forca: after a child preset file was merged into its parent's config (update_diff_values_to_child_config), puts
+    // the parent's value back where the file had "nil" in an option that can't hold nil (ConfigSubstitutionContext::
+    // nil_items, positions in the child's variant order).
+    static void restore_nil_items(Type type, DynamicPrintConfig &config, const DynamicPrintConfig &parent,
+                                  const std::vector<std::string> &child_variants,
+                                  const std::map<t_config_option_key, std::vector<size_t>> &nil_items);
+    // Forca: a preset without a parent has no other value for a nozzle variant that a Bambu Studio file left "nil"
+    // in a per-variant option: it takes the option's first value. A filament override's nil (no override) stays.
+    static void fill_root_nil_items(Type type, DynamicPrintConfig &config);
     // Config of a preset loaded from a project or config file: the project's values over the type's
     // default preset config, without the print-host keys. When different_settings_list is not empty,
     // every key not listed in it is then refreshed from the base system preset, which find_base returns
@@ -606,6 +617,16 @@ public:
 
     // Add default preset at the start of the collection, increment the m_default_preset counter.
     void            add_default_preset(const std::vector<std::string> &keys, const Slic3r::StaticPrintConfig &defaults, const std::string &preset_name);
+
+    // Forca: user preset files that were not loaded because the preset they are based on is missing, for the
+    // preset repair (src/slic3r/GUI/ForcaPresetImportDialog). Kept until the preset is loaded or the file is gone.
+    struct PresetMissingParent
+    {
+        std::string file;
+        std::string name;
+        std::string inherits; // the parent the file names
+    };
+    const std::vector<PresetMissingParent> &presets_missing_parent() const { return m_presets_missing_parent; }
 
     // Load ini files of the particular type from the provided directory path.
     void            load_presets(const std::string &dir_path, const std::string &subdir, PresetsConfigSubstitutions& substitutions, ForwardCompatibilitySubstitutionRule rule, std::function<void(Preset&)> preset_loaded_fn = nullptr, const PresetOrigin &load_origin = PresetOrigin(), bool read_only = false);
@@ -987,6 +1008,8 @@ private:
         bool        discard_file { false };
         // The .info file read beside the preset, which commit logs.
         std::string info_file;
+        // Forca: the parent the file names when no such preset exists, so the preset isn't loaded (commit records it).
+        std::string missing_parent;
         // Both files as they were before the preset was read from them. Resolve runs
         // without the instance lock, so commit compares this with the disk under it.
         PresetFilesOnDisk on_disk;
@@ -1085,6 +1108,8 @@ private:
     // Use deque to force the container to allocate an object per each entry,
     // so that the addresses of the presets don't change during resizing of the container.
     std::deque<Preset>      m_presets;
+    // Forca: see presets_missing_parent().
+    std::vector<PresetMissingParent> m_presets_missing_parent;
     // System profiles may have aliases. Map to the full profile name.
     std::map<std::string, std::vector<std::string>> m_map_alias_to_profile_name;
     std::unordered_map<std::string, std::unordered_set<std::string>> m_printer_hold_alias;

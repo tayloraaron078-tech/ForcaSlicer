@@ -47,6 +47,8 @@
 #include <wx/base64.h>
 #include <ctime>
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/system/error_code.hpp>
 #include "slic3r/GUI/calib_dlg.hpp"
 #include <wx/panel.h>
 #include <wx/settings.h>
@@ -89,10 +91,13 @@
 //#include "RemovableDriveManager.hpp"
 #include "InstanceCheck.hpp"
 #include "I18N.hpp"
+#include "format.hpp"
 #include "GLCanvas3D.hpp"
 #include "Plater.hpp"
 #include "ForcaCalibrationTab.hpp"
 #include "ForcaObnChoice.hpp"
+#include "ForcaPresetImportDialog.hpp"
+#include "libslic3r/ForcaPresetImport.hpp"
 #include "ForcaPrintJournal.hpp"
 #include "ForcaAIDialog.hpp"
 #ifdef SLIC3R_CAD
@@ -3533,6 +3538,18 @@ void MainFrame::init_menubar_as_editor()
             this);
 
         viewMenu->AppendSeparator();
+        wxMenuItem* mouse3d_settings = append_menu_check_item(viewMenu, wxID_ANY, shortcut_label(_L("Show 3Dconnexion Settings"), Shortcut::Mouse3DSettings, true),
+            _L("Show/Hide 3Dconnexion devices settings dialog"),
+            [this](wxCommandEvent&) {
+                Mouse3DController& controller = m_plater->get_mouse3d_controller();
+                controller.show_settings_dialog(!controller.is_settings_dialog_shown());
+                m_plater->get_current_canvas3D()->post_event(SimpleEvent(wxEVT_PAINT));
+            },
+            this, [this]() { return is_prepare_or_preview_tab() && m_plater->get_mouse3d_controller().can_show_settings_dialog(); },
+            [this]() { return m_plater->get_mouse3d_controller().is_settings_dialog_shown(); }, this);
+        m_shortcut_menu_items.push_back({ mouse3d_settings, Shortcut::Mouse3DSettings, _L("Show 3Dconnexion Settings"), true });
+
+        viewMenu->AppendSeparator();
         wxMenuItem* show_labels = append_menu_check_item(viewMenu, wxID_ANY, shortcut_label(_L("Show &Labels"), Shortcut::ShowLabels, true), _L("Show object labels in 3D scene."),
             [this](wxCommandEvent&) { m_plater->show_view3D_labels(!m_plater->are_view3D_labels_shown()); m_plater->get_current_canvas3D()->post_event(SimpleEvent(wxEVT_PAINT)); }, this,
             [this]() { return m_plater->is_view3D_shown(); }, [this]() { return m_plater->are_view3D_labels_shown(); }, this);
@@ -4051,16 +4068,44 @@ void MainFrame::load_config_file()
  //       return;
     wxFileDialog dlg(this, _L("Select profile to load:"),
         !m_last_config.IsEmpty() ? get_dir_name(m_last_config) : wxGetApp().app_config->get_last_dir(),
-        "config.json", _L("Config files (*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament)|*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament"), wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
+        "config.json", _L("Config files (*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament;*.bbsflmt;*.bbscfg)|*.json;*.zip;*.orca_printer;*.orca_bundle;*.orca_filament;*.bbsflmt;*.bbscfg"), wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
      wxArrayString files;
     if (dlg.ShowModal() != wxID_OK)
         return;
     dlg.GetPaths(files);
-    std::vector<std::string> cfiles;
+    std::vector<std::string> paths;
     for (auto file : files) {
-        cfiles.push_back(into_u8(file));
+        paths.push_back(into_u8(file));
         m_last_config = file;
     }
+    import_config_files(paths);
+}
+
+void MainFrame::import_config_files(const std::vector<std::string> &files)
+{
+    if (files.empty())
+        return;
+    // Forca: single preset files go through the import review (ForcaPresetImportDialog), and so do the filaments of a
+    // Bambu Studio bundle, unpacked first (its process presets import directly, its printer is Forca's own); other
+    // bundles keep Orca's import.
+    std::vector<std::string> cfiles, review_files;
+    boost::system::error_code ec;
+    const boost::filesystem::path unpacked = boost::filesystem::temp_directory_path(ec) /
+                                             boost::filesystem::unique_path("forca-bundle-%%%%-%%%%-%%%%", ec);
+    size_t bundles = 0;
+    for (const std::string &file : files) {
+        if (!forca_is_bambu_bundle(file)) {
+            (is_json_file(file) ? review_files : cfiles).push_back(file);
+            continue;
+        }
+        for (const std::string &preset : forca_extract_bambu_bundle(file, (unpacked / std::to_string(bundles++)).string())) {
+            if (boost::filesystem::path(preset).parent_path().filename() == "filament")
+                review_files.push_back(preset);
+            else if (!forca_analyse_preset_file(*wxGetApp().preset_bundle, preset).clashes_with_system_preset)
+                cfiles.push_back(preset);
+        }
+    }
+    const std::string last_file = files.back();
     bool update = false;
     wxGetApp().preset_bundle->import_presets(cfiles, [this](std::string const & name) {
             ConfigsOverwriteConfirmDialog dlg(this, from_u8(name), false);
@@ -4070,8 +4115,14 @@ void MainFrame::load_config_file()
         },
         ForwardCompatibilitySubstitutionRule::Enable,
         *wxGetApp().app_config);
-    if (!cfiles.empty()) {
-        wxGetApp().app_config->update_config_dir(get_dir_name(cfiles.back()));
+    const int reviewed = review_files.empty() ? 0 : forca_review_preset_import(this, review_files);
+    if (bundles > 0)
+        boost::filesystem::remove_all(unpacked, ec);
+    if (reviewed < 0 && cfiles.empty())
+        return; // the review was cancelled and there was nothing else to import
+    size_t imported = cfiles.size() + size_t(std::max(reviewed, 0));
+    if (imported > 0) {
+        wxGetApp().app_config->update_config_dir(get_dir_name(from_u8(last_file)));
         wxGetApp().load_current_presets();
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << " presets has been import,and size is" << cfiles.size();
         NetworkAgent* agent = wxGetApp().getAgent();
@@ -4082,8 +4133,29 @@ void MainFrame::load_config_file()
     wxGetApp().preset_bundle->update_compatible(PresetSelectCompatibleType::Always);
     update_side_preset_ui();
     auto msg = wxString::Format(_L_PLURAL("There is %d config imported. (Only non-system and compatible configs)",
-        "There are %d configs imported. (Only non-system and compatible configs)", cfiles.size()), cfiles.size());
-    if(cfiles.empty())
+        "There are %d configs imported. (Only non-system and compatible configs)", imported), imported);
+    // Forca: say why a file wasn't imported instead of only guessing at a missing printer.
+    const auto &failures = wxGetApp().preset_bundle->import_failures();
+    if (!failures.empty()) {
+        msg += "\n\n" + _L("Not imported:");
+        for (const PresetBundle::ImportFailure &failure : failures) {
+            msg += "\n";
+            switch (failure.reason) {
+            case PresetBundle::ImportFailure::Reason::Unreadable:
+                // TRN %1% is a file name.
+                msg += format_wxstr(_L("%1%: the file could not be read as a preset."), failure.file);
+                break;
+            case PresetBundle::ImportFailure::Reason::ParentMissing:
+                // TRN %1% is a file name, %2% the name of the preset it is based on.
+                msg += format_wxstr(_L("%1%: it is based on the preset \"%2%\", which Forca doesn't have."), failure.file, failure.detail);
+                break;
+            case PresetBundle::ImportFailure::Reason::SystemName:
+                // TRN %1% is a file name, %2% a preset name.
+                msg += format_wxstr(_L("%1%: a system preset is already called \"%2%\"."), failure.file, failure.detail);
+                break;
+            }
+        }
+    } else if (imported == 0)
         msg += _L("\nHint: Make sure you have added the corresponding printer before importing the configs.");
     MessageDialog dlg2(this,msg ,
                         _L("Import result"), wxOK);

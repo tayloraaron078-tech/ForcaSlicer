@@ -88,6 +88,7 @@
 #include <tbb/partitioner.h>
 #include <vector>
 #include <utility>
+#include <nlohmann/json.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -2361,6 +2362,7 @@ PresetsConfigSubstitutions PresetBundle::import_presets(std::vector<std::string>
     PresetsConfigSubstitutions substitutions;
     int overwrite = 0;
     std::vector<std::string>   result;
+    m_import_failures.clear();
     std::string                user_id = config.get("preset_folder");
     if (user_id.empty())
         user_id = DEFAULT_USER_FOLDER_NAME;
@@ -2565,17 +2567,25 @@ bool PresetBundle::import_json_presets(PresetsConfigSubstitutions &            s
                                        const std::map<std::string, std::string> &      bed_asset_paths,
                                        bool *                                          bed_paths_loaded)
 {
+    auto failed = [this, &file](ImportFailure::Reason reason, const std::string &detail = {}) {
+        m_import_failures.push_back({ fs::path(file).filename().string(), reason, detail });
+        return false;
+    };
     try {
         DynamicPrintConfig config;
         // BBS: change to json format
         // ConfigSubstitutions config_substitutions = config.load_from_ini(preset.file, substitution_rule);
         std::map<std::string, std::string> key_values;
         std::string                        reason;
-        ConfigSubstitutions                config_substitutions = config.load_from_json(file, rule, key_values, reason);
+        ConfigSubstitutionContext          substitution_context(rule);
+        std::map<t_config_option_key, std::vector<size_t>> nil_items;
+        substitution_context.nil_items = &nil_items;
+        config.load_from_json(file, substitution_context, true, key_values, reason);
+        ConfigSubstitutions                config_substitutions = std::move(substitution_context.substitutions);
         std::string                        name                 = key_values[BBL_JSON_KEY_NAME];
         std::string                        version_str          = key_values[BBL_JSON_KEY_VERSION];
         boost::optional<Semver>            version              = Semver::parse(version_str);
-        if (!version) return false;
+        if (!reason.empty() || !version) return failed(ImportFailure::Reason::Unreadable);
 
         std::string type_subdir;    // also note the type subdir for bundles
         PresetCollection *collection = nullptr;
@@ -2593,11 +2603,11 @@ bool PresetBundle::import_json_presets(PresetsConfigSubstitutions &            s
         }
         if (collection == nullptr) {
             BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << " Preset type is unknown, not loading: " << name;
-            return false;
+            return failed(ImportFailure::Reason::Unreadable);
         }
         if (!is_path_within_root(name, fs::path(collection->m_dir_path))) {
             BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << " Preset name escapes the preset directory, not loading: " << name;
-            return false;
+            return failed(ImportFailure::Reason::Unreadable);
         }
         const PresetOrigin load_origin = detect_origin_from_path(boost::filesystem::path(bundle_dir));
         const std::string      preset_name = get_preset_canonical_name(name, load_origin);
@@ -2606,7 +2616,7 @@ bool PresetBundle::import_json_presets(PresetsConfigSubstitutions &            s
         if (auto p = collection->find_preset(preset_name, false)) {
             if (p->is_default || p->is_system) {
                 BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << " Preset already present and is system preset, not loading: " << preset_name;
-                return false;
+                return failed(ImportFailure::Reason::SystemName, preset_name);
             }
             if (overwrite != 2 && overwrite != 3) overwrite = override_confirm(preset_name); //3: yes to all  2: no to all
         }
@@ -2632,21 +2642,30 @@ bool PresetBundle::import_json_presets(PresetsConfigSubstitutions &            s
                 config.option<ConfigOptionString>(entry.first, true)->value = entry.second;
         }
         if (inherit_preset) {
+            // Forca: merged per nozzle variant as the preset will be when it is loaded again at the next start
+            // (PresetCollection::resolve_user_preset), so a Bambu Studio "nil" takes the parent's value.
+            std::string            extruder_id_name, extruder_variant_name;
+            std::set<std::string> *key_set1 = nullptr, *key_set2 = nullptr;
+            Preset::get_extruder_names_and_keysets(collection->type(), extruder_id_name, extruder_variant_name, &key_set1, &key_set2);
+            const std::vector<std::string> child_variants = Preset::extruder_variants(collection->type(), config);
             new_config = inherit_preset->config;
-            new_config.apply(std::move(config));
+            extend_default_config_length(config, false, {});
+            new_config.update_diff_values_to_child_config(config, extruder_id_name, extruder_variant_name, *key_set1, *key_set2);
+            Preset::restore_nil_items(collection->type(), new_config, inherit_preset->config, child_variants, nil_items);
         } else {
             // We support custom root preset now
             auto inherits_config2 = dynamic_cast<ConfigOptionString *>(inherits_config);
             if (inherits_config2 && !inherits_config2->value.empty()) {
                 // we should skip this preset here
                 BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << boost::format(", can not find inherit preset for user preset %1%, just skip") % name;
-                return false;
+                return failed(ImportFailure::Reason::ParentMissing, inherits_config2->value);
             }
             // Find a default preset for the config. The PrintPresetCollection provides different default preset based on the "printer_technology" field.
             const Preset &default_preset = collection->default_preset_for(config);
             new_config                   = default_preset.config;
             new_config.apply(std::move(config));
             extend_default_config_length(new_config, true, default_preset.config);
+            Preset::fill_root_nil_items(collection->type(), new_config);
         }
         if (bed_paths_loaded != nullptr && collection == &printers && !bed_asset_paths.empty())
             *bed_paths_loaded = true;
@@ -2686,9 +2705,11 @@ bool PresetBundle::import_json_presets(PresetsConfigSubstitutions &            s
         result.push_back(file);
     } catch (const std::ifstream::failure &err) {
         ++m_errors;
+        failed(ImportFailure::Reason::Unreadable);
         BOOST_LOG_TRIVIAL(error) << boost::format("The config cannot be loaded: %1%. Reason: %2%") % file % err.what();
     } catch (const std::runtime_error &err) {
         ++m_errors;
+        failed(ImportFailure::Reason::Unreadable);
         BOOST_LOG_TRIVIAL(error) << boost::format("Failed importing config file: %1%. Reason: %2%") % file % err.what();
     }
     return true;
@@ -4340,8 +4361,9 @@ void PresetBundle::set_num_filaments(unsigned int n, std::string new_color)
     ConfigOptionInts* filament_volume_map = project_config.option<ConfigOptionInts>("filament_volume_map");
 
     // Which slots are new is a fact about the arrays below, not about filament_presets:
-    // update_multi_material_filament_presets() tops that list up to the nozzle count on its own,
-    // so it can already sit at the new size while every array below is still at the old one.
+    // on a tool changer, update_multi_material_filament_presets() tops that list up to the tool
+    // count on its own, so it can already sit at the new size while every array below is still at
+    // the old one.
     const size_t old_slot_count = filament_color->values.size();
 
     filament_color->resize(n);
@@ -4475,7 +4497,7 @@ size_t PresetBundle::num_mixed_filaments() const
     return size_t(std::count(opt->values.begin(), opt->values.begin() + std::min(slot_count, opt->values.size()), true));
 }
 
-// Colours describe actual slots; filament_presets can be topped up to the nozzle count alone.
+// Colours describe actual slots; on a tool changer filament_presets can be topped up to the tool count alone.
 // Imported projects may have fewer mixed flags than slots. Missing flags mean physical filaments.
 size_t PresetBundle::num_physical_filaments() const
 {
@@ -5386,14 +5408,21 @@ int PresetBundle::get_printer_extruder_count() const
     return count;
 }
 
+size_t PresetBundle::min_filament_count() const
+{
+    if (printers.get_edited_preset().config.opt_bool("single_extruder_multi_material"))
+        return 1;
+    return static_cast<size_t>(get_printer_extruder_count());
+}
+
 void PresetBundle::update_filament_count()
 {
     if (printers.get_edited_preset().printer_technology() != ptFFF)
         return;
-    const size_t num_extruders = static_cast<size_t>(get_printer_extruder_count());
-    if (filament_presets.size() >= num_extruders)
+    const size_t min_filaments = min_filament_count();
+    if (filament_presets.size() >= min_filaments)
         return;
-    filament_presets.resize(num_extruders, filament_presets.empty()
+    filament_presets.resize(min_filaments, filament_presets.empty()
         ? filaments.first_visible().name
         : filament_presets.back());
 }
@@ -8400,19 +8429,20 @@ void PresetBundle::update_multi_material_filament_presets(size_t to_delete_filam
     if (printers.get_edited_preset().printer_technology() != ptFFF)
         return;
 
-    // Orca: when the number of existing filament presets is less than the number of extruders, we will append new filament presets with the
-    // same value as the last existing one.
+    // Orca: when there are fewer filament presets than the printer runs with (min_filament_count(): one per tool on a
+    // tool changer, one on a printer sharing its nozzles), append copies of the last one. Padding a shared-nozzle printer
+    // up to its nozzle count would bring back a filament the user deleted, in this list alone, without the colours and
+    // maps of the parallel per-filament arrays.
     //
     // Verify and select the filament presets.
     size_t num_filaments = this->filament_presets.size();
 
-    auto* nozzle_diameter = static_cast<const ConfigOptionFloats*>(printers.get_edited_preset().config.option("nozzle_diameter"));
-    size_t num_extruders  = nozzle_diameter->values.size();
-    if (num_extruders > num_filaments) { // Verify validity of the current filament presets.
-        for (size_t i = 0; i < std::min(this->filament_presets.size(), num_extruders); ++i)
+    const size_t min_filaments = min_filament_count();
+    if (min_filaments > num_filaments) { // Verify validity of the current filament presets.
+        for (size_t i = 0; i < this->filament_presets.size(); ++i)
             this->filament_presets[i] = this->filaments.find_preset(this->filament_presets[i], true)->name;
         // Append the rest of filament presets.
-        this->filament_presets.resize(num_extruders, this->filament_presets.empty() ? this->filaments.first_visible().name :
+        this->filament_presets.resize(min_filaments, this->filament_presets.empty() ? this->filaments.first_visible().name :
                                                                                       this->filament_presets.back());
         num_filaments = this->filament_presets.size();
     }

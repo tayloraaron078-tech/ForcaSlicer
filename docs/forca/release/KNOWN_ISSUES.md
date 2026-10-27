@@ -11,7 +11,7 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
   Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 23 October 2026, a week past OrcaSlicer's
+- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 25 October 2026, past OrcaSlicer's
   2.5.0-alpha), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
@@ -47,6 +47,13 @@ differently).
   are untested. Forca Academy pictures from a Flashforge printer's built-in camera are untested (no camera here).
 - **Klipper web interface search** looks in the usual places (the printer's address, ports 81 / 4408 / 4409, /fluidd,
   /mainsail); type the address in Device UI if yours is elsewhere.
+
+## OpenSCAD models
+- **Needs an OpenSCAD development snapshot (2025 or later)**; the 2021.01 release is too old. Forca doesn't include
+  OpenSCAD.
+- A file that renders as **several objects** (lazy union) is imported but can't use OpenSCAD parameters.
+- **Colours** from the file aren't matched to filaments yet, and there's no "edit in OpenSCAD and reload" yet.
+- Libraries a file `include`s (BOSL2 and the like) must be where OpenSCAD finds them.
 
 ## Forca AI (experimental)
 - **Off by default**; only works on the same computer; needs the key shown in the Forca AI window.

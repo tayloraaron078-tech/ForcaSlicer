@@ -757,7 +757,9 @@ TEST_CASE("Local reload reconciles filament slots and purge volumes while retain
 {
     LocalReloadFixture f;
     DynamicPrintConfig printer_config(f.bundle.printers.get_selected_preset().config);
+    // A tool changer, whose filament slots follow its nozzle count.
     printer_config.option<ConfigOptionFloats>("nozzle_diameter")->values = {0.4, 0.4};
+    printer_config.option<ConfigOptionBool>("single_extruder_multi_material", true)->value = false;
     write_preset_with_inherits(printer_config, f.directory / PRESET_PRINTER_NAME / "Printer.json", "Printer", "");
     f.bundle.project_config.option<ConfigOptionFloats>("flush_volumes_matrix")->values = {0.};
     f.bundle.project_config.option<ConfigOptionFloats>("flush_volumes_vector")->values = {111., 222.};
@@ -1591,6 +1593,14 @@ TEST_CASE("Plugin capability override keys are scoped per preset type", "[Preset
             CAPTURE(owner.first, key);
             CHECK(contains(*owner.second, key) == (owner.first == scoped.first));
         }
+}
+
+TEST_CASE("G-code precision belongs only to print presets", "[Preset]")
+{
+    const std::string key = "high_precision_gcode";
+    CHECK(contains(Preset::print_options(), key));
+    CHECK_FALSE(contains(Preset::printer_options(), key));
+    CHECK_FALSE(contains(Preset::filament_options(), key));
 }
 
 namespace {
@@ -2459,6 +2469,101 @@ TEST_CASE("Sizing the filament list to a multi-tool nozzle count keeps mixed slo
         CHECK(bundle.filament_presets.size() == nozzle_count);
         CHECK(bundle.num_mixed_filaments() == 0);
     }
+}
+
+// Select an in-memory printer with the given nozzle count, either feeding every filament through
+// shared nozzles (single_extruder_multi_material, as on a Bambu Lab H2D) or giving each nozzle a
+// filament of its own (a tool changer).
+namespace {
+void select_multi_nozzle_printer(PresetBundle &bundle, size_t nozzle_count, bool single_extruder_multi_material)
+{
+    Preset &printer = add_inmemory_preset(bundle.printers, single_extruder_multi_material ? "Shared Nozzle Printer" : "Tool Changer");
+    printer.config.option<ConfigOptionFloats>("nozzle_diameter", true)->values = std::vector<double>(nozzle_count, 0.4);
+    printer.config.option<ConfigOptionBool>("single_extruder_multi_material", true)->value = single_extruder_multi_material;
+    bundle.printers.select_preset_by_name(printer.name, true);
+}
+} // namespace
+
+// A printer that maps filaments onto shared nozzles can run fewer filaments than it has nozzles,
+// so the sidebar lets the user delete down to one. The deleted slot must not come back in the
+// preset list alone, or the project saves a filament with no colour that returns on reload.
+TEST_CASE("Deleting a filament on a shared-nozzle printer keeps it deleted", "[Preset][Bundle]")
+{
+    PresetBundle bundle;
+    select_multi_nozzle_printer(bundle, 2, true);
+    bundle.set_num_filaments(2u, std::string("#FF0000"));
+    REQUIRE(bundle.filament_presets.size() == 2);
+
+    bundle.update_num_filaments(1);
+
+    CHECK(bundle.filament_presets.size() == 1);
+    CHECK(bundle.project_config.option<ConfigOptionStrings>("filament_colour")->values.size() == 1);
+}
+
+// Each tool of a tool changer carries its own filament, so the filament list never drops below the
+// tool count.
+TEST_CASE("A tool changer keeps a filament for every tool", "[Preset][Bundle]")
+{
+    PresetBundle bundle;
+    select_multi_nozzle_printer(bundle, 4, false);
+    bundle.filament_presets = { bundle.filaments.get_selected_preset_name() };
+
+    bundle.update_multi_material_filament_presets();
+
+    CHECK(bundle.filament_presets.size() == 4);
+}
+
+// The app config keeps each printer's filament list. The next start (load_selections) and a switch
+// back to the printer with remember_printer_config on (update_selections) restore it from there: a
+// shared-nozzle printer gets back the one filament it was left with, a tool changer still gets one
+// per tool.
+TEST_CASE("A remembered one-filament list comes back at the printer's minimum length", "[Preset][Bundle]")
+{
+    const bool   shared_nozzles = GENERATE(true, false);
+    const bool   on_startup     = GENERATE(true, false);
+    const size_t nozzle_count   = shared_nozzles ? 2 : 4;
+    const size_t expected       = shared_nozzles ? 1 : nozzle_count;
+    CAPTURE(shared_nozzles, on_startup);
+
+    AppConfig app_config;
+    {
+        PresetBundle bundle;
+        select_multi_nozzle_printer(bundle, nozzle_count, shared_nozzles);
+        add_inmemory_preset(bundle.filaments, "Test Filament");
+        bundle.filaments.select_preset_by_name("Test Filament", true);
+        // Set the one-filament list directly: set_num_filaments() runs the padding under test.
+        bundle.filament_presets = { "Test Filament" };
+        bundle.project_config.option<ConfigOptionStrings>("filament_colour")->values = { "#123456" };
+        bundle.export_selections(app_config);
+    }
+
+    PresetBundle bundle;
+    select_multi_nozzle_printer(bundle, nozzle_count, shared_nozzles);
+    add_inmemory_preset(bundle.filaments, "Test Filament");
+    if (on_startup)
+        bundle.load_selections(app_config);
+    else
+        bundle.update_selections(app_config);
+
+    CHECK(bundle.filament_presets.size() == expected);
+    CHECK(bundle.project_config.option<ConfigOptionStrings>("filament_colour")->values.size() == expected);
+}
+
+// A one-colour print for a shared-nozzle printer, as Bambu Studio saves it for an H2D or X2D, opens
+// with that one filament rather than one per nozzle.
+TEST_CASE("A one-filament project for a shared-nozzle printer opens with one filament", "[Preset][Bundle]")
+{
+    DynamicPrintConfig config = published_pla_file_config();
+    config.opt<ConfigOptionFloats>("nozzle_diameter")->values = { 0.4, 0.4 };
+    config.option<ConfigOptionBool>("single_extruder_multi_material", true)->value = true;
+    // The GUI normalizes the config before load; mirror that so only the production path runs.
+    Preset::normalize(config);
+
+    PresetBundle bundle;
+    bundle.load_config_model("test.3mf", std::move(config));
+
+    CHECK(bundle.filament_presets.size() == 1);
+    CHECK(bundle.project_config.option<ConfigOptionStrings>("filament_colour")->values.size() == 1);
 }
 
 // A "published" 3MF keeps the user's currently-selected presets and overlays only the
@@ -5409,13 +5514,15 @@ TEST_CASE("Adding a filament preserves slots with incomplete mixed metadata", "[
     }
 }
 
-// The nozzle-count top-up in update_multi_material_filament_presets() grows filament_presets on
-// its own, so a physical count derived from that list reports a slot no per-filament array has
-// yet. That is what made the extruder-count handler conclude there was nothing to add and leave
-// the new sidebar combo with no colour to draw.
+// On a tool changer the nozzle-count top-up in update_multi_material_filament_presets() grows
+// filament_presets on its own, so a physical count derived from that list reports a slot no
+// per-filament array has yet. That is what made the extruder-count handler conclude there was
+// nothing to add and leave the new sidebar combo with no colour to draw.
 TEST_CASE("The physical filament count is not fooled by a lone filament_presets top-up", "[Preset][Bundle][FilamentMixer]")
 {
     PresetBundle bundle;
+    // The extruder-count handler that adds filaments runs on tool changers only.
+    bundle.printers.get_edited_preset().config.option<ConfigOptionBool>("single_extruder_multi_material", true)->value = false;
 
     SECTION("no mixed slots") {
         bundle.set_num_filaments(4u, std::string("#FF0000"));
@@ -5448,6 +5555,7 @@ TEST_CASE("The physical filament count is not fooled by a lone filament_presets 
 TEST_CASE("New filament colours are placed by array position", "[Preset][Bundle][FilamentMixer]")
 {
     PresetBundle bundle;
+    bundle.printers.get_edited_preset().config.option<ConfigOptionBool>("single_extruder_multi_material", true)->value = false;
     bundle.set_num_filaments(4u, std::string("#FF0000"));
     bundle.printers.get_edited_preset().config.option<ConfigOptionFloats>("nozzle_diameter", true)->values =
         { 0.4, 0.4, 0.4, 0.4, 0.4 };
@@ -8488,4 +8596,140 @@ TEST_CASE("The cloud diff force-emits a disabled override only where the cloud w
     CHECK(key_values["filament_retract_before_wipe"] == "nil");
     // An ironing override defaults to nil: an absent key stays nil, so it is not sent.
     CHECK(key_values.count("filament_ironing_flow") == 0);
+}
+
+namespace {
+
+// A filament preset with one value per nozzle variant, like Bambu Studio's H2S / H2D / X1E filaments.
+Preset &add_two_variant_filament(PresetBundle &bundle, const std::string &name)
+{
+    Preset &parent = add_inmemory_preset(bundle.filaments, name);
+    parent.is_system = true;
+    parent.config.option<ConfigOptionStrings>("filament_extruder_variant", true)->values = { "Direct Drive Standard", "Direct Drive High Flow" };
+    parent.config.option<ConfigOptionInts>("nozzle_temperature", true)->values            = { 250, 260 };
+    parent.config.option<ConfigOptionFloats>("filament_max_volumetric_speed", true)->values = { 20., 25. };
+    return parent;
+}
+
+// Imported filament presets are saved under root/filament.
+void use_user_filament_folder(PresetBundle &bundle, const fs::path &root)
+{
+    fs::create_directories(root);
+    bundle.filaments.update_user_presets_directory(root.string(), PRESET_FILAMENT_NAME);
+}
+
+// A preset file as Bambu Studio saves it: "nil" where a nozzle variant keeps its parent's value, also in options
+// that can't hold nil in Forca (nozzle_temperature, filament_max_volumetric_speed).
+fs::path write_bambu_studio_filament(const fs::path &file, const std::string &name, const std::string &inherits)
+{
+    fs::create_directories(file.parent_path());
+    std::ofstream(file.string()) << R"({"type":"filament","name":")" << name << R"(","from":"User","version":"2.7.0.7",)"
+                                 << R"("inherits":")" << inherits << R"(","filament_settings_id":[")" << name << R"("],)"
+                                 << R"("filament_extruder_variant":["Direct Drive Standard","Direct Drive High Flow"],)"
+                                 << R"("nozzle_temperature":["290","nil"],"filament_max_volumetric_speed":["12","nil"]})";
+    return file;
+}
+
+} // namespace
+
+TEST_CASE("A Bambu Studio filament with nil for a nozzle variant imports with the parent's value for that variant", "[Preset][Bundle]")
+{
+    ScopedPresetDataDir data_dir;
+    PresetBundle        bundle;
+    const Preset       &parent = add_two_variant_filament(bundle, "Generic ABS @Test");
+    use_user_filament_folder(bundle, data_dir.tmp.path() / "user");
+    std::string file = write_bambu_studio_filament(data_dir.tmp.path() / "download" / "Brand ABS.json", "Brand ABS", parent.name).string();
+
+    PresetsConfigSubstitutions substitutions;
+    std::vector<std::string>   result;
+    int                        overwrite = 0;
+    REQUIRE(bundle.import_json_presets(substitutions, file, [](std::string const &) { return 1; },
+                                       ForwardCompatibilitySubstitutionRule::Enable, overwrite, result));
+
+    // The file's own value on the first variant, the parent's on the second.
+    const Preset *imported = bundle.filaments.find_preset("Brand ABS");
+    REQUIRE(imported != nullptr);
+    CHECK(imported->config.option<ConfigOptionInts>("nozzle_temperature")->values == std::vector<int>{ 290, 260 });
+    check_double_vector(imported->config.option<ConfigOptionFloats>("filament_max_volumetric_speed")->values, { 12., 25. });
+    CHECK(bundle.import_failures().empty());
+}
+
+TEST_CASE("A Bambu Studio filament with nil for a nozzle variant in the user folder loads instead of being deleted", "[Preset][Bundle]")
+{
+    ScopedPresetDataDir data_dir;
+    PresetBundle        bundle;
+    const Preset       &parent = add_two_variant_filament(bundle, "Generic ABS @Test");
+    const fs::path      file   = write_bambu_studio_filament(data_dir.tmp.path() / PRESET_FILAMENT_NAME / "Brand ABS.json", "Brand ABS", parent.name);
+
+    PresetsConfigSubstitutions substitutions;
+    bundle.filaments.load_presets(data_dir.tmp.path().string(), PRESET_FILAMENT_NAME, substitutions,
+                                  ForwardCompatibilitySubstitutionRule::EnableSilent);
+
+    const Preset *loaded = bundle.filaments.find_preset("Brand ABS");
+    REQUIRE(loaded != nullptr);
+    CHECK(loaded->config.option<ConfigOptionInts>("nozzle_temperature")->values == std::vector<int>{ 290, 260 });
+    check_double_vector(loaded->config.option<ConfigOptionFloats>("filament_max_volumetric_speed")->values, { 12., 25. });
+    CHECK(fs::exists(file));
+}
+
+TEST_CASE("A filament without a parent takes its own first value for a nozzle variant left nil", "[Preset][Bundle]")
+{
+    ScopedPresetDataDir data_dir;
+    PresetBundle        bundle;
+    use_user_filament_folder(bundle, data_dir.tmp.path() / "user");
+    std::string file = write_bambu_studio_filament(data_dir.tmp.path() / "download" / "Own ABS.json", "Own ABS", "").string();
+
+    PresetsConfigSubstitutions substitutions;
+    std::vector<std::string>   result;
+    int                        overwrite = 0;
+    REQUIRE(bundle.import_json_presets(substitutions, file, [](std::string const &) { return 1; },
+                                       ForwardCompatibilitySubstitutionRule::Enable, overwrite, result));
+
+    const Preset *imported = bundle.filaments.find_preset("Own ABS");
+    REQUIRE(imported != nullptr);
+    CHECK(imported->config.option<ConfigOptionInts>("nozzle_temperature")->values == std::vector<int>{ 290, 290 });
+}
+
+TEST_CASE("A filament without a parent takes its own first value where a per-variant option is nil", "[Preset][Bundle]")
+{
+    ScopedPresetDataDir data_dir;
+    PresetBundle        bundle;
+    use_user_filament_folder(bundle, data_dir.tmp.path() / "user");
+    const fs::path path = data_dir.tmp.path() / "download" / "Own PLA.json";
+    fs::create_directories(path.parent_path());
+    // filament_flow_ratio can hold nil; filament_retraction_length is an override, where nil means "no override".
+    std::ofstream(path.string()) << R"({"type":"filament","name":"Own PLA","from":"User","version":"2.7.0.7","inherits":"",)"
+                                 << R"("filament_settings_id":["Own PLA"],"filament_extruder_variant":["Direct Drive Standard","Direct Drive High Flow"],)"
+                                 << R"("filament_flow_ratio":["0.98","nil"],"filament_retraction_length":["0.8","nil"]})";
+    std::string file = path.string();
+
+    PresetsConfigSubstitutions substitutions;
+    std::vector<std::string>   result;
+    int                        overwrite = 0;
+    REQUIRE(bundle.import_json_presets(substitutions, file, [](std::string const &) { return 1; },
+                                       ForwardCompatibilitySubstitutionRule::Enable, overwrite, result));
+
+    const Preset *imported = bundle.filaments.find_preset("Own PLA");
+    REQUIRE(imported != nullptr);
+    CHECK(imported->config.opt_serialize("filament_flow_ratio") == "0.98,0.98");
+    CHECK(imported->config.opt_serialize("filament_retraction_length") == "0.8,nil");
+}
+
+TEST_CASE("An imported preset whose parent Forca doesn't have is reported with the parent's name", "[Preset][Bundle]")
+{
+    ScopedPresetDataDir data_dir;
+    PresetBundle        bundle;
+    use_user_filament_folder(bundle, data_dir.tmp.path() / "user");
+    std::string file = write_bambu_studio_filament(data_dir.tmp.path() / "download" / "Brand TPU.json", "Brand TPU", "Somebody's TPU").string();
+
+    PresetsConfigSubstitutions substitutions;
+    std::vector<std::string>   result;
+    int                        overwrite = 0;
+    CHECK_FALSE(bundle.import_json_presets(substitutions, file, [](std::string const &) { return 1; },
+                                           ForwardCompatibilitySubstitutionRule::Enable, overwrite, result));
+
+    REQUIRE(bundle.import_failures().size() == 1);
+    CHECK(bundle.import_failures()[0].file == "Brand TPU.json");
+    CHECK(bundle.import_failures()[0].reason == PresetBundle::ImportFailure::Reason::ParentMissing);
+    CHECK(bundle.import_failures()[0].detail == "Somebody's TPU");
 }

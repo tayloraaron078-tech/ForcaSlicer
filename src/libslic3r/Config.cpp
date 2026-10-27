@@ -1044,8 +1044,29 @@ int ConfigBase::load_from_json(const std::string &file, ConfigSubstitutionContex
                         }
                     }
 
+                    // Forca: a "nil" item where the option can't hold nil (see ConfigSubstitutionContext::nil_items).
+                    json nil_filled;
+                    if (substitution_context.nil_items != nullptr && optdef != nullptr && !optdef->nullable &&
+                        (optdef->type & coVectorType) != 0) {
+                        const json &items    = it.value();
+                        auto        is_nil   = [](const json &item) { return item.is_string() && item.get<std::string>() == "nil"; };
+                        auto        not_nil  = std::find_if_not(items.begin(), items.end(), is_nil);
+                        if (not_nil != items.end() && std::any_of(items.begin(), items.end(), is_nil)) {
+                            std::vector<size_t> &positions = (*substitution_context.nil_items)[opt_key];
+                            json                 filled    = json::array();
+                            for (size_t i = 0; i < items.size(); ++i) {
+                                if (is_nil(items[i])) {
+                                    positions.push_back(i);
+                                    filled.push_back(*not_nil);
+                                } else
+                                    filled.push_back(items[i]);
+                            }
+                            nil_filled[it.key()] = std::move(filled);
+                        }
+                    }
+
                     // BBS: we only support 2 depth array
-                    valid = parse_str_arr(it, single_sep, array_sep,escape_string_type, value_str);
+                    valid = parse_str_arr(nil_filled.empty() ? json::const_iterator(it) : nil_filled.cbegin(), single_sep, array_sep,escape_string_type, value_str);
                     if (!valid) {
                         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": parse " << file << " error, invalid json array for " << it.key();
                         break;

@@ -6,6 +6,7 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "libslic3r/Model.hpp"
+#include "libslic3r/ForcaOpenScad.hpp"
 #include "libslic3r/Format/3mf.hpp"
 #include "libslic3r/Format/bbs_3mf.hpp"
 #include "libslic3r/GCode/ThumbnailData.hpp"
@@ -2651,4 +2652,57 @@ SCENARIO("a rendered no-light thumbnail does not suppress the plate thumbnail", 
             }
         }
     }
+}
+
+// Forca: an object's OpenSCAD link (ModelObject::forca_openscad, libslic3r/ForcaOpenScad.hpp) is saved in
+// Metadata/forca_openscad.json by the object's index and comes back on the same object.
+TEST_CASE("An object's OpenSCAD link survives a 3MF round-trip on the same object", "[3mf][ForcaOpenScad]")
+{
+    ScopedSlic3rTemporaryDir temporary_dir("forca_openscad");
+
+    Model model;
+    for (int i = 0; i < 2; ++i) {
+        ModelObject *object = model.add_object();
+        object->add_volume(make_cube(10.0, 10.0, 10.0));
+        object->add_instance();
+    }
+    OpenScadLink link;
+    link.file   = "C:/models/box.scad";
+    link.scad   = "width = 40; // [10:100]\ncube([width, 30, 15]);\n";
+    link.values = {{"width", "42"}, {"label", "\"Forca \\\"box\\\"\""}};
+    model.objects[1]->forca_openscad = forca_openscad_link_to_json(link);
+
+    const boost::filesystem::path path        = temporary_dir.path() / "openscad_link.3mf";
+    const std::string             path_string = path.string();
+    DynamicPrintConfig            config;
+    auto                          plate = std::make_unique<PlateData>();
+    plate->plate_index                  = 0;
+    StoreParams store_params;
+    store_params.path   = path_string.c_str();
+    store_params.model  = &model;
+    store_params.config = &config;
+    store_params.plate_data_list.push_back(plate.get());
+    store_params.strategy = SaveStrategy::Zip64 | SaveStrategy::Silence;
+    REQUIRE(store_bbs_3mf(store_params));
+
+    Model                     reloaded_model;
+    DynamicPrintConfig        reloaded;
+    ConfigSubstitutionContext substitutions{ForwardCompatibilitySubstitutionRule::Disable};
+    PlateDataPtrs             reloaded_plates;
+    std::vector<Preset *>     project_presets;
+    bool                      is_bbl_3mf  = false;
+    bool                      is_orca_3mf = false;
+    Semver                    file_version;
+    const bool loaded = load_bbs_3mf(path_string.c_str(), &reloaded, &substitutions, &reloaded_model, &reloaded_plates,
+                                     &project_presets, &is_bbl_3mf, &is_orca_3mf, &file_version, nullptr,
+                                     LoadStrategy::LoadModel | LoadStrategy::LoadConfig);
+    release_PlateData_list(reloaded_plates);
+
+    REQUIRE(loaded);
+    REQUIRE(reloaded_model.objects.size() == 2);
+    CHECK(reloaded_model.objects[0]->forca_openscad.empty());
+    const OpenScadLink back = forca_openscad_link_from_json(reloaded_model.objects[1]->forca_openscad);
+    CHECK(back.file == link.file);
+    CHECK(back.scad == link.scad);
+    CHECK(back.values == link.values);
 }

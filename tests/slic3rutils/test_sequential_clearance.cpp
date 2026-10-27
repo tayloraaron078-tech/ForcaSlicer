@@ -20,6 +20,7 @@
 
 using namespace Slic3r;
 using namespace Slic3r::GUI;
+// Forca: Slic3r::Polygon is written out: the GUI precompiled header brings in <Windows.h>, whose Polygon() clashes.
 using Catch::Matchers::WithinAbs;
 
 namespace {
@@ -27,7 +28,7 @@ namespace {
 SequentialClearanceInstance instance(coord_t x, coord_t y, double height)
 {
     return {height, BoundingBox(Point(x, y), Point(x + 5, y + 10)),
-        Polygon{Point(x, y), Point(x + 5, y), Point(x + 5, y + 10), Point(x, y + 10)}};
+        Slic3r::Polygon{Point(x, y), Point(x + 5, y), Point(x + 5, y + 10), Point(x, y + 10)}};
 }
 
 } // namespace
@@ -103,7 +104,7 @@ TEST_CASE("Sequential clearance warns the same rotated copy as print validation"
     print.auto_assign_extruders(object);
     print.apply(model, config);
     Polygons polygons;
-    std::vector<std::pair<Polygon, float>> validation_warnings;
+    std::vector<std::pair<Slic3r::Polygon, float>> validation_warnings;
     Print::sequential_print_clearance_valid(print, &polygons, &validation_warnings);
 
     std::map<ObjectID, int> print_order;
@@ -113,10 +114,10 @@ TEST_CASE("Sequential clearance warns the same rotated copy as print validation"
 
     std::vector<SequentialClearanceInstance> instances;
     for (size_t i = 0; i < object->instances.size(); ++i) {
-        Polygon hull = object->convex_hull_2d(object->instances[i]->get_matrix());
+        Slic3r::Polygon hull = object->convex_hull_2d(object->instances[i]->get_matrix());
         instances.push_back({object->get_instance_max_z(i), hull.bounding_box(), hull, object->instances[i]->id()});
     }
-    const Polygon expected_warning = instances[1].hull_polygon;
+    const Slic3r::Polygon expected_warning = instances[1].hull_polygon;
     REQUIRE(validation_warnings.size() == 1);
     CHECK(validation_warnings.front().first.bounding_box().contains(instances[1].bounding_box.center()));
     CHECK_FALSE(validation_warnings.front().first.bounding_box().contains(instances[0].bounding_box.center()));

@@ -5,7 +5,7 @@ This is the step-by-step procedure for merging newer OrcaSlicer into Forca. Do i
 ## Ground rules
 
 - **`upstream` (OrcaSlicer) is pull-only** — never push to it. `origin` is Forca's own repo. Every `push` needs the maintainer's explicit approval.
-- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14 and upstream `main` `a26501c0ed` on 2026-10-24. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
+- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14, upstream `main` `a26501c0ed` on 2026-10-24 and `baff031626` on 2026-10-25. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
 - Never merge directly on `Multi_Interface`. Always use a throwaway merge branch so you can abort cleanly.
 - Builds are run locally by the maintainer; the exact build/run/log commands are in [§7](#7-rebuild-full) and [§8](#8-validate).
 
@@ -76,6 +76,7 @@ Forca's divergence falls into a few buckets. Resolve each the same way every tim
 | **Retint — scripted** | every other `src/slic3r/GUI/**/*.{cpp,hpp}` + `resources/web/{homepage/css/dark.css,homepage/css/home.css,include/global.css}` | Don't hand-merge colors. Take **upstream's** version of the conflicted file, then regenerate the tint in [§6b](#6b-regenerate-the-retint): `git checkout --theirs <file> && git add <file>`. |
 | **GitHub automation — keep Orca's deleted** | `.github/**` (Orca's workflows, bots, funding, templates) | Forca removed Orca's `.github` folder (it ran Orca's bots/releases with Orca's secrets). Resolve modify/delete conflicts on Orca's files by keeping them deleted (`git rm -f <path>`; upstream's *new* files arrive staged, hence `-f`). **Exception — keep Forca's:** `.github/ISSUE_TEMPLATE/` holds Forca's issue forms (`bug_report.yml` must keep the `version` and `os` field ids the app pre-fills); on a conflict take ours. `check_identity.ps1` fails if Orca's workflows come back. |
 | **Translations — take theirs, re-apply ours** | `localization/i18n/*/OrcaSlicer_*.po` | Take upstream's catalogs on conflict (`git checkout --theirs`), then run `powershell -ExecutionPolicy Bypass -File tools/forca/apply_forca_translations.ps1`: it re-adds Forca's own strings (`tools/forca/forca_translations*.json`, marked `# AI Translated`: Orca wording Forca changed, and the Calibration Wizard's strings, whose sources are not in `localization/i18n/list.txt`) and validates the changed catalogs with `msgfmt`. `check_identity.ps1` fails if any are missing. When Forca rewords or adds a translatable string, add it to the matching JSON with its translations. |
+| **wxWidgets with Scintilla — keep ours** | `deps/wxWidgets/wxWidgets.cmake`, `src/CMakeLists.txt` (both `find_package(wxWidgets ...)` lines) | Forca's OpenSCAD editor (`ForcaOpenScadEditor`, `docs/HLSD/openscad.md`) is a `wxStyledTextCtrl`. Keep `-DwxUSE_STC=ON` (upstream: OFF), `src/stc/scintilla src/stc/lexilla` in `GIT_SUBMODULES`, and `stc` at the end of both component lists. If upstream moves the wx pin (`GIT_TAG`), keep the three and rebuild the dependencies; `deps\build\OrcaSlicer_dep\usr\local\lib\vc_x64_lib\mswu\wx\setup.h` must say `#define wxUSE_STC 1`. A tree built before the submodules were listed needs `git submodule update --init --depth 1 src/stc/scintilla src/stc/lexilla` in `deps/build/dep_wxWidgets-prefix/src/dep_wxWidgets`. |
 | **Build/docs — keep ours** | `build_forca_release.{bat,ps1}`, `tools/forca/**`, `docs/forca/**`, `README.md`, `SECURITY.md`, `CHANGELOG.md` | Keep Forca's. `SECURITY.md` is Forca's policy (Orca's sends reports to Orca's maintainer); `check_identity.ps1` fails if Orca's comes back. |
 
 > Not every file in a category conflicts on every merge — only the ones upstream also changed. Use `git status` to see the actual conflict set and match each against the table.
@@ -141,6 +142,22 @@ Forca's divergence falls into a few buckets. Resolve each the same way every tim
   if a merge passes the limit, split upstream's `SLIC3R_GUI_SOURCES` into a second static library.
 - Dependencies: wxWidgets now builds from OrcaSlicer's fork, plus OpenSSL, OpenCV, GMP 6.3.0, libjpeg-turbo 3.2.0 and
   the Windows Python build (`-d` rebuilt them).
+
+### Notes from the 2026-10-25 merge (`main` `baff031626`)
+
+- Upstream rebuilt the right-click menus (#14787): the part menu is laid out in sections, and dynamic items are
+  inserted after a marker item (`m_part_props_marker` = "Change Type", `m_part_project_marker`) with
+  `FindPositionById(...) + 1`. Forca's `append_menu_item_support_interface_filament` and
+  `append_menu_item_support_z_gap` take a `pos` like upstream's `append_menu_item_change_filament` and go right after
+  the props marker (Change Filament isn't shown for an interface modifier, so they take its place). Keep them in
+  `MenuFactory::part_menu()` if upstream reworks the menus again.
+- The home page gained a Wiki shortcut next to where the OrcaCloud one was: the OrcaCloud shortcut stays removed,
+  the Wiki one is kept (orcaslicer.com wiki links are fine). `home.js` styles an `orca_cloud` menu item that Forca
+  doesn't have; harmless.
+- Dependencies: FreeType is gone and OCCT builds with `USE_FREETYPE=OFF`; libpng 1.6.59, OpenCV built against it
+  (`-d` rebuilds them). Upstream added `.github/workflows/approve_pr_checks.yml` (kept out, like Orca's others).
+- Upstream moved `nlohmann/json.hpp` and `std::regex` out of widely included headers (#16843, #16844): a Forca file
+  that used them through a transitive include must include them itself.
 
 ## 6. Regenerate the cosmetic layers
 

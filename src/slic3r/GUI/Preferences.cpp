@@ -2,6 +2,8 @@
 #include "slic3r/Utils/ForcaFeatures.hpp"
 #include "ForcaAcademy.hpp"
 #include "ForcaObnChoice.hpp"
+#include "ForcaOpenScadImport.hpp"
+#include "format.hpp"
 #include "ForcaReset.hpp"
 #include "CloudProvider.hpp"
 #include "OptionsGroup.hpp"
@@ -58,6 +60,7 @@
 #include <wx/display.h>
 #include <wx/string.h>
 #include <wx/panel.h>
+#include <wx/filedlg.h>
 #include <wx/utils.h>
 #include <wx/valtext.h>
 #include <wx/textctrl.h>
@@ -1989,6 +1992,65 @@ void PreferencesDialog::create_items()
         reset->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { forca_reset_show_dialog(this); });
         row->Add(reset, 0, wxALIGN_CENTER_VERTICAL);
         g_sizer->Add(row);
+    }
+
+    //// GENERAL > OpenSCAD (Forca, ForcaOpenScadImport.hpp): .scad files are rendered by the user's own OpenSCAD.
+    g_sizer->Add(create_item_title(_L("OpenSCAD")), 1, wxEXPAND);
+    {
+        wxBoxSizer*  row = create_item_label(_L("OpenSCAD program"),
+            _L("Forca opens .scad files by running OpenSCAD: a development snapshot from 2025 or later. Without a "
+               "choice here, Forca uses the newest one installed."));
+        const wxSize path_sz(FromDIP(380), -1);
+        auto*        path = new wxStaticText(m_parent, wxID_ANY, wxEmptyString, wxDefaultPosition, path_sz, wxST_ELLIPSIZE_MIDDLE);
+        path->SetMinSize(path_sz);
+        path->SetMaxSize(path_sz);
+        path->SetForegroundColour(DESIGN_GRAY600_COLOR);
+        path->SetFont(::Label::Body_14);
+        // Checking the program runs it, so it happens after the page is shown.
+        auto refresh = [path]() {
+            const OpenScadInfo info    = forca_openscad_find();
+            const std::string  version = info.version.empty() ? std::string("?") : info.version;
+            // TRN %1% is the path to the OpenSCAD program, %2% its version.
+            const wxString text = info.path.empty() ? _L("Not found") :
+                                  info.usable       ? format_wxstr(_L("%1% (version %2%)"), info.path, version) :
+                                                      format_wxstr(_L("%1% (version %2%, too old for Forca)"), info.path, version);
+            path->SetLabelText(text);
+            path->SetToolTip(text);
+        };
+        CallAfter(refresh);
+        auto* browse = new Button(m_parent, _L("Browse") + dots);
+        browse->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        browse->Bind(wxEVT_BUTTON, [this, refresh](wxCommandEvent&) {
+#ifdef _WIN32
+            const wxString wildcard = "openscad.exe|openscad.exe|*.exe|*.exe";
+#else
+            const wxString wildcard = "*";
+#endif
+            wxFileDialog dlg(this, _L("Choose the OpenSCAD program"), wxEmptyString, wxEmptyString, wildcard,
+                             wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+            if (dlg.ShowModal() != wxID_OK)
+                return;
+            app_config->set("forca_openscad_path", into_u8(dlg.GetPath()));
+            refresh();
+        });
+        auto* find = new Button(m_parent, _L("Find automatically"));
+        find->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        find->Bind(wxEVT_BUTTON, [this, refresh](wxCommandEvent&) {
+            app_config->set("forca_openscad_path", "");
+            refresh();
+        });
+        auto* download = new Button(m_parent, _L("Download"));
+        download->SetStyle(ButtonStyle::Regular, ButtonType::Parameter);
+        download->SetToolTip(_L("Opens OpenSCAD's download page (Development Snapshots) in your browser."));
+        download->Bind(wxEVT_BUTTON, [](wxCommandEvent&) { wxLaunchDefaultBrowser("https://openscad.org/downloads.html#snapshots"); });
+        row->Add(browse, 0, wxALIGN_CENTER_VERTICAL);
+        row->Add(find, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(6));
+        row->Add(download, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(6));
+        g_sizer->Add(row);
+        auto* path_row = new wxBoxSizer(wxHORIZONTAL); // under the buttons, aligned with them
+        path_row->AddSpacer(FromDIP(DESIGN_LEFT_MARGIN) + DESIGN_TITLE_SIZE.GetWidth() + FromDIP(5));
+        path_row->Add(path, 0, wxALIGN_CENTER_VERTICAL | wxBOTTOM, FromDIP(3));
+        g_sizer->Add(path_row);
     }
 
 #if 0

@@ -6,6 +6,7 @@
 #include "../Utils.hpp"
 #include "../LocalesUtils.hpp"
 #include "../FilamentMixer.hpp"
+#include "../ForcaOpenScad.hpp"
 #include "../GCode.hpp"
 #include "../Geometry.hpp"
 #include "../GCode/ThumbnailData.hpp"
@@ -234,6 +235,8 @@ const std::string SLICE_INFO_CONFIG_FILE = "Metadata/slice_info.config";
 const std::string FILAMENT_SEQUENCE_FILE = "Metadata/filament_sequence.json";
 const std::string BBS_LAYER_HEIGHTS_PROFILE_FILE = "Metadata/layer_heights_profile.txt";
 const std::string ORCA_CAD_RECIPE_FILE = "Metadata/orca_cad.bin";
+// Forca: each OpenSCAD-linked object's link (ForcaOpenScad.hpp), by 1-based object index; absent without such objects.
+const std::string FORCA_OPENSCAD_FILE = "Metadata/forca_openscad.json";
 // Read-only: the recipe entry's pre-rename name. A reader that knows only the new one drops the
 // feature tree of every project written before the move, without a word. Never written.
 const std::string LEGACY_CAD_RECIPE_FILE = "Metadata/SnapOrca_cad.bin";
@@ -1215,6 +1218,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         std::set<int>   m_items_auto_drop_off; // object ids with a build item auto_drop="0" (2.4.x layout)
         IdToCutObjectInfoMap       m_cut_object_infos;
         IdToLayerHeightsProfileMap m_layer_heights_profiles;
+        std::map<int, std::string> m_forca_openscad_links; // Forca: by 1-based model object index
         IdToLayerConfigRangesMap m_layer_config_ranges;
         IdToBrimPointsMap m_brim_ear_points;
         /*IdToSlaSupportPointsMap m_sla_support_points;
@@ -1510,6 +1514,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         m_objects_metadata.clear();
         m_items_auto_drop_off.clear();
         m_layer_heights_profiles.clear();
+        m_forca_openscad_links.clear();
         m_layer_config_ranges.clear();
         m_brim_ear_points.clear();
         //m_sla_support_points.clear();
@@ -2063,6 +2068,15 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                             model.cad_recipe = std::move(buf);
                     }
                 }
+                else if (boost::algorithm::iequals(name, FORCA_OPENSCAD_FILE)) {
+                    // Forca: OpenSCAD links, applied to the objects below by their index.
+                    constexpr mz_uint64 kMaxLinks = mz_uint64(1) << 28; // 256 MiB of .scad text
+                    if (stat.m_uncomp_size > 0 && stat.m_uncomp_size <= kMaxLinks) {
+                        std::string buf((size_t) stat.m_uncomp_size, '\0');
+                        if (mz_zip_reader_extract_to_mem(&archive, stat.m_file_index, buf.data(), buf.size(), 0))
+                            m_forca_openscad_links = forca_openscad_links_from_archive(buf);
+                    }
+                }
                 else if (boost::algorithm::iequals(name, CUT_INFORMATION_FILE)) {
                     // extract object cut info
                     _extract_cut_information_from_archive(archive, stat, config_substitutions);
@@ -2235,6 +2249,10 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             IdToLayerHeightsProfileMap::iterator obj_layer_heights_profile = m_layer_heights_profiles.find(object.second + 1);
             if (obj_layer_heights_profile != m_layer_heights_profiles.end())
                 model_object->layer_height_profile.set(std::move(obj_layer_heights_profile->second));
+
+            // Forca: the object's OpenSCAD link, by the same 1-based index.
+            if (auto link = m_forca_openscad_links.find(object.second + 1); link != m_forca_openscad_links.end())
+                model_object->forca_openscad = link->second;
 
             // m_layer_config_ranges are indexed by a 1 based model object index.
             IdToLayerConfigRangesMap::iterator obj_layer_config_ranges = m_layer_config_ranges.find(object.second + 1);
@@ -6303,6 +6321,7 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         bool _add_build_to_model_stream(std::stringstream& stream, const BuildItemsList& build_items) const;
         bool _add_layer_height_profile_file_to_archive(mz_zip_archive& archive, Model& model);
         bool _add_cad_recipe_file_to_archive(mz_zip_archive& archive, Model& model);
+        bool _add_forca_openscad_file_to_archive(mz_zip_archive& archive, Model& model);
         bool _add_layer_config_ranges_file_to_archive(mz_zip_archive& archive, Model& model);
         bool _add_brim_ear_points_file_to_archive(mz_zip_archive& archive, Model& model);
         bool _add_sla_support_points_file_to_archive(mz_zip_archive& archive, Model& model);
@@ -6713,6 +6732,11 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
             }
 
             if (!_add_cad_recipe_file_to_archive(archive, model)) {
+                close_zip_writer(&archive);
+                return false;
+            }
+
+            if (!_add_forca_openscad_file_to_archive(archive, model)) {
                 close_zip_writer(&archive);
                 return false;
             }
@@ -8017,6 +8041,22 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 (const void*)model.cad_recipe.data(), model.cad_recipe.length(),
                 MZ_DEFAULT_COMPRESSION)) {
             add_error("Unable to add CAD recipe file to archive");
+            return false;
+        }
+        return true;
+    }
+
+    bool _BBS_3MF_Exporter::_add_forca_openscad_file_to_archive(mz_zip_archive& archive, Model& model)
+    {
+        std::vector<std::pair<int, std::string>> links;
+        for (size_t i = 0; i < model.objects.size(); ++i)
+            if (!model.objects[i]->forca_openscad.empty())
+                links.emplace_back(int(i) + 1, model.objects[i]->forca_openscad);
+        if (links.empty())
+            return true;
+        const std::string out = forca_openscad_links_to_archive(links);
+        if (!mz_zip_writer_add_mem(&archive, FORCA_OPENSCAD_FILE.c_str(), (const void*)out.data(), out.length(), MZ_DEFAULT_COMPRESSION)) {
+            add_error("Unable to add OpenSCAD links file to archive");
             return false;
         }
         return true;

@@ -25,6 +25,7 @@
 #include <deque>
 #include <regex>
 #include <initializer_list>
+#include <memory>
 
 #include "Config.hpp"
 #include "Exception.hpp"
@@ -1056,6 +1057,68 @@ void Preset::get_extruder_names_and_keysets(Type type, std::string& extruder_id_
     }
 }
 
+std::vector<std::string> Preset::extruder_variants(Type type, const DynamicPrintConfig &config)
+{
+    std::string            extruder_id_name, extruder_variant_name;
+    std::set<std::string> *key_set1 = nullptr, *key_set2 = nullptr;
+    get_extruder_names_and_keysets(type, extruder_id_name, extruder_variant_name, &key_set1, &key_set2);
+    const ConfigOptionStrings *variants = extruder_variant_name.empty() ? nullptr : config.option<ConfigOptionStrings>(extruder_variant_name);
+    return variants != nullptr ? variants->values : std::vector<std::string>();
+}
+
+void Preset::restore_nil_items(Type type, DynamicPrintConfig &config, const DynamicPrintConfig &parent,
+                               const std::vector<std::string> &child_variants,
+                               const std::map<t_config_option_key, std::vector<size_t>> &nil_items)
+{
+    std::string            extruder_id_name, extruder_variant_name;
+    std::set<std::string> *key_set1 = nullptr, *key_set2 = nullptr;
+    get_extruder_names_and_keysets(type, extruder_id_name, extruder_variant_name, &key_set1, &key_set2);
+    const std::vector<std::string> parent_variants = extruder_variants(type, parent);
+
+    // The merge lays a per-variant option out in the parent's variant order; any other option keeps the child's.
+    for (const auto &[key, positions] : nil_items) {
+        auto       *dst = dynamic_cast<ConfigOptionVectorBase *>(config.option(key));
+        const auto *src = dynamic_cast<const ConfigOptionVectorBase *>(parent.option(key));
+        if (dst == nullptr || src == nullptr || dst->type() != src->type())
+            continue;
+        const bool by_variant = key_set1->count(key) != 0 && !parent_variants.empty() && !child_variants.empty();
+        for (size_t i : positions) {
+            size_t at = i;
+            if (by_variant) {
+                if (i >= child_variants.size())
+                    continue;
+                auto found = std::find(parent_variants.begin(), parent_variants.end(), child_variants[i]);
+                if (found == parent_variants.end())
+                    continue;
+                at = size_t(found - parent_variants.begin());
+            }
+            if (at < src->size() && at < dst->size())
+                dst->set_at(src, at, at);
+        }
+    }
+}
+
+void Preset::fill_root_nil_items(Type type, DynamicPrintConfig &config)
+{
+    std::string            extruder_id_name, extruder_variant_name;
+    std::set<std::string> *key_set1 = nullptr, *key_set2 = nullptr;
+    get_extruder_names_and_keysets(type, extruder_id_name, extruder_variant_name, &key_set1, &key_set2);
+    for (const std::string &key : *key_set1) {
+        auto *opt = dynamic_cast<ConfigOptionVectorBase *>(config.option(key));
+        if (opt == nullptr || !opt->nullable() || is_filament_extruder_override_key(key))
+            continue;
+        size_t first = 0;
+        while (first < opt->size() && opt->is_nil(first))
+            ++first;
+        if (first == opt->size())
+            continue;
+        std::unique_ptr<ConfigOption> value(opt->clone());
+        for (size_t i = 0; i < opt->size(); ++i)
+            if (opt->is_nil(i))
+                opt->set_at(value.get(), i, first);
+    }
+}
+
 DynamicPrintConfig Preset::load_external_config(Type type, const DynamicPrintConfig &default_config, const DynamicPrintConfig &project_config,
                                                 const std::set<std::string> &different_settings_list,
                                                 const std::function<DynamicPrintConfig *(const std::string &inherits)> &find_base,
@@ -1425,6 +1488,7 @@ static std::vector<std::string> s_Preset_print_options{
     "tree_support_auto_brim",
     "tree_support_brim_width",
     "gcode_comments",
+    "high_precision_gcode",
     "gcode_label_objects",
     "initial_layer_travel_speed",
     "initial_layer_travel_acceleration",
@@ -1862,7 +1926,11 @@ PresetCollection::UserPresetLoad PresetCollection::resolve_user_preset(
         //ConfigSubstitutions config_substitutions = config.load_from_ini(preset.file, substitution_rule);
         std::map<std::string, std::string> key_values;
         std::string reason;
-        ConfigSubstitutions config_substitutions = config.load_from_json(preset.file, substitution_rule, key_values, reason);
+        ConfigSubstitutionContext                          substitution_context(substitution_rule);
+        std::map<t_config_option_key, std::vector<size_t>> nil_items;
+        substitution_context.nil_items = &nil_items;
+        config.load_from_json(preset.file, substitution_context, true, key_values, reason);
+        ConfigSubstitutions config_substitutions = std::move(substitution_context.substitutions);
         if (! config_substitutions.empty())
             out.substitutions.push_back({ preset.name, m_type, PresetConfigSubstitutions::Source::UserFile, preset.file, std::move(config_substitutions) });
         if (!reason.empty()) {
@@ -1908,13 +1976,16 @@ PresetCollection::UserPresetLoad PresetCollection::resolve_user_preset(
         if (inherit_preset) {
             preset.config = inherit_preset->config;
             preset.filament_id = inherit_preset->filament_id;
+            const std::vector<std::string> child_variants = Preset::extruder_variants(m_type, config);
             extend_default_config_length(config, false, {});
             preset.config.update_diff_values_to_child_config(config, extruder_id_name, extruder_variant_name, *key_set1, *key_set2);
+            Preset::restore_nil_items(m_type, preset.config, inherit_preset->config, child_variants, nil_items);
         }
         else {
             auto inherits_config2 = dynamic_cast<ConfigOptionString *>(inherits_config);
             if ((inherits_config2 && !inherits_config2->value.empty())) {
                 out.errors.push_back((boost::format("can not find parent %1% for config %2%!") % inherits_config2->value % preset.file).str());
+                out.missing_parent = inherits_config2->value;
                 return out;
             }
             // We support custom root preset now
@@ -1922,6 +1993,7 @@ PresetCollection::UserPresetLoad PresetCollection::resolve_user_preset(
             preset.config = default_preset.config;
             preset.config.apply(std::move(config));
             extend_default_config_length(preset.config, true, default_preset.config);
+            Preset::fill_root_nil_items(m_type, preset.config);
         }
 
         Preset::normalize(preset.config);
@@ -1972,6 +2044,13 @@ void PresetCollection::commit_user_preset(UserPresetLoad &&loaded, std::deque<Pr
     }
     if (loaded.discard_file)
         remove_preset_files(loaded.preset.file, read_only);
+    // Forca: a preset whose parent is missing is offered for repair; one that loads is no longer missing.
+    auto missing = std::find_if(m_presets_missing_parent.begin(), m_presets_missing_parent.end(),
+                                [&preset](const PresetMissingParent &entry) { return entry.file == preset.file; });
+    if (missing != m_presets_missing_parent.end())
+        m_presets_missing_parent.erase(missing);
+    if (!loaded.missing_parent.empty())
+        m_presets_missing_parent.push_back({preset.file, preset.name, loaded.missing_parent});
     if (!loaded.install)
         return;
 

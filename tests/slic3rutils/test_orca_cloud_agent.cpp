@@ -35,6 +35,7 @@
 #include "slic3r/Utils/ForcaFeatures.hpp"
 #include "slic3r/Utils/bambu_networking.hpp"
 #include "test_utils.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace Slic3r;
 namespace fs = boost::filesystem;

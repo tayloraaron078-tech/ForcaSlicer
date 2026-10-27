@@ -21,6 +21,11 @@ report what happens** — good or bad. A report of "it worked on my Prusa MK4 wi
    went. Do "Before you print", Insights and Compare tell you something useful?
 5. **Forca AI (only if you use an AI assistant like Claude Code):** turn it on in the Forca AI window, connect your
    assistant, and ask it to prepare a print. Tell us what it got right and wrong.
+6. **OpenSCAD models (if you use OpenSCAD):** open a `.scad` file with a Customizer, change its parameters
+   (right-click → **OpenSCAD parameters...**) and render it again; save the project and reopen it. The
+   [OpenSCAD guide](../openscad.md) shows how. Did a model render differently from OpenSCAD itself?
+7. **Filament profile import:** import a filament profile from OrcaSlicer or Bambu Studio (File → Import → Import
+   Configs). Did the review show the right base preset and printer, and does the imported preset print as before?
 
 ## How to report
 Use the forms at <https://github.com/tayloraaron078-tech/ForcaSlicer/issues/new/choose>:

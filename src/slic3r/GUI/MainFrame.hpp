@@ -414,6 +414,8 @@ public:
     void        export_config();
     // Query user for the config file and open it.
     void        load_config_file();
+    // Forca: imports preset files and bundles (File > Import > Import Configs, or dropped on the window).
+    void        import_config_files(const std::vector<std::string> &files);
     // Open a config file. Return true if loaded.
     bool        load_config_file(const std::string &path);
 

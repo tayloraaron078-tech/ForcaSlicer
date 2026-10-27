@@ -1,6 +1,7 @@
 #include "Plater.hpp"
 #include "ForcaAcademy.hpp" // Forca: print records
 #include "ForcaAI.hpp"      // Forca: forca_ai_printer_label
+#include "ForcaOpenScadImport.hpp" // Forca: .scad files
 #include "libslic3r/ForcaCalibModel.hpp" // Forca: thin-walled Max Volumetric Speed test
 #include "../Utils/NetworkAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -1124,11 +1125,15 @@ void Sidebar::priv::layout_printer(bool isBBL, bool isDual)
         // ORCA: a non-Bambu printer with several extruders lists one nozzle row per tool; Bambu's own
         // multi-extruder printers keep the left/right pair above.
         const bool multi_extruder_rows = !preset_bundle.is_bbl_vendor() && extruder_count > 1;
+        const auto &diameters = cfg.option<ConfigOptionFloats>("nozzle_diameter")->values;
+        const bool mixed_diameters = std::any_of(diameters.begin(), diameters.end(), [&diameters](double value) {
+            return get_diameter_string(value) != get_diameter_string(diameters.front());
+        });
 
         // The variant box switches the machine variant. The card below lists the nozzles when there
-        // are flow variants to choose or several extruders to show; otherwise the box says it all.
+        // are flow variants to choose or extruders of different diameters; otherwise the box says it all.
         panel_nozzle_dia->Show(true);
-        extruder_single_sizer->Show(has_flow_variant || multi_extruder_rows);
+        extruder_single_sizer->Show(has_flow_variant || (multi_extruder_rows && mixed_diameters));
         single_extruder->SetNozzleRowCount(multi_extruder_rows ? size_t(extruder_count) : 1);
     } else {
         panel_nozzle_dia->Show(false);
@@ -4024,7 +4029,8 @@ void Sidebar::update_presets(Preset::Type preset_type)
         auto diameters = wxGetApp().preset_bundle->printers.diameters_of_selected_printer();
         auto diameter = printer_preset.config.opt_string("printer_variant");
         auto extruder_max_nozzle_count = printer_preset.config.option<ConfigOptionIntsNullable>("extruder_max_nozzle_count");
-        auto update_extruder_variant = [printer_model, extruders_def, extruders, nozzle_volumes_def, nozzle_volumes, extruder_variants,diameter,extruder_max_nozzle_count](ExtruderGroup & extruder, size_t row, int index) {
+        const bool has_flow_variant = preset_bundle.support_different_extruders();
+        auto update_extruder_variant = [printer_model, extruders_def, extruders, nozzle_volumes_def, nozzle_volumes, extruder_variants,diameter,extruder_max_nozzle_count,has_flow_variant](ExtruderGroup & extruder, size_t row, int index) {
             ComboBox *combo_flow = extruder.rows[row].flow;
             combo_flow->Clear();
             // A profile may leave the per-extruder lists shorter than the nozzle count (they are
@@ -4060,8 +4066,8 @@ void Sidebar::update_presets(Preset::Type preset_type)
             if (select == -1)
                 select = combo_flow->GetCount() - 1;
             combo_flow->SetSelection(select);
-            // No flow variant for this extruder: the diameter keeps the whole row.
-            combo_flow->Show(combo_flow->GetCount() > 0);
+            // No flow variant for this printer or extruder: the diameter keeps the whole row.
+            combo_flow->Show(has_flow_variant && combo_flow->GetCount() > 0);
         };
 
         auto update_extruder_diameter = [&diameters, &nozzle_diameter, &diameter](int extruder_index,ExtruderGroup & extruder) {
@@ -7814,6 +7820,20 @@ bool PlaterDropTarget::OnDropFiles(wxCoord x, wxCoord y, const wxArrayString &fi
     m_mainframe.select_tab(TAB_ID_PREPARE);
     if (wxGetApp().is_editor())
         m_plater.select_view_3D("3D");
+
+    // Forca: preset files (OrcaSlicer, Bambu Studio or Forca presets and bundles) are imported like
+    // File > Import > Import Configs. A .zip may hold models, so it is left to load_files.
+    const std::regex preset_drop(".*[.](json|orca_filament|orca_printer|orca_bundle|bbsflmt|bbscfg)", std::regex::icase);
+    if (!filenames.empty() && std::all_of(filenames.begin(), filenames.end(), [&preset_drop](const wxString &filename) {
+            return std::regex_match(into_u8(filename), preset_drop);
+        })) {
+        std::vector<std::string> files;
+        for (const wxString &filename : filenames)
+            files.push_back(into_u8(filename));
+        // After the drop returns: the import shows dialogs, which must not run inside the drag-and-drop callback.
+        wxGetApp().CallAfter([files] { if (MainFrame *frame = wxGetApp().mainframe) frame->import_config_files(files); });
+        return true;
+    }
 
     // When only one .svg file is dropped on scene
     if (filenames.size() == 1) {
@@ -14383,9 +14403,8 @@ PlateBBoxData Plater::priv::generate_first_layer_bbox()
     for (auto obj : objects)
     {
         auto bb_scaled = obj->get_first_layer_bbox(data.area, data.layer_height, data.name);
+        // get_first_layer_bbox() is already plate-local, unlike the wipe tower corners below.
         auto bb = unscaled(bb_scaled);
-        bb.min -= orig2d;
-        bb.max -= orig2d;
         bbox_all.merge(bb);
         data.area *= (SCALING_FACTOR * SCALING_FACTOR); // unscale area
         data.id = obj->id().id;
@@ -18488,7 +18507,14 @@ void Plater::force_update_all_plate_thumbnails()
 }
 
 // BBS: backup
-std::vector<size_t> Plater::load_files(const std::vector<fs::path>& input_files, LoadStrategy strategy, bool ask_multi, bool* published_out) {
+std::vector<size_t> Plater::load_files(const std::vector<fs::path>& input_files_in, LoadStrategy strategy, bool ask_multi, bool* published_out) {
+    // Forca: .scad files are rendered by OpenSCAD in the background, then added like any model (ForcaOpenScadImport).
+    std::vector<fs::path> input_files, scad_files;
+    for (const fs::path &file : input_files_in)
+        (forca_is_scad_file(file) ? scad_files : input_files).push_back(file);
+    forca_openscad_import(*this, scad_files);
+    if (input_files.empty())
+        return {};
     //BBS: wish to reset state when load a new file
     p->m_slice_all_only_has_gcode = false;
     //BBS: wish to reset all plates stats item selected state when load a new file
@@ -18835,7 +18861,7 @@ void ProjectDropDialog::on_dpi_changed(const wxRect& suggested_rect)
 //BBS: remove GCodeViewer as seperate APP logic
 bool Plater::load_files(const wxArrayString& filenames)
 {
-    const std::regex pattern_drop(".*[.](stp|step|stl|oltp|obj|amf|3mf|svg|zip|drc|glb|gltf|fbx)", std::regex::icase);
+    const std::regex pattern_drop(".*[.](stp|step|stl|oltp|obj|amf|3mf|svg|zip|drc|glb|gltf|fbx|scad)", std::regex::icase);
     const std::regex pattern_gcode_drop(".*[.](gcode|g)", std::regex::icase);
 
     std::vector<fs::path> normal_paths;

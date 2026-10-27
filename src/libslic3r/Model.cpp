@@ -1274,6 +1274,7 @@ ModelObject& ModelObject::assign_copy(const ModelObject &rhs)
     //BBS: add module name
     this->module_name                 = rhs.module_name;
     this->input_file                  = rhs.input_file;
+    this->forca_openscad              = rhs.forca_openscad;
     // Copies the config's ID
     this->config                      = rhs.config;
     assert(this->config.id() == rhs.config.id());
@@ -1315,6 +1316,7 @@ ModelObject& ModelObject::assign_copy(ModelObject &&rhs)
     //BBS: add module name
     this->module_name                 = std::move(rhs.module_name);
     this->input_file                  = std::move(rhs.input_file);
+    this->forca_openscad              = std::move(rhs.forca_openscad);
     // Moves the config's ID
     this->config                      = std::move(rhs.config);
     assert(this->config.id() == rhs.config.id());

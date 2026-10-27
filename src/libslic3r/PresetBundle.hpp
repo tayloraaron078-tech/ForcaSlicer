@@ -316,6 +316,17 @@ public:
                                               ForwardCompatibilitySubstitutionRule rule,
                                               AppConfig& config);
 
+    // Forca: a preset file the last import_presets() did not import, and why, for the result message.
+    struct ImportFailure
+    {
+        enum class Reason { Unreadable, ParentMissing, SystemName };
+        std::string file;   // the file's name, without its folder
+        Reason      reason;
+        std::string detail; // ParentMissing: the parent's name; SystemName: the preset's name
+    };
+    const std::vector<ImportFailure> &import_failures() const { return m_import_failures; }
+    void                              clear_import_failures() { m_import_failures.clear(); }
+
     bool import_json_presets(PresetsConfigSubstitutions& substitutions,
                              std::string& file,
                              std::function<int(std::string const&)> override_confirm,
@@ -564,7 +575,7 @@ public:
     int get_printer_extruder_count() const;
     bool support_different_extruders() const;
 
-    // Orca: Ensure filament_presets has at least one slot per nozzle on FFF printers.
+    // Orca: Ensure filament_presets has at least min_filament_count() slots on FFF printers.
     // Called from (load|update)_selections before the parallel project_config arrays
     // (filament_colour/colour_type/map) are sized off filament_presets.size(), so a
     // short saved filament list doesn't truncate the loaded colors.
@@ -731,6 +742,12 @@ public:
         const std::atomic<bool>* cancel = nullptr, std::vector<std::string>* failed = nullptr);
 
 private:
+    // Orca: The fewest filaments the selected FFF printer runs with. A tool changer carries one
+    // filament per tool, so it needs one per nozzle. A printer feeding filaments through shared
+    // nozzles (single_extruder_multi_material, e.g. a Bambu Lab H2D) maps any number of them onto
+    // its nozzles, so one is enough, and the user may delete down to it.
+    size_t min_filament_count() const;
+
     // Move the presets and vendor profiles of `others` into this bundle, in one pass
     // over each collection. A preset whose name this bundle or an earlier one of
     // `others` already has is left out and listed under the bundle that repeats it.
@@ -940,6 +957,7 @@ private:
     bool validation_mode = false;
     std::string vendor_to_validate = "";
     int m_errors = 0;
+    std::vector<ImportFailure> m_import_failures;
 
     // The live SelectionExportBlockers.
     int m_selection_export_blockers = 0;

@@ -34,7 +34,7 @@ orcaslicer_add_cmake_project(
     GIT_REPOSITORY "https://github.com/OrcaSlicer/Orca-deps-wxWidgets"
     GIT_TAG 5b7e8c0cde6b975d63613188d2ac6c1ab8769fbc
     GIT_SHALLOW ON
-    GIT_SUBMODULES 3rdparty/catch 3rdparty/pcre 3rdparty/libwebp
+    GIT_SUBMODULES 3rdparty/catch 3rdparty/pcre 3rdparty/libwebp src/stc/scintilla src/stc/lexilla # Forca: + stc
     DEPENDS ${PNG_PKG} ${ZLIB_PKG} ${EXPAT_PKG} ${JPEG_PKG}
     CMAKE_ARGS
         -DwxBUILD_PRECOMP=${_wx_precomp}
@@ -55,7 +55,9 @@ orcaslicer_add_cmake_project(
         -DwxUSE_REGEX=builtin
         -DwxUSE_LIBSDL=OFF
         -DwxUSE_XTEST=OFF
-        -DwxUSE_STC=OFF
+        # Forca: wxStyledTextCtrl (Scintilla) for the OpenSCAD code editor (ForcaOpenScadEditor). Upstream has it OFF:
+        # keep ON at merges.
+        -DwxUSE_STC=ON
         -DwxUSE_AUI=ON
         -DwxUSE_LIBPNG=sys
         -DwxUSE_ZLIB=sys
