@@ -421,6 +421,8 @@ TEST_CASE("fill_surfaces mutation cascades at PrepareInfill but not at Infill", 
         Slic3r::Print print; Slic3r::Model model;
         auto config = Slic3r::DynamicPrintConfig::full_print_config();
         config.set_key_value("slicing_pipeline_plugin", new Slic3r::ConfigOptionStrings({"probe"}));
+        // Forca: joined monotonic lines are one path each, which would make the path count depend on the joins.
+        config.set_key_value("monotonic_line_join", new Slic3r::ConfigOptionBool(false));
         Slic3r::Print::set_slicing_pipeline_hook_fn(
             [shrink, at](Slic3r::Print&, const Slic3r::PrintObject* o, Slic3r::SlicingPipelineStepPlugin s){
                 if (!shrink || s != at || !o) return;

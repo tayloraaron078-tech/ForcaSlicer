@@ -104,6 +104,22 @@ void forca_build_hole_plate(ModelObject& object)
     object.add_volume(std::move(notch), ModelVolumeType::NEGATIVE_VOLUME, false)->name = "Forca notch (small holes)";
 }
 
+void forca_build_flow_weight_plate(ModelObject& object)
+{
+    object.add_volume(make_cube(FORCA_WEIGHT_PLATE_X, FORCA_WEIGHT_PLATE_Y, FORCA_WEIGHT_PLATE_H), ModelVolumeType::MODEL_PART, false)
+        ->name = "Forca flow weight plate";
+}
+
+double forca_flow_ratio_from_weight(double expected_g, double measured_g)
+{
+    return expected_g > 0. && measured_g > 0. ? expected_g / measured_g : 0.;
+}
+
+double forca_density_from_meter_weight(double grams_per_meter, double diameter_mm)
+{
+    return grams_per_meter > 0. && diameter_mm > 0. ? grams_per_meter / (PI * diameter_mm * diameter_mm / 4.) : 0.;
+}
+
 ForcaHoleFit forca_hole_fit(const std::vector<double>& designed, const std::vector<double>& measured)
 {
     ForcaHoleFit fit;

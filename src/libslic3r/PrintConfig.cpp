@@ -134,7 +134,22 @@ bool is_filament_extruder_override_key(const std::string &opt_key)
            opt_key == "filament_ironing_flow" ||
            opt_key == "filament_ironing_spacing" ||
            opt_key == "filament_ironing_inset" ||
-           opt_key == "filament_ironing_speed";
+           opt_key == "filament_ironing_speed" ||
+           is_filament_scarf_override_key(opt_key);
+}
+
+// Forca: the filament scarf seam overrides (Bambu Studio's names) and the process setting each one replaces.
+const std::vector<std::pair<std::string, std::string>> filament_scarf_override_keys = {
+    { "filament_scarf_seam_type", "seam_slope_type" },
+    { "filament_scarf_height",    "seam_slope_start_height" },
+    { "filament_scarf_gap",       "seam_gap" },
+    { "filament_scarf_length",    "seam_slope_min_length" },
+};
+
+bool is_filament_scarf_override_key(const std::string &opt_key)
+{
+    return std::any_of(filament_scarf_override_keys.begin(), filament_scarf_override_keys.end(),
+                       [&opt_key](const auto &keys) { return keys.first == opt_key; });
 }
 
 size_t get_extruder_index(const GCodeConfig& config, unsigned int filament_id)
@@ -336,7 +351,11 @@ static t_config_enum_values s_keys_map_InfillPattern {
     { "spiralinset", ipSpiralInset },
     { "hilbertcurve", ipHilbertCurve },
     { "archimedeanchords", ipArchimedeanChords },
-    { "octagramspiral", ipOctagramSpiral }
+    { "octagramspiral", ipOctagramSpiral },
+    // Forca: Bambu Studio's name for its spiral ironing
+    { "ironingarchimedeanspiral", ipIroningArchimedeanSpiral },
+    // Forca: sub_top_surface_pattern's default
+    { "sameasinternalsolid", ipSameAsInternalSolid }
 };
 CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(InfillPattern)
 
@@ -1918,7 +1937,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("precise_outer_wall",coBool);
     def->label = L("Precise wall");
     def->category = L("Quality");
-    def->tooltip  = L("Improve shell precision by adjusting outer wall spacing. This also improves layer consistency. NOTE: This option "
+    def->tooltip  = L("Improve shell precision by adjusting outer wall spacing. This also improves layer consistency.\n\nNote: This option "
                        "will be ignored for outer-inner or inner-outer-inner wall sequences.");
     def->set_default_value(new ConfigOptionBool{true});
 
@@ -1936,7 +1955,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("If a top surface has to be printed and it's partially covered by another layer, it won't be considered at a top layer where its width is below this value."
         " This can be useful to not let the 'one perimeter on top' trigger on surface that should be covered only by perimeters."
         " This value can be a mm or a % of the perimeter extrusion width."
-        "\nWarning: If enabled, artifacts can be created if you have some thin features on the next layer, like letters. Set this setting to 0 to remove these artifacts.");
+        "\n\nWarning: If enabled, artifacts can be created if you have some thin features on the next layer, like letters. Set this setting to 0 to remove these artifacts.");
     def->sidetext = L("mm or %");
     def->ratio_over = "inner_wall_line_width";
     def->min = 0;
@@ -2027,7 +2046,7 @@ void PrintConfigDef::init_fff_params()
                      "For example, additional slowdown will be applied when printing overhangs on sharp corners like the "
                      "front of the Benchy hull, reducing curling which compounds over multiple layers.\n\n"
                      "It is generally recommended to have this option switched on unless your printer cooling is powerful enough or the "
-                     "print speed is slow enough that perimeter curling does not happen. \n"
+                     "print speed is slow enough that perimeter curling does not happen.\n"
                      "If printing with a high external perimeter speed, this parameter may introduce wall artifacts when slowing down, "
                      "due to the potentially large variance in print speeds causing the extruder to be unable to keep up with the requested flow change.\n"
                      "Root cause of these artifacts is most likely PA tuning being slightly off, especially when combined "
@@ -2498,7 +2517,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("activate_air_filtration",coBools);
     def->label = L("Activate air filtration");
-    def->tooltip = L("Activate for better air filtration. G-code command: M106 P3 S(0-255)");
+    def->tooltip = L("Activate for better air filtration.\nG-code command: M106 P3 S(0-255)");
     def->mode = comSimple;
     def->set_default_value(new ConfigOptionBools{false});
     
@@ -2823,6 +2842,36 @@ void PrintConfigDef::init_fff_params()
     def->enum_values   = def_top_fill_pattern->enum_values;
     def->enum_labels   = def_top_fill_pattern->enum_labels;
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipMonotonic));
+
+    // Forca: Bambu Studio 2.8.3's setting and values, plus a default that keeps the internal solid pattern (BS:
+    // Monotonic), so prints don't change until it's set. Applied in Fill.cpp (group_fills), found by
+    // PrintObject::infill (discover_sub_top_areas).
+    def                = this->add("sub_top_surface_pattern", coEnum);
+    def->label         = L("Sub-top surface pattern");
+    def->category      = L("Strength");
+    def->tooltip       = L("Line pattern of the solid layer that supports a visible top surface. Its lines can print "
+                           "through and mark the top, so a monotonic pattern gives the smoothest result. The whole solid "
+                           "area that a top surface reaches uses this pattern, not only the part directly beneath it. "
+                           "Top surfaces narrower than 3 mm are ignored.");
+    def->enum_keys_map = &ConfigOptionEnum<InfillPattern>::get_enum_values();
+    def->enum_values.push_back("sameasinternalsolid");
+    def->enum_labels.push_back(L("Same as internal solid infill"));
+    for (size_t i = 0; i < def_top_fill_pattern->enum_values.size(); ++i) {
+        def->enum_values.push_back(def_top_fill_pattern->enum_values[i]);
+        def->enum_labels.push_back(def_top_fill_pattern->enum_labels[i]);
+    }
+    def->mode          = comAdvanced;
+    def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipSameAsInternalSolid));
+
+    // Forca: Bambu Studio always joins them. Applied in Fill::fill_surface_extrusion.
+    def           = this->add("monotonic_line_join", coBool);
+    def->label    = L("Join monotonic lines");
+    def->category = L("Strength");
+    def->tooltip  = L("With the Monotonic line pattern, move from one line to the next without extruding instead of "
+                      "travelling, as Bambu Studio does. The nozzle keeps the surface's speed and acceleration, which "
+                      "saves time on every top surface.");
+    def->mode     = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(true));
     
     def = this->add("outer_wall_line_width", coFloatOrPercent);
     def->label = L("Outer wall");
@@ -2996,7 +3045,7 @@ void PrintConfigDef::init_fff_params()
         "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the "
         "entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be "
         "set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max "
-        "points. This information can usually be obtained from your printer manufacturer. The default setting is (-99999, -99999), which "
+        "points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (-99999, -99999), which "
         "means there are no limits, thus allowing probing across the entire bed.");
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->mode = comAdvanced;
@@ -3008,7 +3057,7 @@ void PrintConfigDef::init_fff_params()
         "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the "
         "entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be "
         "set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max "
-        "points. This information can usually be obtained from your printer manufacturer. The default setting is (99999, 99999), which "
+        "points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (99999, 99999), which "
         "means there are no limits, thus allowing probing across the entire bed.");
     def->sidetext = L("mm");	// millimeters, CIS languages need translation
     def->mode = comAdvanced;
@@ -3144,7 +3193,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("adaptive_pressure_advance_bridges", coFloats);
     def->label = L("Static pressure advance for bridges");
-    def->tooltip = L("Static pressure advance value for bridges. Set to 0 to apply the same pressure advance as \n"
+    def->tooltip = L("Static pressure advance value for bridges. Set to 0 to apply the same pressure advance as "
 					"equivalent walls (using adaptive settings if enabled).\n\n"
                     "A lower PA value when printing bridges helps reduce the appearance of slight under-extrusion immediately after bridges. "
                     "This is caused by the pressure drop in the nozzle when printing in the air and a lower PA helps counteract this.");
@@ -3204,6 +3253,18 @@ void PrintConfigDef::init_fff_params()
     def->max = 50;
     def->mode = comDevelop; // BambuStudio shows it in Develop mode only
     def->set_default_value(new ConfigOptionFloats{ 10. });
+
+    // Forca: layer-time smoothing (roadmap #10), applied in CoolingBuffer::calculate_layer_slowdown.
+    def = this->add("slow_down_recovery_layers", coInts);
+    def->label = L("Slowdown recovery layers");
+    def->tooltip = L("After a layer slowed down for its minimum layer time, speed comes back gradually over this many "
+                     "layers instead of at once, so a model whose layers suddenly get longer (above a thin section) "
+                     "doesn't show a band where the speed jumps. Slowing down still happens at once. 0 disables it.");
+    def->sidetext = L("layers");
+    def->min = 0;
+    def->max = 50;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionInts{ 0 });
 
     def = this->add("fan_cooling_layer_time", coFloats);
     def->label = L("Layer time");
@@ -4420,6 +4481,60 @@ void PrintConfigDef::init_fff_params()
     def->nullable = true;
     def->set_default_value(new ConfigOptionFloatsNullable{ ConfigOptionFloatsNullable::nil_value() });
 
+    // Forca: filament scarf seam overrides, with Bambu Studio's names and meaning, so its filaments import as they are.
+    // Unset (nil) = the process value. "override_filament_scarf_seam_setting" lets a process, object or modifier win.
+    def = this->add("filament_scarf_seam_type", coEnums);
+    def->label = L("Scarf joint seam (beta)");
+    def->category = L("Quality");
+    def->tooltip = L("Filament-specific override for the scarf joint seam. Walls printed with this filament use it "
+                     "instead of the process setting, unless the process turns on \"Override filament scarf seam "
+                     "setting\".");
+    def->enum_keys_map = &ConfigOptionEnum<SeamScarfType>::get_enum_values();
+    def->enum_values.push_back("none");
+    def->enum_values.push_back("external");
+    def->enum_values.push_back("all");
+    def->enum_labels.push_back(L("None"));
+    def->enum_labels.push_back(L("Contour"));
+    def->enum_labels.push_back(L("Contour and hole"));
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionEnumsGenericNullable{ ConfigOptionEnumsGenericNullable::nil_value() });
+
+    def = this->add("filament_scarf_height", coFloatsOrPercents);
+    def->label = L("Scarf start height");
+    def->category = L("Quality");
+    def->tooltip = L("Filament-specific override for the start height of the scarf. This amount can be specified in "
+                     "millimeters or as a percentage of the current layer height.");
+    def->sidetext = L("mm or %");
+    def->ratio_over = "layer_height";
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsOrPercentsNullable{ ConfigOptionFloatsOrPercentsNullable::nil_value() });
+
+    def = this->add("filament_scarf_gap", coFloatsOrPercents);
+    def->label = L("Scarf slope gap");
+    def->category = L("Quality");
+    def->tooltip = L("Filament-specific override for the gap at the end of a scarf joint seam, in millimeters or as a "
+                     "percentage of the nozzle diameter. It replaces the seam gap only for walls that get a scarf.");
+    def->sidetext = L("mm or %");
+    def->ratio_over = "nozzle_diameter";
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsOrPercentsNullable{ ConfigOptionFloatsOrPercentsNullable::nil_value() });
+
+    def = this->add("filament_scarf_length", coFloats);
+    def->label = L("Scarf length");
+    def->category = L("Quality");
+    def->tooltip = L("Filament-specific override for the length of the scarf. Setting this parameter to zero "
+                     "effectively disables the scarf.");
+    def->sidetext = L("mm");	// millimeters, CIS languages need translation
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->nullable = true;
+    def->set_default_value(new ConfigOptionFloatsNullable{ ConfigOptionFloatsNullable::nil_value() });
+
     // BBS: a filament can replace the process overhang and bridge speeds.
     def = this->add("override_process_overhang_speed", coBools);
     def->label = L("Override overhang speed");
@@ -4767,7 +4882,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("auxiliary_fan", coBool);
     def->label = L("Auxiliary part cooling fan");
-    def->tooltip = L("Enable this option if machine has auxiliary part cooling fan. G-code command: M106 P2 S(0-255).");
+    def->tooltip = L("Enable this option if machine has auxiliary part cooling fan.\nG-code command: M106 P2 S(0-255).");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
@@ -4910,7 +5025,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Skip G-code config block");
     def->tooltip = L("Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. "
                    "This can help with printers whose firmware crashes when parsing these comment lines "
-                   "(e.g. Anycubic go-klipper). Note: the G-code file will no longer contain slicer settings, "
+                   "(e.g. Anycubic go-klipper).\n\nNote: the G-code file will no longer contain slicer settings, "
                    "so importing it back into OrcaSlicer will not restore the configuration.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
@@ -4930,7 +5045,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("gcode_label_objects", coBool);
     def->label = L("Label objects");
     def->tooltip = L("Enable this to add comments into the G-code labeling print moves with what object they belong to,"
-                   " which is useful for the Octoprint CancelObject plug-in. This setting is NOT compatible with "
+                   " which is useful for the Octoprint CancelObject plug-in.\n\nThis setting is NOT compatible with "
                    "Single Extruder Multi Material setup and Wipe into Object / Wipe into Infill.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(1));
@@ -4954,7 +5069,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("gcode_comments", coBool);
     def->label = L("Verbose G-code");
-    def->tooltip = L("Enable this to get a commented G-code file, with each line explained by a descriptive text. "
+    def->tooltip = L("Enable this to get a commented G-code file, with each line explained by a descriptive text.\n\n"
                    "If you print from SD card, the additional weight of the file could make your firmware "
                    "slow down.");
     def->mode = comAdvanced;
@@ -4968,7 +5083,7 @@ void PrintConfigDef::init_fff_params()
                      "precision. This may help stabilize extrusion with small nozzles (e.g. 0.2 mm) and "
                      "thin layers (e.g. 0.08 mm or less), where each move extrudes so little material that rounding errors "
                      "matter most. The effect depends strongly on how well the rest of the settings are tuned and may be hard "
-                     "to notice unless the print profile is well calibrated. The G-code file becomes about 10 percent larger, "
+                     "to notice unless the print profile is well calibrated.\n\nThe G-code file becomes about 10 percent larger, "
                      "which may slow down printers that parse G-code slowly.");
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionBool(false));
@@ -4997,9 +5112,9 @@ void PrintConfigDef::init_fff_params()
     def->category = L("Strength");
     def->tooltip  = L("Rotate the sparse infill direction per layer using a template of angles. "
                       "Enter comma-separated degrees (e.g., '0,30,60,90'). "
-                      "Angles are applied in order by layer and repeat when the list ends. "
-                      "Advanced syntax is supported: '+5' rotates +5° every layer; '+5#5' rotates +5° every 5 layers. See the Wiki for details. "
-                      "When a template is set, the standard infill direction setting is ignored. "
+                      "Angles are applied in order by layer and repeat when the list ends.\n\n"
+                      "Advanced syntax is supported: '+5' rotates +5° every layer; '+5#5' rotates +5° every 5 layers. See the Wiki for details.\n\n"
+                      "When a template is set, the standard infill direction setting is ignored.\n\n"
                       "Note: some infill patterns (e.g., Gyroid) control rotation themselves; use with care.");
     def->sidetext = u8"°";	// degrees, don't need translation
     def->mode     = comAdvanced;
@@ -5012,7 +5127,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip  = L("This parameter adds a rotation of solid infill direction to each layer according to the specified template. "
                       "The template is a comma-separated list of angles in degrees, e.g. '0,90'. "
                       "The first angle is applied to the first layer, the second angle to the second layer, and so on. "
-                      "If there are more layers than angles, the angles will be repeated. Note that not all solid infill patterns support rotation.");
+                      "If there are more layers than angles, the angles will be repeated.\n\nNote that not all solid infill patterns support rotation.");
     def->sidetext = u8"°";	// degrees, don't need translation
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionString(""));
@@ -5420,8 +5535,10 @@ void PrintConfigDef::init_fff_params()
     def->enum_keys_map = &ConfigOptionEnum<InfillPattern>::get_enum_values();
     def->enum_values.push_back("rectilinear");
     def->enum_values.push_back("concentric");
+    def->enum_values.push_back("ironingarchimedeanspiral"); // Forca: Bambu Studio's spiral ironing
     def->enum_labels.push_back(L("Rectilinear"));
     def->enum_labels.push_back(L("Concentric"));
+    def->enum_labels.push_back(L("Archimedean Chords"));
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipRectilinear));
     
@@ -5923,7 +6040,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("additional_cooling_fan_speed", coInts);
     def->label = L("Fan speed");
     def->tooltip = L("Speed of auxiliary part cooling fan. Auxiliary fan will run at this speed during printing except the first several layers "
-                     "which is defined by no cooling layers.\nPlease enable auxiliary_fan in printer settings to use this feature. G-code command: M106 P2 S(0-255)");
+                     "which is defined by no cooling layers.\nPlease enable auxiliary_fan in printer settings to use this feature.\nG-code command: M106 P2 S(0-255)");
     def->sidetext = "%";
     def->min = 0;
     def->max = 100;
@@ -6809,6 +6926,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionEnum<SeamScarfType>(SeamScarfType::None));
 
+    // Forca: Bambu Studio's switch; lets the process (or an object or modifier) win over the filament's scarf settings.
+    def = this->add("override_filament_scarf_seam_setting", coBool);
+    def->label = L("Override filament scarf seam setting");
+    def->category = L("Quality");
+    def->tooltip = L("Use these scarf joint settings even for filaments that set their own. Turn it on for an object "
+                     "or modifier to control its scarf joint there.");
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def = this->add("seam_slope_conditional", coBool);
     def->label = L("Conditional scarf joint");
     def->category = L("Quality");
@@ -6846,7 +6972,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip  = L(
         "This option sets the printing speed for scarf joints. It is recommended to print scarf joints at a slow speed (less than 100 "
          "mm/s). It's also advisable to enable 'Extrusion rate smoothing' if the set speed varies significantly from the speed of the "
-         "outer or inner walls. If the speed specified here is higher than the speed of the outer or inner walls, the printer will default "
+         "outer or inner walls.\n\nIf the speed specified here is higher than the speed of the outer or inner walls, the printer will default "
          "to the slower of the two speeds. When specified as a percentage (e.g., 80%), the speed is calculated based on the respective "
          "outer or inner wall speed. The default value is set to 100%.");
     def->sidetext = L("mm/s or %");
@@ -7178,7 +7304,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("timelapse_type", coEnum);
     def->label = L("Timelapse");
-    def->tooltip = L("If smooth or traditional mode is selected, a timelapse video will be generated for each print. After each layer is printed, a snapshot is taken with the chamber camera. All of these snapshots are composed into a timelapse video when printing completes. If smooth mode is selected, the toolhead will move to the excess chute after each layer is printed and then take a snapshot. Since the melt filament may leak from the nozzle during the process of taking a snapshot, a prime tower is required for smooth mode to wipe the nozzle.");
+    def->tooltip = L("If smooth or traditional mode is selected, a timelapse video will be generated for each print. After each layer is printed, a snapshot is taken with the chamber camera. All of these snapshots are composed into a timelapse video when printing completes.\n\nIf smooth mode is selected, the toolhead will move to the excess chute after each layer is printed and then take a snapshot. Since the melt filament may leak from the nozzle during the process of taking a snapshot, a prime tower is required for smooth mode to wipe the nozzle.");
     def->enum_keys_map = &ConfigOptionEnum<TimelapseType>::get_enum_values();
     def->enum_values.emplace_back("0");
     def->enum_values.emplace_back("1");
@@ -7556,7 +7682,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("tool_change_on_wipe_tower", coBool);
     def->label = L("Tool change on wipe tower");
-    def->tooltip = L("Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx). "
+    def->tooltip = L("Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx).\n\n"
                      "Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. "
                      "By default Orca skips the travel on multi-toolhead machines because the firmware handles the head swap, "
                      "which can result in the Tx command being issued above the printed part. "
@@ -7568,7 +7694,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Wait for temperature on wipe tower");
     def->tooltip = L("Pick up the new tool without waiting for it to reach printing temperature, travel to the wipe "
                      "tower, and wait for the temperature there, right before purging. Ooze from the heat-up lands on "
-                     "the tower instead of the model, and the travel overlaps with the heating. "
+                     "the tower instead of the model, and the travel overlaps with the heating.\n\n"
                      "Only relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. "
                      "The firmware or tool change macro must not wait for the temperature itself. "
                      "When disabled, the temperature wait is issued right after the tool change command.");
@@ -7988,9 +8114,10 @@ void PrintConfigDef::init_fff_params()
     def = this->add("support_style", coEnum);
     def->label = L("Style");
     def->category = L("Support");
-    def->tooltip = L("Style and shape of the support. For normal support, projecting the supports into a regular grid "
+    def->tooltip = L("Style and shape of the support.\n\n"
+                     "For normal support, projecting the supports into a regular grid "
                      "will create more stable supports (default), while snug support towers will save material and reduce "
-                     "object scarring.\n"
+                     "object scarring.\n\n"
                      "For tree support, slim and organic style will merge branches more aggressively and save "
                      "a lot of material (default organic), while hybrid style will create similar structure to normal support "
                      "under large flat overhangs.");
@@ -8024,7 +8151,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("support_threshold_angle", coInt);
     def->label = L("Threshold angle");
     def->category = L("Support");
-    def->tooltip = L("Support will be generated for overhangs whose slope angle is below the threshold. The smaller this value is, the steeper the overhang that can be printed without support.\nNote: If set to 0, normal supports use the Threshold overlap instead, while tree supports fall back to a default value of 30.");
+    def->tooltip = L("Support will be generated for overhangs whose slope angle is below the threshold. The smaller this value is, the steeper the overhang that can be printed without support.\n\nNote: If set to 0, normal supports use the Threshold overlap instead, while tree supports fall back to a default value of 30.");
     def->sidetext = u8"°";	// degrees, don't need translation
     def->min = 0;
     def->max = 90;
@@ -8419,7 +8546,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("activate_chamber_temp_control",coBools);
     def->label = L("Activate temperature control");
     def->tooltip = L("Enable this option for automated chamber temperature control. "
-                     "This option activates the emitting of an M191 command before the \"machine_start_gcode\"\n which sets the chamber temperature and waits until it is reached. "
+                     "This option activates the emitting of an M191 command before the \"machine_start_gcode\" which sets the chamber temperature and waits until it is reached. "
                      "In addition, it emits an M141 command at the end of the print to turn off the chamber heater, if present.\n\n"
                      "This option relies on the firmware supporting the M191 and M141 commands either via macros or natively and is usually used when an active chamber heater is installed.");
     def->mode = comSimple;
@@ -8436,7 +8563,7 @@ void PrintConfigDef::init_fff_params()
                      "material softening at the heat break.\n\n"
                      "If enabled, this parameter also sets a G-code variable named chamber_temperature, which can be "
                      "used to pass the desired chamber temperature to your print start macro, or a heat soak macro "
-                     "like this: PRINT_START (other variables) CHAMBER_TEMP=[chamber_temperature]. "
+                     "like this:\nPRINT_START (other variables) CHAMBER_TEMP=[chamber_temperature]\n"
                      "This may be useful if your printer does not support M141/M191 commands, or if you desire "
                      "to handle heat soaking in the print start macro if no active chamber heater is installed."
                     );
@@ -8452,7 +8579,7 @@ void PrintConfigDef::init_fff_params()
                      "toward the \"Target\" chamber temperature. For example, set the Target to 60 and the Minimal to 50 to "
                      "begin printing once the chamber reaches 50℃, without waiting for the full 60℃.\n\n"
                      "It sets a G-code variable named chamber_minimal_temperature, which can be passed to your print start macro "
-                     "or a heat soak macro, like this: PRINT_START (other variables) CHAMBER_MIN_TEMP=[chamber_minimal_temperature].\n\n"
+                     "or a heat soak macro, like this:\nPRINT_START (other variables) CHAMBER_MIN_TEMP=[chamber_minimal_temperature]\n\n"
                      "Unlike the \"Target\" chamber temperature, this option does not emit any M141/M191 commands; it only exposes "
                      "the value to your custom G-code. It should not exceed the \"Target\" chamber temperature.");
     def->sidetext = L(u8"\u2103" /* °C */);	// degrees Celsius, CIS languages need translation
@@ -9070,10 +9197,10 @@ void PrintConfigDef::init_fff_params()
     def->category = L("Quality");
     def->tooltip = L("Prevent transitioning back and forth between one extra wall and one less. This "
         "margin extends the range of extrusion widths which follow to [Minimum wall width "
-        "- margin, 2 * Minimum wall width + margin]. Increasing this margin "
+        "- margin, 2 * Minimum wall width + margin].\n\nIncreasing this margin "
         "reduces the number of transitions, which reduces the number of extrusion "
         "starts/stops and travel time. However, large extrusion width variation can lead to "
-        "under- or overextrusion problems. "
+        "under- or overextrusion problems.\n\n"
         "It's expressed as a percentage over nozzle diameter.");
     def->sidetext = "%";
     def->mode = comAdvanced;
@@ -9327,7 +9454,7 @@ void PrintConfigDef::init_fff_params()
     def          = this->add("filament_pre_cooling_temperature_nc", coInts);
     def->label   = L("Hotend change");
     def->tooltip = L(
-        "To prevent oozing, the nozzle temperature will be cooled during ramming. Note: only a cooldown command and fan activation are triggered, reaching the target temperature is not guaranteed. 0 means disabled.");
+        "To prevent oozing, the nozzle temperature will be cooled during ramming. 0 means disabled.\n\nNote: only a cooldown command and fan activation are triggered, reaching the target temperature is not guaranteed.");
     def->mode     = comAdvanced;
     def->sidetext = L(u8"\u2103" /* °C */);	// degrees Celsius, CIS languages need translation
     def->min      = 0;
@@ -10637,6 +10764,11 @@ std::set<std::string> filament_options_with_variant = {
     "filament_ironing_spacing",
     "filament_ironing_inset",
     "filament_ironing_speed",
+    // Forca: filament scarf seam overrides
+    "filament_scarf_seam_type",
+    "filament_scarf_height",
+    "filament_scarf_gap",
+    "filament_scarf_length",
     // BBS: filament overhang and bridge speeds
     "override_process_overhang_speed",
     "filament_enable_overhang_speed",
@@ -10820,25 +10952,6 @@ void DynamicPrintConfig::normalize_fdm(int used_filaments)
         }
     }
 
-    if (this->has("sparse_infill_filament_id")) {
-        int sparse_infill_filament_id = this->option("sparse_infill_filament_id")->getInt();
-        if (sparse_infill_filament_id > 0 && (!this->has("internal_solid_filament_id") || this->option("internal_solid_filament_id")->getInt() == 0))
-            this->option("internal_solid_filament_id", true)->setInt(sparse_infill_filament_id);
-    }
-
-    const int internal_solid = this->has("internal_solid_filament_id") ? this->option("internal_solid_filament_id")->getInt() : 0;
-    const int top_surface    = this->has("top_surface_filament_id") ? this->option("top_surface_filament_id")->getInt() : 0;
-    const int bottom_surface = this->has("bottom_surface_filament_id") ? this->option("bottom_surface_filament_id")->getInt() : 0;
-
-    if (internal_solid == 0 && top_surface > 0)
-        this->option("internal_solid_filament_id", true)->setInt(top_surface);
-    if (internal_solid == 0 && bottom_surface > 0)
-        this->option("internal_solid_filament_id", true)->setInt(bottom_surface);
-    if (top_surface == 0 && internal_solid > 0)
-        this->option("top_surface_filament_id", true)->setInt(internal_solid);
-    if (bottom_surface == 0 && internal_solid > 0)
-        this->option("bottom_surface_filament_id", true)->setInt(internal_solid);
-
     if (this->has("spiral_mode") && this->opt<ConfigOptionBool>("spiral_mode", true)->value) {
         {
             // this should be actually done only on the spiral layers instead of all
@@ -10916,25 +11029,6 @@ void DynamicPrintConfig::normalize_fdm_1()
             //     this->option("support_interface_filament", true)->setInt(extruder);
         }
     }
-
-    if (this->has("sparse_infill_filament_id")) {
-        int sparse_infill_filament_id = this->option("sparse_infill_filament_id")->getInt();
-        if (sparse_infill_filament_id > 0 && (!this->has("internal_solid_filament_id") || this->option("internal_solid_filament_id")->getInt() == 0))
-            this->option("internal_solid_filament_id", true)->setInt(sparse_infill_filament_id);
-    }
-
-    const int internal_solid = this->has("internal_solid_filament_id") ? this->option("internal_solid_filament_id")->getInt() : 0;
-    const int top_surface    = this->has("top_surface_filament_id") ? this->option("top_surface_filament_id")->getInt() : 0;
-    const int bottom_surface = this->has("bottom_surface_filament_id") ? this->option("bottom_surface_filament_id")->getInt() : 0;
-
-    if (internal_solid == 0 && top_surface > 0)
-        this->option("internal_solid_filament_id", true)->setInt(top_surface);
-    if (internal_solid == 0 && bottom_surface > 0)
-        this->option("internal_solid_filament_id", true)->setInt(bottom_surface);
-    if (top_surface == 0 && internal_solid > 0)
-        this->option("top_surface_filament_id", true)->setInt(internal_solid);
-    if (bottom_surface == 0 && internal_solid > 0)
-        this->option("bottom_surface_filament_id", true)->setInt(internal_solid);
 
     if (this->has("spiral_mode") && this->opt<ConfigOptionBool>("spiral_mode", true)->value) {
         {
@@ -11143,6 +11237,12 @@ void DynamicPrintConfig::set_num_filaments(unsigned int num_filaments)
         if (key == "default_filament_profile")
             // Don't resize this field, as it is presented to the user at the "Dependencies" page of the Printer profile and we don't want to present
             // empty fields there, if not defined by the system profile.
+            continue;
+        // A variant-bearing key holds one value per (slot, variant): its length is the preset's
+        // variant list, not the filament count. Resizing it here truncated every variant but the
+        // first, which the readers then hid by clamping to the first value. Preset::normalize
+        // skips the same keys in its own pass below this call.
+        if (filament_options_with_variant.count(key) != 0)
             continue;
         auto* opt = this->option(key, false);
         assert(opt != nullptr);
@@ -13877,9 +13977,9 @@ PrintStatisticsConfigDef::PrintStatisticsConfigDef()
     def->label = L("Print time (normal mode)");
     def->tooltip = L("Estimated print time when printed in normal mode (i.e. not in silent mode). Same as normal_print_time.");
 
-    //def = this->add("printing_filament_types", coString);
-    //def->label = L("Used filament types");
-    //def->tooltip = L("Comma-separated list of all filament types used during the print.");
+    def = this->add("printing_filament_types", coString);
+    def->label = L("Used filament types");
+    def->tooltip = L("Underscore-separated list of all filament types used during the print.");
 
     def = this->add("silent_print_time", coString);
     def->label = L("Print time (silent mode)");

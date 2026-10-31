@@ -23,6 +23,7 @@
 #include <cstddef>
 #include <exception>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <utility>
@@ -64,6 +65,65 @@ bool is_bambu_studio_key(const std::string &key)
         "overhang_threshold_participating_cooling", "first_x_layer_part_fan_speed"};
     return keys.count(key) != 0;
 }
+
+// Bambu Studio's scarf seam settings as Forca reads them (PLAN_scarf_seam D3, D4). A filament whose
+// filament_scarf_seam_type is "none" (Bambu Studio's default) gets no scarf override, so it can't switch off a scarf the
+// user's process turns on; one that sets a scarf gets Bambu Studio's defaults for the scarf values its file leaves out
+// (Bambu Studio takes them from its own parent). A process's scarf-only seam_slope_gap becomes Forca's seam_gap when
+// the file doesn't set seam_gap. Returns whether it changed anything.
+bool adapt_bambu_scarf(json &j)
+{
+    bool changed = false;
+    if (j.contains("filament_scarf_seam_type")) {
+        const json &type       = j["filament_scarf_seam_type"];
+        const auto  sets_scarf = [](const json &v) { return v.is_string() && v != "none" && v != "nil"; };
+        if (type.is_array() ? std::none_of(type.begin(), type.end(), sets_scarf) : !sets_scarf(type)) {
+            for (const auto &keys : filament_scarf_override_keys)
+                j.erase(keys.first);
+            changed = true;
+        } else {
+            const size_t count = type.is_array() ? type.size() : 1;
+            for (const auto &[key, value] : std::vector<std::pair<std::string, std::string>>{
+                     {"filament_scarf_height", "10%"}, {"filament_scarf_gap", "0"}, {"filament_scarf_length", "10"}})
+                if (!j.contains(key)) {
+                    j[key]  = json::array();
+                    for (size_t i = 0; i < count; ++i)
+                        j[key].push_back(value);
+                    changed = true;
+                }
+        }
+    }
+    if (j.contains("seam_slope_gap") && !j.contains("seam_gap")) {
+        j["seam_gap"] = j["seam_slope_gap"];
+        j.erase("seam_slope_gap");
+        changed = true;
+    }
+    return changed;
+}
+
+// A copy of a preset file's JSON, under the file's own name in a folder of its own (removed with the copy).
+struct TempCopy
+{
+    boost::filesystem::path dir;
+    std::string             file;
+
+    TempCopy(const json &j, const std::string &original)
+    {
+        boost::system::error_code ec;
+        dir = boost::filesystem::temp_directory_path(ec) / boost::filesystem::unique_path("forca-import-%%%%-%%%%-%%%%", ec);
+        boost::filesystem::create_directories(dir, ec);
+        file = (dir / boost::filesystem::path(original).filename()).string();
+        boost::nowide::ofstream out(file);
+        out << j.dump(4);
+    }
+    ~TempCopy()
+    {
+        boost::system::error_code ec;
+        boost::filesystem::remove_all(dir, ec);
+    }
+    TempCopy(const TempCopy &)            = delete;
+    TempCopy &operator=(const TempCopy &) = delete;
+};
 
 // A value as the file writes it: an array's items joined by ",".
 std::string file_value(const json &value)
@@ -220,25 +280,18 @@ bool forca_import_preset(PresetBundle &bundle, const PresetImportItem &item, con
         j["filament_notes"] = json::array({notes});
     }
 
+    adapt_bambu_scarf(j);
+
     // In a folder of its own, under the file's own name (what import_failures() reports).
-    boost::system::error_code ec;
-    const boost::filesystem::path dir = boost::filesystem::temp_directory_path(ec) /
-                                        boost::filesystem::unique_path("forca-import-%%%%-%%%%-%%%%", ec);
-    boost::filesystem::create_directories(dir, ec);
-    std::string copy = (dir / boost::filesystem::path(item.file).filename()).string();
-    {
-        boost::nowide::ofstream out(copy);
-        out << j.dump(4);
-    }
+    TempCopy copy(j, item.file); // not const: import_json_presets() takes the path by reference
 
     PresetsConfigSubstitutions substitutions;
     std::vector<std::string>   result;
     int                        overwrite = 0;
     const bool replace = choice.replace_existing;
     // The confirmation's answer: 1 = replace this one, 0 = keep it (see MainFrame::load_config_file).
-    const bool imported = bundle.import_json_presets(substitutions, copy, [replace](const std::string &) { return replace ? 1 : 0; },
+    const bool imported = bundle.import_json_presets(substitutions, copy.file, [replace](const std::string &) { return replace ? 1 : 0; },
                                                      ForwardCompatibilitySubstitutionRule::Enable, overwrite, result);
-    boost::filesystem::remove_all(dir, ec);
     return imported && !result.empty();
 }
 
@@ -306,6 +359,21 @@ PresetImportItem forca_analyse_preset_file(PresetBundle &bundle, const std::stri
     }
     if (!j.is_object())
         return item;
+    if (j.contains("from") && j["from"] == "system" && j.contains(BBL_JSON_KEY_NAME) && j[BBL_JSON_KEY_NAME].is_string()) {
+        item.bambu_system = true;
+        item.name         = j[BBL_JSON_KEY_NAME].get<std::string>();
+        for (const PresetCollection *collection : {static_cast<const PresetCollection *>(&bundle.filaments),
+                                                   static_cast<const PresetCollection *>(&bundle.prints),
+                                                   static_cast<const PresetCollection *>(&bundle.printers)})
+            if (const Preset *preset = collection->find_preset(item.name, false); preset != nullptr && preset->is_system)
+                item.forca_has_it = true;
+        return item;
+    }
+    // Bambu Studio's scarf seam settings as the import maps them (see adapt_bambu_scarf); the review lists the result.
+    const json                     original = j;
+    std::unique_ptr<TempCopy>      adapted;
+    if (adapt_bambu_scarf(j))
+        adapted = std::make_unique<TempCopy>(j, file);
 
     // The settings as an import loads them (a Bambu Studio "nil" becomes a value, see ConfigSubstitutionContext).
     DynamicPrintConfig                                 config;
@@ -314,7 +382,7 @@ PresetImportItem forca_analyse_preset_file(PresetBundle &bundle, const std::stri
     ConfigSubstitutionContext                          context(ForwardCompatibilitySubstitutionRule::EnableSilent);
     std::map<t_config_option_key, std::vector<size_t>> nil_items;
     context.nil_items = &nil_items;
-    config.load_from_json(file, context, true, key_values, reason);
+    config.load_from_json(adapted ? adapted->file : file, context, true, key_values, reason);
 
     item.name     = key_values[BBL_JSON_KEY_NAME];
     item.type     = preset_type(key_values[BBL_JSON_KEY_TYPE], config);
@@ -368,6 +436,12 @@ PresetImportItem forca_analyse_preset_file(PresetBundle &bundle, const std::stri
     }
 
     // Settings.
+    if (original.contains("seam_slope_gap") && !j.contains("seam_slope_gap"))
+        item.renamed.emplace_back("seam_slope_gap", "seam_gap");
+    // A Bambu Studio setting the mapping above removed still tells where the file comes from.
+    for (auto it = original.begin(); it != original.end(); ++it)
+        if (is_bambu_studio_key(it.key()))
+            item.source = PresetImportItem::Source::BambuStudio;
     for (auto it = j.begin(); it != j.end(); ++it) {
         if (is_meta_key(it.key()))
             continue;

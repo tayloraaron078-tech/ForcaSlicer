@@ -27,6 +27,13 @@ is its own command. Every push and every public action needs the maintainer's ex
       title); placeholders `<DATE>`, `<SHA256_SETUP>`, `<SHA256_ZIP>` are filled in by the script. Start from the
       previous release's notes; the download table must name `Forca_Slicer_<version>_win64_setup.exe` and
       `Forca_Slicer_<version>_win64_portable.zip`.
+- [ ] **Every change is documented.** Go through each commit since the last release
+      (`git log --oneline --no-merges --first-parent v<last version>..Multi_Interface`, plus what an OrcaSlicer merge
+      changes for users) and check, for each user-visible one: an entry in the changelog section and the release notes;
+      the feature in `README.md` if it is the kind of thing README lists; the guide in `docs/forca/guides/` that covers
+      that part of Forca (new steps, new screens, a changed default; new guides listed in `guides/README.md`); its
+      `docs/HLSD/` design doc when the design changed; `KNOWN_ISSUES.md`. Then search README and the guides for text a
+      change made untrue (for example "not merged upstream yet" after a merge took the pull request in).
 - [ ] `docs/forca/release/KNOWN_ISSUES.md` is current.
 - [ ] **Code signing:** `-Build` signs `forca-slicer.exe` and `ForcaSlicer.dll` before packaging and the installer
       after it, with Azure Artifact Signing (account `Forca`, certificate profile `ForcaRelease`, East US), and refuses

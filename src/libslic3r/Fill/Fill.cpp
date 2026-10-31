@@ -906,6 +906,20 @@ void split_solid_surface(size_t layer_id, const SurfaceFill &fill, ExPolygons &n
 #endif
 }
 
+// Forca: whether an internal solid island holds up a visible top surface (Layer::sub_top_mask), as Bambu Studio decides
+// it: real overlap, not a shared edge (opening by half a solid line).
+static bool is_sub_top_island(const ExPolygon &island, const ExPolygons &sub_top_mask, float min_width)
+{
+    if (sub_top_mask.empty())
+        return false;
+    const BoundingBox island_bbox = get_extents(island).inflated(SCALED_EPSILON);
+    Polygons          local_mask;
+    for (const ExPolygon &top : sub_top_mask)
+        if (get_extents(top).overlap(island_bbox))
+            append(local_mask, ClipperUtils::clip_clipper_polygons_with_subject_bbox(top, island_bbox));
+    return !local_mask.empty() && !opening_ex(intersection_ex(island, local_mask, ApplySafetyOffset::Yes), 0.5f * min_width).empty();
+}
+
 std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_param)
 {
 	std::vector<SurfaceFill> surface_fills;
@@ -973,6 +987,10 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
                         }
                     } else if (surface.is_solid_infill()) {
                         params.pattern = region_config.internal_solid_infill_pattern.value;
+                        // Forca: the island under a visible top surface (sub_top_surface_pattern, Bambu Studio 2.8.3).
+                        if (region_config.sub_top_surface_pattern.value != ipSameAsInternalSolid &&
+                            is_sub_top_island(surface.expolygon, layer.sub_top_mask, float(layerm.flow(frSolidInfill).scaled_spacing())))
+                            params.pattern = region_config.sub_top_surface_pattern.value;
                         params.density = 100.f;
                     } else {
                         if (region_config.top_surface_pattern == ipMonotonic || region_config.top_surface_pattern == ipMonotonicLine)
@@ -1448,6 +1466,7 @@ void Layer::make_fills(const FillAdaptive::RegionOctrees* fill_octrees, FillLigh
         params.config               = &region_config;
         params.pattern              = surface_fill.params.pattern;
         params.fill_order           = surface_fill.params.fill_order;
+        params.join_lines_without_extrusion = surface_fill.params.pattern == ipMonotonicLine && region_config.monotonic_line_join.value;
 
         // Orca: Checking the filling of a centered surface by drawing for each model parts
         bool is_top_or_bottom = params.extrusion_role == erTopSolidInfill || params.extrusion_role == erBottomSurface;

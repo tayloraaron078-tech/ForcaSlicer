@@ -177,6 +177,11 @@ public:
     std::function<void(wxWindow* win)> rescale_near_label_widget { nullptr };
 
     std::function<void(const t_config_option_key& opt_key)> edit_custom_gcode { nullptr };
+    // Forca: right-click on a setting line's label (the process tab's favourites menu), with the line's option ids.
+    std::function<void(const std::vector<t_config_option_key>& opt_ids)> label_context_menu { nullptr };
+    // Forca: a group that repeats settings shown on their own pages (Favorites) stays out of the settings index, which
+    // keeps one page per setting for search.
+    bool skip_settings_index { false };
 
     wxFont			sidetext_font {wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT) };
     wxFont			label_font {wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT) };

@@ -1,4 +1,7 @@
 #include "ForcaOpenScad.hpp"
+#include "miniz_extension.hpp"
+
+#include <miniz.h>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -244,6 +247,132 @@ std::vector<std::string> forca_openscad_problems(const std::string &console_outp
             problems.push_back(line);
     }
     return problems;
+}
+
+namespace {
+
+// The value of attribute `name` in the tag text `tag` ("<triangle v1=\"0\" p1=\"2\" />"), or empty.
+std::string xml_attribute(const std::string &tag, const char *name)
+{
+    const std::string key = std::string(" ") + name + "=\"";
+    const size_t      at  = tag.find(key);
+    if (at == std::string::npos)
+        return {};
+    const size_t start = at + key.size();
+    const size_t end   = tag.find('"', start);
+    return end == std::string::npos ? std::string() : tag.substr(start, end - start);
+}
+
+int to_int(const std::string &text, int fallback)
+{
+    if (text.empty())
+        return fallback;
+    try {
+        return std::stoi(text);
+    } catch (const std::exception &) {
+        return fallback;
+    }
+}
+
+} // namespace
+
+OpenScadColors forca_openscad_colors_from_model_xml(const std::string &xml)
+{
+    OpenScadColors colors;
+    int            object_material = -1; // the current object's pindex, for triangles without p1
+    for (size_t pos = xml.find('<'); pos != std::string::npos; pos = xml.find('<', pos + 1)) {
+        const size_t end = xml.find('>', pos);
+        if (end == std::string::npos)
+            break;
+        const std::string tag = xml.substr(pos, end - pos + 1);
+        if (tag.compare(0, 6, "<base ") == 0) {
+            const std::string name    = xml_attribute(tag, "name");
+            const std::string display = xml_attribute(tag, "displaycolor"); // #RRGGBB or #RRGGBBAA
+            if (name == "Default")
+                colors.default_index = int(colors.colors.size());
+            colors.colors.push_back(display.size() >= 7 ? display.substr(0, 7) : std::string("#808080"));
+        } else if (tag.compare(0, 8, "<object ") == 0) {
+            colors.triangles.emplace_back();
+            object_material = to_int(xml_attribute(tag, "pindex"), -1);
+            if (xml_attribute(tag, "pid").empty())
+                object_material = -1;
+        } else if (tag.compare(0, 10, "<triangle ") == 0 && !colors.triangles.empty()) {
+            colors.triangles.back().push_back(to_int(xml_attribute(tag, "p1"), object_material));
+        }
+        pos = end;
+    }
+    return colors;
+}
+
+OpenScadColors forca_openscad_read_colors(const std::string &path_3mf)
+{
+    mz_zip_archive zip;
+    mz_zip_zero_struct(&zip);
+    if (!open_zip_reader(&zip, path_3mf))
+        return {};
+    size_t      size = 0;
+    void       *data = mz_zip_reader_extract_file_to_heap(&zip, "3D/3dmodel.model", &size, 0);
+    std::string xml;
+    if (data != nullptr) {
+        xml.assign(static_cast<const char *>(data), size);
+        mz_free(data);
+    }
+    close_zip_reader(&zip);
+    return xml.empty() ? OpenScadColors() : forca_openscad_colors_from_model_xml(xml);
+}
+
+std::string forca_openscad_value_from_json(const std::string &json_text)
+{
+    const json value = json::parse(json_text, nullptr, false);
+    if (value.is_discarded() || value.is_null() || value.is_object())
+        throw std::runtime_error("Not an OpenSCAD value: " + json_text);
+    return openscad_value(value);
+}
+
+std::string forca_openscad_starter_model()
+{
+    return "// A new OpenSCAD model, started in Forca Slicer.\n"
+           "//\n"
+           "// A value with a comment like \"// [10:1:200]\" after it is a Customizer parameter: Forca shows it under\n"
+           "// right-click > OpenSCAD parameters... (from 10 to 200 in steps of 1). The comment line above a parameter is\n"
+           "// its description, and /* [Name] */ starts a group. Save this file in OpenSCAD and Forca offers to render the\n"
+           "// model on the plate again.\n"
+           "\n"
+           "/* [Size] */\n"
+           "// Outside width (mm)\n"
+           "width = 40; // [10:1:200]\n"
+           "// Outside depth (mm)\n"
+           "depth = 30; // [10:1:200]\n"
+           "// Height (mm)\n"
+           "height = 20; // [5:1:100]\n"
+           "\n"
+           "/* [Shape] */\n"
+           "// Corner radius (mm)\n"
+           "radius = 3; // [0:0.5:20]\n"
+           "// Hollow, with walls and a floor\n"
+           "hollow = false;\n"
+           "// Wall and floor thickness when hollow (mm)\n"
+           "wall = 2; // [0.8:0.2:10]\n"
+           "\n"
+           "/* [Hidden] */\n"
+           "$fn = 64;\n"
+           "\n"
+           "module rounded_box(size, r) {\n"
+           "    r = min(r, size.x / 2, size.y / 2);\n"
+           "    if (r <= 0)\n"
+           "        cube(size);\n"
+           "    else\n"
+           "        hull()\n"
+           "            for (x = [r, size.x - r], y = [r, size.y - r])\n"
+           "                translate([x, y, 0]) cylinder(h = size.z, r = r);\n"
+           "}\n"
+           "\n"
+           "difference() {\n"
+           "    rounded_box([width, depth, height], radius);\n"
+           "    if (hollow)\n"
+           "        translate([wall, wall, wall])\n"
+           "            rounded_box([width - 2 * wall, depth - 2 * wall, height], radius - wall);\n"
+           "}\n";
 }
 
 std::vector<OpenScadProblemLine> forca_openscad_problem_lines(const std::string &console_output, const std::string &file_name)

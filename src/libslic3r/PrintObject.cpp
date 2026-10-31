@@ -810,6 +810,41 @@ void PrintObject::prepare_infill()
     this->set_done(posPrepareInfill);
 }
 
+// Forca: Bambu Studio 2.8.3's sub-top surface. Per layer, the top surfaces of the layer above that are wide enough to
+// show (they survive a 1.5 mm erosion); Fill.cpp gives an internal solid island under one of them
+// sub_top_surface_pattern. Bambu Studio retypes those islands to a new surface type instead; a mask leaves every
+// other use of the surface types as it is. Each layer reads the layer above, fixed since prepare_infill(), and writes
+// only its own mask.
+static void discover_sub_top_areas(LayerPtrs &layers, const std::function<void()> &throw_if_canceled)
+{
+    static constexpr double MIN_TOP_EROSION_MM = 1.5;
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, layers.size()), [&layers, &throw_if_canceled](const tbb::blocked_range<size_t> &range) {
+        for (size_t idx = range.begin(); idx < range.end(); ++idx) {
+            throw_if_canceled();
+            Layer *layer = layers[idx];
+            layer->sub_top_mask.clear();
+            const bool wanted = std::any_of(layer->regions().begin(), layer->regions().end(), [](const LayerRegion *layerm) {
+                return layerm->region().config().sub_top_surface_pattern.value != ipSameAsInternalSolid;
+            });
+            if (!wanted || layer->upper_layer == nullptr)
+                continue;
+            ExPolygons tops;
+            for (const LayerRegion *upper_region : layer->upper_layer->regions())
+                for (const Surface &surface : upper_region->fill_surfaces.surfaces)
+                    if (surface.surface_type == stTop)
+                        tops.emplace_back(surface.expolygon);
+            const auto    erosion    = float(scale_(MIN_TOP_EROSION_MM));
+            const coord_t min_extent = coord_t(scale_(2. * MIN_TOP_EROSION_MM));
+            for (ExPolygon &top : union_ex(tops)) {
+                // An island narrower than the erosion's diameter can't survive it: skip the offset.
+                const Point extents = get_extents(top).size();
+                if (extents.x() >= min_extent && extents.y() >= min_extent && !offset_ex(top, -erosion).empty())
+                    layer->sub_top_mask.emplace_back(std::move(top));
+            }
+        }
+    });
+}
+
 void PrintObject::infill()
 {
     // prerequisites
@@ -817,6 +852,7 @@ void PrintObject::infill()
 
     if (this->set_started(posInfill)) {
         m_print->set_status(35, L("Generating infill toolpath"));
+        discover_sub_top_areas(m_layers, [this]() { m_print->throw_if_canceled(); });
 
         BOOST_LOG_TRIVIAL(debug) << "Filling layers in parallel - start";
         tbb::parallel_for(
@@ -1698,6 +1734,8 @@ bool PrintObject::invalidate_state_by_config_options(
             || opt_key == "top_surface_fill_order"
             || opt_key == "bottom_surface_fill_order"
             || opt_key == "internal_solid_infill_pattern"
+            || opt_key == "sub_top_surface_pattern"
+            || opt_key == "monotonic_line_join"
             || opt_key == "external_fill_link_max_length"
             || opt_key == "infill_anchor"
             || opt_key == "infill_anchor_max"
@@ -1806,6 +1844,7 @@ bool PrintObject::invalidate_state_by_config_options(
         } else if (
                opt_key == "seam_position"
             || opt_key == "seam_slope_type"
+            || opt_key == "override_filament_scarf_seam_setting"
             || opt_key == "seam_slope_conditional"
             || opt_key == "scarf_angle_threshold"
             || opt_key == "scarf_overhang_threshold"

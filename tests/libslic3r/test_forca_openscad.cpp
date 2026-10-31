@@ -9,6 +9,7 @@
 #include "libslic3r/ForcaOpenScad.hpp"
 #include "test_utils.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <ios>
 #include <iterator>
@@ -169,6 +170,61 @@ TEST_CASE("The lines of the file that OpenSCAD's warnings and errors name are fo
     REQUIRE(real.size() == 1);
     CHECK(real[0].line == 33);
     CHECK(real[0].syntax);
+}
+
+TEST_CASE("The colours of an OpenSCAD 3MF are read per triangle", "[ForcaOpenScad]")
+{
+    // colors.3mf is OpenSCAD 2026.10.05's render of colors.scad: a red block with a white label, one object.
+    const OpenScadColors colors = forca_openscad_read_colors(std::string(TEST_DATA_DIR) + "/forca_openscad/colors.3mf");
+    REQUIRE(colors.colors.size() == 3);
+    CHECK(colors.default_index == 0);
+    CHECK(colors.colors[1] == "#FF0000");
+    CHECK(colors.colors[2] == "#FFFFFF");
+    REQUIRE(colors.triangles.size() == 1);
+    CHECK(colors.triangles[0].size() == 28);
+    // Both colours are used, and nothing is left uncoloured.
+    CHECK(std::count(colors.triangles[0].begin(), colors.triangles[0].end(), 1) > 0);
+    CHECK(std::count(colors.triangles[0].begin(), colors.triangles[0].end(), 2) > 0);
+    CHECK(std::count(colors.triangles[0].begin(), colors.triangles[0].end(), 0) == 0);
+}
+
+TEST_CASE("A triangle without its own colour takes its object's", "[ForcaOpenScad]")
+{
+    const std::string xml = "<model><resources><basematerials id=\"1\"><base name=\"Default\" displaycolor=\"#F9D72C00\" />"
+                            "<base name=\"Color 1\" displaycolor=\"#0000FF\" /></basematerials>"
+                            "<object id=\"2\" pid=\"1\" pindex=\"1\"><mesh><triangles><triangle v1=\"0\" v2=\"1\" v3=\"2\" />"
+                            "<triangle v1=\"0\" v2=\"2\" v3=\"3\" pid=\"1\" p1=\"0\" /></triangles></mesh></object>"
+                            "<object id=\"3\"><mesh><triangles><triangle v1=\"0\" v2=\"1\" v3=\"2\" /></triangles></mesh></object>"
+                            "</resources></model>";
+    const OpenScadColors colors = forca_openscad_colors_from_model_xml(xml);
+    CHECK(colors.colors == std::vector<std::string>{"#F9D72C", "#0000FF"});
+    REQUIRE(colors.triangles.size() == 2);
+    CHECK(colors.triangles[0] == std::vector<int>{1, 0});
+    CHECK(colors.triangles[1] == std::vector<int>{-1});
+    CHECK(forca_openscad_read_colors("no such file.3mf").triangles.empty());
+}
+
+TEST_CASE("A JSON value becomes an OpenSCAD value for -D", "[ForcaOpenScad]")
+{
+    CHECK(forca_openscad_value_from_json("42") == "42");
+    CHECK(forca_openscad_value_from_json("2.5") == "2.5");
+    CHECK(forca_openscad_value_from_json("true") == "true");
+    CHECK(forca_openscad_value_from_json("\"lid\"") == "\"lid\"");
+    CHECK(forca_openscad_value_from_json("[40, 30.5]") == "[40, 30.5]");
+    CHECK_THROWS_AS(forca_openscad_value_from_json("{\"a\": 1}"), std::runtime_error);
+    CHECK_THROWS_AS(forca_openscad_value_from_json("null"), std::runtime_error);
+    CHECK_THROWS_AS(forca_openscad_value_from_json("not json"), std::runtime_error);
+}
+
+TEST_CASE("The starter model for a new OpenSCAD file has Customizer parameters in groups", "[ForcaOpenScad]")
+{
+    // Rendering it needs OpenSCAD; this checks the parts the parameters dialog relies on.
+    const std::string scad = forca_openscad_starter_model();
+    CHECK(scad.find("/* [Size] */") != std::string::npos);
+    CHECK(scad.find("width = 40; // [10:1:200]") != std::string::npos);
+    CHECK(scad.find("hollow = false;") != std::string::npos);
+    CHECK(scad.find("/* [Hidden] */") != std::string::npos);
+    CHECK(scad.find("rounded_box([width, depth, height], radius);") != std::string::npos);
 }
 
 TEST_CASE("An object's OpenSCAD link keeps its file, text and values through JSON", "[ForcaOpenScad]")

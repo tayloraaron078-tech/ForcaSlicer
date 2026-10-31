@@ -120,6 +120,8 @@ struct FillParams
     const           PrintRegionConfig* config{ nullptr };
     bool            dont_sort{ false }; // do not sort the lines, just simply connect them
     bool            can_reverse{true};
+    // Forca: join neighbouring lines with moves that don't extrude (monotonic_line_join)
+    bool            join_lines_without_extrusion{false};
 
     // Orca: forced print order of surface fill loops/fragments for center-based patterns
     // (Concentric, Archimedean Chords, Octagram Spiral). Default keeps shortest-path ordering.

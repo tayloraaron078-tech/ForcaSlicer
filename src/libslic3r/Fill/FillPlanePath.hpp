@@ -77,6 +77,16 @@ protected:
     void generate(coord_t min_x, coord_t min_y, coord_t max_x, coord_t max_y, const double resolution, InfillPolylineOutput &output) override;
 };
 
+// Forca: Bambu Studio's spiral ironing (ironing_pattern "ironingarchimedeanspiral"). The Archimedean spiral of each
+// ironed area, from its centre outwards: a short lead-in from the centre, the pieces in the order of the spiral, and
+// no slivers along the rim (see FillPlanePath::_fill_surface_single).
+class FillIroningSpiral : public FillArchimedeanChords
+{
+public:
+    Fill* clone() const override { return new FillIroningSpiral(*this); };
+    ~FillIroningSpiral() override = default;
+};
+
 class FillHilbertCurve : public FillPlanePath
 {
 public:

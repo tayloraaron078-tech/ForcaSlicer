@@ -80,6 +80,10 @@ private:
     double                      m_forca_overhang_fan { -1 };
     //BBS: current fan speed
     int                         m_current_fan_speed;
+    // Forca: slowdown recovery (slow_down_recovery_layers). The speed the last layer ran at, as a share of its natural
+    // speed (1 = not slowed), and how much faster each following layer may run.
+    float                       m_recovery_speed { 1.f };
+    float                       m_recovery_step  { 0.f };
     // Belt printers: the extrusion being processed lies in the first-layer band above the
     // belt (between a ";_BELT_BAND_START" and a ";_BELT_BAND_END"). Kept across layers.
     bool                        m_belt_band_active = false;

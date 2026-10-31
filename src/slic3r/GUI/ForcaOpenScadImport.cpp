@@ -5,6 +5,7 @@
 #include "ForcaOpenScadDialog.hpp"
 #include "ForcaOpenScadEditor.hpp"
 #include "GUI_ObjectList.hpp"
+#include "GuiColor.hpp" // calc_color_distance
 #include "MsgDialog.hpp"
 #include "I18N.hpp"
 #include "MainFrame.hpp"
@@ -13,10 +14,13 @@
 #include "Jobs/Job.hpp"
 #include "Jobs/Worker.hpp"
 #include "libslic3r/AppConfig.hpp"
+#include "libslic3r/Config.hpp"
 #include "libslic3r/ForcaOpenScad.hpp"
-#include "libslic3r/Format/bbs_3mf.hpp" // LoadStrategy
+#include "libslic3r/Format/ProjectStrategy.hpp" // LoadStrategy
 #include "libslic3r/Model.hpp"
 #include "libslic3r/ObjectID.hpp"
+#include "libslic3r/PresetBundle.hpp"
+#include "libslic3r/TriangleSelector.hpp"
 #include "slic3r/Utils/BoostProcessCompat.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -28,16 +32,23 @@
 #include <boost/system/error_code.hpp>
 
 #include <wx/busycursor.h>
+#include <wx/colour.h>
+#include <wx/event.h>
+#include <wx/filedlg.h>
 #include <wx/string.h>
+#include <wx/timer.h>
 #include <wx/utils.h>
 
 #include <algorithm>
 #include <chrono>
 #include <cstddef>
+#include <ctime>
 #include <exception>
 #include <functional>
 #include <ios>
 #include <iterator>
+#include <limits>
+#include <map>
 #include <memory>
 #include <string>
 #include <utility>
@@ -288,6 +299,241 @@ void replace_model_parts(ModelObject &object, ModelObject &rendered)
     object.invalidate_bounding_box();
 }
 
+// D5: OpenSCAD's colours (read from its 3MF; OrcaSlicer's reader ignores per-triangle materials) become the project's
+// filaments: each colour the closest filament colour, the faces painted with it, and the most common one the object's
+// filament. Faces OpenSCAD left uncoloured keep the object's filament. The part must still have the file's triangles.
+void apply_colors(ModelObject &object, const OpenScadColors &colors, size_t object_in_file)
+{
+    if (object_in_file >= colors.triangles.size() || wxGetApp().preset_bundle == nullptr)
+        return;
+    const std::vector<int> &triangles = colors.triangles[object_in_file];
+    ModelVolume            *volume    = nullptr;
+    for (ModelVolume *v : object.volumes)
+        if (v->is_model_part() && v->mesh().its.indices.size() == triangles.size()) {
+            volume = v;
+            break;
+        }
+    const auto *filaments = wxGetApp().preset_bundle->project_config.option<ConfigOptionStrings>("filament_colour");
+    if (volume == nullptr || filaments == nullptr || filaments->values.empty())
+        return;
+
+    std::map<int, int>  filament_of; // material -> 0-based filament
+    std::vector<size_t> count(filaments->values.size(), 0);
+    bool                uncoloured = false;
+    for (int material : triangles) {
+        if (material < 0 || material == colors.default_index || material >= int(colors.colors.size())) {
+            uncoloured = true;
+            continue;
+        }
+        auto it = filament_of.find(material);
+        if (it == filament_of.end()) {
+            int   best          = 0;
+            float best_distance = std::numeric_limits<float>::max();
+            for (size_t f = 0; f < filaments->values.size(); ++f) {
+                const float distance = calc_color_distance(wxColour(from_u8(colors.colors[material])), wxColour(from_u8(filaments->values[f])));
+                if (distance < best_distance) {
+                    best          = int(f);
+                    best_distance = distance;
+                }
+            }
+            it = filament_of.emplace(material, best).first;
+        }
+        ++count[it->second];
+    }
+    if (filament_of.empty())
+        return; // no color() in the file
+
+    const int current = object.config.has("extruder") ? std::max(object.config.opt_int("extruder"), 1) - 1 : 0;
+    const int base    = uncoloured ? current : int(std::max_element(count.begin(), count.end()) - count.begin());
+    object.config.set_key_value("extruder", new ConfigOptionInt(base + 1));
+    if (volume->config.has("extruder"))
+        volume->config.set_key_value("extruder", new ConfigOptionInt(base + 1));
+
+    TriangleSelector selector(volume->mesh());
+    bool             painted = false;
+    for (size_t i = 0; i < triangles.size(); ++i)
+        if (auto it = filament_of.find(triangles[i]); it != filament_of.end() && it->second != base) {
+            const auto state = static_cast<EnforcerBlockerType>(static_cast<int>(EnforcerBlockerType::Extruder1) + it->second);
+            if (state <= EnforcerBlockerType::ExtruderMax) {
+                selector.set_facet(int(i), state);
+                painted = true;
+            }
+        }
+    volume->mmu_segmentation_facets.reset();
+    if (painted)
+        volume->mmu_segmentation_facets.set(selector);
+}
+
+// Renders the job's one render in the background and puts the result in place of the object's model parts, as the undo
+// step undo_name. A failed render shows OpenSCAD's messages and offers the editor.
+void queue_rerender(Plater &plater, std::shared_ptr<RenderJob> job, const OpenScadLink &link, ObjectID object_id, std::string undo_name);
+
+// The .scad files opened with "Edit in OpenSCAD" or "New OpenSCAD model", checked once a second on the UI thread. A
+// change counts once the file has stayed the same for one more check, so a save isn't read half-written. A file no
+// linked object uses any more is dropped. The watch lives as long as the Plater.
+class OpenScadWatch : public wxTimer
+{
+public:
+    static OpenScadWatch *instance() { return s_instance; }
+
+    static OpenScadWatch &get(Plater &plater)
+    {
+        if (s_instance == nullptr) {
+            s_instance = new OpenScadWatch(plater);
+            plater.Bind(wxEVT_DESTROY, [&plater](wxWindowDestroyEvent &event) {
+                if (event.GetEventObject() == &plater) {
+                    delete s_instance;
+                    s_instance = nullptr;
+                }
+                event.Skip();
+            });
+            s_instance->Start(1000);
+        }
+        return *s_instance;
+    }
+
+    void watch(const fs::path &file)
+    {
+        boost::system::error_code ec;
+        for (const File &watched : m_files)
+            if (fs::equivalent(watched.path, file, ec))
+                return;
+        m_files.push_back({file, stamp(file)});
+    }
+
+    // Forca's own OpenSCAD dialogs change the file themselves: no question while they are open, and what they saved
+    // counts as seen.
+    void pause() { ++m_paused; }
+    void resume()
+    {
+        if (m_paused > 0 && --m_paused == 0)
+            for (File &file : m_files) {
+                file.seen        = stamp(file.path);
+                file.has_pending = false;
+            }
+    }
+
+    void Notify() override
+    {
+        if (m_paused > 0 || m_asking)
+            return;
+        std::vector<fs::path> changed;
+        for (File &file : m_files) {
+            const std::time_t now = stamp(file.path);
+            if (now == file.seen)
+                file.has_pending = false;
+            else if (!file.has_pending || file.pending != now) {
+                file.pending     = now;
+                file.has_pending = true;
+            } else {
+                file.seen        = now;
+                file.has_pending = false;
+                changed.push_back(file.path);
+            }
+        }
+        for (const fs::path &file : changed)
+            ask_to_render(file);
+    }
+
+private:
+    struct File
+    {
+        fs::path    path;
+        std::time_t seen        = 0;
+        std::time_t pending     = 0;
+        bool        has_pending = false;
+    };
+
+    explicit OpenScadWatch(Plater &plater) : m_plater(plater) {}
+
+    static std::time_t stamp(const fs::path &file)
+    {
+        boost::system::error_code ec;
+        const std::time_t         time = fs::last_write_time(file, ec);
+        return ec ? 0 : time;
+    }
+
+    void ask_to_render(const fs::path &file)
+    {
+        boost::system::error_code ec;
+        std::vector<ObjectID>     linked;
+        for (const ModelObject *object : m_plater.model().objects) {
+            const OpenScadLink link = forca_openscad_link_from_json(object->forca_openscad);
+            if (!link.empty() && !link.file.empty() && fs::equivalent(fs::path(boost::nowide::widen(link.file)), file, ec))
+                linked.push_back(object->id());
+        }
+        if (linked.empty()) {
+            m_files.erase(std::remove_if(m_files.begin(), m_files.end(), [&](const File &f) { return f.path == file; }), m_files.end());
+            return;
+        }
+        m_asking = true;
+        // TRN %1% is a file name.
+        const bool render = MessageDialog(&m_plater, format_wxstr(_L("%1% has changed. Render the model again?"), file.filename().string()),
+                                          _L("OpenSCAD"), wxYES_NO | wxYES_DEFAULT | wxICON_QUESTION)
+                                .ShowModal() == wxID_YES;
+        m_asking = false;
+        if (!render)
+            return;
+        const OpenScadInfo info = forca_openscad_find();
+        if (!info.usable) {
+            show_error(&m_plater, no_openscad_message(info));
+            return;
+        }
+        // Each object with its own values; the object may have gone while the question was open.
+        for (const ObjectID &id : linked)
+            for (const ModelObject *object : m_plater.model().objects)
+                if (object->id() == id) {
+                    const OpenScadLink link = forca_openscad_link_from_json(object->forca_openscad);
+                    auto               job  = std::make_shared<RenderJob>();
+                    job->exe                = info.path;
+                    job->dir                = make_work_dir();
+                    job->renders.push_back({file, job->dir / (file.stem().string() + ".3mf"), link.values});
+                    queue_rerender(m_plater, job, link, id, _u8L("Render OpenSCAD model again"));
+                }
+    }
+
+    static inline OpenScadWatch *s_instance = nullptr;
+    Plater                      &m_plater;
+    std::vector<File>            m_files;
+    int                          m_paused = 0;
+    bool                         m_asking = false;
+};
+
+// Keeps the watch from asking while one of Forca's own OpenSCAD dialogs is open.
+struct WatchPause
+{
+    WatchPause()
+    {
+        if (OpenScadWatch *watch = OpenScadWatch::instance())
+            watch->pause();
+    }
+    ~WatchPause()
+    {
+        if (OpenScadWatch *watch = OpenScadWatch::instance())
+            watch->resume();
+    }
+    WatchPause(const WatchPause &)            = delete;
+    WatchPause &operator=(const WatchPause &) = delete;
+};
+
+// Opens the file in OpenSCAD's own window and watches it.
+bool open_in_openscad(Plater &plater, const fs::path &file)
+{
+    const OpenScadInfo info = forca_openscad_find();
+    if (info.path.empty()) {
+        show_error(&plater, no_openscad_message(info));
+        return false;
+    }
+    const wxString command = "\"" + from_u8(info.path) + "\" \"" + from_path(file) + "\"";
+    if (wxExecute(command, wxEXEC_ASYNC) == 0) {
+        // TRN %1% is the path to openscad.exe.
+        show_error(&plater, format_wxstr(_L("Couldn't start OpenSCAD (%1%)."), info.path));
+        return false;
+    }
+    OpenScadWatch::get(plater).watch(file);
+    return true;
+}
+
 } // namespace
 
 void forca_openscad_import(Plater &plater, const std::vector<fs::path> &scad_files)
@@ -324,10 +570,19 @@ void forca_openscad_import(Plater &plater, const std::vector<fs::path> &scad_fil
                 if (!render.ok)
                     continue;
                 std::vector<ModelObject *> from_render;
+                std::vector<size_t>        from_render_idx;
                 for (size_t idx : objects)
                     if (idx < model_objects.size() &&
-                        (fs::path(model_objects[idx]->input_file).stem() == render.out.stem() || rendered.size() == 1))
+                        (fs::path(model_objects[idx]->input_file).stem() == render.out.stem() || rendered.size() == 1)) {
                         from_render.push_back(model_objects[idx]);
+                        from_render_idx.push_back(idx);
+                    }
+                // The objects come in the file's order (D5: their colours to filaments).
+                const OpenScadColors colors = forca_openscad_read_colors(render.out.string());
+                for (size_t k = 0; k < from_render.size(); ++k) {
+                    apply_colors(*from_render[k], colors, k);
+                    wxGetApp().obj_list()->update_info_items(from_render_idx[k]);
+                }
                 for (ModelObject *object : from_render) {
                     if (openscad_default_name(object->name)) {
                         object->name = render.scad.stem().string();
@@ -385,6 +640,7 @@ void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx)
     }
 
     const std::string shown_name  = original.filename().string().empty() ? source.filename().string() : original.filename().string();
+    const WatchPause  pause_watch;
     auto              edit_source = [&](const std::string &output) {
         return forca_openscad_edit_source(&plater, source, output,
                                    [&](const fs::path &file) { return check_source(job->exe, job->dir, file, link.values); });
@@ -431,8 +687,55 @@ void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx)
     }
 
     job->renders.push_back({source, job->dir / (stem + ".3mf"), link.values});
-    const ObjectID object_id = object->id();
-    auto finish = [job, link, object_id, &plater](bool canceled, std::exception_ptr &eptr) {
+    queue_rerender(plater, job, link, object->id(), _u8L("Change OpenSCAD parameters"));
+}
+
+void forca_openscad_edit_in_openscad(Plater &plater, size_t obj_idx)
+{
+    if (obj_idx >= plater.model().objects.size())
+        return;
+    const OpenScadLink link = forca_openscad_link_from_json(plater.model().objects[obj_idx]->forca_openscad);
+    if (link.empty())
+        return;
+    const fs::path            file(boost::nowide::widen(link.file));
+    boost::system::error_code ec;
+    if (link.file.empty() || !fs::is_regular_file(file, ec)) {
+        // TRN %1% is a file path.
+        show_error(&plater, format_wxstr(_L("%1% isn't there any more. OpenSCAD parameters > Edit source... edits the copy kept in "
+                                            "the project."),
+                                         link.file));
+        return;
+    }
+    open_in_openscad(plater, file);
+}
+
+void forca_openscad_new_model(Plater &plater)
+{
+    wxFileDialog dlg(&plater, _L("Save the new OpenSCAD model as"), from_u8(wxGetApp().app_config->get_last_dir()), "model.scad",
+                     _L("OpenSCAD files") + " (*.scad)|*.scad", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    if (dlg.ShowModal() != wxID_OK)
+        return;
+    fs::path file = into_path(dlg.GetPath());
+    if (!forca_is_scad_file(file))
+        file += ".scad";
+    {
+        boost::nowide::ofstream out(file.string(), std::ios::binary | std::ios::trunc);
+        out << forca_openscad_starter_model();
+        if (!out) {
+            // TRN %1% is a file path.
+            show_error(&plater, format_wxstr(_L("Couldn't save %1%."), file.string()));
+            return;
+        }
+    }
+    forca_openscad_import(plater, {file});
+    open_in_openscad(plater, file);
+}
+
+namespace {
+
+void queue_rerender(Plater &plater, std::shared_ptr<RenderJob> job, const OpenScadLink &link, ObjectID object_id, std::string undo_name)
+{
+    auto finish = [job, link, object_id, undo_name, &plater](bool canceled, std::exception_ptr &eptr) {
         boost::system::error_code ec;
         const Render             &render  = job->renders.front();
         auto                      cleanup = [&] { fs::remove_all(job->dir, ec); };
@@ -445,7 +748,8 @@ void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx)
         if (!render.ok) {
             // Offered after the job has finished, with OpenSCAD's whole console in the editor.
             wxGetApp().CallAfter([job, &plater] {
-                const Render &render = job->renders.front();
+                const WatchPause pause_watch;
+                const Render    &render = job->renders.front();
                 if (MessageDialog(&plater, render_errors(job->renders) + "\n\n" + _L("Open the file in the editor to fix it?"),
                                   _L("OpenSCAD parameters"), wxYES_NO | wxYES_DEFAULT | wxICON_ERROR)
                         .ShowModal() == wxID_YES)
@@ -477,9 +781,11 @@ void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx)
                                              render.scad.filename().string()));
             return cleanup();
         }
-        plater.take_snapshot(_u8L("Change OpenSCAD parameters"));
+        plater.take_snapshot(undo_name);
         ModelObject &object = *objects[obj_idx];
         replace_model_parts(object, *rendered.objects.front());
+        apply_colors(object, forca_openscad_read_colors(render.out.string()), 0);
+        wxGetApp().obj_list()->update_info_items(obj_idx);
         OpenScadLink updated  = link;
         updated.scad          = render.scad_text;
         updated.values        = render.values;
@@ -489,6 +795,124 @@ void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx)
         cleanup();
     };
     queue_job(plater.get_ui_job_worker(), [job](Job::Ctl &ctl) { render_all(*job, ctl); }, std::move(finish));
+}
+
+} // namespace
+
+OpenScadRun forca_openscad_render_file(const std::string &exe, const fs::path &scad,
+                                       const std::vector<std::pair<std::string, std::string>> &values, int timeout_s)
+{
+    OpenScadRun run;
+    run.work_dir  = make_work_dir();
+    run.out_3mf   = run.work_dir / ((scad.stem().string().empty() ? std::string("model") : scad.stem().string()) + ".3mf");
+    run.scad_text = read_file(scad);
+    const RunResult result = run_openscad(exe, forca_openscad_render_args(scad.string(), run.out_3mf.string(), values), run.work_dir, nullptr,
+                                          std::chrono::seconds(timeout_s));
+    boost::system::error_code ec;
+    run.output = result.output;
+    run.ok     = result.error.empty() && !result.timed_out && result.exit_code == 0 && fs::file_size(run.out_3mf, ec) > 0 && !ec;
+    if (!result.error.empty())
+        run.error = "OpenSCAD couldn't be started: " + result.error;
+    else if (result.timed_out)
+        run.error = "OpenSCAD took longer than " + std::to_string(timeout_s) + " s and was stopped.";
+    else if (!run.ok)
+        run.error = "OpenSCAD couldn't render the file (exit " + std::to_string(result.exit_code) + ").";
+    if (!run.ok)
+        fs::remove_all(run.work_dir, ec);
+    return run;
+}
+
+std::vector<OpenScadParam> forca_openscad_read_params(const std::string &exe, const fs::path &scad, std::string &output, std::string &error)
+{
+    const fs::path            dir       = make_work_dir();
+    const fs::path            json_file = dir / "parameters.json";
+    const RunResult           result    = run_openscad(exe, forca_openscad_param_args(scad.string(), json_file.string()), dir, nullptr,
+                                                       std::chrono::seconds(60));
+    std::vector<OpenScadParam> params;
+    output = result.output;
+    try {
+        params = forca_openscad_parse_params(read_file(json_file));
+    } catch (const std::exception &err) {
+        error = err.what();
+    }
+    boost::system::error_code ec;
+    fs::remove_all(dir, ec);
+    return params;
+}
+
+int forca_openscad_place(Plater &plater, const OpenScadRun &run, const fs::path &scad,
+                         const std::vector<std::pair<std::string, std::string>> &values, int replace_obj, const std::string &undo_name,
+                         std::string &error)
+{
+    boost::system::error_code ec;
+    struct Cleanup
+    {
+        const fs::path &dir;
+        ~Cleanup()
+        {
+            boost::system::error_code ec;
+            fs::remove_all(dir, ec);
+        }
+    } cleanup{run.work_dir};
+
+    OpenScadLink link;
+    link.file   = fs::absolute(scad, ec).string();
+    link.scad   = run.scad_text;
+    link.values = values;
+    ModelObjectPtrs &objects = plater.model().objects;
+
+    if (replace_obj >= 0) {
+        if (replace_obj >= int(objects.size())) {
+            error = "No object " + std::to_string(replace_obj) + ".";
+            return -1;
+        }
+        Model rendered;
+        try {
+            rendered = Model::read_from_file(run.out_3mf.string(), nullptr, nullptr, LoadStrategy::AddDefaultInstances | LoadStrategy::LoadModel);
+        } catch (const std::exception &err) {
+            error = err.what();
+            return -1;
+        }
+        if (rendered.objects.size() != 1) {
+            error = "The render has " + std::to_string(rendered.objects.size()) + " objects; an object can only be replaced by one.";
+            return -1;
+        }
+        plater.take_snapshot(undo_name);
+        ModelObject &object = *objects[replace_obj];
+        replace_model_parts(object, *rendered.objects.front());
+        apply_colors(object, forca_openscad_read_colors(run.out_3mf.string()), 0);
+        object.forca_openscad = forca_openscad_link_to_json(link);
+        wxGetApp().obj_list()->add_volumes_to_object_in_list(size_t(replace_obj));
+        wxGetApp().obj_list()->update_info_items(size_t(replace_obj));
+        plater.changed_object(replace_obj);
+        return replace_obj;
+    }
+
+    const size_t before = objects.size();
+    {
+        Plater::TakeSnapshot snapshot(&plater, undo_name);
+        plater.load_files({run.out_3mf}, LoadStrategy::LoadModel, false);
+    }
+    if (objects.size() <= before) {
+        error = "Forca couldn't load the render.";
+        return -1;
+    }
+    const OpenScadColors colors = forca_openscad_read_colors(run.out_3mf.string());
+    for (size_t i = before; i < objects.size(); ++i) {
+        ModelObject *object = objects[i];
+        apply_colors(*object, colors, i - before);
+        wxGetApp().obj_list()->update_info_items(i);
+        if (openscad_default_name(object->name)) {
+            object->name = scad.stem().string();
+            for (ModelVolume *volume : object->volumes)
+                if (openscad_default_name(volume->name))
+                    volume->name = object->name;
+        }
+        if (objects.size() == before + 1) // linked only when the file gave one object, as an import
+            object->forca_openscad = forca_openscad_link_to_json(link);
+    }
+    wxGetApp().obj_list()->update_name_for_items();
+    return int(before);
 }
 
 }} // namespace Slic3r::GUI

@@ -1,4 +1,5 @@
 #include "../ClipperUtils.hpp"
+#include "../EdgeGrid.hpp"
 #include "../ShortestPath.hpp"
 
 #include "libslic3r/BoundingBox.hpp"
@@ -81,6 +82,37 @@ void InfillPolylineClipper::add_point(const Vec2d &fpt)
     }
 }
 
+// Forca: spiral ironing (Bambu Studio's). Clipping a spiral to a faceted rim leaves tiny tangency slivers along it:
+// pieces of a few points whose middle hugs the boundary. A piece that dives inside (the fill itself, an arc cut by a
+// hole, a narrow spur) has a deep middle and is kept.
+static void drop_spiral_slivers(Polylines &pieces, const ExPolygon &boundary, double spacing)
+{
+    if (pieces.size() < 2)
+        return;
+    const double  max_sliver_depth = spacing * 0.1;
+    const coord_t search_radius    = coord_t(std::ceil(max_sliver_depth));
+    const size_t  min_protected_points = 5;
+    EdgeGrid::Grid grid;
+    grid.create(boundary, std::max<coord_t>(1, coord_t(spacing)));
+
+    Polylines kept;
+    kept.reserve(pieces.size());
+    for (Polyline &pl : pieces) {
+        // The middle of the piece: for three points, between the chord's middle and the middle point.
+        const size_t n = pl.points.size();
+        const Point  mid = n == 3     ? Point(((pl.points.front() + pl.points.back()) / 2 + pl.points[1]) / 2) :
+                           n % 2 == 0 ? Point((pl.points[n / 2 - 1] + pl.points[n / 2]) / 2) :
+                                        pl.points[n / 2];
+        coordf_t   dist      = 0.;
+        const bool is_sliver = n < min_protected_points && grid.signed_distance_edges(mid, search_radius, dist) &&
+                               std::abs(dist) < max_sliver_depth;
+        if (!is_sliver)
+            kept.push_back(std::move(pl));
+    }
+    if (!kept.empty())
+        pieces = std::move(kept);
+}
+
 void FillPlanePath::_fill_surface_single(
     const FillParams                &params, 
     unsigned int                     thickness_layers,
@@ -139,6 +171,17 @@ void FillPlanePath::_fill_surface_single(
         }
     }
 
+    // Forca: spiral ironing (Bambu Studio's): keep the centre, skip the innermost turns up to 3 line spacings and join
+    // the centre straight to the first kept point, a short lead-in that leaves the very centre mostly un-ironed.
+    const bool spiral_ironing = dynamic_cast<const FillIroningSpiral*>(this) != nullptr;
+    if (spiral_ironing && polyline.points.size() > 1) {
+        const double start_radius = 3. * scaled<double>(this->spacing) / params.density;
+        const auto   first        = std::find_if(polyline.points.begin(), polyline.points.end(),
+                                                 [r2 = start_radius * start_radius](const Point &p) { return p.cast<double>().squaredNorm() >= r2; });
+        if (first != polyline.points.end())
+            polyline.points.erase(polyline.points.begin() + 1, first);
+    }
+
     Polylines polylines = {polyline};
 
     // Apply multiline offset if needed
@@ -148,7 +191,12 @@ void FillPlanePath::_fill_surface_single(
         polylines = intersection_pl(std::move(polylines), expolygon);
         if (!polylines.empty()) {
             Polylines chained;
-            if (params.dont_connect() || params.density > 0.5) {
+            if (spiral_ironing) {
+                // From the centre outwards, in the order of the spiral; holes are crossed by travels.
+                drop_spiral_slivers(polylines, expolygon, scaled<double>(this->spacing));
+                restore_source_path_order(polyline, polylines);
+                chained = std::move(polylines);
+            } else if (params.dont_connect() || params.density > 0.5) {
                 // ORCA: special flag for flow rate calibration. The chords chained ahead of the
                 // inside-out center spiral collide with it in opposing directions, raising a
                 // tactile lip that the calibration reads. Only applies while the fill order is

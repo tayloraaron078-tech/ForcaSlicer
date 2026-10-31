@@ -1,9 +1,12 @@
 #pragma once
 
+#include "libslic3r/ForcaOpenScad.hpp"
+
 #include <boost/filesystem/path.hpp>
 
 #include <cstddef>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace Slic3r {
@@ -43,6 +46,38 @@ bool forca_openscad_is_linked(const ModelObject &object);
 // last render when the file is gone), lets the user change them, renders in the background and replaces the object's
 // model parts in place (one undo step), keeping where the object is, its modifiers and its parts' settings.
 void forca_openscad_edit_parameters(Plater &plater, size_t obj_idx);
+
+// "Edit in OpenSCAD": opens the linked file in OpenSCAD's own window and watches it. When it is saved there, Forca asks
+// whether to render the objects linked to it again (D6), each with its own values (one undo step each).
+void forca_openscad_edit_in_openscad(Plater &plater, size_t obj_idx);
+
+// "New OpenSCAD model": saves a starter .scad file where the user chooses, imports it and opens it in OpenSCAD, watched
+// as above.
+void forca_openscad_new_model(Plater &plater);
+
+// For Forca AI's OpenSCAD tools (ForcaAIOpenScad.cpp), which run OpenSCAD off the GUI thread and place the result on it.
+// A render done here, waiting until OpenSCAD ends (any thread). work_dir holds the 3MF until forca_openscad_place
+// removes it.
+struct OpenScadRun
+{
+    bool                    ok = false;
+    std::string             error;     // couldn't start, timed out, or OpenSCAD failed
+    std::string             output;    // OpenSCAD's console
+    std::string             scad_text; // the file as rendered
+    boost::filesystem::path out_3mf;
+    boost::filesystem::path work_dir;
+};
+OpenScadRun forca_openscad_render_file(const std::string &exe, const boost::filesystem::path &scad,
+                                       const std::vector<std::pair<std::string, std::string>> &values, int timeout_s);
+// The file's Customizer parameters (any thread); empty + error when OpenSCAD can't read them.
+std::vector<OpenScadParam> forca_openscad_read_params(const std::string &exe, const boost::filesystem::path &scad, std::string &output,
+                                                      std::string &error);
+// GUI thread: puts a successful run on the plate as a new object linked to scad, or, with replace_obj >= 0, in place of
+// that object's model parts (as "OpenSCAD parameters" does), as the undo step undo_name. Returns the object's index, or
+// -1 and error. Removes run.work_dir.
+int forca_openscad_place(Plater &plater, const OpenScadRun &run, const boost::filesystem::path &scad,
+                         const std::vector<std::pair<std::string, std::string>> &values, int replace_obj, const std::string &undo_name,
+                         std::string &error);
 
 } // namespace GUI
 } // namespace Slic3r

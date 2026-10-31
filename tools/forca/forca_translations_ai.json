@@ -1836,6 +1836,87 @@
         "zh_CN": "恢复打印",
         "zh_TW": "恢復列印"
       }
+    },
+    {
+      "msgid": "Connect from:",
+      "translations": {
+        "ca": "Connecta des de:",
+        "cs": "Připojit z:",
+        "de": "Verbinden von:",
+        "es": "Conectar desde:",
+        "eu": "Konektatu hemendik:",
+        "fr": "Connecter depuis :",
+        "hu": "Csatlakozás innen:",
+        "it": "Connetti da:",
+        "ja": "接続元:",
+        "ko": "연결할 앱:",
+        "lt": "Jungtis iš:",
+        "nl": "Verbinden vanuit:",
+        "pl": "Połącz z:",
+        "pt_BR": "Conectar a partir de:",
+        "ru": "Подключить из:",
+        "sv": "Anslut från:",
+        "th": "เชื่อมต่อจาก:",
+        "tr": "Bağlanılacak uygulama:",
+        "uk": "Підключити з:",
+        "vi": "Kết nối từ:",
+        "zh_CN": "连接方式：",
+        "zh_TW": "連線方式："
+      }
+    },
+    {
+      "msgid": "Copy settings",
+      "translations": {
+        "ca": "Copia la configuració",
+        "cs": "Kopírovat nastavení",
+        "de": "Einstellungen kopieren",
+        "es": "Copiar la configuración",
+        "eu": "Kopiatu ezarpenak",
+        "fr": "Copier les paramètres",
+        "hu": "Beállítások másolása",
+        "it": "Copia le impostazioni",
+        "ja": "設定をコピー",
+        "ko": "설정 복사",
+        "lt": "Kopijuoti nustatymus",
+        "nl": "Instellingen kopiëren",
+        "pl": "Kopiuj ustawienia",
+        "pt_BR": "Copiar configurações",
+        "ru": "Копировать настройки",
+        "sv": "Kopiera inställningar",
+        "th": "คัดลอกการตั้งค่า",
+        "tr": "Ayarları kopyala",
+        "uk": "Копіювати налаштування",
+        "vi": "Sao chép cài đặt",
+        "zh_CN": "复制设置",
+        "zh_TW": "複製設定"
+      }
+    },
+    {
+      "msgid": "To connect Claude Desktop's chat (it needs Node.js), open Settings > Developer > Edit Config in Claude Desktop and add the \"forca\" entry below to the file's \"mcpServers\" section. Keep everything else in the file. Then quit and restart Claude Desktop. For its Code tab, use the Claude Code command instead.",
+      "translations": {
+        "ca": "Per connectar el xat de Claude Desktop (necessita Node.js), obre Settings > Developer > Edit Config a Claude Desktop i afegeix l'entrada \"forca\" de sota a la secció \"mcpServers\" del fitxer. Conserva tota la resta del fitxer. Després tanca i torna a obrir Claude Desktop. Per a la seva pestanya Code, fes servir l'ordre de Claude Code.",
+        "cs": "Chcete-li připojit chat Claude Desktop (potřebuje Node.js), otevřete v Claude Desktop Settings > Developer > Edit Config a přidejte níže uvedenou položku \"forca\" do sekce \"mcpServers\" v souboru. Vše ostatní v souboru ponechte. Poté Claude Desktop ukončete a znovu spusťte. Pro jeho kartu Code použijte příkaz pro Claude Code.",
+        "de": "Um den Chat von Claude Desktop zu verbinden (benötigt Node.js), öffne in Claude Desktop Settings > Developer > Edit Config und füge den Eintrag \"forca\" unten in den Abschnitt \"mcpServers\" der Datei ein. Lass alles andere in der Datei unverändert. Beende Claude Desktop dann und starte es neu. Für seinen Code-Tab verwende stattdessen den Befehl für Claude Code.",
+        "es": "Para conectar el chat de Claude Desktop (necesita Node.js), abre Settings > Developer > Edit Config en Claude Desktop y añade la entrada \"forca\" de abajo a la sección \"mcpServers\" del archivo. Conserva todo lo demás del archivo. Luego cierra y vuelve a abrir Claude Desktop. Para su pestaña Code, usa el comando de Claude Code.",
+        "eu": "Claude Desktop-en txata konektatzeko (Node.js behar du), ireki Settings > Developer > Edit Config Claude Desktop-en eta gehitu beheko \"forca\" sarrera fitxategiaren \"mcpServers\" atalean. Utzi fitxategiko gainerako guztia bere horretan. Gero itxi eta berrabiarazi Claude Desktop. Bere Code fitxarako, erabili Claude Code-ren komandoa.",
+        "fr": "Pour connecter le chat de Claude Desktop (Node.js est nécessaire), ouvrez Settings > Developer > Edit Config dans Claude Desktop et ajoutez l'entrée \"forca\" ci-dessous à la section \"mcpServers\" du fichier. Gardez tout le reste du fichier. Puis quittez et relancez Claude Desktop. Pour son onglet Code, utilisez plutôt la commande Claude Code.",
+        "hu": "A Claude Desktop csevegésének csatlakoztatásához (Node.js szükséges) nyissa meg a Claude Desktopban a Settings > Developer > Edit Config menüt, és adja hozzá az alábbi \"forca\" bejegyzést a fájl \"mcpServers\" szakaszához. A fájl többi részét hagyja meg. Ezután lépjen ki és indítsa újra a Claude Desktopot. A Code lapjához inkább a Claude Code parancsot használja.",
+        "it": "Per connettere la chat di Claude Desktop (serve Node.js), apri Settings > Developer > Edit Config in Claude Desktop e aggiungi la voce \"forca\" qui sotto alla sezione \"mcpServers\" del file. Mantieni tutto il resto del file. Poi chiudi e riavvia Claude Desktop. Per la sua scheda Code, usa invece il comando di Claude Code.",
+        "ja": "Claude Desktop のチャットを接続するには (Node.js が必要です)、Claude Desktop で Settings > Developer > Edit Config を開き、下の \"forca\" エントリをファイルの \"mcpServers\" セクションに追加してください。ファイルのほかの内容はそのまま残してください。その後 Claude Desktop を終了して再起動してください。Code タブには Claude Code のコマンドを使用してください。",
+        "ko": "Claude Desktop 채팅을 연결하려면(Node.js 필요) Claude Desktop에서 Settings > Developer > Edit Config을 열고 아래의 \"forca\" 항목을 파일의 \"mcpServers\" 섹션에 추가하세요. 파일의 나머지 내용은 그대로 두세요. 그런 다음 Claude Desktop을 종료했다가 다시 시작하세요. Code 탭에는 Claude Code 명령을 대신 사용하세요.",
+        "lt": "Norėdami prijungti Claude Desktop pokalbį (reikia Node.js), Claude Desktop atverkite Settings > Developer > Edit Config ir įtraukite toliau pateiktą \"forca\" įrašą į failo \"mcpServers\" skyrių. Visa kita faile palikite. Tada uždarykite ir iš naujo paleiskite Claude Desktop. Jo skirtukui Code naudokite Claude Code komandą.",
+        "nl": "Om de chat van Claude Desktop te verbinden (vereist Node.js), open je Settings > Developer > Edit Config in Claude Desktop en voeg je het item \"forca\" hieronder toe aan de sectie \"mcpServers\" van het bestand. Laat de rest van het bestand staan. Sluit Claude Desktop daarna af en start het opnieuw. Gebruik voor het tabblad Code de opdracht voor Claude Code.",
+        "pl": "Aby połączyć czat Claude Desktop (wymaga Node.js), otwórz w Claude Desktop Settings > Developer > Edit Config i dodaj poniższy wpis \"forca\" do sekcji \"mcpServers\" w pliku. Resztę pliku pozostaw bez zmian. Następnie zamknij i uruchom ponownie Claude Desktop. Dla jego karty Code użyj zamiast tego polecenia Claude Code.",
+        "pt_BR": "Para conectar o chat do Claude Desktop (requer Node.js), abra Settings > Developer > Edit Config no Claude Desktop e adicione a entrada \"forca\" abaixo à seção \"mcpServers\" do arquivo. Mantenha todo o resto do arquivo. Depois feche e reabra o Claude Desktop. Para a aba Code dele, use o comando do Claude Code.",
+        "ru": "Чтобы подключить чат Claude Desktop (нужен Node.js), откройте в Claude Desktop Settings > Developer > Edit Config и добавьте запись \"forca\" ниже в раздел \"mcpServers\" файла. Всё остальное в файле оставьте как есть. Затем закройте и снова запустите Claude Desktop. Для его вкладки Code используйте команду для Claude Code.",
+        "sv": "För att ansluta chatten i Claude Desktop (kräver Node.js), öppna Settings > Developer > Edit Config i Claude Desktop och lägg till posten \"forca\" nedan i filens avsnitt \"mcpServers\". Behåll allt annat i filen. Avsluta sedan Claude Desktop och starta om det. För dess Code-flik använder du kommandot för Claude Code i stället.",
+        "th": "หากต้องการเชื่อมต่อแชทของ Claude Desktop (ต้องใช้ Node.js) ให้เปิด Settings > Developer > Edit Config ใน Claude Desktop แล้วเพิ่มรายการ \"forca\" ด้านล่างลงในส่วน \"mcpServers\" ของไฟล์ เก็บเนื้อหาอื่นในไฟล์ไว้ตามเดิม จากนั้นปิดและเปิด Claude Desktop ใหม่ สำหรับแท็บ Code ให้ใช้คำสั่งของ Claude Code แทน",
+        "tr": "Claude Desktop sohbetini bağlamak için (Node.js gerekir) Claude Desktop'ta Settings > Developer > Edit Config menüsünü açın ve aşağıdaki \"forca\" girdisini dosyanın \"mcpServers\" bölümüne ekleyin. Dosyadaki diğer her şeyi koruyun. Ardından Claude Desktop'tan çıkıp yeniden başlatın. Code sekmesi için bunun yerine Claude Code komutunu kullanın.",
+        "uk": "Щоб підключити чат Claude Desktop (потрібен Node.js), відкрийте в Claude Desktop Settings > Developer > Edit Config і додайте наведений нижче запис \"forca\" до розділу \"mcpServers\" файлу. Усе інше у файлі залиште як є. Потім закрийте й знову запустіть Claude Desktop. Для його вкладки Code використовуйте команду для Claude Code.",
+        "vi": "Để kết nối trò chuyện của Claude Desktop (cần Node.js), hãy mở Settings > Developer > Edit Config trong Claude Desktop và thêm mục \"forca\" bên dưới vào phần \"mcpServers\" của tệp. Giữ nguyên mọi nội dung khác trong tệp. Sau đó thoát và khởi động lại Claude Desktop. Với thẻ Code của nó, hãy dùng lệnh của Claude Code.",
+        "zh_CN": "要连接 Claude Desktop 的聊天（需要 Node.js），请在 Claude Desktop 中打开 Settings > Developer > Edit Config，将下面的 \"forca\" 条目添加到文件的 \"mcpServers\" 部分，文件中的其他内容保持不变。然后退出并重新启动 Claude Desktop。其 Code 选项卡请改用 Claude Code 的命令。",
+        "zh_TW": "要連線 Claude Desktop 的聊天（需要 Node.js），請在 Claude Desktop 中開啟 Settings > Developer > Edit Config，將下方的 \"forca\" 項目加入檔案的 \"mcpServers\" 區段，檔案中的其他內容保持不變。然後結束並重新啟動 Claude Desktop。其 Code 分頁請改用 Claude Code 的命令。"
+      }
     }
   ]
 }

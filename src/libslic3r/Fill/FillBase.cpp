@@ -85,6 +85,7 @@ Fill* Fill::new_from_type(const InfillPattern type)
     case ipCubic:               return new FillCubic();
     case ipQuarterCubic:        return new FillQuarterCubic();
     case ipArchimedeanChords:   return new FillArchimedeanChords();
+    case ipIroningArchimedeanSpiral: return new FillIroningSpiral();
     case ipHilbertCurve:        return new FillHilbertCurve();
     case ipOctagramSpiral:      return new FillOctagramSpiral();
     case ipAdaptiveCubic:       return new FillAdaptive::Filler();
@@ -120,6 +121,9 @@ bool Fill::use_bridge_flow(const InfillPattern type)
 	if (cached.empty()) {
 		cached.assign(size_t(ipCount), 0);
 		for (size_t i = 0; i < cached.size(); ++ i) {
+			// Forca: sub_top_surface_pattern's "same as internal solid" names another pattern, it has no filler.
+			if (i == size_t(ipSameAsInternalSolid))
+				continue;
 			auto *fill = Fill::new_from_type((InfillPattern)i);
 			cached[i] = fill->use_bridge_flow();
 			delete fill;
@@ -213,10 +217,18 @@ void Fill::fill_surface_extrusion(const Surface* surface, const FillParams& para
             // Orca: sparse infill lines whose ends are next to each other print as one path, without a travel between them.
             if (params.extrusion_role == erInternalInfill && ! eec->no_sort)
                 join_close_ends(polylines, scale_(2. * this->spacing), params.can_reverse);
-            extrusion_entities_append_paths(
-                eec->entities, std::move(polylines),
-                params.extrusion_role,
-                flow_mm3_per_mm, float(flow_width), params.flow.height());
+            // Forca: as in Bambu Studio, the nozzle goes on to the next line without extruding, at the fill's speed and
+            // acceleration, instead of travelling.
+            if (params.join_lines_without_extrusion)
+                extrusion_entities_append_paths_with_wipe(
+                    eec->entities, std::move(polylines),
+                    params.extrusion_role,
+                    flow_mm3_per_mm, float(flow_width), params.flow.height());
+            else
+                extrusion_entities_append_paths(
+                    eec->entities, std::move(polylines),
+                    params.extrusion_role,
+                    flow_mm3_per_mm, float(flow_width), params.flow.height());
         }
         if (!params.can_reverse || is_flow_calib || keep_fill_order) {
             for (size_t i = idx; i < eec->entities.size(); i++)

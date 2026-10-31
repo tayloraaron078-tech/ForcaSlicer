@@ -25,6 +25,11 @@ struct PresetImportItem
 
     std::string  file;     // the file analysed
     bool         readable = false;
+    // Forca: one of Bambu Studio's own built-in presets ("from": "system", from its system folder). Those aren't
+    // standalone preset files (no "version", parents in the same folder), so they aren't readable; Forca ships the same
+    // built-in presets, and forca_has_it says whether this one is among them (under `name`).
+    bool         bambu_system = false;
+    bool         forca_has_it = false;
     Preset::Type type     = Preset::TYPE_INVALID;
     std::string  name;
     Source       source = Source::OrcaOrForca;

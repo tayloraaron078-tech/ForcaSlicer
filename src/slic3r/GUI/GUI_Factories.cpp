@@ -1636,10 +1636,13 @@ void MenuFactory::append_menu_item_edit_text(wxMenu *menu, size_t pos)
 
 void MenuFactory::append_menu_item_forca_openscad(wxMenu *menu, size_t pos)
 {
-    const wxString name = _L("OpenSCAD parameters") + dots;
-    const int      old  = menu->FindItem(name);
-    if (old != wxNOT_FOUND) {
-        // Delete the old item and the separator placed right after it
+    const wxString name      = _L("OpenSCAD parameters") + dots;
+    const wxString edit_name = _L("Edit in OpenSCAD");
+    // Delete the old items and the separator placed right after them
+    for (const wxString &label : {edit_name, name}) {
+        const int old = menu->FindItem(label);
+        if (old == wxNOT_FOUND)
+            continue;
         const size_t item_pos = FindPositionById(menu, old);
         if (item_pos != size_t(wxNOT_FOUND) && item_pos + 1 < menu->GetMenuItemCount() && menu->FindItemByPosition(item_pos + 1)->IsSeparator())
             menu->Destroy(menu->FindItemByPosition(item_pos + 1));
@@ -1653,7 +1656,11 @@ void MenuFactory::append_menu_item_forca_openscad(wxMenu *menu, size_t pos)
     append_menu_item(menu, wxID_ANY, name, _L("Change the parameters of the OpenSCAD file this object was made from and render it again."),
         [obj_idx](wxCommandEvent &) { forca_openscad_edit_parameters(*plater(), size_t(obj_idx)); }, "cog", nullptr,
         []() { return true; }, m_parent, pos);
-    menu->InsertSeparator(pos + 1);
+    append_menu_item(menu, wxID_ANY, edit_name,
+        _L("Open the OpenSCAD file in OpenSCAD. When you save it there, Forca offers to render the model again."),
+        [obj_idx](wxCommandEvent &) { forca_openscad_edit_in_openscad(*plater(), size_t(obj_idx)); }, "", nullptr,
+        []() { return true; }, m_parent, pos + 1);
+    menu->InsertSeparator(pos + 2);
 }
 
 void MenuFactory::append_menu_item_edit_svg(wxMenu *menu, size_t pos)
@@ -2059,6 +2066,27 @@ void MenuFactory::create_plate_menu()
             return !plater()->get_partplate_list().get_selected_plate()->get_objects().empty();
         }, m_parent);
 
+    // order objects on current plate, or on all plates
+    wxMenu* order_menu     = new wxMenu();
+    wxMenu* order_all_menu = new wxMenu();
+    const std::vector<std::pair<ObjectOrder, wxString>> orders = {
+        {ObjectOrder::Name, _L("Name")}, {ObjectOrder::Filament, _L("Filament")},
+        {ObjectOrder::Height, _L("Height")}, {ObjectOrder::Size, _L("Size")}};
+    for (const auto& entry : orders) {
+        const ObjectOrder order = entry.first;
+        append_menu_item(order_menu, wxID_ANY, entry.second, "",
+            [order](wxCommandEvent&) { obj_list()->order_objects(order, false); }, "", nullptr,
+            []() { return !plater()->get_partplate_list().get_selected_plate()->empty(); }, m_parent);
+        append_menu_item(order_all_menu, wxID_ANY, entry.second, "",
+            [order](wxCommandEvent&) { obj_list()->order_objects(order, true); }, "", nullptr,
+            []() { return true; }, m_parent);
+    }
+    order_menu->AppendSeparator();
+    append_submenu(order_menu, order_all_menu, wxID_ANY, _L("All Plates"), "", "",
+        []() { return plater()->get_partplate_list().get_plate_count() > 1; }, m_parent);
+    append_submenu(menu, order_menu, wxID_ANY, _L("Order By"), "", "",
+        []() { return !plater()->model().objects.empty(); }, m_parent);
+
     wxMenu* modify_menu = new wxMenu();
 
     // fix objects on current plate
@@ -2423,7 +2451,7 @@ void MenuFactory::append_menu_item_simplify(wxMenu* menu)
 void MenuFactory::append_menu_item_smooth_mesh(wxMenu *menu)
 {
     wxMenuItem *menu_item = append_menu_item(
-        menu, wxID_ANY, _L("Subdivision mesh (Lost color)"), "", [](wxCommandEvent &) { obj_list()->smooth_mesh(); }, "", menu, []() { return plater()->can_smooth_mesh(); },
+        menu, wxID_ANY, _L("Subdivision mesh"), "", [](wxCommandEvent &) { obj_list()->smooth_mesh(); }, "", menu, []() { return plater()->can_smooth_mesh(); },
         m_parent);
 }
 

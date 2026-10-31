@@ -44,6 +44,7 @@
 #include "wxExtensions.hpp"
 #include "ConfigManipulation.hpp"
 #include "OptionsGroup.hpp"
+#include "OptionStateRegistry.hpp"
 #include "libslic3r/Preset.hpp"
 //BBS: GUI refactor
 #include "Notebook.hpp"
@@ -378,7 +379,11 @@ public:
 	void		compare_preset();
 	void		transfer_options(const std::string&name_from, const std::string&name_to, std::vector<std::string> options);
 	//BBS: add project embedded preset relate logic
-	void        save_preset(std::string name = std::string(), bool detach = false, bool save_to_project = false, bool from_input = false, std::string input_name = "");
+	// Returns false when the save was cancelled (the unresolved-plugin warning, the temperature
+	// safety check or the save-name dialog), so callers that were about to discard the edited
+	// preset can abort instead. `plugin_warning_confirmed` is set only by a caller that already ran
+	// the warning (UnsavedChangesDialog::save) and must not repeat it.
+	bool        save_preset(std::string name = std::string(), bool detach = false, bool save_to_project = false, bool from_input = false, std::string input_name = "", bool plugin_warning_confirmed = false);
 	//void		save_preset(std::string name = std::string(), bool detach = false);
 
 	void		delete_preset();
@@ -416,6 +421,8 @@ public:
 	virtual void	build() = 0;
 	virtual void	update() = 0;
 	virtual void	toggle_options() = 0;
+	// Forca: right-click on a setting line's label (OptionsGroup::label_context_menu); the process tab's favourites.
+	virtual void	show_setting_menu(const std::vector<t_config_option_key>& /*opt_ids*/) {}
 	virtual void	init_options_list();
 	std::string	options_list_storage_key(const std::string& opt_key) const;
     virtual void    update_custom_dirty(std::vector<std::string> &dirty_options, std::vector<std::string> &nonsys_options) {}
@@ -468,8 +475,9 @@ public:
 	std::pair<OG_CustomCtrl*, bool*> get_custom_ctrl_with_blinking_ptr(const t_config_option_key& opt_key, int opt_index = -1);
 
     Field*          get_field(const t_config_option_key &opt_key, Page** selected_page, int opt_index = -1);
-    void            toggle_option(const std::string &opt_key, bool toggle, int opt_index = -1);
-    void            toggle_line(const std::string &opt_key, bool toggle, int opt_index = -1); // BBS: hide some line
+    void            toggle_option(const std::string &opt_key, bool toggle, int opt_index = -1, const wxString& reason = {});
+    void            toggle_line(const std::string &opt_key, bool toggle, int opt_index = -1, const wxString& reason = {});
+    const OptionStateRegistry& option_state_registry() const { return m_option_state_registry; }
     // Renames the row that owns the option. `label` is the untranslated English msgid (an L("...")
     // string); it is translated for display and kept as the row's English search alias.
     void            set_option_label(const std::string &opt_key, const wxString &label, int opt_index = -1);
@@ -560,11 +568,15 @@ protected:
     void			filter_diff_option(std::vector<std::string> &options);
 
     ConfigManipulation m_config_manipulation;
+    OptionStateRegistry m_option_state_registry;
     std::string m_last_sparse_infill_rotate_template_value;
     ConfigManipulation get_config_manipulation();
     friend class EditGCodeDialog;
     friend class PublishSettingsDialog;
 };
+
+// Resolves the same object/global settings owner for navigation and availability descriptions.
+Tab* get_tab_for_option(const std::string& opt_key, Preset::Type type);
 
 class TabPrint : public Tab
 {
@@ -581,6 +593,9 @@ public:
 	void		update() override;
 	void		clear_pages() override;
 	bool 		supports_printer_technology(const PrinterTechnology tech) const override { return tech == ptFFF; }
+	// Column of the extruder's variant in the per-variant process vectors, as the extruder switch
+	// selects it; -1 when the printer has no such extruder variant.
+	int			extruder_variant_index(int extruder_id, NozzleVolumeType nozzle_type);
 
 private:
 	ogStaticText*	m_recommended_thin_wall_thickness_description_line = nullptr;
@@ -588,6 +603,19 @@ private:
 	// Forca: under "Overhang speed", names the selected filaments whose own overhang speeds replace these.
 	ogStaticText*	m_filament_overhang_override_line = nullptr;
 	wxString		filament_overhang_override_hint() const;
+	// Forca: under the scarf joint settings, names the selected filaments that set their own (filament_scarf_*).
+	ogStaticText*	m_filament_scarf_override_line = nullptr;
+	wxString		filament_scarf_override_hint() const;
+	// The selected filaments (the edited one with its unsaved changes) whose config passes `test`, comma-separated.
+	wxString		selected_filament_names(const std::function<bool(const DynamicPrintConfig&)>& test) const;
+
+	// Forca: favourite settings, a page first in the process settings with the settings the user starred (right-click
+	// on a setting's label). A UI preference (AppConfig "forca_favorite_settings"), never part of a preset.
+	PageShp			m_favorites_page;
+	void			fill_favorites_page();    // its option lines from the stored list (no group, so hidden, when empty)
+	void			rebuild_favorites_page(); // after the list changed: refill, re-list the pages, re-activate
+public:
+	void			show_setting_menu(const std::vector<t_config_option_key>& opt_ids) override;
 };
 
 class TabPrintModel : public TabPrint

@@ -1,0 +1,86 @@
+{
+  "_comment": "Forca AI window strings for Codex and other MCP apps (ForcaAIDialog.cpp). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Other app (MCP)",
+      "translations": {
+        "ca": "Una altra aplicació (MCP)",
+        "cs": "Jiná aplikace (MCP)",
+        "de": "Andere App (MCP)",
+        "es": "Otra aplicación (MCP)",
+        "eu": "Beste aplikazio bat (MCP)",
+        "fr": "Autre application (MCP)",
+        "hu": "Más alkalmazás (MCP)",
+        "it": "Altra app (MCP)",
+        "ja": "その他のアプリ (MCP)",
+        "ko": "기타 앱(MCP)",
+        "lt": "Kita programa (MCP)",
+        "nl": "Andere app (MCP)",
+        "pl": "Inna aplikacja (MCP)",
+        "pt_BR": "Outro aplicativo (MCP)",
+        "ru": "Другое приложение (MCP)",
+        "sv": "Annan app (MCP)",
+        "th": "แอปอื่น (MCP)",
+        "tr": "Başka bir uygulama (MCP)",
+        "uk": "Інший застосунок (MCP)",
+        "vi": "Ứng dụng khác (MCP)",
+        "zh_CN": "其他应用 (MCP)",
+        "zh_TW": "其他應用程式 (MCP)"
+      }
+    },
+    {
+      "msgid": "To connect Codex (in the ChatGPT desktop app, or the Codex app or CLI), add these lines to Codex's config.toml, in the .codex folder of your user folder, or add a Streamable HTTP server with this address and header in Codex's MCP settings. Then restart Codex.",
+      "translations": {
+        "ca": "Per connectar Codex (a l'aplicació d'escriptori de ChatGPT, o a l'aplicació o la CLI de Codex), afegiu aquestes línies al config.toml de Codex, a la carpeta .codex de la vostra carpeta d'usuari, o afegiu un servidor Streamable HTTP amb aquesta adreça i aquesta capçalera a la configuració MCP de Codex. Després reinicieu Codex.",
+        "cs": "Chcete-li připojit Codex (v desktopové aplikaci ChatGPT nebo v aplikaci či CLI Codex), přidejte tyto řádky do souboru config.toml programu Codex ve složce .codex ve vaší uživatelské složce, nebo v nastavení MCP programu Codex přidejte server Streamable HTTP s touto adresou a hlavičkou. Potom Codex restartujte.",
+        "de": "Um Codex zu verbinden (in der ChatGPT-Desktop-App oder in der Codex-App bzw. -CLI), fügen Sie diese Zeilen in die config.toml von Codex im Ordner .codex Ihres Benutzerordners ein, oder fügen Sie in den MCP-Einstellungen von Codex einen Streamable-HTTP-Server mit dieser Adresse und diesem Header hinzu. Starten Sie Codex dann neu.",
+        "es": "Para conectar Codex (en la aplicación de escritorio de ChatGPT, o en la aplicación o la CLI de Codex), añada estas líneas al config.toml de Codex, en la carpeta .codex de su carpeta de usuario, o añada un servidor Streamable HTTP con esta dirección y esta cabecera en la configuración MCP de Codex. Después reinicie Codex.",
+        "eu": "Codex konektatzeko (ChatGPT-ren mahaigaineko aplikazioan, edo Codex aplikazioan edo CLIan), gehitu lerro hauek Codex-en config.toml fitxategira, zure erabiltzaile-karpetako .codex karpetan, edo gehitu Streamable HTTP zerbitzari bat helbide eta goiburu honekin Codex-en MCP ezarpenetan. Ondoren, berrabiarazi Codex.",
+        "fr": "Pour connecter Codex (dans l'application de bureau ChatGPT, ou dans l'application ou la CLI Codex), ajoutez ces lignes au fichier config.toml de Codex, dans le dossier .codex de votre dossier utilisateur, ou ajoutez un serveur Streamable HTTP avec cette adresse et cet en-tête dans les paramètres MCP de Codex. Redémarrez ensuite Codex.",
+        "hu": "A Codex csatlakoztatásához (a ChatGPT asztali alkalmazásában, vagy a Codex alkalmazásban vagy CLI-ben) adja hozzá ezeket a sorokat a Codex config.toml fájljához a felhasználói mappa .codex mappájában, vagy adjon hozzá egy Streamable HTTP szervert ezzel a címmel és fejléccel a Codex MCP-beállításaiban. Ezután indítsa újra a Codexet.",
+        "it": "Per collegare Codex (nell'app desktop di ChatGPT, o nell'app o nella CLI di Codex), aggiungi queste righe al config.toml di Codex, nella cartella .codex della tua cartella utente, oppure aggiungi un server Streamable HTTP con questo indirizzo e questa intestazione nelle impostazioni MCP di Codex. Poi riavvia Codex.",
+        "ja": "Codex (ChatGPT デスクトップアプリ、または Codex アプリや CLI) を接続するには、ユーザーフォルダーの .codex フォルダーにある Codex の config.toml にこれらの行を追加するか、Codex の MCP 設定でこのアドレスとヘッダーを使って Streamable HTTP サーバーを追加します。その後 Codex を再起動してください。",
+        "ko": "Codex(ChatGPT 데스크톱 앱 또는 Codex 앱이나 CLI)를 연결하려면 사용자 폴더의 .codex 폴더에 있는 Codex의 config.toml에 이 줄들을 추가하거나, Codex의 MCP 설정에서 이 주소와 헤더로 Streamable HTTP 서버를 추가하세요. 그런 다음 Codex를 다시 시작하세요.",
+        "lt": "Norėdami prijungti Codex (ChatGPT darbalaukio programoje arba Codex programoje ar CLI), pridėkite šias eilutes į Codex failą config.toml, esantį jūsų naudotojo aplanko .codex aplanke, arba Codex MCP nustatymuose pridėkite Streamable HTTP serverį su šiuo adresu ir antrašte. Tada iš naujo paleiskite Codex.",
+        "nl": "Om Codex te verbinden (in de ChatGPT-desktopapp, of de Codex-app of -CLI), voegt u deze regels toe aan de config.toml van Codex, in de map .codex van uw gebruikersmap, of voegt u in de MCP-instellingen van Codex een Streamable HTTP-server toe met dit adres en deze header. Start Codex daarna opnieuw.",
+        "pl": "Aby połączyć Codex (w aplikacji desktopowej ChatGPT albo w aplikacji lub CLI Codex), dodaj te wiersze do pliku config.toml Codex w folderze .codex w folderze użytkownika albo dodaj w ustawieniach MCP Codex serwer Streamable HTTP z tym adresem i nagłówkiem. Następnie uruchom ponownie Codex.",
+        "pt_BR": "Para conectar o Codex (no aplicativo de desktop do ChatGPT, ou no aplicativo ou na CLI do Codex), adicione estas linhas ao config.toml do Codex, na pasta .codex da sua pasta de usuário, ou adicione um servidor Streamable HTTP com este endereço e este cabeçalho nas configurações de MCP do Codex. Depois reinicie o Codex.",
+        "ru": "Чтобы подключить Codex (в настольном приложении ChatGPT, в приложении Codex или в его CLI), добавьте эти строки в файл config.toml Codex в папке .codex вашей папки пользователя или добавьте в настройках MCP Codex сервер Streamable HTTP с этим адресом и заголовком. Затем перезапустите Codex.",
+        "sv": "För att ansluta Codex (i ChatGPT:s skrivbordsapp, eller i Codex-appen eller -CLI:t) lägger du till de här raderna i Codex config.toml, i mappen .codex i din användarmapp, eller lägger till en Streamable HTTP-server med den här adressen och rubriken i Codex MCP-inställningar. Starta sedan om Codex.",
+        "th": "หากต้องการเชื่อมต่อ Codex (ในแอป ChatGPT บนเดสก์ท็อป หรือแอปหรือ CLI ของ Codex) ให้เพิ่มบรรทัดเหล่านี้ลงใน config.toml ของ Codex ในโฟลเดอร์ .codex ของโฟลเดอร์ผู้ใช้ หรือเพิ่มเซิร์ฟเวอร์ Streamable HTTP ด้วยที่อยู่และส่วนหัวนี้ในการตั้งค่า MCP ของ Codex จากนั้นรีสตาร์ท Codex",
+        "tr": "Codex'i bağlamak için (ChatGPT masaüstü uygulamasında ya da Codex uygulamasında veya CLI'ında) bu satırları kullanıcı klasörünüzdeki .codex klasöründe bulunan Codex config.toml dosyasına ekleyin ya da Codex'in MCP ayarlarında bu adres ve başlıkla bir Streamable HTTP sunucusu ekleyin. Ardından Codex'i yeniden başlatın.",
+        "uk": "Щоб підключити Codex (у настільному застосунку ChatGPT або в застосунку чи CLI Codex), додайте ці рядки до файлу config.toml Codex у папці .codex вашої папки користувача або додайте в налаштуваннях MCP Codex сервер Streamable HTTP з цією адресою та заголовком. Потім перезапустіть Codex.",
+        "vi": "Để kết nối Codex (trong ứng dụng ChatGPT trên máy tính, hoặc ứng dụng hay CLI Codex), hãy thêm các dòng này vào config.toml của Codex trong thư mục .codex của thư mục người dùng, hoặc thêm một máy chủ Streamable HTTP với địa chỉ và tiêu đề này trong cài đặt MCP của Codex. Sau đó khởi động lại Codex.",
+        "zh_CN": "要连接 Codex（在 ChatGPT 桌面应用中，或 Codex 应用或 CLI 中），请将这些行添加到用户文件夹下 .codex 文件夹中的 Codex config.toml，或在 Codex 的 MCP 设置中用此地址和标头添加一个 Streamable HTTP 服务器。然后重启 Codex。",
+        "zh_TW": "要連接 Codex（在 ChatGPT 桌面應用程式中，或 Codex 應用程式或 CLI 中），請將這些行加入使用者資料夾下 .codex 資料夾中的 Codex config.toml，或在 Codex 的 MCP 設定中用此位址和標頭新增一個 Streamable HTTP 伺服器。然後重新啟動 Codex。"
+      }
+    },
+    {
+      "msgid": "For another app that can use MCP servers, such as LM Studio or a chat app running a local model, Grok or another AI: add a Streamable HTTP server with the address and Authorization header below. Apps that read an mcp.json file, such as LM Studio, take it as it is.",
+      "translations": {
+        "ca": "Per a una altra aplicació que pugui fer servir servidors MCP, com ara LM Studio o una aplicació de xat amb un model local, Grok o una altra IA: afegiu un servidor Streamable HTTP amb l'adreça i la capçalera Authorization de sota. Les aplicacions que llegeixen un fitxer mcp.json, com LM Studio, l'accepten tal com és.",
+        "cs": "Pro jinou aplikaci, která umí používat servery MCP, například LM Studio nebo chatovací aplikaci s místním modelem, Grokem nebo jinou AI: přidejte server Streamable HTTP s adresou a hlavičkou Authorization níže. Aplikace, které čtou soubor mcp.json, například LM Studio, jej převezmou tak, jak je.",
+        "de": "Für eine andere App, die MCP-Server nutzen kann, etwa LM Studio oder eine Chat-App mit einem lokalen Modell, Grok oder einer anderen KI: Fügen Sie einen Streamable-HTTP-Server mit der Adresse und dem Authorization-Header unten hinzu. Apps, die eine mcp.json-Datei lesen, wie LM Studio, übernehmen ihn unverändert.",
+        "es": "Para otra aplicación que pueda usar servidores MCP, como LM Studio o una aplicación de chat con un modelo local, Grok u otra IA: añada un servidor Streamable HTTP con la dirección y la cabecera Authorization de abajo. Las aplicaciones que leen un archivo mcp.json, como LM Studio, lo aceptan tal cual.",
+        "eu": "MCP zerbitzariak erabil ditzakeen beste aplikazio baterako, adibidez LM Studio edo eredu lokal bat, Grok edo beste AA bat darabilen txat-aplikazio bat: gehitu Streamable HTTP zerbitzari bat beheko helbidearekin eta Authorization goiburuarekin. mcp.json fitxategi bat irakurtzen duten aplikazioek, LM Studiok adibidez, dagoen bezala onartzen dute.",
+        "fr": "Pour une autre application capable d'utiliser des serveurs MCP, comme LM Studio ou une application de chat avec un modèle local, Grok ou une autre IA : ajoutez un serveur Streamable HTTP avec l'adresse et l'en-tête Authorization ci-dessous. Les applications qui lisent un fichier mcp.json, comme LM Studio, l'acceptent tel quel.",
+        "hu": "Más, MCP-szervereket használni tudó alkalmazáshoz, például az LM Studióhoz vagy helyi modellt, Grokot vagy más MI-t futtató csevegőalkalmazáshoz: adjon hozzá egy Streamable HTTP szervert az alábbi címmel és Authorization fejléccel. Az mcp.json fájlt olvasó alkalmazások, például az LM Studio, változtatás nélkül átveszik.",
+        "it": "Per un'altra app che può usare server MCP, come LM Studio o un'app di chat con un modello locale, Grok o un'altra IA: aggiungi un server Streamable HTTP con l'indirizzo e l'intestazione Authorization qui sotto. Le app che leggono un file mcp.json, come LM Studio, lo accettano così com'è.",
+        "ja": "MCP サーバーを使えるその他のアプリ (LM Studio や、ローカルモデル・Grok・その他の AI を使うチャットアプリなど) の場合: 下のアドレスと Authorization ヘッダーで Streamable HTTP サーバーを追加します。LM Studio のように mcp.json ファイルを読むアプリには、そのまま使えます。",
+        "ko": "MCP 서버를 사용할 수 있는 다른 앱(LM Studio 또는 로컬 모델, Grok, 기타 AI를 실행하는 채팅 앱 등)의 경우: 아래 주소와 Authorization 헤더로 Streamable HTTP 서버를 추가하세요. LM Studio처럼 mcp.json 파일을 읽는 앱은 그대로 사용할 수 있습니다.",
+        "lt": "Kitai programai, galinčiai naudoti MCP serverius, pavyzdžiui, LM Studio arba pokalbių programai su vietiniu modeliu, Grok ar kitu DI: pridėkite Streamable HTTP serverį su toliau nurodytu adresu ir Authorization antrašte. Programos, skaitančios mcp.json failą, pavyzdžiui, LM Studio, jį priima tokį, koks yra.",
+        "nl": "Voor een andere app die MCP-servers kan gebruiken, zoals LM Studio of een chatapp met een lokaal model, Grok of een andere AI: voeg een Streamable HTTP-server toe met het adres en de Authorization-header hieronder. Apps die een mcp.json-bestand lezen, zoals LM Studio, nemen het ongewijzigd over.",
+        "pl": "Dla innej aplikacji, która potrafi korzystać z serwerów MCP, np. LM Studio albo aplikacji czatu z modelem lokalnym, Grokiem lub inną AI: dodaj serwer Streamable HTTP z poniższym adresem i nagłówkiem Authorization. Aplikacje odczytujące plik mcp.json, takie jak LM Studio, przyjmą go bez zmian.",
+        "pt_BR": "Para outro aplicativo que possa usar servidores MCP, como o LM Studio ou um aplicativo de chat com um modelo local, o Grok ou outra IA: adicione um servidor Streamable HTTP com o endereço e o cabeçalho Authorization abaixo. Aplicativos que leem um arquivo mcp.json, como o LM Studio, o aceitam como está.",
+        "ru": "Для другого приложения, которое может использовать серверы MCP, например LM Studio или чат-приложения с локальной моделью, Grok или другим ИИ: добавьте сервер Streamable HTTP с адресом и заголовком Authorization ниже. Приложения, читающие файл mcp.json, такие как LM Studio, примут его как есть.",
+        "sv": "För en annan app som kan använda MCP-servrar, till exempel LM Studio eller en chattapp med en lokal modell, Grok eller en annan AI: lägg till en Streamable HTTP-server med adressen och Authorization-rubriken nedan. Appar som läser en mcp.json-fil, som LM Studio, tar den som den är.",
+        "th": "สำหรับแอปอื่นที่ใช้เซิร์ฟเวอร์ MCP ได้ เช่น LM Studio หรือแอปแชตที่ใช้โมเดลในเครื่อง Grok หรือ AI อื่น: ให้เพิ่มเซิร์ฟเวอร์ Streamable HTTP ด้วยที่อยู่และส่วนหัว Authorization ด้านล่าง แอปที่อ่านไฟล์ mcp.json เช่น LM Studio ใช้ได้ตามนี้เลย",
+        "tr": "MCP sunucularını kullanabilen başka bir uygulama için, örneğin LM Studio ya da yerel bir model, Grok veya başka bir yapay zekâ çalıştıran bir sohbet uygulaması: aşağıdaki adres ve Authorization başlığıyla bir Streamable HTTP sunucusu ekleyin. LM Studio gibi mcp.json dosyası okuyan uygulamalar bunu olduğu gibi kabul eder.",
+        "uk": "Для іншого застосунку, який може використовувати сервери MCP, наприклад LM Studio або чат-застосунку з локальною моделлю, Grok чи іншим ШІ: додайте сервер Streamable HTTP з адресою та заголовком Authorization нижче. Застосунки, що читають файл mcp.json, як-от LM Studio, приймуть його без змін.",
+        "vi": "Với ứng dụng khác dùng được máy chủ MCP, chẳng hạn LM Studio hoặc ứng dụng trò chuyện chạy mô hình cục bộ, Grok hay AI khác: hãy thêm một máy chủ Streamable HTTP với địa chỉ và tiêu đề Authorization bên dưới. Các ứng dụng đọc tệp mcp.json, như LM Studio, dùng được nguyên như vậy.",
+        "zh_CN": "对于其他可以使用 MCP 服务器的应用，例如 LM Studio，或运行本地模型、Grok 或其他 AI 的聊天应用：用下面的地址和 Authorization 标头添加一个 Streamable HTTP 服务器。读取 mcp.json 文件的应用（如 LM Studio）可以直接使用。",
+        "zh_TW": "對於其他可以使用 MCP 伺服器的應用程式，例如 LM Studio，或執行本機模型、Grok 或其他 AI 的聊天應用程式：用下方的位址和 Authorization 標頭新增一個 Streamable HTTP 伺服器。讀取 mcp.json 檔案的應用程式（如 LM Studio）可以直接使用。"
+      }
+    }
+  ]
+}

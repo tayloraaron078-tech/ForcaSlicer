@@ -658,6 +658,8 @@ inline void extrusion_entities_append_paths_with_wipe(ExtrusionEntitiesPtr &dst,
     }
     if (!multi_path->empty())
         dst.push_back(multi_path);
+    else
+        delete multi_path;
     polylines.clear();
     dst.shrink_to_fit();
 }

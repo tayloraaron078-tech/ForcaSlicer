@@ -46,6 +46,9 @@ std::pair<InterfaceMoves, InterfaceMoves> slice_t(const std::string &support_typ
         { "support_style", support_style },
         { "support_interface_top_layers", "2" },
         { "enable_prime_tower", prime_tower ? "1" : "0" },
+        // On the 200 x 200 mm bed, clear of the part at X/Y 0..30 (the default position is off this bed).
+        { "wipe_tower_x", "150" },
+        { "wipe_tower_y", "150" },
         { "layer_height", "0.2" },
         { "initial_layer_print_height", "0.2" },
     });

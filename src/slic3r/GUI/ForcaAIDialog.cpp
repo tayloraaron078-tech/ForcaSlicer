@@ -18,6 +18,7 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/checklst.h>
+#include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -276,20 +277,37 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
         refresh(); // back to Guarded on No
     });
 
-    auto* cmd_label = new wxStaticText(this, wxID_ANY, _L("To connect Claude Code, run this once in a terminal:"));
-    root->Add(cmd_label, 0, wxLEFT | wxRIGHT, pad);
-    m_command = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, FromDIP(wxSize(560, -1)), wxTE_READONLY);
+    auto* client_row = new wxBoxSizer(wxHORIZONTAL);
+    client_row->Add(new wxStaticText(this, wxID_ANY, _L("Connect from:")), 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+    m_client = new wxChoice(this, wxID_ANY);
+    m_client->Append("Claude Code");    // product names, not translated
+    m_client->Append("Claude Desktop");
+    m_client->Append("Codex (ChatGPT)");
+    m_client->Append(_L("Other app (MCP)"));
+    m_client->SetSelection(0);
+    m_client->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) {
+        refresh();
+        GetSizer()->SetSizeHints(this); // the Claude Desktop text is longer
+    });
+    client_row->Add(m_client, 0, wxALIGN_CENTER_VERTICAL);
+    root->Add(client_row, 0, wxLEFT | wxRIGHT | wxBOTTOM, pad);
+
+    m_command_label = new wxStaticText(this, wxID_ANY, "");
+    root->Add(m_command_label, 0, wxLEFT | wxRIGHT, pad);
+    // Multi-line so the long Claude Code command wraps; Claude Desktop's JSON scrolls (Copy takes all of it). Three
+    // lines only: the window is already about as tall as a 1080p screen allows.
+    m_command = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, FromDIP(wxSize(560, 64)), wxTE_READONLY | wxTE_MULTILINE);
     root->Add(m_command, 0, wxLEFT | wxRIGHT | wxTOP | wxEXPAND, FromDIP(6));
 
     auto* buttons  = new wxBoxSizer(wxHORIZONTAL);
-    auto* copy_btn = new wxButton(this, wxID_ANY, _L("Copy command"));
-    copy_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+    m_copy_btn = new wxButton(this, wxID_ANY, _L("Copy command"));
+    m_copy_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
         if (wxTheClipboard->Open()) {
             wxTheClipboard->SetData(new wxTextDataObject(m_command->GetValue()));
             wxTheClipboard->Close();
         }
     });
-    buttons->Add(copy_btn, 0, wxRIGHT, FromDIP(8));
+    buttons->Add(m_copy_btn, 0, wxRIGHT, FromDIP(8));
     auto* key_btn = new wxButton(this, wxID_ANY, _L("Make a new key"));
     key_btn->SetToolTip(_L("Stops every AI that uses the old key; connect them again with the new command."));
     key_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
@@ -415,6 +433,7 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
             self->refresh();
     });
     refresh();
+    GetSizer()->SetSizeHints(this); // refresh() filled in the setup label
     CenterOnParent();
 }
 
@@ -453,6 +472,7 @@ void ForcaAIDialog::refresh()
                           wxString::Format(_L("%d of %d sent"), f.done, f.copies);
     }
     m_grant_text->SetLabel(grant_text);
+    m_grant_text->Wrap(-1); // Wrap() skips a width it already used, even for a new label
     m_grant_text->Wrap(FromDIP(560));
     m_grant_btn->Enable(advanced);
     m_bed_btn->Enable(advanced && grant.id != 0);
@@ -465,8 +485,40 @@ void ForcaAIDialog::refresh()
     default:                        m_state->SetForegroundColour(wxColour("#6B7488")); break;
     }
     m_state->SetLabel(wxString::FromUTF8(ai.state_text().c_str()));
-    m_command->SetValue(ai.enabled() ? wxString::FromUTF8(ai.claude_code_command().c_str())
-                                     : _L("(turn Forca AI on to see the command)"));
+    // 0 Claude Code, 1 Claude Desktop, 2 Codex, 3 any other MCP app
+    const int client = m_client->GetSelection();
+    switch (client) {
+    case 1:
+        m_command_label->SetLabel(_L("To connect Claude Desktop's chat (it needs Node.js), open Settings > Developer > "
+                                     "Edit Config in Claude Desktop and add the \"forca\" entry below to the file's "
+                                     "\"mcpServers\" section. Keep everything else in the file. Then quit and restart "
+                                     "Claude Desktop. For its Code tab, use the Claude Code command instead."));
+        break;
+    case 2:
+        m_command_label->SetLabel(_L("To connect Codex (in the ChatGPT desktop app, or the Codex app or CLI), add these "
+                                     "lines to Codex's config.toml, in the .codex folder of your user folder, or add a "
+                                     "Streamable HTTP server with this address and header in Codex's MCP settings. Then "
+                                     "restart Codex."));
+        break;
+    case 3:
+        m_command_label->SetLabel(_L("For another app that can use MCP servers, such as LM Studio or a chat app running a "
+                                     "local model, Grok or another AI: add a Streamable HTTP server with the address and "
+                                     "Authorization header below. Apps that read an mcp.json file, such as LM Studio, take "
+                                     "it as it is."));
+        break;
+    default: m_command_label->SetLabel(_L("To connect Claude Code, run this once in a terminal:")); break;
+    }
+    m_command_label->Wrap(-1);
+    m_command_label->Wrap(FromDIP(560));
+    m_copy_btn->SetLabel(client == 0 ? _L("Copy command") : _L("Copy settings"));
+    if (!ai.enabled())
+        m_command->SetValue(_L("(turn Forca AI on to see the command)"));
+    else
+        m_command->SetValue(wxString::FromUTF8(client == 1 ? ai.claude_desktop_config() :
+                                               client == 2 ? ai.codex_config() :
+                                               client == 3 ? ai.mcp_app_config() :
+                                                             ai.claude_code_command()));
+    Layout();
 
     // Printers: rebuild only when the set Forca knows changes (keeps the user's scroll/focus), then sync ticks.
     const std::vector<std::string> ids = forca_ai_known_printers();

@@ -70,7 +70,8 @@ static constexpr const char* CFG_LEVEL         = "forca_ai_level"; // "advanced"
 // What every connecting AI is told up front (MCP "instructions").
 static const char* SERVER_INSTRUCTIONS =
     "You are connected to Forca Slicer (an OrcaSlicer fork) running on the user's computer. The tools let you see "
-    "and operate the slicer: import and arrange models, printer/process/filament presets and per-object settings, "
+    "and operate the slicer: import and arrange models, design models in OpenSCAD (forca_openscad_render renders .scad "
+    "code with the user's OpenSCAD), printer/process/filament presets and per-object settings, "
     "modifiers and support regions, slicing, and saving; and read the status and camera of printers the user has "
     "shared with you (forca_list_printers), and pause a print you see failing on a printer the user also allowed you "
     "to pause (you may resume only your own pause). At its default 'guarded' control level Forca enforces two rules "
@@ -379,6 +380,42 @@ void ForcaAI::regenerate_token()
 std::string ForcaAI::claude_code_command()
 {
     return "claude mcp add --transport http forca " + url() + " --header \"Authorization: Bearer " + token() + "\"";
+}
+
+std::string ForcaAI::claude_desktop_config()
+{
+    // Claude Desktop's chat starts only local (stdio) servers, so mcp-remote bridges to Forca's HTTP server.
+    // The key goes through env: Claude Desktop on Windows doesn't quote args with spaces ("Bearer <key>").
+    return "{\n"
+           "  \"mcpServers\": {\n"
+           "    \"forca\": {\n"
+           "      \"command\": \"npx\",\n"
+           "      \"args\": [\"-y\", \"mcp-remote\", \"" + url() + "\", \"--allow-http\",\n"
+           "               \"--header\", \"Authorization:${FORCA_AI_AUTH}\"],\n"
+           "      \"env\": { \"FORCA_AI_AUTH\": \"Bearer " + token() + "\" }\n"
+           "    }\n"
+           "  }\n"
+           "}";
+}
+
+std::string ForcaAI::codex_config()
+{
+    // Codex connects to Streamable HTTP servers itself, so no bridge is needed.
+    return "[mcp_servers.forca]\n"
+           "url = \"" + url() + "\"\n"
+           "http_headers = { \"Authorization\" = \"Bearer " + token() + "\" }";
+}
+
+std::string ForcaAI::mcp_app_config()
+{
+    return "{\n"
+           "  \"mcpServers\": {\n"
+           "    \"forca\": {\n"
+           "      \"url\": \"" + url() + "\",\n"
+           "      \"headers\": { \"Authorization\": \"Bearer " + token() + "\" }\n"
+           "    }\n"
+           "  }\n"
+           "}";
 }
 
 void ForcaAI::set_enabled(bool on)

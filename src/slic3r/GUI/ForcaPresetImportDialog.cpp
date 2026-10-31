@@ -64,6 +64,8 @@ struct Row
 // The short line under a file's name: where it comes from and what needs a look.
 wxString status_text(const PresetImportItem &item)
 {
+    if (item.bambu_system)
+        return item.forca_has_it ? _L("Already built into Forca") : _L("A Bambu Studio built-in preset Forca doesn't have yet");
     if (!item.readable)
         return _L("Can't be read as a preset.");
     std::vector<wxString> parts;
@@ -88,6 +90,14 @@ wxString status_text(const PresetImportItem &item)
 wxString details_text(const PresetImportItem &item)
 {
     wxString text = format_wxstr(_L("File: %1%"), item.file) + "\n";
+    if (item.bambu_system)
+        return text + (item.forca_has_it ?
+                           // TRN %1% is a preset name.
+                           format_wxstr(_L("One of Bambu Studio's built-in presets. Forca has the same preset built in, "
+                                           "\"%1%\": select it in the list, there is nothing to import."), item.name) :
+                           format_wxstr(_L("One of Bambu Studio's built-in presets, \"%1%\". Forca doesn't have it yet: "
+                                           "built-in presets come with Forca's printer profiles and can't be imported "
+                                           "from Bambu Studio."), item.name));
     if (!item.readable)
         return text + _L("Can't be read as a preset.");
     if (!item.best_parent.empty())

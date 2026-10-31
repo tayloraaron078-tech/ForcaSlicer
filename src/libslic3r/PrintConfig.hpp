@@ -36,6 +36,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 #include <utility>
 #include <cstddef>
 #include <cassert>
@@ -134,6 +135,10 @@ enum InfillPattern : int {
     ipCrossHatch, ipTpmsD, ipTpmsFK, ipGyroid,
     ipConcentric, ipSpiralInset, ipHilbertCurve, ipArchimedeanChords, ipOctagramSpiral,
     ipSupportBase, ipConcentricInternal,
+    // Forca: Bambu Studio's spiral ironing (FillIroningSpiral); an ironing pattern only.
+    ipIroningArchimedeanSpiral,
+    // Forca: sub_top_surface_pattern's default, "use internal_solid_infill_pattern"; never filled itself.
+    ipSameAsInternalSolid,
     ipCount,
 };
 
@@ -802,6 +807,9 @@ static std::string get_bed_temp_1st_layer_key(const BedType type)
 extern const std::vector<std::string> filament_extruder_override_keys;
 // Full override-key check incl. filament_retract_length_nc (defined outside the generator list).
 extern bool is_filament_extruder_override_key(const std::string &opt_key);
+// Forca: the filament scarf seam overrides, each with the process setting it replaces (filament key, process key).
+extern const std::vector<std::pair<std::string, std::string>> filament_scarf_override_keys;
+extern bool is_filament_scarf_override_key(const std::string &opt_key);
 
 // for parse extruder_ams_count
 extern std::vector<std::map<int, int>> get_extruder_ams_count(const std::vector<std::string> &strs);
@@ -1143,8 +1151,14 @@ protected:
                 m_keys.emplace_back(kvp.first);
                 const ConfigOptionDef *def = defs->get(kvp.first);
                 assert(def != nullptr);
-                if (def->default_value)
-                    opt->set(def->default_value.get());
+                if (def->default_value) {
+                    if (def->default_value->type() == coEnums) {
+                        // Enum list defaults are built without a keys map; set() adopts the one create_default_option() adds.
+                        std::unique_ptr<ConfigOption> default_option(def->create_default_option());
+                        opt->set(default_option.get());
+                    } else
+                        opt->set(def->default_value.get());
+                }
                 // Generic enum options are constructed without the names they (de)serialize; take them from the
                 // definition, so the defaults and every config copied from them can read and write names.
                 if (auto *enum_opt = dynamic_cast<ConfigOptionEnumGeneric*>(opt))
@@ -1521,6 +1535,10 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionEnum<SurfaceFillOrder>, top_surface_fill_order))
     ((ConfigOptionEnum<SurfaceFillOrder>, bottom_surface_fill_order))
     ((ConfigOptionEnum<InfillPattern>, internal_solid_infill_pattern))
+    // Forca: Bambu Studio 2.8.3's pattern for the solid island under a visible top surface
+    ((ConfigOptionEnum<InfillPattern>, sub_top_surface_pattern))
+    // Forca: Bambu Studio's monotonic line joins, without extruding
+    ((ConfigOptionBool,                 monotonic_line_join))
     ((ConfigOptionFloatOrPercent,       outer_wall_line_width))
     ((ConfigOptionFloatsNullable,       outer_wall_speed))
     ((ConfigOptionFloat,                infill_direction))
@@ -1592,6 +1610,11 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloatsNullable, filament_ironing_spacing))
     ((ConfigOptionFloatsNullable, filament_ironing_inset))
     ((ConfigOptionFloatsNullable, filament_ironing_speed))
+    // Forca: filament scarf seam overrides
+    ((ConfigOptionEnumsGenericNullable, filament_scarf_seam_type))
+    ((ConfigOptionFloatsOrPercentsNullable, filament_scarf_height))
+    ((ConfigOptionFloatsOrPercentsNullable, filament_scarf_gap))
+    ((ConfigOptionFloatsNullable, filament_scarf_length))
     // Detect bridging perimeters
     ((ConfigOptionBool, detect_overhang_wall))
     ((ConfigOptionBool, unsupported_wall_last))
@@ -1686,6 +1709,7 @@ PRINT_CONFIG_CLASS_DEFINE(
 
     // Orca: seam slopes
     ((ConfigOptionEnum<SeamScarfType>,  seam_slope_type))
+    ((ConfigOptionBool,                 override_filament_scarf_seam_setting))
     ((ConfigOptionBool,                 seam_slope_conditional))
     ((ConfigOptionInt,                  scarf_angle_threshold))
     ((ConfigOptionFloatOrPercent,       seam_slope_start_height))
@@ -2106,6 +2130,7 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionBools,              dont_slow_down_outer_wall))
     ((ConfigOptionEnumsGeneric,       cooling_slowdown_logic))
     ((ConfigOptionFloats,             cooling_perimeter_transition_distance))
+    ((ConfigOptionInts,               slow_down_recovery_layers))
     ((ConfigOptionFloats,             fan_cooling_layer_time))
     ((ConfigOptionBools,              activate_air_filtration))
     ((ConfigOptionBools,              activate_air_filtration_during_print))

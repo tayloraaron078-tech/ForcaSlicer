@@ -15,12 +15,15 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/BoundingBox.hpp"
 #include "libslic3r/ForcaCalibModel.hpp"
+#include "libslic3r/ExtrusionEntity.hpp"
+#include "libslic3r/GCode/GCodeProcessor.hpp"
 #include "libslic3r/Geometry.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/TriangleMesh.hpp"
 #include "libslic3r/Utils.hpp" // resources_dir()
+#include "slic3r/Utils/NetworkAgent.hpp"
 
 #include <boost/filesystem/path.hpp>
 #include <boost/log/trivial.hpp>
@@ -39,6 +42,7 @@
 #include <libslic3r/Point.hpp>
 #include <utility>
 #include <libslic3r/Format/bbs_3mf.hpp>
+#include <libslic3r/Format/ProjectStrategy.hpp>
 #include <map>
 #include <cstdio>
 #include <slic3r/GUI/GUI.hpp>
@@ -60,6 +64,11 @@
 #include <cmath>
 #include <optional>
 #include <wx/unichar.h>
+
+#ifdef _WIN32
+#include <uxtheme.h>
+#include "dark_mode.hpp"
+#endif
 
 namespace Slic3r { namespace GUI {
 
@@ -291,6 +300,29 @@ static const std::vector<TableRowDef>& table_rows()
 static wxColour wizard_bg(bool dark) { return dark ? wxColour("#2B2F3A") : *wxWHITE; }
 static wxColour wizard_fg(bool dark) { return dark ? wxColour("#E6EAF2") : wxColour("#26395A"); } // Forca navy on light
 
+#ifdef _WIN32
+// wxWidgets 3.3 gives a native choice or button the dark Windows theme only when it is created in dark mode, and never
+// takes it back, so after a switch they keep the mode the wizard was built in. Re-apply the theme wx uses for each
+// (msw/choice.cpp, msw/control.cpp) for the current mode; setting the theme again makes Windows redraw them.
+static void retheme_native_controls(wxWindow* w, bool dark)
+{
+    const wchar_t* theme = dynamic_cast<wxChoice*>(w) ? L"CFD" : dynamic_cast<wxButton*>(w) ? L"Explorer" : nullptr;
+    if (theme != nullptr) {
+        const HWND hwnd = w->GetHWND();
+        NppDarkMode::AllowDarkModeForWindow(hwnd, dark);
+        ::SetWindowTheme(hwnd, theme, nullptr);
+        COMBOBOXINFO info{};
+        info.cbSize = sizeof(info);
+        if (dynamic_cast<wxChoice*>(w) && ::GetComboBoxInfo(hwnd, &info) && info.hwndList)
+            NppDarkMode::AllowDarkModeForWindow(info.hwndList, dark); // the drop-down list, as wx does
+
+        w->Refresh();
+    }
+    for (wxWindow* child : w->GetChildren())
+        retheme_native_controls(child, dark);
+}
+#endif
+
 ForcaCalibrationWizard::ForcaCalibrationWizard(wxWindow* parent, Plater* plater)
     : wxScrolled<wxPanel>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxTAB_TRAVERSAL)
     , m_plater(plater)
@@ -475,6 +507,7 @@ wxPanel* ForcaCalibrationWizard::build_flow_gen_page(wxWindow* parent)
     m_flow_method = new wxChoice(panel, wxID_ANY);
     m_flow_method->Append(_L("Classic (coarse + fine pass)"));         // FLOW_CLASSIC
     m_flow_method->Append(_L("YOLO (Recommended + Perfectionist)"));   // FLOW_YOLO
+    m_flow_method->Append(_L("Weigh a printed plate (needs a 0.01 g scale)")); // FLOW_WEIGHT
     m_flow_method->SetSelection(FLOW_CLASSIC);
     m_flow_method->Bind(wxEVT_CHOICE, &ForcaCalibrationWizard::on_flow_method_changed, this);
     method_row->Add(m_flow_method, 0);
@@ -809,6 +842,25 @@ wxPanel* ForcaCalibrationWizard::build_result_page(wxWindow* parent)
     m_shrink_inputs->Hide(); // shown by show_result_page for Shrinkage only
     sizer->Add(m_shrink_inputs, 0, wxBOTTOM, FromDIP(8));
 
+    // Flow by weight only: what the plate should weigh (from its slice) and the optional density check.
+    m_weight_inputs = new wxPanel(panel);
+    auto* weight_sizer = new wxBoxSizer(wxVERTICAL);
+    auto add_weight_row = [&](const wxString& label) -> wxTextCtrl* {
+        auto* r = new wxBoxSizer(wxHORIZONTAL);
+        r->Add(new wxStaticText(m_weight_inputs, wxID_ANY, label, wxDefaultPosition, FromDIP(wxSize(200, -1))),
+               0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(6));
+        auto* t = new wxTextCtrl(m_weight_inputs, wxID_ANY, "", wxDefaultPosition, FromDIP(wxSize(90, -1)));
+        t->Bind(wxEVT_TEXT, &ForcaCalibrationWizard::on_result_value_changed, this);
+        r->Add(t, 0);
+        weight_sizer->Add(r, 0, wxBOTTOM, FromDIP(4));
+        return t;
+    };
+    m_weight_expected = add_weight_row(_L("Expected weight (g):"));
+    m_weight_meter    = add_weight_row(_L("1 m of filament (g, optional):"));
+    m_weight_inputs->SetSizer(weight_sizer);
+    m_weight_inputs->Hide(); // shown by show_result_page for Flow Rate by weight only
+    sizer->Add(m_weight_inputs, 0, wxBOTTOM, FromDIP(8));
+
     // Hole size only: one measured diameter per hole.
     m_hole_inputs = new wxPanel(panel);
     auto* hole_sizer = new wxBoxSizer(wxVERTICAL);
@@ -1103,12 +1155,19 @@ void ForcaCalibrationWizard::show_result_page()
     const bool is_tower  = is_pa && pa_method == PA_TOWER;
     wxString rlabel = _L("Best temperature (C):");
     if (is_mvs)          rlabel = _L("Max flow (mm3/s):");
-    else if (is_flow)    rlabel = _L("Best block number:");
+    else if (is_flow)    rlabel = flow_is_weight() ? _L("Plate weight (g):") : _L("Best block number:");
     else if (is_pa)      rlabel = _L("Best PA value:");
     else if (is_retract) rlabel = _L("Retraction length (mm):");
     m_result_label->SetLabel(rlabel);
     m_result_value->SetValue("");
 
+    // Flow by weight: the slice's expected weight, filled in when the plate on the bed is sliced.
+    m_weight_inputs->Show(is_flow && flow_is_weight());
+    if (is_flow && flow_is_weight()) {
+        const double expected = weight_plate_expected_grams();
+        m_weight_expected->ChangeValue(expected > 0. ? wxString::Format("%.2f", expected) : wxString());
+        m_weight_meter->ChangeValue("");
+    }
     // Shrinkage takes three measurements instead of the single value.
     m_result_row->ShowItems(!is_shrink && !is_holes);
     m_shrink_inputs->Show(is_shrink);
@@ -1449,6 +1508,8 @@ void ForcaCalibrationWizard::launch_calib(const Calib_Params& params, bool skip_
         m_plater->calib_temp(params, skip_confirm);
     else if (m_cal == Cal::MaxVolSpeed)
         m_plater->calib_max_vol_speed(params, skip_confirm);
+    else if (m_cal == Cal::FlowRate && flow_is_weight())
+        launch_weight_plate(skip_confirm);
     else if (m_cal == Cal::FlowRate) // m_flow_pass: classic coarse/fine, or YOLO Recommended/Perfectionist
         m_plater->calib_flowrate(flow_is_yolo(), m_flow_pass, ipArchimedeanChords, skip_confirm);
     else if (m_cal == Cal::Retraction)
@@ -1621,6 +1682,41 @@ void ForcaCalibrationWizard::launch_hole_test(bool skip_confirm)
     wxGetApp().obj_list()->paste_objects_into_list({ model.objects.size() - 1 });
 }
 
+void ForcaCalibrationWizard::launch_weight_plate(bool skip_confirm)
+{
+    if (m_plater->new_project(skip_confirm, false, _L("Flow weight plate")) == wxID_CANCEL)
+        return;
+    wxGetApp().mainframe->select_tab(TAB_ID_PREPARE);
+    m_plater->get_partplate_list().get_current_fff_print().set_calib_params(Calib_Params()); // see launch_shrinkage_test
+
+    Model&       model = m_plater->model();
+    ModelObject* obj   = model.add_object();
+    obj->name          = into_u8(_L("Forca flow weight plate")); // weight_plate_expected_grams() looks for it
+    forca_build_flow_weight_plate(*obj);
+    obj->add_instance();
+    obj->config.set_key_value("extruder", new ConfigOptionInt(1));
+    // Solid all the way, straight lines, nothing extra to weigh or to cut off.
+    obj->config.set_key_value("sparse_infill_density", new ConfigOptionPercent(100.));
+    obj->config.set_key_value("sparse_infill_pattern", new ConfigOptionEnum<InfillPattern>(ipRectilinear));
+    obj->config.set_key_value("internal_solid_infill_pattern", new ConfigOptionEnum<InfillPattern>(ipRectilinear));
+    obj->config.set_key_value("top_surface_pattern", new ConfigOptionEnum<InfillPattern>(ipRectilinear));
+    obj->config.set_key_value("bottom_surface_pattern", new ConfigOptionEnum<InfillPattern>(ipRectilinear));
+    obj->config.set_key_value("brim_type", new ConfigOptionEnum<BrimType>(btNoBrim));
+    obj->config.set_key_value("ironing_type", new ConfigOptionEnum<IroningType>(IroningType::NoIroning));
+    obj->config.set_key_value("enable_support", new ConfigOptionBool(false));
+    BoundingBoxf3 bb;
+    for (const ModelVolume* v : obj->volumes)
+        bb.merge(v->mesh().bounding_box());
+    obj->invalidate_bounding_box();
+    obj->translate(-bb.center());
+    save_object_mesh(*obj);
+    obj->instances[0]->set_offset(to_3d(m_plater->build_volume().bed_center(), -obj->origin_translation.z()));
+    obj->ensure_on_bed();
+    const Geometry::Transformation t = obj->instances[0]->get_transformation();
+    obj->instances[0]->set_assemble_transformation(t);
+    wxGetApp().obj_list()->paste_objects_into_list({ model.objects.size() - 1 });
+}
+
 void ForcaCalibrationWizard::launch_final_check(bool skip_confirm)
 {
     if (m_plater->new_project(skip_confirm, false, _L("Autodesk FDM Test")) == wxID_CANCEL)
@@ -1663,6 +1759,28 @@ void ForcaCalibrationWizard::update_flow_hint()
     const double cur_flow = current_flow_ratio();
     const bool   yolo     = flow_is_yolo();
 
+    if (flow_is_weight()) {
+        wxString text = _L("Weigh the plate after removing any strings and the skirt. Expected weight is what its slice "
+                           "says it should weigh; it fills in when the plate on the bed is sliced, or type it from the "
+                           "slice estimate. Optional: weigh 1 m of the filament too, so a wrong density in the preset "
+                           "isn't taken for too much or too little flow.");
+        wxString formula;
+        if (const double density = weight_check_density(); density > 0.) {
+            const double preset = current_filament_density();
+            formula += wxString::Format(_L("Measured density: %.3f g/cm3 (preset: %.3f)."), density, preset) + "\n";
+        }
+        if (const double flow = weight_flow_ratio(); flow > 0.)
+            formula += wxString::Format(_L("New flow: expected / measured = %.3f (now %.3f)."), flow, cur_flow);
+        else
+            formula += wxString::Format(_L("New flow: expected / measured (now %.3f)."), cur_flow);
+        m_result_hint->SetLabel(hard_wrap(text, 52) + "\n" + formula);
+        // The hint grows by a line once a density is entered: lay out its page and the scrolled wizard, or it's clipped
+        // (as on_flow_method_changed does).
+        m_result_hint->GetParent()->Layout();
+        relayout();
+        return;
+    }
+
     wxString pass_note;
     if (m_flow_recheck)
         pass_note = _L("This is the optional recheck after Pressure Advance.");
@@ -1695,6 +1813,62 @@ bool ForcaCalibrationWizard::flow_is_yolo() const
     return m_flow_method && m_flow_method->GetSelection() == FLOW_YOLO;
 }
 
+bool ForcaCalibrationWizard::flow_is_weight() const
+{
+    return m_flow_method && m_flow_method->GetSelection() == FLOW_WEIGHT;
+}
+
+double ForcaCalibrationWizard::weight_plate_expected_grams() const
+{
+    // Only the weight plate's own slice: it's the plate's single object.
+    PartPlate* plate = m_plater->get_partplate_list().get_curr_plate(); // get_slice_result() is not const
+    if (plate == nullptr || !plate->is_slice_result_valid() || plate->get_slice_result() == nullptr)
+        return 0.;
+    const Model& model = m_plater->model();
+    if (model.objects.size() != 1 || model.objects.front()->name != into_u8(_L("Forca flow weight plate")))
+        return 0.;
+    // The printed plate without what the user takes off or never weighs: skirt, brim, purge and prime lines.
+    double grams = 0.;
+    for (const auto& [role, used] : plate->get_slice_result()->print_statistics.used_filaments_per_role)
+        if (role != erSkirt && role != erBrim && role != erWipeTower && role != erCustom)
+            grams += used.second;
+    return grams;
+}
+
+double ForcaCalibrationWizard::current_filament_density() const
+{
+    if (PresetBundle* b = wxGetApp().preset_bundle)
+        if (const Preset* fp = b->filaments.find_preset(selected_filament_name()))
+            if (const auto* d = fp->config.option<ConfigOptionFloats>("filament_density"); d && !d->values.empty())
+                return d->values.front();
+    return 0.;
+}
+
+double ForcaCalibrationWizard::weight_check_density() const
+{
+    double grams = 0., diameter = 0.;
+    if (!m_weight_meter || !m_weight_meter->GetValue().ToDouble(&grams))
+        return 0.;
+    if (PresetBundle* b = wxGetApp().preset_bundle)
+        if (const Preset* fp = b->filaments.find_preset(selected_filament_name()))
+            if (const auto* d = fp->config.option<ConfigOptionFloats>("filament_diameter"); d && !d->values.empty())
+                diameter = d->values.front();
+    return forca_density_from_meter_weight(grams, diameter);
+}
+
+double ForcaCalibrationWizard::weight_flow_ratio() const
+{
+    double expected = 0., measured = 0.;
+    if (!m_weight_expected || !m_weight_expected->GetValue().ToDouble(&expected) || !m_result_value->GetValue().ToDouble(&measured))
+        return 0.;
+    // The slice weighs the plate at the preset's density: with a measured density, the plate should weigh that much more
+    // or less, and only the rest is flow.
+    const double density = weight_check_density(), preset = current_filament_density();
+    if (density > 0. && preset > 0.)
+        expected *= density / preset;
+    return forca_flow_ratio_from_weight(expected, measured);
+}
+
 double ForcaCalibrationWizard::current_flow_ratio() const
 {
     if (PresetBundle* b = wxGetApp().preset_bundle)
@@ -1717,6 +1891,15 @@ void ForcaCalibrationWizard::update_flow_labels()
     if (!m_flow_pass_label || !m_flow_coach)
         return;
     const bool yolo = flow_is_yolo();
+    if (flow_is_weight()) {
+        m_flow_pass_label->SetLabel(m_flow_recheck ? _L("Recheck after PA (weigh a plate)") : _L("One pass: weigh a plate"));
+        m_flow_coach->SetLabel(hard_wrap(wxString::Format(
+            _L("This prints a solid %g x %g x %g mm plate with your settings. Weigh it on a scale that reads 0.01 g: "
+               "Forca compares that with what the slice says it should weigh and sets the flow ratio so the printer "
+               "extrudes exactly what it's told. Slice the plate before printing it, so the expected weight is known."),
+            FORCA_WEIGHT_PLATE_X, FORCA_WEIGHT_PLATE_Y, FORCA_WEIGHT_PLATE_H), 60));
+        return;
+    }
     wxString pass;
     if (m_flow_recheck)
         pass = yolo ? _L("Recheck after PA (Perfectionist pass)") : _L("Recheck after PA (fine pass)");
@@ -1765,6 +1948,7 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
 
     double value = 0.0;
     double shrink_z_pct = 0.0; // Shrinkage only: the Z percent written, for the confirmation message
+    wxString weight_note;      // Flow by weight only: the two weights, for the message and the journal
     std::map<std::string, ConfigOption*> key_values;
 
     if (m_cal == Cal::Temperature) {
@@ -1792,7 +1976,38 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
         key_values["filament_max_volumetric_speed"] = new ConfigOptionFloats{ value };
     }
 
-    if (m_cal == Cal::FlowRate) {
+    if (m_cal == Cal::FlowRate && flow_is_weight()) {
+        double expected = 0., measured = 0.;
+        if (!m_result_value->GetValue().ToDouble(&measured) || measured <= 0. ||
+            !m_weight_expected->GetValue().ToDouble(&expected) || expected <= 0.) {
+            MessageDialog dlg(this, _L("Please enter the plate's weight and the weight its slice expects, in grams."),
+                              cal_display(), wxICON_WARNING | wxOK);
+            dlg.ShowModal();
+            return;
+        }
+        const double density = weight_check_density();
+        if (!m_weight_meter->GetValue().Trim().IsEmpty() && (density < 0.5 || density > 3.)) {
+            MessageDialog dlg(this, _L("That weight for 1 m of filament gives an implausible density. Please weigh it "
+                                       "again, or leave it empty."),
+                              cal_display(), wxICON_WARNING | wxOK);
+            dlg.ShowModal();
+            return;
+        }
+        value = weight_flow_ratio();
+        if (value < FLOW_MIN || value > FLOW_MAX) {
+            MessageDialog dlg(this,
+                wxString::Format(_L("Those weights would set the flow ratio to %.3f, outside the safe range "
+                                    "%.2f-%.2f. Please re-check them."), value, FLOW_MIN, FLOW_MAX),
+                cal_display(), wxICON_WARNING | wxOK);
+            dlg.ShowModal();
+            return;
+        }
+        key_values["filament_flow_ratio"] = new ConfigOptionFloats{ value };
+        // A weighed density is better than the preset's: keep it.
+        if (density > 0.)
+            key_values["filament_density"] = new ConfigOptionFloats{ density };
+        weight_note = wxString::Format(_L("expected %s g, weighed %s g"), m_weight_expected->GetValue(), m_result_value->GetValue());
+    } else if (m_cal == Cal::FlowRate) {
         const double mod_max  = flow_is_yolo() ? FLOW_YOLO_MOD_MAX : FLOW_MOD_MAX;
         double       modifier = 0.0;
         if (!m_result_value->GetValue().ToDouble(&modifier) || std::abs(modifier) > mod_max) {
@@ -1912,7 +2127,8 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
 
     // Flow records how many passes are saved (1, 2; 3 = the optional recheck) so progress fills in halves and a
     // run resumes on the right pass.
-    const int pass = (m_cal == Cal::FlowRate) ? (m_flow_recheck ? 3 : m_flow_pass) : 0;
+    // A weighed plate is the whole flow calibration: it saves as the final pass.
+    const int pass = (m_cal == Cal::FlowRate) ? (m_flow_recheck ? 3 : (flow_is_weight() ? 2 : m_flow_pass)) : 0;
     m_store.set_done(src_key, value, saved_name, pass);
     ForcaCalibrationStore::Key target_key = src_key;
     target_key.filament = saved_name;
@@ -1935,6 +2151,8 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
         tab->select_preset(saved_name);
 
     wxString val_str = format_result(value);
+    if (!weight_note.IsEmpty())
+        val_str += " (" + weight_note + ")";
     if (shrink_z_pct > 0)
         val_str += wxString::Format(_L(", Z %.2f%%"), shrink_z_pct);
 
@@ -1952,7 +2170,7 @@ void ForcaCalibrationWizard::on_apply_result(wxCommandEvent& /*evt*/)
         if (was_recheck) {
             next = Cal::Retraction;
             next_line = _L("Flow recheck saved. Next up: Retraction.");
-        } else if (m_flow_pass == 1) {
+        } else if (m_flow_pass == 1 && !flow_is_weight()) {
             next_pass = 2;
             next_line = _L("Pass 1 saved. Next: Flow Rate pass 2.");
         } else {
@@ -2189,6 +2407,9 @@ void ForcaCalibrationWizard::sys_color_changed()
     SetForegroundColour(fg);
     for (wxWindow* child : GetChildren())
         recolor(child);
+#ifdef _WIN32
+    retheme_native_controls(this, dark);
+#endif
     Refresh();
     // Back to light: finish after the generic pass, which runs after this and can't undo its own dark-mode changes.
     if (!dark)

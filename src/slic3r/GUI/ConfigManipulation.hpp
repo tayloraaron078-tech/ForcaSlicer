@@ -29,15 +29,21 @@ namespace GUI {
 
 class ConfigManipulation
 {
+public:
+    using ToggleCallback = std::function<void(const std::string&, bool, int, const wxString&)>;
+
+private:
     bool                is_msg_dlg_already_exist{ false };
     bool                m_is_initialized_support_material_overhangs_queried{ false };
     bool                m_support_material_overhangs_queried{ false };
     bool                is_BBL_Printer{false};
+    // Forca: a selected filament sets its own scarf joint, so the process scarf details (steps, speed...) still apply.
+    bool                filament_sets_scarf{false};
 
     // function to loading of changed configuration
     std::function<void()>                                       load_config = nullptr;
-    std::function<void (const std::string&, bool toggle, int opt_index)>   cb_toggle_field = nullptr;
-    std::function<void(const std::string &, bool toggle, int opt_index)> cb_toggle_line  = nullptr;
+    ToggleCallback cb_toggle_field = nullptr;
+    ToggleCallback cb_toggle_line  = nullptr;
     std::function<void(const std::string &, const wxString &, int opt_index)> cb_set_option_label = nullptr;
     // callback to propagation of changed value, if needed
     std::function<void(const std::string&, const boost::any&)>  cb_value_change = nullptr;
@@ -50,8 +56,8 @@ class ConfigManipulation
 
 public:
     ConfigManipulation(std::function<void()> load_config,
-        std::function<void(const std::string&, bool toggle, int opt_index)> cb_toggle_field,
-        std::function<void(const std::string&, bool toggle, int opt_index)> cb_toggle_line,
+        ToggleCallback cb_toggle_field,
+        ToggleCallback cb_toggle_line,
         std::function<void(const std::string&, const boost::any&)>  cb_value_change,
         //BBS: change local config to DynamicPrintConfig
         const DynamicPrintConfig* local_config = nullptr,
@@ -78,8 +84,8 @@ public:
 
     void    apply(DynamicPrintConfig* config, DynamicPrintConfig* new_config);
     t_config_option_keys const &applying_keys() const;
-    void    toggle_field(const std::string& field_key, const bool toggle, int opt_index = -1);
-    void    toggle_line(const std::string& field_key, const bool toggle, int opt_index = -1);
+    void    toggle_field(const std::string& field_key, const bool toggle, int opt_index = -1, const wxString& reason = {});
+    void    toggle_line(const std::string& field_key, const bool toggle, int opt_index = -1, const wxString& reason = {});
     // Renames an option's row. `label` is the untranslated English msgid (an L("...") string); the
     // row translates it for display.
     void    set_option_label(const std::string& field_key, const wxString& label, int opt_index = -1);
@@ -93,7 +99,7 @@ public:
     void    check_nozzle_recommended_temperature_range(DynamicPrintConfig *config, unsigned int variant_index);
     void    check_nozzle_temperature_range(DynamicPrintConfig* config, unsigned int variant_index);
     void    check_nozzle_temperature_initial_layer_range(DynamicPrintConfig* config, unsigned int variant_index);
-    void    check_adaptive_pressure_advance_model(DynamicPrintConfig* config);
+    void    check_adaptive_pressure_advance_model(DynamicPrintConfig* config, unsigned int variant_index);
     void    check_filament_max_volumetric_speed(DynamicPrintConfig *config);
     void    check_filament_ironing_spacing(DynamicPrintConfig *config);
     void    check_chamber_temperature(DynamicPrintConfig* config);
@@ -103,6 +109,7 @@ public:
     void    layer_height_limits(double& min_layer_height, double& max_layer_height) const;
     void    set_is_BBL_Printer(bool is_bbl_printer) { is_BBL_Printer = is_bbl_printer; };
     bool    get_is_BBL_Printer() { return is_BBL_Printer; };
+    void    set_filament_sets_scarf(bool sets_scarf) { filament_sets_scarf = sets_scarf; }
     // SLA print
     void    update_print_sla_config(DynamicPrintConfig* config, const bool is_global_config = false);
     void    toggle_print_sla_options(DynamicPrintConfig* config);

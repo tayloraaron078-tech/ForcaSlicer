@@ -24,6 +24,18 @@ is not involved.
   mistake, so for a syntax error the last code line before it is marked in yellow too, with a note in the console. Save and check saves the file and has OpenSCAD render it with the chosen values, showing the new console
   output. Closing the editor reads the parameters again, so a parameter added in the editor appears in the dialog.
   When OpenSCAD can't read the parameters, or a re-render fails, Forca offers the editor with OpenSCAD's output.
+- **Right-click the object > Edit in OpenSCAD** opens the linked file in OpenSCAD's own window. Forca watches the file:
+  when it is saved there, Forca asks whether to render the model again, and each object linked to the file is
+  re-rendered with its own values (one undo step each).
+- **File > Import > New OpenSCAD model...** saves a starter `.scad` file where the user chooses (a rounded box whose
+  sizes, hollowness and wall are Customizer parameters, with comments on how parameters work), puts it on the plate
+  and opens it in OpenSCAD, watched as above.
+- **Colours**: a model's `color()`s arrive as filaments. Each OpenSCAD colour becomes the project filament closest to
+  it, the faces in that colour are painted with it (multi-material painting), and the most common colour becomes the
+  object's filament; faces without a `color()` keep the object's filament.
+- **Forca AI** can use OpenSCAD: `forca_openscad_params` reads a file's parameters, and `forca_openscad_render`
+  renders a `.scad` file, or code the AI writes, onto the plate (or in place of an OpenSCAD object) and returns
+  OpenSCAD's messages with the lines they name, so the AI can fix its code and try again.
 - **Preferences > OpenSCAD** shows which OpenSCAD Forca uses and its version, with Browse, Find automatically and
   Download (OpenSCAD's development snapshots page).
 - Without a usable OpenSCAD, importing a `.scad` file says what to install or choose.
@@ -70,6 +82,23 @@ is not involved.
   warnings and errors name ("in file box.scad, line 9"), leaving out lines of included files. The editor keeps the
   file's own line endings. It is meant for a few lines, not as a replacement for OpenSCAD or a code editor.
 
+- **The file watch** (`OpenScadWatch` in `ForcaOpenScadImport.cpp`): a one-second `wxTimer` on the UI thread, living
+  as long as the Plater, checks the modification time of every file opened with Edit in OpenSCAD or New OpenSCAD
+  model. A change counts once the time has stayed the same for one more check, so a save isn't read half-written. A
+  file no linked object uses any more is dropped. While Forca's own parameters dialog or editor is open the watch
+  doesn't ask (they save the file themselves), and what they saved counts as seen afterwards.
+- **Colours** (`forca_openscad_read_colors`, `apply_colors`): OpenSCAD's 3MF (`export-3mf/color-mode=model`) has one
+  `basematerials` entry per colour (the first, "Default", for no `color()`) and a material per triangle (`p1`).
+  OrcaSlicer's 3MF reader ignores per-triangle materials, so Forca reads them from the 3MF itself (libslic3r, tested
+  against a real OpenSCAD 3MF) and paints the loaded part's `mmu_segmentation_facets` by triangle index. The reader
+  keeps OpenSCAD's triangle order; when the part's triangle count differs from the file's, the colours are left out.
+  The closest filament is by CIE76 colour distance (`calc_color_distance`), among the project's filament colours.
+- **Forca AI** (`ForcaAIOpenScad.cpp`): both tools run OpenSCAD off the GUI thread and change the plate on it. Code
+  the AI writes goes through rule R1: a new file in `Documents\Forca AI\OpenSCAD` named "<name> (Claude <date>).scad",
+  or an existing file only when the AI wrote it and nobody changed it since (any file at the Advanced level, backed up
+  first). The user's own `.scad` files are otherwise only read. A render waits at most five minutes. `forca_scene`
+  shows each OpenSCAD object's file and changed parameters.
+
 ## Limits
 
 - A file whose top level renders as several objects (lazy-union) is imported unlinked, and a re-render that gives
@@ -78,3 +107,7 @@ is not involved.
   Forca trusts it as much as opening it in OpenSCAD does.
 - Libraries a file `include`s (BOSL2 and the like) must be where OpenSCAD looks for them (its library folder or
   `OPENSCADPATH`).
+- Colours only map to filaments the project already has: two colours closest to the same filament print in that one.
+  Re-rendering replaces painting done by hand with the file's colours.
+- The watch only covers files opened from Forca in this session; editing a linked file another way is picked up the
+  next time the parameters are opened.

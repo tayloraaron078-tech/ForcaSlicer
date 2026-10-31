@@ -7,7 +7,7 @@
 #include "slic3r/plugin/PluginAuditManager.hpp"
 #include "slic3r/plugin/PythonInterpreter.hpp" // PythonGILState
 #include "libslic3r/libslic3r.h"               // Forca: SLIC3R_APP_NAME
-#include "slic3r/plugin/PluginFsUtils.hpp"   // json_to_py / py_to_json
+#include "slic3r/plugin/PluginJsonPy.hpp"
 
 #include <functional>
 #include <exception>
@@ -243,6 +243,10 @@ private:
 // wxTheApp is rechecked because it goes null while a worker may still be waiting on the UI thread.
 bool app_closing() { return wxTheApp == nullptr || GUI::wxGetApp().is_closing(); }
 
+// State of a call queued by run_on_ui_blocking(). It is at namespace scope because MSVC does not
+// find a function-local enumerator from the default member initializer of a local class in a template.
+enum : int { UiCallPending, UiCallClaimed, UiCallAbandoned };
+
 // --------------------------------------------------------------------------
 // Run a (pure C++/wx) callable on the main/UI thread, blocking the caller until
 // it completes, with the GIL released across the wait. If already on the main
@@ -268,24 +272,20 @@ auto run_on_ui_blocking(Fn&& fn) -> std::invoke_result_t<Fn&>
     if (app_closing())
         throw std::runtime_error("OrcaSlicer is closing");
 
-    enum : int { Pending, Claimed, Abandoned };
     // Shared with the queued task, which can outlive an abandoned wait. The task only touches fn
     // after claiming the call, and a claimed call is always waited for, so fn is still alive then.
     struct Call
     {
         std::promise<R>  prom;
-        std::atomic<int> state;
+        std::atomic<int> state{UiCallPending};
     };
     auto           call = std::make_shared<Call>();
-    // Forca: set here, not as the member's initializer: MSVC doesn't find the function's local enum from a local
-    // class's default member initializer in a template (C2065).
-    call->state.store(Pending);
     std::future<R> fut  = call->prom.get_future();
 
     py::gil_scoped_release nogil;
     GUI::wxGetApp().CallAfter([call, &fn]() {
-        int expected = Pending;
-        if (!call->state.compare_exchange_strong(expected, Claimed))
+        int expected = UiCallPending;
+        if (!call->state.compare_exchange_strong(expected, UiCallClaimed))
             return;
         try {
             if constexpr (std::is_void_v<R>) {
@@ -299,8 +299,8 @@ auto run_on_ui_blocking(Fn&& fn) -> std::invoke_result_t<Fn&>
         }
     });
     while (fut.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
-        int expected = Pending;
-        if (app_closing() && call->state.compare_exchange_strong(expected, Abandoned))
+        int expected = UiCallPending;
+        if (app_closing() && call->state.compare_exchange_strong(expected, UiCallAbandoned))
             throw std::runtime_error("OrcaSlicer is closing");
     }
     return fut.get();

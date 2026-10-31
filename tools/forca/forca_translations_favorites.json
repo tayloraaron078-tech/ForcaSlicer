@@ -1,0 +1,59 @@
+{
+  "_comment": "Strings of the favourite settings (Tab.cpp, the process tab's Favorites page and a setting's right-click menu; 'Remove from favorites' comes from Speed Dial). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Favorites",
+      "translations": {
+        "ca": "Preferits",
+        "cs": "Oblíbené",
+        "de": "Favoriten",
+        "es": "Favoritos",
+        "eu": "Gogokoak",
+        "fr": "Favoris",
+        "hu": "Kedvencek",
+        "it": "Preferiti",
+        "ja": "お気に入り",
+        "ko": "즐겨찾기",
+        "lt": "Mėgstamiausi",
+        "nl": "Favorieten",
+        "pl": "Ulubione",
+        "pt_BR": "Favoritos",
+        "ru": "Избранное",
+        "sv": "Favoriter",
+        "th": "รายการโปรด",
+        "tr": "Favoriler",
+        "uk": "Обране",
+        "vi": "Yêu thích",
+        "zh_CN": "收藏",
+        "zh_TW": "我的最愛"
+      }
+    },
+    {
+      "msgid": "Add to favorites",
+      "translations": {
+        "ca": "Afegeix als preferits",
+        "cs": "Přidat do oblíbených",
+        "de": "Zu Favoriten hinzufügen",
+        "es": "Añadir a favoritos",
+        "eu": "Gehitu gogokoetara",
+        "fr": "Ajouter aux favoris",
+        "hu": "Hozzáadás a kedvencekhez",
+        "it": "Aggiungi ai preferiti",
+        "ja": "お気に入りに追加",
+        "ko": "즐겨찾기에 추가",
+        "lt": "Pridėti prie mėgstamiausių",
+        "nl": "Toevoegen aan favorieten",
+        "pl": "Dodaj do ulubionych",
+        "pt_BR": "Adicionar aos favoritos",
+        "ru": "Добавить в избранное",
+        "sv": "Lägg till i favoriter",
+        "th": "เพิ่มในรายการโปรด",
+        "tr": "Favorilere ekle",
+        "uk": "Додати до обраного",
+        "vi": "Thêm vào yêu thích",
+        "zh_CN": "添加到收藏",
+        "zh_TW": "加入我的最愛"
+      }
+    }
+  ]
+}

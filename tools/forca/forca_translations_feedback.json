@@ -1,0 +1,59 @@
+{
+ "_comment": "The one-time feedback notification (ForcaFeedback.cpp). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+ "entries": [
+  {
+   "msgid": "Forca is free and made by one person. How is it working for you? A few words help: what works, what doesn't and what you miss.",
+   "translations": {
+    "ca": "Forca és gratuït i el fa una sola persona. Com us funciona? Unes poques paraules ajuden: què funciona, què no i què hi trobeu a faltar.",
+    "cs": "Forca je zdarma a vytváří ji jeden člověk. Jak vám funguje? Pomůže i pár slov: co funguje, co ne a co vám chybí.",
+    "de": "Forca ist kostenlos und wird von einer einzigen Person entwickelt. Wie funktioniert es bei Ihnen? Ein paar Worte helfen: was funktioniert, was nicht und was Ihnen fehlt.",
+    "es": "Forca es gratuito y lo hace una sola persona. ¿Qué tal le funciona? Unas pocas palabras ayudan: qué funciona, qué no y qué echa en falta.",
+    "eu": "Forca doakoa da eta pertsona bakar batek egiten du. Nola dabil zuretzat? Hitz gutxi batzuek laguntzen dute: zer dabilen, zer ez eta zer falta zaizun.",
+    "fr": "Forca est gratuit et développé par une seule personne. Comment ça se passe pour vous ? Quelques mots aident : ce qui fonctionne, ce qui ne fonctionne pas et ce qui vous manque.",
+    "hu": "A Forca ingyenes, és egyetlen ember készíti. Hogyan működik Önnél? Néhány szó is segít: mi működik, mi nem, és mi hiányzik.",
+    "it": "Forca è gratuito ed è fatto da una sola persona. Come ti trovi? Bastano poche parole: cosa funziona, cosa no e cosa ti manca.",
+    "ja": "Forca は無料で、一人で開発しています。使い心地はいかがですか？うまく動くこと、動かないこと、足りないことを一言いただけると助かります。",
+    "ko": "Forca는 무료이며 한 사람이 만들고 있습니다. 사용해 보시니 어떠신가요? 잘 되는 점, 안 되는 점, 아쉬운 점을 몇 마디만 남겨 주셔도 도움이 됩니다.",
+    "lt": "Forca yra nemokama, ją kuria vienas žmogus. Kaip ji jums veikia? Padeda ir keli žodžiai: kas veikia, kas ne ir ko trūksta.",
+    "nl": "Forca is gratis en wordt door één persoon gemaakt. Hoe bevalt het u? Een paar woorden helpen al: wat werkt, wat niet en wat u mist.",
+    "pl": "Forca jest darmowa i tworzy ją jedna osoba. Jak się u Ciebie sprawdza? Pomoże kilka słów: co działa, co nie działa i czego brakuje.",
+    "pt_BR": "O Forca é gratuito e feito por uma só pessoa. Como ele está funcionando para você? Poucas palavras já ajudam: o que funciona, o que não funciona e o que falta.",
+    "ru": "Forca бесплатна, и её делает один человек. Как она у вас работает? Помогут даже несколько слов: что работает, что нет и чего не хватает.",
+    "sv": "Forca är gratis och görs av en enda person. Hur fungerar det för dig? Några ord hjälper: vad som fungerar, vad som inte gör det och vad du saknar.",
+    "th": "Forca ใช้ได้ฟรีและพัฒนาโดยคนคนเดียว ใช้งานเป็นอย่างไรบ้าง? แค่ไม่กี่คำก็ช่วยได้: อะไรใช้ได้ อะไรใช้ไม่ได้ และอะไรที่ยังขาดอยู่",
+    "tr": "Forca ücretsizdir ve tek bir kişi tarafından geliştiriliyor. Sizin için nasıl çalışıyor? Birkaç kelime bile yardımcı olur: neyin çalıştığı, neyin çalışmadığı ve neyin eksik olduğu.",
+    "uk": "Forca безкоштовна, і її робить одна людина. Як вона у вас працює? Допоможуть навіть кілька слів: що працює, що ні і чого бракує.",
+    "vi": "Forca miễn phí và do một người làm. Bạn dùng thấy thế nào? Vài lời thôi cũng giúp ích: điều gì hoạt động tốt, điều gì chưa và bạn còn thiếu gì.",
+    "zh_CN": "Forca 是免费的，由一个人开发。用起来怎么样？几句话就很有帮助：哪些好用、哪些不好用、还缺什么。",
+    "zh_TW": "Forca 是免費的，由一個人開發。用起來如何？幾句話就很有幫助：哪些好用、哪些不好用、還缺少什麼。"
+   }
+  },
+  {
+   "msgid": "Share feedback",
+   "translations": {
+    "ca": "Envieu comentaris",
+    "cs": "Sdělit zpětnou vazbu",
+    "de": "Feedback geben",
+    "es": "Enviar comentarios",
+    "eu": "Partekatu iritzia",
+    "fr": "Donner votre avis",
+    "hu": "Visszajelzés küldése",
+    "it": "Invia un feedback",
+    "ja": "フィードバックを送る",
+    "ko": "피드백 보내기",
+    "lt": "Pasidalyti atsiliepimu",
+    "nl": "Feedback geven",
+    "pl": "Podziel się opinią",
+    "pt_BR": "Enviar feedback",
+    "ru": "Оставить отзыв",
+    "sv": "Ge feedback",
+    "th": "แสดงความคิดเห็น",
+    "tr": "Geri bildirim gönder",
+    "uk": "Залишити відгук",
+    "vi": "Gửi góp ý",
+    "zh_CN": "分享反馈",
+    "zh_TW": "分享意見回饋"
+   }
+  }
+ ]
+}

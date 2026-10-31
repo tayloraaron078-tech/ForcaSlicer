@@ -33,6 +33,7 @@ $must = @(
     @('version.inc',                                'set(SLIC3R_APP_KEY "OrcaSlicer")'),      # must STAY Orca (config file, translations, .3mf)
     @('src/slic3r/GUI/GUI_App.cpp',                 'FORCA_DATA_DIR_NAME = "ForcaSlicer"'),
     @('src/slic3r/GUI/GUI_App.cpp',                 'SetAppName(FORCA_DATA_DIR_NAME)'),
+    @('src/libslic3r/utils.cpp',                    'xdg_config_dir("ForcaSlicer")'),
     @('src/slic3r/GUI/GUI_App.cpp',                 'forca_copy_orca_data_dir(s_forca_orca_data_dir'),
     @('src/slic3r/GUI/GUI_App.cpp',                 '#define FORCA_PROG_ID L"Forca.Slicer.1"'),
     @('src/slic3r/GUI/GUI_App.cpp',                 'libslic3r_translate_callback(const char *s) { return _u8L(s); }'),

@@ -400,3 +400,88 @@ TEST_CASE("A user filament whose parent is missing is listed for repair and load
     CHECK(next.filaments.find_preset("Shop TPU", false) != nullptr);
     CHECK(next.filaments.presets_missing_parent().empty());
 }
+
+// Bambu Studio's filament scarf seam settings are Forca filament settings too (PLAN_scarf_seam D3): its default "none"
+// imports as no override, so it can't switch off a scarf the user's process turns on.
+TEST_CASE("A Bambu Studio filament without a scarf seam imports no scarf override", "[ForcaPresetImport]")
+{
+    ImportTarget target;
+    add_system_filament(target.bundle, "Generic PLA @Test", "Generic", "PLA", {});
+    const PresetImportItem item = forca_analyse_preset_file(
+        target.bundle, write_filament(target.tmp.path() / "download", "Brand PLA", "Generic PLA @Test",
+                                      R"("filament_scarf_seam_type":["none"],"filament_scarf_length":["10"])"));
+    REQUIRE(item.readable);
+    CHECK(item.source == PresetImportItem::Source::BambuStudio);
+    CHECK(std::none_of(item.overrides.begin(), item.overrides.end(),
+                       [](const PresetImportItem::Override &o) { return is_filament_scarf_override_key(o.key); }));
+    CHECK(item.unsupported.empty());
+
+    REQUIRE(forca_import_preset(target.bundle, item, PresetImportChoice{}));
+    const Preset *imported = target.bundle.filaments.find_preset("Brand PLA", false);
+    REQUIRE(imported != nullptr);
+    CHECK(imported->config.option<ConfigOptionEnumsGenericNullable>("filament_scarf_seam_type")->is_nil(0));
+    CHECK(imported->config.option<ConfigOptionFloatsNullable>("filament_scarf_length")->is_nil(0));
+}
+
+TEST_CASE("A Bambu Studio filament's scarf seam imports, with Bambu Studio's defaults for the values it leaves out",
+          "[ForcaPresetImport]")
+{
+    ImportTarget target;
+    add_system_filament(target.bundle, "Generic PLA @Test", "Generic", "PLA", {});
+    const PresetImportItem item = forca_analyse_preset_file(
+        target.bundle, write_filament(target.tmp.path() / "download", "Silk PLA", "Generic PLA @Test",
+                                      R"("filament_scarf_seam_type":["external"],"filament_scarf_length":["15"])"));
+    REQUIRE(item.readable);
+    CHECK(std::any_of(item.overrides.begin(), item.overrides.end(),
+                      [](const PresetImportItem::Override &o) { return o.key == "filament_scarf_height"; }));
+
+    REQUIRE(forca_import_preset(target.bundle, item, PresetImportChoice{}));
+    const Preset *imported = target.bundle.filaments.find_preset("Silk PLA", false);
+    REQUIRE(imported != nullptr);
+    const DynamicPrintConfig &config = imported->config;
+    CHECK(config.option<ConfigOptionEnumsGenericNullable>("filament_scarf_seam_type")->get_at(0) == int(SeamScarfType::External));
+    CHECK(config.option<ConfigOptionFloatsNullable>("filament_scarf_length")->get_at(0) == 15.);
+    const FloatOrPercent height = config.option<ConfigOptionFloatsOrPercentsNullable>("filament_scarf_height")->get_at(0);
+    CHECK(height.value == 10.);
+    CHECK(height.percent);
+    CHECK(config.option<ConfigOptionFloatsOrPercentsNullable>("filament_scarf_gap")->get_at(0).value == 0.);
+}
+
+TEST_CASE("A Bambu Studio process's scarf gap becomes the seam gap when the file doesn't set one", "[ForcaPresetImport]")
+{
+    ScopedTemporaryDir dir;
+    PresetBundle       bundle;
+    const fs::path     file = dir.path() / "Fine.json";
+    std::ofstream(file.string()) << R"({"type":"process","name":"Fine","from":"User","version":"2.7.0.7",)"
+                                 << R"("seam_slope_gap":"15%","override_filament_scarf_seam_setting":"1"})";
+
+    const PresetImportItem item = forca_analyse_preset_file(bundle, file.string());
+    REQUIRE(item.readable);
+    CHECK(has_pair(item.renamed, "seam_slope_gap", "seam_gap"));
+    CHECK(item.unsupported.empty());
+}
+
+// A file from Bambu Studio's system folder ("from": "system", no "version") is one of its built-in presets: not
+// imported, and the review says whether Forca has the same preset built in.
+TEST_CASE("A Bambu Studio built-in preset is recognised, with whether Forca has it", "[ForcaPresetImport]")
+{
+    ScopedTemporaryDir dir;
+    PresetBundle       bundle;
+    add_system_filament(bundle, "Brand PLA @Test", "Brand", "PLA", {});
+    const auto system_file = [&dir](const std::string &name) {
+        const fs::path file = dir.path() / (name + ".json");
+        std::ofstream(file.string()) << R"({"type":"filament","name":")" << name
+                                     << R"(","inherits":"Brand PLA @base","from":"system","instantiation":"true"})";
+        return file.string();
+    };
+
+    const PresetImportItem known = forca_analyse_preset_file(bundle, system_file("Brand PLA @Test"));
+    CHECK_FALSE(known.readable);
+    CHECK(known.bambu_system);
+    CHECK(known.forca_has_it);
+    CHECK(known.name == "Brand PLA @Test");
+
+    const PresetImportItem unknown = forca_analyse_preset_file(bundle, system_file("Brand PLA Aero @Test"));
+    CHECK(unknown.bambu_system);
+    CHECK_FALSE(unknown.forca_has_it);
+}

@@ -222,15 +222,19 @@
 		"40"
 	],
 	"filament_scarf_gap": [
+		"15%",
 		"15%"
 	],
 	"filament_scarf_height": [
+		"10%",
 		"10%"
 	],
 	"filament_scarf_length": [
+		"10",
 		"10"
 	],
 	"filament_scarf_seam_type": [
+		"none",
 		"none"
 	],
 	"filament_settings_id": [

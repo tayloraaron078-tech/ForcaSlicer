@@ -1,0 +1,113 @@
+{
+  "_comment": "Strings of the import review for Bambu Studio's built-in (system) preset files (ForcaPresetImportDialog.cpp). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Already built into Forca",
+      "translations": {
+        "ca": "Ja inclòs a Forca",
+        "cs": "Již je součástí Forca",
+        "de": "Bereits in Forca enthalten",
+        "es": "Ya incluido en Forca",
+        "eu": "Forcan barne dago jada",
+        "fr": "Déjà intégré à Forca",
+        "hu": "Már benne van a Forcában",
+        "it": "Già incluso in Forca",
+        "ja": "Forca に組み込み済み",
+        "ko": "이미 Forca에 내장됨",
+        "lt": "Jau įtrauktas į Forca",
+        "nl": "Al ingebouwd in Forca",
+        "pl": "Już wbudowany w Forca",
+        "pt_BR": "Já incluído no Forca",
+        "ru": "Уже встроен в Forca",
+        "sv": "Redan inbyggd i Forca",
+        "th": "มีอยู่ใน Forca แล้ว",
+        "tr": "Forca'da zaten yerleşik",
+        "uk": "Уже вбудований у Forca",
+        "vi": "Đã có sẵn trong Forca",
+        "zh_CN": "Forca 已内置",
+        "zh_TW": "Forca 已內建"
+      }
+    },
+    {
+      "msgid": "A Bambu Studio built-in preset Forca doesn't have yet",
+      "translations": {
+        "ca": "Un perfil integrat de Bambu Studio que Forca encara no té",
+        "cs": "Vestavěný profil Bambu Studio, který Forca zatím nemá",
+        "de": "Ein integriertes Bambu-Studio-Profil, das Forca noch nicht hat",
+        "es": "Un perfil integrado de Bambu Studio que Forca aún no tiene",
+        "eu": "Forcak oraindik ez duen Bambu Studioren profil integratua",
+        "fr": "Un profil intégré de Bambu Studio que Forca n'a pas encore",
+        "hu": "Bambu Studio beépített profil, amely a Forcában még nincs meg",
+        "it": "Un profilo integrato di Bambu Studio che Forca non ha ancora",
+        "ja": "Forca にまだない Bambu Studio の組み込みプリセット",
+        "ko": "Forca에 아직 없는 Bambu Studio 내장 프리셋",
+        "lt": "Įtaisytasis Bambu Studio profilis, kurio Forca dar neturi",
+        "nl": "Een ingebouwd Bambu Studio-profiel dat Forca nog niet heeft",
+        "pl": "Wbudowany profil Bambu Studio, którego Forca jeszcze nie ma",
+        "pt_BR": "Um perfil integrado do Bambu Studio que o Forca ainda não tem",
+        "ru": "Встроенный профиль Bambu Studio, которого в Forca пока нет",
+        "sv": "En inbyggd Bambu Studio-profil som Forca inte har än",
+        "th": "พรีเซ็ตในตัวของ Bambu Studio ที่ Forca ยังไม่มี",
+        "tr": "Forca'da henüz olmayan bir Bambu Studio yerleşik ön ayarı",
+        "uk": "Вбудований профіль Bambu Studio, якого у Forca ще немає",
+        "vi": "Một cấu hình có sẵn của Bambu Studio mà Forca chưa có",
+        "zh_CN": "Forca 尚未内置的 Bambu Studio 内置预设",
+        "zh_TW": "Forca 尚未內建的 Bambu Studio 內建預設"
+      }
+    },
+    {
+      "msgid": "One of Bambu Studio's built-in presets. Forca has the same preset built in, \"%1%\": select it in the list, there is nothing to import.",
+      "translations": {
+        "ca": "Un dels perfils integrats de Bambu Studio. Forca té el mateix perfil integrat, \"%1%\": selecciona'l a la llista, no cal importar res.",
+        "cs": "Jeden z vestavěných profilů Bambu Studio. Forca má stejný profil vestavěný, \"%1%\": vyberte ho v seznamu, není co importovat.",
+        "de": "Eines der integrierten Profile von Bambu Studio. Forca hat dasselbe Profil integriert, \"%1%\": wähle es in der Liste aus, es gibt nichts zu importieren.",
+        "es": "Uno de los perfiles integrados de Bambu Studio. Forca tiene el mismo perfil integrado, \"%1%\": selecciónalo en la lista, no hay nada que importar.",
+        "eu": "Bambu Studioren profil integratuetako bat. Forcak profil bera du integratuta, \"%1%\": hautatu zerrendan, ez dago ezer inportatzeko.",
+        "fr": "Un des profils intégrés de Bambu Studio. Forca a le même profil intégré, « %1% » : sélectionnez-le dans la liste, il n'y a rien à importer.",
+        "hu": "A Bambu Studio egyik beépített profilja. A Forcában ugyanez a profil beépítve megvan, \"%1%\": válassza ki a listában, nincs mit importálni.",
+        "it": "Uno dei profili integrati di Bambu Studio. Forca ha lo stesso profilo integrato, \"%1%\": selezionalo nell'elenco, non c'è nulla da importare.",
+        "ja": "Bambu Studio の組み込みプリセットの 1 つです。Forca にも同じプリセット「%1%」が組み込まれています。リストから選択してください。インポートするものはありません。",
+        "ko": "Bambu Studio 내장 프리셋 중 하나입니다. Forca에도 같은 프리셋 \"%1%\"이(가) 내장되어 있습니다. 목록에서 선택하세요. 가져올 것이 없습니다.",
+        "lt": "Vienas iš įtaisytųjų Bambu Studio profilių. Forca turi tą patį įtaisytąjį profilį, \"%1%\": pasirinkite jį sąraše, nieko importuoti nereikia.",
+        "nl": "Een van de ingebouwde profielen van Bambu Studio. Forca heeft hetzelfde profiel ingebouwd, \"%1%\": kies het in de lijst, er valt niets te importeren.",
+        "pl": "Jeden z wbudowanych profili Bambu Studio. Forca ma ten sam wbudowany profil, \"%1%\": wybierz go z listy, nie ma nic do importu.",
+        "pt_BR": "Um dos perfis integrados do Bambu Studio. O Forca tem o mesmo perfil integrado, \"%1%\": selecione-o na lista, não há nada para importar.",
+        "ru": "Один из встроенных профилей Bambu Studio. В Forca встроен такой же профиль, «%1%»: выберите его в списке, импортировать нечего.",
+        "sv": "En av Bambu Studios inbyggda profiler. Forca har samma profil inbyggd, \"%1%\": välj den i listan, det finns inget att importera.",
+        "th": "หนึ่งในพรีเซ็ตในตัวของ Bambu Studio Forca มีพรีเซ็ตเดียวกันในตัวแล้ว \"%1%\": เลือกจากรายการ ไม่มีอะไรต้องนำเข้า",
+        "tr": "Bambu Studio'nun yerleşik ön ayarlarından biri. Forca'da aynı ön ayar yerleşik olarak var, \"%1%\": listeden seçin, içe aktarılacak bir şey yok.",
+        "uk": "Один із вбудованих профілів Bambu Studio. У Forca вбудовано такий самий профіль, «%1%»: виберіть його у списку, імпортувати нічого.",
+        "vi": "Một trong các cấu hình có sẵn của Bambu Studio. Forca có sẵn cấu hình giống vậy, \"%1%\": hãy chọn nó trong danh sách, không có gì để nhập.",
+        "zh_CN": "这是 Bambu Studio 的内置预设之一。Forca 内置了相同的预设“%1%”：在列表中选择它即可，无需导入。",
+        "zh_TW": "這是 Bambu Studio 的內建預設之一。Forca 內建了相同的預設「%1%」：在清單中選擇它即可，無需匯入。"
+      }
+    },
+    {
+      "msgid": "One of Bambu Studio's built-in presets, \"%1%\". Forca doesn't have it yet: built-in presets come with Forca's printer profiles and can't be imported from Bambu Studio.",
+      "translations": {
+        "ca": "Un dels perfils integrats de Bambu Studio, \"%1%\". Forca encara no el té: els perfils integrats arriben amb els perfils d'impressora de Forca i no es poden importar des de Bambu Studio.",
+        "cs": "Jeden z vestavěných profilů Bambu Studio, \"%1%\". Forca ho zatím nemá: vestavěné profily přicházejí s profily tiskáren Forca a z Bambu Studio je nelze importovat.",
+        "de": "Eines der integrierten Profile von Bambu Studio, \"%1%\". Forca hat es noch nicht: integrierte Profile kommen mit den Druckerprofilen von Forca und können nicht aus Bambu Studio importiert werden.",
+        "es": "Uno de los perfiles integrados de Bambu Studio, \"%1%\". Forca aún no lo tiene: los perfiles integrados llegan con los perfiles de impresora de Forca y no se pueden importar desde Bambu Studio.",
+        "eu": "Bambu Studioren profil integratuetako bat, \"%1%\". Forcak oraindik ez du: profil integratuak Forcaren inprimagailu-profilekin datoz eta ezin dira Bambu Studiotik inportatu.",
+        "fr": "Un des profils intégrés de Bambu Studio, « %1% ». Forca ne l'a pas encore : les profils intégrés viennent avec les profils d'imprimante de Forca et ne peuvent pas être importés depuis Bambu Studio.",
+        "hu": "A Bambu Studio egyik beépített profilja, \"%1%\". A Forcában még nincs meg: a beépített profilok a Forca nyomtatóprofiljaival érkeznek, és a Bambu Studióból nem importálhatók.",
+        "it": "Uno dei profili integrati di Bambu Studio, \"%1%\". Forca non lo ha ancora: i profili integrati arrivano con i profili stampante di Forca e non si possono importare da Bambu Studio.",
+        "ja": "Bambu Studio の組み込みプリセット「%1%」です。Forca にはまだありません。組み込みプリセットは Forca のプリンタープロファイルと一緒に提供され、Bambu Studio からはインポートできません。",
+        "ko": "Bambu Studio 내장 프리셋 \"%1%\"입니다. Forca에는 아직 없습니다. 내장 프리셋은 Forca의 프린터 프로필과 함께 제공되며 Bambu Studio에서 가져올 수 없습니다.",
+        "lt": "Vienas iš įtaisytųjų Bambu Studio profilių, \"%1%\". Forca jo dar neturi: įtaisytieji profiliai pateikiami su Forca spausdintuvų profiliais ir jų negalima importuoti iš Bambu Studio.",
+        "nl": "Een van de ingebouwde profielen van Bambu Studio, \"%1%\". Forca heeft het nog niet: ingebouwde profielen komen met de printerprofielen van Forca en kunnen niet uit Bambu Studio worden geïmporteerd.",
+        "pl": "Jeden z wbudowanych profili Bambu Studio, \"%1%\". Forca go jeszcze nie ma: wbudowane profile przychodzą z profilami drukarek Forca i nie można ich zaimportować z Bambu Studio.",
+        "pt_BR": "Um dos perfis integrados do Bambu Studio, \"%1%\". O Forca ainda não o tem: os perfis integrados vêm com os perfis de impressora do Forca e não podem ser importados do Bambu Studio.",
+        "ru": "Один из встроенных профилей Bambu Studio, «%1%». В Forca его пока нет: встроенные профили поставляются с профилями принтеров Forca и не импортируются из Bambu Studio.",
+        "sv": "En av Bambu Studios inbyggda profiler, \"%1%\". Forca har den inte än: inbyggda profiler följer med Forcas skrivarprofiler och kan inte importeras från Bambu Studio.",
+        "th": "หนึ่งในพรีเซ็ตในตัวของ Bambu Studio \"%1%\" Forca ยังไม่มี: พรีเซ็ตในตัวมากับโปรไฟล์เครื่องพิมพ์ของ Forca และนำเข้าจาก Bambu Studio ไม่ได้",
+        "tr": "Bambu Studio'nun yerleşik ön ayarlarından biri, \"%1%\". Forca'da henüz yok: yerleşik ön ayarlar Forca'nın yazıcı profilleriyle gelir ve Bambu Studio'dan içe aktarılamaz.",
+        "uk": "Один із вбудованих профілів Bambu Studio, «%1%». У Forca його ще немає: вбудовані профілі постачаються з профілями принтерів Forca і не імпортуються з Bambu Studio.",
+        "vi": "Một trong các cấu hình có sẵn của Bambu Studio, \"%1%\". Forca chưa có: cấu hình có sẵn đi kèm cấu hình máy in của Forca và không thể nhập từ Bambu Studio.",
+        "zh_CN": "这是 Bambu Studio 的内置预设之一“%1%”。Forca 尚未内置它：内置预设随 Forca 的打印机配置提供，无法从 Bambu Studio 导入。",
+        "zh_TW": "這是 Bambu Studio 的內建預設之一「%1%」。Forca 尚未內建它：內建預設隨 Forca 的印表機設定檔提供，無法從 Bambu Studio 匯入。"
+      }
+    }
+  ]
+}

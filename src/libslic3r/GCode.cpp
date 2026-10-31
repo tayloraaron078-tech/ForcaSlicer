@@ -95,6 +95,7 @@
 #include <regex>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find.hpp>
+#include <boost/algorithm/string/join.hpp>
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp>
@@ -1260,6 +1261,17 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
 
         end_filament_gcode_str = toolchange_retract_str + object_end_label_temp + end_filament_gcode_str;
 
+        // Lift to the layer Z so the toolchange can't hit taller printed parts. Only a custom macro or
+        // a switch to another physical extruder (whose firmware Tn may dock) can travel. The
+        // compacted_below_object descent below brings Z back down once over the tower.
+        const bool tool_may_travel = !change_filament_gcode.empty()
+            || (gcodegen.writer().filament() != nullptr && gcodegen.writer().filament()->extruder_id() != unsigned(new_extruder_id));
+        std::string restore_layer_z_str;
+        if (compacted_below_object && tool_may_travel && gcodegen.writer().get_position().z() < current_z - EPSILON) {
+            restore_layer_z_str += gcodegen.writer().travel_to_z(current_z, "Restore layer Z before toolchange");
+            check_add_eol(restore_layer_z_str);
+        }
+
         std::string wipe_next_start_point_str;
         bool        need_travel_after_change_filament_gcode = false; // travel need be after the filament changed to get the correct "m_curr_extruder_id"
         if (! change_filament_gcode.empty()) {
@@ -1614,6 +1626,7 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
         // Insert the end filament, toolchange, and start filament gcode into the generated gcode.
         DynamicConfig config;
         config.set_key_value("filament_end_gcode", new ConfigOptionString(end_filament_gcode_str));
+        config.set_key_value("restore_layer_z_before_toolchange", new ConfigOptionString(restore_layer_z_str));
         config.set_key_value("change_filament_gcode", new ConfigOptionString(toolchange_gcode_str));
         config.set_key_value("filament_start_gcode", new ConfigOptionString(start_filament_gcode_str));
         std::string tcr_gcode, tcr_escaped_gcode = gcodegen.placeholder_parser_process("tcr_rotated_gcode", tcr_rotated_gcode, new_filament_id, &config);
@@ -1747,6 +1760,7 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
 
         std::string toolchange_gcode_str;
         std::string deretraction_str;
+        std::string restore_layer_z_str;
         int toolchange_temp_override = -1;
         int interface_temp = -1;
         if (tcr.priming || (new_extruder_id >= 0 && needs_toolchange)) {
@@ -1757,6 +1771,15 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
                 if (interface_temp == -1)
                     interface_temp = gcodegen.config().nozzle_temperature_range_high.get_at(gcodegen.get_filament_config_index(new_extruder_id));
                 toolchange_temp_override = interface_temp;
+            }
+            // Lift to the layer Z so the toolchange can't hit taller printed parts. Only a custom macro
+            // or a switch to another physical extruder (whose firmware Tn may dock) can travel.
+            const bool tool_may_travel = !gcodegen.config().change_filament_gcode.value.empty()
+                || (gcodegen.writer().filament() != nullptr
+                    && gcodegen.writer().filament()->extruder_id() != get_extruder_index(*m_print_config, new_extruder_id));
+            if (will_go_down && tool_may_travel && gcodegen.config().enable_prime_tower) {
+                restore_layer_z_str += gcodegen.writer().travel_to_z(current_z, "Restore layer Z before toolchange");
+                check_add_eol(restore_layer_z_str);
             }
             toolchange_gcode_str = gcodegen.set_extruder(new_extruder_id, tcr.print_z, false, toolchange_temp_override,
                                                          WipeTower2::wait_for_temp_enabled(gcodegen.m_config)); // TODO: toolchange_z vs print_z
@@ -1915,6 +1938,7 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
         DynamicConfig config;
         config.set_key_value("change_filament_gcode", new ConfigOptionString(toolchange_gcode_str));
         config.set_key_value("deretraction_from_wipe_tower_generator", new ConfigOptionString(deretraction_str));
+        config.set_key_value("restore_layer_z_before_toolchange", new ConfigOptionString(restore_layer_z_str));
         config.set_key_value("layer_num", new ConfigOptionInt(gcodegen.m_layer_index));
         config.set_key_value("layer_z", new ConfigOptionFloat(tcr.print_z));
         config.set_key_value("toolchange_z", new ConfigOptionFloat(z));
@@ -3714,6 +3738,20 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     this->placeholder_parser().set("first_filaments", new ConfigOptionInts(first_filaments));
     this->placeholder_parser().set("initial_tool", initial_extruder_id);
     this->placeholder_parser().set("initial_extruder", initial_extruder_id);
+    // Orca: filament types really extruded on this plate, deduplicated, in filament id order.
+    // Joined with '_': safe in URLs and on print hosts, and unlike '-' it does not clash with
+    // types that already contain a hyphen (PLA-CF, TPU-95A).
+    std::string printing_filament_types;
+    {
+        std::vector<std::string> types;
+        for (const Extruder &extruder : m_writer.extruders()) {
+            std::string type = m_config.filament_type.get_at(extruder.id());
+            if (std::find(types.begin(), types.end(), type) == types.end())
+                types.emplace_back(std::move(type));
+        }
+        printing_filament_types = boost::algorithm::join(types, "_");
+    }
+    this->placeholder_parser().set("printing_filament_types", printing_filament_types);
     //BBS
     match_physical_extruder_for_each_filament(first_non_support_filaments, m_config);
 
@@ -4582,7 +4620,10 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
         CalibPressureAdvanceLine pa_test(this);
 
-        auto fast_speed = CalibPressureAdvance::find_optimal_PA_speed(print.full_print_config(), pa_test.line_width(), pa_test.height_layer());
+        // Cap the speed by the volumetric speed of the filament the test prints with, selected above.
+        const Extruder *pa_filament = m_writer.filament();
+        auto fast_speed = CalibPressureAdvance::find_optimal_PA_speed(print.full_print_config(), pa_test.line_width(), pa_test.height_layer(),
+                                                                      int(pa_filament->extruder_id()), pa_filament->config_index());
         auto slow_speed = std::max(10.0, fast_speed / 10.0);
         if (fast_speed < slow_speed + 5)
             fast_speed = slow_speed + 5;
@@ -4815,11 +4856,10 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
     // adds tag for processor
     file.write_format(";%s%s\n", GCodeProcessor::reserved_tag(GCodeProcessor::ETags::Role).c_str(), ExtrusionEntity::role_to_string(erCustom).c_str());
 
-    // Mark the start of the machine end g-code so the usage-block builder closes its open blocks here and
-    // ignores filament changes inside the end g-code. Same enable_pre_heating gate as the start marker →
-    // byte-frozen fleet unaffected.
-    if (m_config.enable_pre_heating.value)
-        file.write_format(";%s\n", GCodeProcessor::Machine_End_GCode_Start_Tag.c_str());
+    // Mark the start of the machine end g-code, as Bambu Studio does on every printer. The time estimate skips
+    // the end g-code's dwells after it (post-print filtration and cooldown are not print time), and with
+    // pre-heating on the usage-block builder closes its open blocks here and ignores filament changes after it.
+    file.write_format(";%s\n", GCodeProcessor::Machine_End_GCode_Start_Tag.c_str());
 
     // Process filament-specific gcode in extruder order.
     {
@@ -4913,6 +4953,8 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
         print.tool_ordering()));
     print.m_print_statistics.initial_tool = initial_extruder_id;
     print.m_print_statistics.initial_no_support_tool = initial_non_support_extruder_id;
+    // Set again here: update_print_stats_and_format_filament_stats() above cleared the statistics.
+    print.m_print_statistics.printing_filament_types = printing_filament_types;
     if (!is_bbl_printers) {
         file.write_format("; total filament used [g] = %.2lf\n",
             print.m_print_statistics.total_weight);
@@ -6850,6 +6892,9 @@ LayerResult GCode::process_layer(
             break;
         }
         case CalibMode::Calib_Temp_Tower: {
+            // Name the tool printing the tower: on a multi-tool printer a bare M104 goes to
+            // whichever tool the firmware considers active.
+            const int tool = m_writer.filament() ? static_cast<int>(m_writer.filament()->id()) : -1;
             // ORCA-Belt: the sectioned variant prints each temperature as its
             // own object in native belt orientation, with the temperature
             // encoded in the object name ("temp_230") — step per object
@@ -6858,9 +6903,9 @@ LayerResult GCode::process_layer(
             if (m_config.belt_printer.value &&
                 sscanf(layer.object()->model_object()->name.c_str(), "temp_%d", &sectioned_temp) == 1 &&
                 sectioned_temp > 0) {
-                gcode += writer().set_temperature(static_cast<unsigned int>(sectioned_temp));
+                gcode += writer().set_temperature(static_cast<unsigned int>(sectioned_temp), false, tool);
             } else {
-                gcode += writer().set_temperature(this->interpolate_value_across_layers(static_cast<float>(print.calib_params().start), static_cast<float>(print.calib_params().end), 5.0f));
+                gcode += writer().set_temperature(this->interpolate_value_across_layers(static_cast<float>(print.calib_params().start), static_cast<float>(print.calib_params().end), 5.0f), false, tool);
             }
             break;
         }
@@ -8733,7 +8778,15 @@ std::string GCode::extrude_loop(const ExtrusionLoop&                       loop_
     } else
         loop.split_at(last_pos, false);
 
-    const auto seam_scarf_type = m_config.seam_slope_type.value;
+    // Forca: the filament's own scarf seam settings (Bambu Studio's filament_scarf_*) replace the process ones where
+    // the filament sets them, unless the process (or an object or modifier) turns on override_filament_scarf_seam_setting.
+    const size_t scarf_filament_idx = get_filament_config_index(m_writer.filament()->id());
+    const auto   filament_scarf_set = [this, scarf_filament_idx](const ConfigOptionVectorBase &opt) {
+        return !m_config.override_filament_scarf_seam_setting.value && !opt.is_nil(scarf_filament_idx);
+    };
+    const auto seam_scarf_type = filament_scarf_set(m_config.filament_scarf_seam_type) ?
+                                     SeamScarfType(m_config.filament_scarf_seam_type.get_at(scarf_filament_idx)) :
+                                     m_config.seam_slope_type.value;
     // Belt printers never get a scarf joint. The scarf starts one layer height
     // below the layer, which on a tilted belt is a step backwards along the belt
     // axis into the previous layer's wall at the seam (0.28 mm at 45 degrees per
@@ -8757,7 +8810,9 @@ std::string GCode::extrude_loop(const ExtrusionLoop&                       loop_
     // clip the path to avoid the extruder to get exactly on the first point of the loop;
     // if polyline was shorter than the clipping distance we'd get a null polyline, so
     // we discard it in that case
-    const double seam_gap = scale_(m_config.seam_gap.get_abs_value(nozzle_diameter));
+    const double seam_gap = scale_(enable_seam_slope && filament_scarf_set(m_config.filament_scarf_gap) ?
+                                       m_config.filament_scarf_gap.get_at(scarf_filament_idx).get_abs_value(nozzle_diameter) :
+                                       m_config.seam_gap.get_abs_value(nozzle_diameter));
     const bool seam_gap_applied = enable_seam_slope || m_enable_loop_clipping;
     const double seam_gap_distance_mm = seam_gap_applied ? unscale_(seam_gap) : 0.0;
     double seam_scarf_distance_mm = 0.0;
@@ -8889,13 +8944,16 @@ std::string GCode::extrude_loop(const ExtrusionLoop&                       loop_
         }
     } else {
         // Create seam slope
+        const FloatOrPercent start_height = filament_scarf_set(m_config.filament_scarf_height) ?
+                                                m_config.filament_scarf_height.get_at(scarf_filament_idx) :
+                                                FloatOrPercent(m_config.seam_slope_start_height.value, m_config.seam_slope_start_height.percent);
         double start_slope_ratio;
-        if (m_config.seam_slope_start_height.percent) {
-            start_slope_ratio = m_config.seam_slope_start_height.value / 100.;
+        if (start_height.percent) {
+            start_slope_ratio = start_height.value / 100.;
         } else {
             // Get the ratio against current layer height
             double h = paths.front().height;
-            start_slope_ratio = m_config.seam_slope_start_height.value / h;
+            start_slope_ratio = start_height.value / h;
         }
         if (start_slope_ratio >= 1)
             start_slope_ratio = 0.99;
@@ -8906,7 +8964,10 @@ std::string GCode::extrude_loop(const ExtrusionLoop&                       loop_
         }
 
         const bool   slope_entire_loop        = m_config.seam_slope_entire_loop;
-        const double slope_min_length         = slope_entire_loop ? loop_length : std::min(m_config.seam_slope_min_length.value, loop_length);
+        const double scarf_length             = filament_scarf_set(m_config.filament_scarf_length) ?
+                                                    m_config.filament_scarf_length.get_at(scarf_filament_idx) :
+                                                    m_config.seam_slope_min_length.value;
+        const double slope_min_length         = slope_entire_loop ? loop_length : std::min(scarf_length, loop_length);
         const int    slope_steps              = m_config.seam_slope_steps;
         const double slope_max_segment_length = scale_(slope_min_length / slope_steps);
         seam_scarf_distance_mm = slope_min_length;
@@ -10640,7 +10701,7 @@ std::string GCode::travel_to(const Point& point, ExtrusionRole role, std::string
             jerk_to_set = initial_layer_travel_jerk;
         }
     } else { // ORCA: Handle short-travel acceleration and jerk for outer perimeters (if applicable)
-        const bool is_short_travel = travel.length() < scale_(EXTRUDER_CONFIG(retraction_minimum_travel));
+        const bool is_short_travel = travel.length() < scale_(FILAMENT_CONFIG(retraction_minimum_travel));
 
         if (NOZZLE_CONFIG(default_acceleration) > 0) {
             // BBS: a set short travel acceleration replaces the outer wall and bridge accelerations below.
@@ -10998,7 +11059,7 @@ std::string GCode::retract(bool toolchange, bool is_last_retraction, LiftType li
 
     gcode += m_writer.reset_e();
     // Orca: check if should + can lift (roughly from SuperSlicer)
-    RetractLiftEnforceType retract_lift_type = RetractLiftEnforceType(EXTRUDER_CONFIG(retract_lift_enforce));
+    RetractLiftEnforceType retract_lift_type = RetractLiftEnforceType(FILAMENT_CONFIG(retract_lift_enforce));
 
     bool needs_lift = toolchange
         || m_writer.filament()->retraction_length() > 0

@@ -292,6 +292,8 @@ struct PerExtruderAdjustments
     // that keeps its speed with cslConsistentSurface.
     CoolingSlowdownLogicType    cooling_slowdown_logic = cslUniformCooling;
     float                       cooling_perimeter_transition_distance = 0.f;
+    // Forca: layers over which speed comes back after a slowed-down layer (0 = at once).
+    int                         slow_down_recovery_layers = 0;
 
 
     // Parsed lines.
@@ -430,6 +432,7 @@ std::vector<PerExtruderAdjustments> CoolingBuffer::parse_layer_gcode(const std::
         adj.dont_slow_down_outer_wall   = m_config.dont_slow_down_outer_wall.get_at(extruder_id);
         adj.cooling_slowdown_logic      = CoolingSlowdownLogicType(m_config.cooling_slowdown_logic.get_at(extruder_id));
         adj.cooling_perimeter_transition_distance = float(m_config.cooling_perimeter_transition_distance.get_at(extruder_id));
+        adj.slow_down_recovery_layers = m_config.slow_down_recovery_layers.get_at(extruder_id);
         map_extruder_to_per_extruder_adjustment[extruder_id] = i;
     }
 
@@ -881,6 +884,24 @@ float CoolingBuffer::calculate_layer_slowdown(std::vector<PerExtruderAdjustments
         }
     }
 
+    // Forca: slowdown recovery (layer-time smoothing). After a slowed-down layer, speed comes back in equal steps over
+    // slow_down_recovery_layers layers: a layer may run at most one step faster (as a share of its natural speed) than
+    // the one before, so its target time is at least its natural time / that speed. A layer that needs to be slower
+    // than that is slowed at once and starts a new recovery. It is the speed that fades, not the time: a short layer
+    // slowed 6x would otherwise stretch the long layer after it 6x too.
+    float natural_time = 0.f;
+    int   recovery_layers = 0;
+    for (const PerExtruderAdjustments &adj : per_extruder_adjustments) {
+        natural_time += adj.time_total;
+        if (adj.cooling_slow_down_enabled)
+            recovery_layers = std::max(recovery_layers, adj.slow_down_recovery_layers);
+    }
+    const float recovery_speed = recovery_layers > 0 ? std::min(1.f, m_recovery_speed + m_recovery_step) : 1.f;
+    if (recovery_speed < 1.f)
+        for (PerExtruderAdjustments *adj : by_slowdown_time)
+            if (adj->slow_down_recovery_layers > 0)
+                adj->slow_down_layer_time = std::max(adj->slow_down_layer_time, natural_time / recovery_speed);
+
     std::sort(by_slowdown_time.begin(), by_slowdown_time.end(),
         [](const PerExtruderAdjustments *adj1, const PerExtruderAdjustments *adj2)
             { return adj1->slow_down_layer_time < adj2->slow_down_layer_time; });
@@ -914,6 +935,19 @@ float CoolingBuffer::calculate_layer_slowdown(std::vector<PerExtruderAdjustments
         time_overhead_min   -= adj.time_overhead_lower_bound;
         time_overhead_done  += adj.time_overhead_total();
         elapsed_time_total0 += adj.elapsed_time_total();
+    }
+
+    // Forca: the speed this layer ran at (as a share of its natural speed), for the next layer's recovery (see above).
+    const float speed = elapsed_time_total0 > 0.f ? std::min(1.f, natural_time / elapsed_time_total0) : 1.f;
+    if (recovery_layers <= 0) {
+        m_recovery_speed = 1.f;
+        m_recovery_step  = 0.f;
+    } else if (speed < recovery_speed * 0.999f) {
+        // Slowed down more than the recovery asked for: a new recovery from here.
+        m_recovery_speed = speed;
+        m_recovery_step  = (1.f - speed) / float(recovery_layers);
+    } else {
+        m_recovery_speed = recovery_speed;
     }
 
     return elapsed_time_total0;

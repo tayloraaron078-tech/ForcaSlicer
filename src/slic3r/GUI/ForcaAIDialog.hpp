@@ -8,6 +8,7 @@
 
 class wxCheckBox;
 class wxCheckListBox;
+class wxChoice;
 class wxRadioButton;
 class wxButton;
 class wxStaticText;
@@ -16,7 +17,7 @@ class wxListCtrl;
 
 namespace Slic3r { namespace GUI {
 
-// The Forca AI window: turn AI access on/off (opt-in), copy the connection command for Claude Code, and watch the
+// The Forca AI window: turn AI access on/off (opt-in), copy the connection setup for Claude Code or Claude Desktop, and watch the
 // AI's activity feed. A single persistent instance owned by MainFrame (closing only hides it).
 class ForcaAIDialog : public wxDialog
 {
@@ -27,7 +28,10 @@ public:
 private:
     wxCheckBox*   m_enable   { nullptr };
     wxStaticText* m_state    { nullptr };
+    wxChoice*     m_client   { nullptr }; // which AI app the setup text is for: Claude Code or Claude Desktop's chat
+    wxStaticText* m_command_label { nullptr };
     wxTextCtrl*   m_command  { nullptr };
+    wxButton*     m_copy_btn { nullptr };
     wxListCtrl*   m_activity { nullptr };
     wxCheckListBox*          m_printers { nullptr }; // per-printer opt-in: the AI sees only ticked printers
     wxCheckListBox*          m_pausers  { nullptr }; // per-printer "AI may pause" (only counts on a shared printer)

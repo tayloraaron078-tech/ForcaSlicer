@@ -1,5 +1,6 @@
 #include "OG_CustomCtrl.hpp"
 #include "OptionsGroup.hpp"
+#include "OptionStateRegistry.hpp"
 #include "MarkdownTip.hpp"
 #include "Plater.hpp"
 #include "GUI_App.hpp"
@@ -19,6 +20,7 @@
 #include <wx/dc.h>
 #include <wx/colour.h>
 #include <cstddef>
+#include <string>
 #include <wx/settings.h>
 #include "slic3r/GUI/Widgets/StateColor.hpp"
 #include "slic3r/GUI/GUI.hpp"
@@ -83,6 +85,7 @@ OG_CustomCtrl::OG_CustomCtrl(   wxWindow*            parent,
     this->Bind(wxEVT_PAINT,     &OG_CustomCtrl::OnPaint, this);
     this->Bind(wxEVT_MOTION,    &OG_CustomCtrl::OnMotion, this);
     this->Bind(wxEVT_LEFT_DOWN, &OG_CustomCtrl::OnLeftDown, this);
+    this->Bind(wxEVT_RIGHT_DOWN, &OG_CustomCtrl::OnRightDown, this);
     this->Bind(wxEVT_LEAVE_WINDOW, &OG_CustomCtrl::OnLeaveWin, this);
 }
 
@@ -372,6 +375,7 @@ void OG_CustomCtrl::OnMotion(wxMouseEvent& event)
 {
     const wxPoint pos = event.GetLogicalPosition(wxClientDC(this));
     wxString tooltip;
+    wxString availability;
     std::string markdowntip;
 
     // BBS: markdown tip
@@ -387,6 +391,19 @@ void OG_CustomCtrl::OnMotion(wxMouseEvent& event)
             if (!suppress_hyperlinks && !line.og_line.label_path.empty())
                 tooltip = OptionsGroup::get_url(line.og_line.label_path) + "\n\n";
             tooltip += line.og_line.label_tooltip;
+            if (m_option_state_registry) {
+                std::vector<wxString> reasons;
+                for (const Option& option : line.og_line.get_options()) {
+                    const std::string& key = option.opt.opt_key.empty() ? option.opt_id : option.opt.opt_key;
+                    wxString reason = m_option_state_registry->description(key);
+                    if (!reason.empty() && std::find(reasons.begin(), reasons.end(), reason) == reasons.end()) {
+                        reasons.push_back(reason);
+                        if (!availability.empty())
+                            availability += "\n\n";
+                        availability += reason;
+                    }
+                }
+            }
             // BBS: markdown tip
             focusedLine = &line;
             markdowntip = line.og_line.label.empty()
@@ -432,13 +449,16 @@ void OG_CustomCtrl::OnMotion(wxMouseEvent& event)
         assert(focusedLine);
         wxPoint pos2 = { 250, focusedLine->rect_label.y };
         pos2 = ClientToScreen(pos2);
-        if (MarkdownTip::ShowTip(markdowntip, into_u8(tooltip), pos2)) {
+        if (MarkdownTip::ShowTip(markdowntip, into_u8(tooltip), pos2, into_u8(availability))) {
             tooltip.clear();
+            availability.clear();
         }
     }
     else {
         MarkdownTip::ShowTip(markdowntip, "", {tooltip.empty() ? 0 : 1, 0});
     }
+    if (!availability.empty())
+        tooltip = availability + "\n\n" + tooltip;
     if (GetToolTipText() != tooltip)
         this->SetToolTip(tooltip);
     // BBS
@@ -493,6 +513,28 @@ void OG_CustomCtrl::OnLeftDown(wxMouseEvent& event)
     }
 
     SetFocusIgnoringChildren();
+}
+
+// Forca: a right-click on a setting's label opens its group's context menu (the process tab's favourites). The menu
+// is shown after the mouse handler returns, as no window work belongs on its stack.
+void OG_CustomCtrl::OnRightDown(wxMouseEvent& event)
+{
+    event.Skip();
+    if (!opt_group || !opt_group->label_context_menu)
+        return;
+    const wxPoint pos = event.GetLogicalPosition(wxClientDC(this));
+    for (const CtrlLine& line : ctrl_lines) {
+        if (!line.is_visible || !is_point_in_rect(pos, line.rect_label) || line.og_line.get_options().empty())
+            continue;
+        std::vector<t_config_option_key> opt_ids;
+        for (const Option& option : line.og_line.get_options())
+            opt_ids.push_back(option.opt_id);
+        CallAfter([this, opt_ids]() {
+            if (opt_group && opt_group->label_context_menu)
+                opt_group->label_context_menu(opt_ids);
+        });
+        return;
+    }
 }
 
 void OG_CustomCtrl::OnLeaveWin(wxMouseEvent& event)

@@ -9,6 +9,10 @@ What you can do:
 - [Open a `.scad` file](#open-a-scad-file) and get the model on the plate in one step.
 - [Change its parameters](#change-the-parameters) in Forca and render it again in place.
 - [Fix a line or two](#fix-a-problem-in-the-file) of the file in a small editor that shows OpenSCAD's messages.
+- [Edit it in OpenSCAD](#edit-in-openscad) and have Forca render it again when you save.
+- [Start a new model](#start-a-new-model) from a starter file.
+- Get its [colours as filaments](#colours).
+- [Let your AI design a part](#forca-ai) in OpenSCAD, if you use Forca AI.
 - [Save the project](#what-the-project-keeps) and re-render it later, on another computer or after the file is renamed.
 
 ## Set up OpenSCAD
@@ -90,6 +94,43 @@ editor.
 
 Forca saves the file with the line endings it already had. Undo (**Ctrl+Z**) works in the editor until you close it.
 
+## Edit in OpenSCAD
+
+For more than a quick fix, right-click the object > **Edit in OpenSCAD**. The file opens in OpenSCAD's own window, with
+its preview and everything else OpenSCAD offers. When you save it there, Forca asks **"... has changed. Render the model
+again?"**; **Yes** renders it with your values and replaces the model in place, as one undo step. Objects on the plate
+made from the same file are each rendered with their own values.
+
+Forca watches the file until no object on the plate uses it any more, or until you close Forca.
+
+## Start a new model
+
+**File > Import > New OpenSCAD model...** asks where to save the new `.scad` file, then puts a starter model on the
+plate and opens the file in OpenSCAD. The starter is a box with rounded corners whose width, depth, height, corner
+radius and an optional hollow inside are Customizer parameters, with comments that explain how to make your own. Change
+it in OpenSCAD and save: Forca renders it again, as above.
+
+## Colours
+
+When a file uses OpenSCAD's `color()`, the model arrives in colour: each colour goes to the project filament closest to
+it, the faces in that colour are painted with that filament, and the most common colour becomes the object's filament.
+Faces without a `color()` keep the object's filament.
+
+Load the filaments you want before importing (the Filament list in the sidebar): colours only map to filaments the
+project has, so two colours closest to the same filament print in that one. You can change the painting afterwards with
+the colour painting tool, as for any model; rendering the file again paints it from the file's colours again.
+
+## Forca AI
+
+If you use [Forca AI](guides/forca-ai.md), your AI assistant can use OpenSCAD too: ask it to design a part, and it
+writes the OpenSCAD code, renders it onto the plate with your OpenSCAD, looks at the result and adjusts the code. It
+reads the parameters of your files, and renders them with other values.
+
+- The AI's files go into `Documents\Forca AI\OpenSCAD`, named "<name> (Claude <date>).scad". It can't change your own
+  `.scad` files at the Guarded level.
+- The models it makes are linked like any other, so **OpenSCAD parameters** and **Edit in OpenSCAD** work on them, and
+  you keep the file.
+
 ## What the project keeps
 
 When you save the project (`.3mf`), each linked object keeps:
@@ -113,12 +154,5 @@ Other slicers ignore this part of the project and open the model as a normal mes
   renders in Forca.
 - **A `.scad` file is code.** It can read files on your computer (`import()`, `include`), though it can't run
   programs. Opening it in Forca trusts it as much as opening it in OpenSCAD does.
-- **Colours** from the file aren't matched to your filaments yet.
-
-## Coming next
-
-- **Edit in OpenSCAD**: open the file in OpenSCAD itself, and Forca offers to re-render when you save it there.
-- **New OpenSCAD model**: start a new `.scad` file from Forca.
-- **Colours to filaments**: a model's OpenSCAD colours picked up as filaments.
-- **Forca AI**: your own AI assistant can write a `.scad` model, render it and change its parameters, under Forca's
-  safety rules.
+- **Edits made outside Forca** are only watched for files opened with Edit in OpenSCAD or New OpenSCAD model in this
+  session. Otherwise open **OpenSCAD parameters** and press **Render model** to pick up the changes.

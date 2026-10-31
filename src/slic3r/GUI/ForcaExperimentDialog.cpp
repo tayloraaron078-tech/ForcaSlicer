@@ -15,7 +15,7 @@
 #include "Widgets/Label.hpp"
 #include "libslic3r/BoundingBox.hpp"
 #include "libslic3r/Config.hpp"
-#include "libslic3r/Format/bbs_3mf.hpp" // LoadStrategy
+#include "libslic3r/Format/ProjectStrategy.hpp" // LoadStrategy
 #include "libslic3r/Format/STL.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/Point.hpp"

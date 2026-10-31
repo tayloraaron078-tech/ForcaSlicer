@@ -1,0 +1,59 @@
+{
+  "_comment": "Strings of the slowdown recovery (PrintConfig.cpp slow_down_recovery_layers, roadmap #10 layer-time smoothing). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Slowdown recovery layers",
+      "translations": {
+        "ca": "Capes de recuperació de l'alentiment",
+        "cs": "Vrstvy pro návrat po zpomalení",
+        "de": "Schichten bis zur vollen Geschwindigkeit",
+        "es": "Capas de recuperación tras ralentizar",
+        "eu": "Moteltzearen ondoko berreskuratze-geruzak",
+        "fr": "Couches de reprise après ralentissement",
+        "hu": "Visszagyorsítási rétegek",
+        "it": "Strati di ripresa dopo il rallentamento",
+        "ja": "減速後の回復レイヤー数",
+        "ko": "감속 후 복귀 레이어 수",
+        "lt": "Greičio atkūrimo sluoksniai",
+        "nl": "Lagen om weer op snelheid te komen",
+        "pl": "Warstwy powrotu po zwolnieniu",
+        "pt_BR": "Camadas de recuperação após redução",
+        "ru": "Слоёв для возврата скорости",
+        "sv": "Lager för att återgå efter nedsaktning",
+        "th": "จำนวนเลเยอร์ในการคืนความเร็ว",
+        "tr": "Yavaşlama sonrası toparlanma katmanları",
+        "uk": "Шарів для повернення швидкості",
+        "vi": "Số lớp phục hồi sau giảm tốc",
+        "zh_CN": "降速后恢复层数",
+        "zh_TW": "降速後恢復層數"
+      }
+    },
+    {
+      "msgid": "After a layer slowed down for its minimum layer time, speed comes back gradually over this many layers instead of at once, so a model whose layers suddenly get longer (above a thin section) doesn't show a band where the speed jumps. Slowing down still happens at once. 0 disables it.",
+      "translations": {
+        "ca": "Després d'una capa alentida pel seu temps mínim de capa, la velocitat torna de mica en mica al llarg d'aquest nombre de capes en lloc de tornar de cop, perquè un model les capes del qual s'allarguen de sobte (sobre una secció prima) no mostri una franja on la velocitat salta. L'alentiment continua aplicant-se de cop. 0 ho desactiva.",
+        "cs": "Po vrstvě zpomalené kvůli minimální době vrstvy se rychlost vrací postupně během tohoto počtu vrstev, ne naráz, aby model, jehož vrstvy se náhle prodlouží (nad tenkou částí), neměl pruh v místě skoku rychlosti. Zpomalení dál nastává okamžitě. 0 funkci vypne.",
+        "de": "Nach einer Schicht, die für ihre minimale Schichtzeit verlangsamt wurde, kehrt die Geschwindigkeit schrittweise über diese Anzahl Schichten zurück statt auf einmal, damit ein Modell, dessen Schichten plötzlich länger werden (über einem dünnen Abschnitt), keinen Streifen zeigt, wo die Geschwindigkeit springt. Verlangsamt wird weiterhin sofort. 0 schaltet es aus.",
+        "es": "Tras una capa ralentizada por su tiempo mínimo de capa, la velocidad vuelve poco a poco a lo largo de este número de capas en lugar de hacerlo de golpe, para que un modelo cuyas capas se alargan de repente (sobre una sección fina) no muestre una franja donde la velocidad salta. La ralentización sigue aplicándose de golpe. 0 lo desactiva.",
+        "eu": "Gutxieneko geruza-denboragatik moteldutako geruza baten ondoren, abiadura pixkanaka itzultzen da geruza kopuru honetan, ez bat-batean, bat-batean luzatzen diren geruzak dituen eredu batek (atal mehe baten gainean) abiadura-jauzia dagoen tokian bandarik erakuts ez dezan. Moteltzea berehala gertatzen da oraindik. 0k desgaitzen du.",
+        "fr": "Après une couche ralentie pour son temps de couche minimal, la vitesse revient progressivement sur ce nombre de couches au lieu de revenir d'un coup, pour qu'un modèle dont les couches s'allongent soudain (au-dessus d'une partie fine) ne montre pas de bande là où la vitesse saute. Le ralentissement reste immédiat. 0 le désactive.",
+        "hu": "Egy, a minimális rétegidő miatt lelassított réteg után a sebesség ennyi réteg alatt fokozatosan tér vissza, nem egyszerre, így egy olyan modellen, amelynek rétegei hirtelen hosszabbak lesznek (egy vékony rész fölött), nem látszik sáv ott, ahol a sebesség ugrik. A lassítás továbbra is azonnali. 0 kikapcsolja.",
+        "it": "Dopo uno strato rallentato per il suo tempo minimo di strato, la velocità torna gradualmente in questo numero di strati invece che tutta insieme, così un modello i cui strati si allungano all'improvviso (sopra una parte sottile) non mostra una banda dove la velocità salta. Il rallentamento resta immediato. 0 lo disattiva.",
+        "ja": "最小積層時間のために減速した層の後、速度を一度に戻さず、この層数をかけて徐々に戻します。細い部分の上で層が急に長くなるモデルに、速度が急変した位置の帯が出にくくなります。減速は引き続きすぐに行われます。0 で無効になります。",
+        "ko": "최소 레이어 시간 때문에 감속된 레이어 다음에는 속도를 한 번에 되돌리지 않고 이 레이어 수에 걸쳐 서서히 되돌려, 얇은 부분 위에서 레이어가 갑자기 길어지는 모델에 속도가 바뀌는 자리의 띠가 생기지 않게 합니다. 감속은 계속 즉시 적용됩니다. 0이면 사용하지 않습니다.",
+        "lt": "Po sluoksnio, sulėtinto dėl minimalaus sluoksnio laiko, greitis grįžta palaipsniui per tiek sluoksnių, o ne iš karto, kad modelis, kurio sluoksniai staiga pailgėja (virš plonos dalies), neturėtų juostos ten, kur greitis šokteli. Lėtinama vis tiek iš karto. 0 išjungia.",
+        "nl": "Na een laag die is vertraagd voor zijn minimale laagtijd, komt de snelheid geleidelijk terug over dit aantal lagen in plaats van in één keer, zodat een model waarvan de lagen plotseling langer worden (boven een dun deel) geen band toont waar de snelheid verspringt. Vertragen gebeurt nog steeds meteen. 0 schakelt het uit.",
+        "pl": "Po warstwie zwolnionej ze względu na minimalny czas warstwy prędkość wraca stopniowo przez tyle warstw zamiast od razu, aby model, którego warstwy nagle się wydłużają (nad cienką częścią), nie miał pasa w miejscu skoku prędkości. Zwalnianie nadal następuje od razu. 0 wyłącza.",
+        "pt_BR": "Depois de uma camada desacelerada pelo tempo mínimo de camada, a velocidade volta aos poucos ao longo deste número de camadas em vez de voltar de uma vez, para que um modelo cujas camadas ficam de repente mais longas (acima de uma parte fina) não mostre uma faixa onde a velocidade salta. A desaceleração continua imediata. 0 desativa.",
+        "ru": "После слоя, замедленного ради минимального времени слоя, скорость возвращается постепенно за указанное число слоёв, а не сразу, чтобы на модели, слои которой вдруг становятся длиннее (над тонкой частью), не было полосы в месте скачка скорости. Замедление по-прежнему включается сразу. 0 отключает.",
+        "sv": "Efter ett lager som saktats ner för sin minsta lagertid kommer hastigheten tillbaka gradvis över så här många lager i stället för på en gång, så att en modell vars lager plötsligt blir längre (ovanför en tunn del) inte får ett band där hastigheten hoppar. Nedsaktningen sker fortfarande direkt. 0 stänger av det.",
+        "th": "หลังเลเยอร์ที่ถูกชะลอเพื่อเวลาเลเยอร์ขั้นต่ำ ความเร็วจะค่อย ๆ กลับมาภายในจำนวนเลเยอร์นี้แทนที่จะกลับทันที เพื่อไม่ให้โมเดลที่เลเยอร์ยาวขึ้นกะทันหัน (เหนือส่วนที่บาง) มีแถบตรงที่ความเร็วเปลี่ยนกะทันหัน การชะลอยังเกิดขึ้นทันทีเหมือนเดิม 0 คือปิด",
+        "tr": "Minimum katman süresi için yavaşlatılan bir katmandan sonra hız bir anda değil bu kadar katman boyunca kademeli olarak geri gelir; böylece katmanları birden uzayan bir modelde (ince bir bölümün üstünde) hızın sıçradığı yerde bant oluşmaz. Yavaşlama yine hemen uygulanır. 0 kapatır.",
+        "uk": "Після шару, сповільненого заради мінімального часу шару, швидкість повертається поступово за вказану кількість шарів, а не відразу, щоб на моделі, шари якої раптом стають довшими (над тонкою частиною), не було смуги там, де швидкість стрибає. Сповільнення й далі вмикається відразу. 0 вимикає.",
+        "vi": "Sau một lớp bị giảm tốc vì thời gian lớp tối thiểu, tốc độ quay lại dần dần trong số lớp này thay vì ngay lập tức, để mô hình có các lớp đột ngột dài hơn (phía trên một phần mỏng) không bị một dải ở chỗ tốc độ thay đổi đột ngột. Việc giảm tốc vẫn diễn ra ngay. 0 để tắt.",
+        "zh_CN": "某层因最小层时间而降速后，速度在这么多层内逐步恢复，而不是一下子恢复，这样在细的部分之上层突然变长的模型就不会在速度突变处出现条纹。降速仍然立即生效。0 表示禁用。",
+        "zh_TW": "某層因最小層時間而降速後，速度在這麼多層內逐步恢復，而不是一下子恢復，這樣在細的部分之上層突然變長的模型就不會在速度突變處出現條紋。降速仍然立即生效。0 表示停用。"
+      }
+    }
+  ]
+}

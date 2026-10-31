@@ -93,6 +93,9 @@ public:
     void        regenerate_token();
     std::string url() const;
     std::string claude_code_command();    // ready to paste into a terminal
+    std::string claude_desktop_config();  // claude_desktop_config.json for Claude Desktop's chat (needs Node.js)
+    std::string codex_config();           // lines for Codex's config.toml (ChatGPT's coding agent)
+    std::string mcp_app_config();         // the common "mcpServers" JSON with url + headers (LM Studio and others)
 
     // Control level (HQ PLAN_forca_ai.md §10a). Guarded, the default, is R1 + R2 as above. Advanced: the AI may also
     // overwrite the user's files and edit their presets (Forca backs each file up first, ForcaAIFiles), and a print
@@ -167,6 +170,8 @@ nlohmann::json forca_ai_plate_report(int plate, std::string& err);
 void register_forca_ai_print_tools(ForcaAI& ai);
 // ForcaAIAcademy.cpp: Forca Academy (print journal / knowledge base) tools.
 void register_forca_ai_academy_tools(ForcaAI& ai);
+// ForcaAIOpenScad.cpp: OpenSCAD tools (the parameters of a .scad file; rendering a file or the AI's own code).
+void register_forca_ai_openscad_tools(ForcaAI& ai);
 // ForcaAIPrinters.cpp: per-printer opt-in (the AI sees only printers the user ticked) + read-only status tools.
 std::set<std::string>    forca_ai_printer_optins();
 void                     forca_ai_set_printer_optin(const std::string& dev_id, bool on);

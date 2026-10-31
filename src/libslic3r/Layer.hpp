@@ -175,6 +175,10 @@ public:
     // PrintObject::separated_body_bboxes(). Populated by PrintObject::prepare_infill() only when needed.
     std::vector<size_t>      lslices_separated_component_ids;
 
+    // Forca: the top surfaces of the layer above that are wide enough to show; an internal solid island under one of
+    // them takes sub_top_surface_pattern. Set by PrintObject::infill() only when a region sets that pattern.
+    ExPolygons              sub_top_mask;
+
     // BBS
     ExPolygons              loverhangs;
     BoundingBox             loverhangs_bbox;

@@ -38,6 +38,23 @@ Bambu Studio project still lists any setting Forca doesn't know when it is opene
 | `support_ironing_inset`, `_direction`, `_speed` | `Support/SupportCommon.cpp` (inset, angle relative to the interface lines) and `GCode::extrude_support` (speed) |
 | `cooling_slowdown_logic`, `cooling_perimeter_transition_distance` | `GCode/CoolingBuffer.cpp`; Forca restores the original speed for the transition distance, which Bambu Studio only accounts for in its time estimate |
 | `avoid_crossing_wall_includes_support` | `GCode/AvoidCrossingPerimeters.cpp`, turning OrcaSlicer's compile-time `INCLUDE_SUPPORTS_IN_BOUNDARY` into a run-time choice |
+| `filament_scarf_seam_type`, `_height`, `_gap`, `_length` + `override_filament_scarf_seam_setting` | `GCode::extrude_loop`: a filament's scarf values replace the process ones (`seam_slope_type`, `seam_slope_start_height`, `seam_gap` on scarfed walls, `seam_slope_min_length`) unless the process, object or modifier turns the switch on |
+| `ironing_pattern` value `ironingarchimedeanspiral` | `FillIroningSpiral` (`Fill/FillPlanePath`): the Archimedean spiral of each ironed area from its centre outwards, with Bambu Studio's 3-spacing lead-in and rim-sliver removal, pieces in spiral order (`restore_source_path_order`); the other patterns are untouched |
+| `sub_top_surface_pattern` | `Fill.cpp` `group_fills`: an internal solid island under a visible top (`is_sub_top_island` against `Layer::sub_top_mask`, filled by `discover_sub_top_areas` at the start of `PrintObject::infill`) takes this pattern |
+
+`sub_top_surface_pattern` defaults to `sameasinternalsolid` (`ipSameAsInternalSolid`, a Forca value with no filler;
+`Fill::use_bridge_flow` skips it), where Bambu Studio defaults to Monotonic. Bambu Studio retypes the island to a new
+surface type `stSubTop`; Forca keeps the island internal solid and only changes its pattern, so nothing else that reads
+surface types changes. The detection is Bambu Studio's: tops of the layer above that survive a 1.5 mm erosion, and an
+island that overlaps one by more than half a solid line.
+
+The filament scarf settings are nullable, unlike Bambu Studio's (which default to "none", 10%, 0 and 10 mm and always
+win unless the process switch is on): unset means "use the process value", so profiles and projects that don't set
+them slice as before. They follow OrcaSlicer's filament ironing overrides: the filament's **Setting Overrides** page,
+an enable box per value, `filament_scarf_override_keys` naming the process setting each one replaces. The import
+leaves out a Bambu Studio filament's "none" (it would switch off a scarf the user's process turns on) and gives a
+filament that sets a scarf Bambu Studio's defaults for the values its file omits (`adapt_bambu_scarf` in
+`ForcaPresetImport.cpp`). A process's `seam_slope_gap` becomes `seam_gap` when the file has none.
 
 Bambu Studio's `print_in_clockwise` (P2S, X2D) is not a setting in Forca: OrcaSlicer's `wall_direction` has only ccw
 and cw, so a printer-level key could not tell a user's explicit choice from the default. The P2S and X2D process

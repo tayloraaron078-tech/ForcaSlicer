@@ -1,0 +1,86 @@
+{
+  "_comment": "Strings of the sub-top surface pattern (PrintConfig.cpp sub_top_surface_pattern, Bambu Studio 2.8.3). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Sub-top surface pattern",
+      "translations": {
+        "ca": "Patró de la capa sota la superfície superior",
+        "cs": "Vzor vrstvy pod horním povrchem",
+        "de": "Muster unter der Oberfläche",
+        "es": "Patrón bajo la cubierta superior",
+        "eu": "Goiko gainazalaren azpiko patroia",
+        "fr": "Motif sous la surface supérieure",
+        "hu": "Felső felület alatti mintázat",
+        "it": "Motivo sotto la superficie superiore",
+        "ja": "上面直下のパターン",
+        "ko": "상단 표면 아래 패턴",
+        "lt": "Raštas po viršutiniu paviršiumi",
+        "nl": "Patroon onder het bovenvlak",
+        "pl": "Wzór pod górną powierzchnią",
+        "pt_BR": "Padrão sob a superfície superior",
+        "ru": "Шаблон слоя под верхней поверхностью",
+        "sv": "Mönster under toppytan",
+        "th": "รูปแบบชั้นใต้ผิวด้านบน",
+        "tr": "Üst yüzeyin altındaki desen",
+        "uk": "Шаблон шару під верхньою поверхнею",
+        "vi": "Mẫu lớp dưới bề mặt trên",
+        "zh_CN": "顶面下层图案",
+        "zh_TW": "頂面下層圖案"
+      }
+    },
+    {
+      "msgid": "Same as internal solid infill",
+      "translations": {
+        "ca": "Igual que el farciment sòlid intern",
+        "cs": "Stejný jako vnitřní plná výplň",
+        "de": "Wie innere massive Füllung",
+        "es": "Igual que el relleno sólido interno",
+        "eu": "Barruko betegarri solidoaren berdina",
+        "fr": "Identique au remplissage plein interne",
+        "hu": "Ugyanaz, mint a belső tömör kitöltés",
+        "it": "Uguale al riempimento solido interno",
+        "ja": "内部ソリッドインフィルと同じ",
+        "ko": "꽉찬 내부 채우기와 동일",
+        "lt": "Kaip vidinis tvirtas užpildas",
+        "nl": "Zelfde als interne solide vulling",
+        "pl": "Taki sam jak wypełnienie wewnętrzne",
+        "pt_BR": "Igual ao preenchimento sólido interno",
+        "ru": "Как у сплошного заполнения",
+        "sv": "Samma som invändig solid fyllnad",
+        "th": "เหมือนไส้ในแบบทึบภายใน",
+        "tr": "İç katı dolgu ile aynı",
+        "uk": "Як внутрішнє суцільне заповнення",
+        "vi": "Giống infill đặc bên trong",
+        "zh_CN": "与内部实心填充相同",
+        "zh_TW": "與內部實心填充相同"
+      }
+    },
+    {
+      "msgid": "Line pattern of the solid layer that supports a visible top surface. Its lines can print through and mark the top, so a monotonic pattern gives the smoothest result. The whole solid area that a top surface reaches uses this pattern, not only the part directly beneath it. Top surfaces narrower than 3 mm are ignored.",
+      "translations": {
+        "ca": "Patró de línies de la capa sòlida que suporta una superfície superior visible. Les seves línies es poden marcar a través de la superfície superior, de manera que un patró monotònic dona el resultat més llis. Tota l'àrea sòlida que toca una superfície superior fa servir aquest patró, no només la part just a sota. S'ignoren les superfícies superiors de menys de 3 mm d'amplada.",
+        "cs": "Vzor čar plné vrstvy, která nese viditelný horní povrch. Její čáry se mohou propsat a zanechat stopy na horním povrchu, proto monotonní vzor dává nejhladší výsledek. Tento vzor používá celá plná oblast, které se horní povrch dotýká, nejen část přímo pod ním. Horní povrchy užší než 3 mm se nezohledňují.",
+        "de": "Linienmuster der massiven Schicht, die eine sichtbare Oberfläche trägt. Ihre Linien können sich auf der Oberfläche abzeichnen, daher ergibt ein monotones Muster das glatteste Ergebnis. Die ganze massive Fläche, die eine Oberfläche berührt, verwendet dieses Muster, nicht nur der Teil direkt darunter. Oberflächen, die schmaler als 3 mm sind, werden ignoriert.",
+        "es": "Patrón de líneas de la capa sólida que sostiene una superficie superior visible. Sus líneas pueden marcarse en la superficie superior, así que un patrón monotónico da el resultado más liso. Toda el área sólida que alcanza una superficie superior usa este patrón, no solo la parte justo debajo. Se ignoran las superficies superiores de menos de 3 mm de ancho.",
+        "eu": "Goiko gainazal ikusgarri bati eusten dion geruza solidoaren lerro-patroia. Bere lerroak goiko gainazalean marka daitezke, beraz patroi monotoniko batek ematen du emaitzarik leunena. Goiko gainazal batek ukitzen duen eremu solido osoak erabiltzen du patroi hau, ez bakarrik zuzenean azpian dagoen zatiak. 3 mm baino estuagoak diren goiko gainazalak ez dira kontuan hartzen.",
+        "fr": "Motif de lignes de la couche pleine qui soutient une surface supérieure visible. Ses lignes peuvent marquer la surface supérieure par transparence, un motif monotone donne donc le résultat le plus lisse. Toute la zone pleine qu'atteint une surface supérieure utilise ce motif, pas seulement la partie juste en dessous. Les surfaces supérieures de moins de 3 mm de large sont ignorées.",
+        "hu": "A látható felső felületet tartó tömör réteg vonalmintázata. A vonalai átütve nyomot hagyhatnak a felső felületen, ezért a monotonikus mintázat adja a legsimább eredményt. A teljes tömör terület, amelyet egy felső felület elér, ezt a mintázatot használja, nem csak a közvetlenül alatta lévő rész. A 3 mm-nél keskenyebb felső felületeket figyelmen kívül hagyja.",
+        "it": "Motivo delle linee dello strato solido che sostiene una superficie superiore visibile. Le sue linee possono segnare la superficie superiore, quindi un motivo monotonico dà il risultato più liscio. Tutta l'area solida raggiunta da una superficie superiore usa questo motivo, non solo la parte direttamente sotto. Le superfici superiori più strette di 3 mm vengono ignorate.",
+        "ja": "見える上面を支えるソリッド層の線パターンです。この層の線は上面に透けて跡を残すことがあるため、単調パターンが最もなめらかな仕上がりになります。上面が接するソリッド領域全体がこのパターンを使い、真下の部分だけではありません。幅が 3 mm 未満の上面は無視されます。",
+        "ko": "보이는 상단 표면을 받치는 꽉찬 레이어의 선 패턴입니다. 이 레이어의 선은 상단 표면에 비쳐 자국을 남길 수 있으므로 단조 패턴이 가장 매끄러운 결과를 냅니다. 상단 표면이 닿는 꽉찬 영역 전체가 이 패턴을 사용하며, 바로 아래 부분만이 아닙니다. 폭이 3 mm보다 좁은 상단 표면은 무시됩니다.",
+        "lt": "Vientiso sluoksnio, laikančio matomą viršutinį paviršių, linijų raštas. Jo linijos gali prasišviesti ir palikti žymes viršutiniame paviršiuje, todėl monotoniškas raštas duoda lygiausią rezultatą. Šį raštą naudoja visas vientisas plotas, kurį pasiekia viršutinis paviršius, ne tik dalis tiesiai po juo. Viršutiniai paviršiai, siauresni nei 3 mm, nepaisomi.",
+        "nl": "Lijnpatroon van de massieve laag die een zichtbaar bovenvlak draagt. De lijnen ervan kunnen doordrukken en het bovenvlak tekenen, dus een monotoon patroon geeft het gladste resultaat. Het hele massieve gebied dat een bovenvlak raakt gebruikt dit patroon, niet alleen het deel er direct onder. Bovenvlakken smaller dan 3 mm worden genegeerd.",
+        "pl": "Wzór linii pełnej warstwy, która podtrzymuje widoczną górną powierzchnię. Jej linie mogą się przebijać i odznaczać na górnej powierzchni, więc wzór monotoniczny daje najgładszy wynik. Tego wzoru używa cały pełny obszar, którego dotyka górna powierzchnia, nie tylko część bezpośrednio pod nią. Górne powierzchnie węższe niż 3 mm są pomijane.",
+        "pt_BR": "Padrão de linhas da camada sólida que sustenta uma superfície superior visível. As suas linhas podem marcar a superfície superior, por isso um padrão monótono dá o resultado mais liso. Toda a área sólida que uma superfície superior alcança usa este padrão, não só a parte logo abaixo. Superfícies superiores com menos de 3 mm de largura são ignoradas.",
+        "ru": "Шаблон линий сплошного слоя, который держит видимую верхнюю поверхность. Его линии могут проступать и оставлять следы на верхней поверхности, поэтому аккуратный зигзаг даёт самый гладкий результат. Этот шаблон использует вся сплошная область, которой касается верхняя поверхность, а не только часть прямо под ней. Верхние поверхности уже 3 мм не учитываются.",
+        "sv": "Linjemönster för det solida lagret som bär en synlig toppyta. Dess linjer kan synas igenom och märka toppytan, så ett monotont mönster ger det jämnaste resultatet. Hela det solida området som en toppyta når använder detta mönster, inte bara delen direkt under den. Toppytor smalare än 3 mm ignoreras.",
+        "th": "รูปแบบเส้นของชั้นทึบที่รองรับผิวด้านบนที่มองเห็นได้ เส้นของชั้นนี้อาจทิ้งรอยบนผิวด้านบน ดังนั้นรูปแบบโมโนโทนิคจะให้ผลเรียบที่สุด พื้นที่ทึบทั้งหมดที่ผิวด้านบนแตะถึงจะใช้รูปแบบนี้ ไม่ใช่เฉพาะส่วนที่อยู่ใต้ผิวโดยตรง ผิวด้านบนที่แคบกว่า 3 mm จะถูกละเว้น",
+        "tr": "Görünür bir üst yüzeyi taşıyan katı katmanın çizgi deseni. Çizgileri üst yüzeye yansıyıp iz bırakabilir, bu yüzden monotonik desen en pürüzsüz sonucu verir. Bir üst yüzeyin ulaştığı katı alanın tamamı bu deseni kullanır, yalnızca hemen altındaki kısım değil. 3 mm'den dar üst yüzeyler yok sayılır.",
+        "uk": "Шаблон ліній суцільного шару, що тримає видиму верхню поверхню. Його лінії можуть проступати й залишати сліди на верхній поверхні, тому монотонний шаблон дає найгладший результат. Цей шаблон використовує вся суцільна область, якої торкається верхня поверхня, а не лише частина безпосередньо під нею. Верхні поверхні, вужчі за 3 мм, не враховуються.",
+        "vi": "Mẫu đường của lớp đặc đỡ một bề mặt trên nhìn thấy được. Các đường của lớp này có thể in hằn lên bề mặt trên, nên mẫu đơn điệu cho kết quả mịn nhất. Toàn bộ vùng đặc mà bề mặt trên chạm tới đều dùng mẫu này, không chỉ phần ngay bên dưới. Các bề mặt trên hẹp hơn 3 mm được bỏ qua.",
+        "zh_CN": "支撑可见顶面的实心层的线条图案。该层的线条可能透过顶面留下痕迹，因此单调图案的效果最平滑。顶面所及的整个实心区域都使用此图案，而不仅是正下方的部分。宽度小于 3 mm 的顶面会被忽略。",
+        "zh_TW": "支撐可見頂面的實心層的線條圖案。該層的線條可能透過頂面留下痕跡，因此單調圖案的效果最平滑。頂面所及的整個實心區域都使用此圖案，而不只是正下方的部分。寬度小於 3 mm 的頂面會被忽略。"
+      }
+    }
+  ]
+}

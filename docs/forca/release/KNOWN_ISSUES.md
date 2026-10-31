@@ -11,8 +11,8 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
   Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 25 October 2026, past OrcaSlicer's
-  2.5.0-alpha), not a stable Orca release.
+- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 30 October 2026, past OrcaSlicer's
+  2.5.0-beta), not a stable Orca release.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
@@ -38,9 +38,9 @@ differently).
 ## Non-Bambu printers
 - **Filament sync from Klipper filament changers picks generic filament presets** (seen with an Anycubic ACE through
   KX-Bridge): the type and colour come across, but not the bridge's exact filament profile. The sync itself works
-  again in this release (the printer's port is no longer lost, see
+  again since 0.1.0-alpha.7 (the printer's port is no longer lost, see
   [#3](https://github.com/tayloraaron078-tech/ForcaSlicer/issues/3)); check the filament list after
-  "Synchronize filament list". The two OrcaSlicer pull requests in this release (not merged upstream yet) are
+  "Synchronize filament list". The OrcaSlicer fix Forca carries for Happy Hare (not merged upstream yet) is
   untested on Happy Hare MMU hardware.
 - **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the
   printer's network settings (API Key / Password). Other Flashforge models with the same local API should work but
@@ -52,7 +52,8 @@ differently).
 - **Needs an OpenSCAD development snapshot (2025 or later)**; the 2021.01 release is too old. Forca doesn't include
   OpenSCAD.
 - A file that renders as **several objects** (lazy union) is imported but can't use OpenSCAD parameters.
-- **Colours** from the file aren't matched to filaments yet, and there's no "edit in OpenSCAD and reload" yet.
+- **Colours** go to the closest filament already in the project; Forca doesn't add filaments for colours it can't
+  match.
 - Libraries a file `include`s (BOSL2 and the like) must be where OpenSCAD finds them.
 
 ## Forca AI (experimental)

@@ -9,6 +9,7 @@
 #include "AdaptivePAProcessor.hpp"
 #include <memory>
 #include <cstddef>
+#include <cstdlib>
 #include <regex>
 #include <iosfwd>
 #include <algorithm>
@@ -45,6 +46,7 @@ AdaptivePAProcessor::AdaptivePAProcessor(GCode &gcodegen)
       m_max_next_feedrate(0.0),
       m_next_feedrate(0.0),
       m_current_feedrate(0.0),
+      m_modal_feedrate(0.0),
       m_last_config_index(-1),
       m_pa_change_pattern(R"(; PA_CHANGE:T(\d+) MM3MM:([0-9]*\.[0-9]+) ACCEL:(\d+) BR:(\d+) RC:(\d+) OV:(\d+))"),
       m_g1_f_pattern(R"(G1 F([0-9]+))")
@@ -65,6 +67,18 @@ AdaptivePAInterpolator* AdaptivePAProcessor::getInterpolator(unsigned int config
         it->second->parseAndSetData(m_config.adaptive_pressure_advance_model.get_at(config_index));
     }
     return it->second.get();
+}
+
+// The feedrate, in mm/s, a G0/G1/G2/G3 line sets with its F word, or 0 when it has none.
+// Forca: takes a view into the null-terminated layer, parsed in place like process_layer's other line helpers.
+static double feedrate_word(std::string_view line)
+{
+    if (line.size() < 3 || line[0] != 'G' || line[2] != ' ' || (line[1] != '0' && line[1] != '1' && line[1] != '2' && line[1] != '3'))
+        return 0.0;
+    const std::size_t pos = line.find(" F");
+    if (pos == std::string_view::npos || pos + 2 >= line.size() || !std::isdigit(static_cast<unsigned char>(line[pos + 2])) || line.find(';') < pos)
+        return 0.0;
+    return std::strtod(line.data() + pos + 2, nullptr) / 60.0;
 }
 
 /**
@@ -123,6 +137,10 @@ std::string AdaptivePAProcessor::process_layer(std::string &&gcode) {
             m_current_feedrate = feedrate_of(line);
         }
         
+        // Every move with an F word sets the feedrate the firmware runs the following moves at, including travels and wipes.
+        if (const double feedrate = feedrate_word(line); feedrate > 0)
+            m_modal_feedrate = feedrate;
+
         // Wipe end found, continue searching for current feed rate.
         if (contains(line, "WIPE_END")) {
             wipe_command = false;
@@ -161,6 +179,7 @@ std::string AdaptivePAProcessor::process_layer(std::string &&gcode) {
                 size_t look_ahead = next_line_start;
                 std::string_view next_line;
                 double temp_feed_rate = 0;
+                double modal_feedrate = m_modal_feedrate;
                 bool extrude_move_found = false;
                 int line_counter = 0;
                 
@@ -170,11 +189,23 @@ std::string AdaptivePAProcessor::process_layer(std::string &&gcode) {
                 // until a feature change pattern or a wipe command is detected
                 while (get_line(look_ahead, next_line)) {
                     line_counter++;
+                    // Up to the first extrusion, every move with an F word (a travel, a lift, the extrusion itself) sets the
+                    // feedrate the extrusion inherits when no G1 F precedes it
+                    if (!extrude_move_found)
+                        if (const double feedrate = feedrate_word(next_line); feedrate > 0)
+                            modal_feedrate = feedrate;
                     // Found an extrude move, set extrude move found flag and move to the next line
                     const bool is_g1 = starts_with(next_line, "G1 ");
                     if ((!extrude_move_found) && is_g1 && contains(next_line, "X") && contains(next_line, "Y") && contains(next_line, "E")) {
                         // Pattern matched, break the loop
                         extrude_move_found = true;
+                        // No G1 F preceded the extrusion: the cooling buffer drops a feedrate the preceding travel or wipe
+                        // already set, so the extrusion runs at that feedrate rather than at the last G1 F seen.
+                        if (temp_feed_rate == 0 && modal_feedrate > 0) {
+                            temp_feed_rate     = modal_feedrate;
+                            m_next_feedrate    = modal_feedrate;
+                            m_current_feedrate = modal_feedrate;
+                        }
                         continue;
                     }
                     
@@ -310,6 +341,25 @@ std::string AdaptivePAProcessor::process_layer(std::string &&gcode) {
     return output;
 }
 
+// The model line with the whitespace around each comma-separated value removed.
+static std::string trim_adaptive_pa_model_fields(const std::string& line)
+{
+    std::string trimmed;
+    std::istringstream line_stream(line);
+    std::string field;
+    bool first = true;
+    while (std::getline(line_stream, field, ',')) {
+        const auto begin = field.find_first_not_of(" \t\r");
+        const auto end   = field.find_last_not_of(" \t\r");
+        if (!first)
+            trimmed += ',';
+        if (begin != std::string::npos)
+            trimmed += field.substr(begin, end - begin + 1);
+        first = false;
+    }
+    return trimmed;
+}
+
 std::string AdaptivePAProcessor::validate_adaptive_pa_model(const std::string& model_str)
 {
     if (model_str.empty())
@@ -322,14 +372,11 @@ std::string AdaptivePAProcessor::validate_adaptive_pa_model(const std::string& m
     while (std::getline(model_stream, line)) {
         ++line_number;
         
-        // Trim whitespace
-        const auto first = line.find_first_not_of(" \t\r\n");
-        if (first == std::string::npos)
+        // Whitespace around each value is ignored, as std::stod ignores it when the model is parsed
+        line = trim_adaptive_pa_model_fields(line);
+        if (line.empty())
             continue; // Skip empty lines
-        
-        const auto last = line.find_last_not_of(" \t\r\n");
-        line = line.substr(first, last - first + 1);
-        
+
         // Only numbers, commas and dots are allowed (no letters or other characters)
         for (char c : line) {
             if (!std::isdigit(static_cast<unsigned char>(c)) && c != ',' && c != '.') {
@@ -383,6 +430,24 @@ std::string AdaptivePAProcessor::validate_adaptive_pa_model(const std::string& m
     }
     
     return {}; // All validations passed
+}
+
+bool AdaptivePAProcessor::adaptive_pa_model_has_measurements(const std::string& model_str)
+{
+    std::istringstream model_stream(model_str);
+    std::string line;
+    while (std::getline(model_stream, line)) {
+        std::istringstream line_stream(line);
+        std::string value;
+        while (std::getline(line_stream, value, ',')) {
+            // a field that is not a number is left to validate_adaptive_pa_model
+            char* end = nullptr;
+            const double number = std::strtod(value.c_str(), &end);
+            if (end != value.c_str() && number != 0.0)
+                return true;
+        }
+    }
+    return false;
 }
 
 } // namespace Slic3r

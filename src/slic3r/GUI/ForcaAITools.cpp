@@ -10,6 +10,7 @@
 #include "GLCanvas3D.hpp"
 #include "Notebook.hpp"
 #include "libslic3r/BoundingBox.hpp"
+#include "libslic3r/ForcaOpenScad.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
@@ -200,6 +201,13 @@ ForcaAIResult tool_scene(const json& args)
         for (const ModelVolume* v : o->volumes)
             volumes.push_back({ { "name", v->name }, { "type", volume_type_name(v->type()) }, { "filament", v->extruder_id() } });
         oj["parts"] = volumes;
+        // Forca: an object rendered from a .scad file (forca_openscad_render can replace it in place).
+        if (const OpenScadLink link = forca_openscad_link_from_json(o->forca_openscad); !link.empty()) {
+            json values = json::object();
+            for (const auto& [name, value] : link.values)
+                values[name] = value;
+            oj["openscad"] = { { "file", link.file }, { "changed_parameters", values } };
+        }
 
         if (with_overrides) {
             json overrides = json::object();
@@ -445,6 +453,7 @@ void register_forca_ai_tools(ForcaAI& ai)
     register_forca_ai_printer_tools(ai);
     register_forca_ai_autonomy_tools(ai);
     register_forca_ai_academy_tools(ai);
+    register_forca_ai_openscad_tools(ai);
 }
 
 }} // namespace Slic3r::GUI

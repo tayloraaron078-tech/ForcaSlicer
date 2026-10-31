@@ -3,6 +3,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include "test_helpers.hpp"
 
+#include "libslic3r/GCodeReader.hpp"
+#include <catch2/catch_message.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
 #include <algorithm>
 #include <cstddef>
 #include "libslic3r/PrintConfig.hpp"
@@ -271,4 +276,58 @@ TEST_CASE("Consistent surface cooling keeps the outer wall speed", "[Cooling]")
     // The transition distance adds a feedrate command near the end of slowed down extrusions.
     CHECK(count_lines(slice_cube(cslConsistentSurface, 10.), "G1 F", "") >
           count_lines(slice_cube(cslConsistentSurface, 0.), "G1 F", ""));
+}
+
+// Forca: layer-time smoothing. A 20 mm block (layers 0-9), a 2 mm neck slowed down for its minimum layer time (10-19),
+// then the block again (20-39), at 0.2 mm. Without slowdown recovery the first wide layer after the neck is back at
+// full speed at once; with 5 recovery layers it starts slower and is at full speed again 5 layers later.
+TEST_CASE("Slowdown recovery brings the speed back over the set number of layers", "[Cooling]")
+{
+    TriangleMesh model = make_cube(20., 20., 2.);
+    TriangleMesh neck  = make_cube(2., 2., 2.);
+    neck.translate(9.f, 9.f, 2.f);
+    TriangleMesh top = make_cube(20., 20., 4.);
+    top.translate(0.f, 0.f, 4.f);
+    model.merge(neck);
+    model.merge(top);
+
+    // The time each layer spends extruding (seconds): a slowdown stretches it.
+    const auto time_per_layer = [&model](int recovery_layers) {
+        DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+        config.set_deserialize_strict({
+            { "layer_height",                0.2 },
+            { "initial_layer_print_height",  0.2 },
+            { "skirt_loops",                 0 },
+            { "slow_down_for_layer_cooling", true },
+            { "slow_down_layer_time",        "8" },
+            { "slow_down_min_speed",         "5" },
+        });
+        config.set_key_value("slow_down_recovery_layers", new ConfigOptionInts{ recovery_layers });
+        std::vector<double> times;
+        GCodeReader         parser;
+        parser.parse_buffer(slice({ model }, config), [&times](GCodeReader &reader, const GCodeReader::GCodeLine &line) {
+            if (line.comment() == "LAYER_CHANGE" || line.comment() == " CHANGE_LAYER")
+                times.push_back(0.);
+            else if (const double feedrate = line.has_f() ? line.f() : reader.f();
+                     !times.empty() && line.extruding(reader) && feedrate > 0.)
+                times.back() += line.dist_XY(reader) / (feedrate / 60.);
+        });
+        return times;
+    };
+
+    const std::vector<double> at_once = time_per_layer(0);
+    const std::vector<double> faded   = time_per_layer(5);
+    REQUIRE(at_once.size() == 40);
+    REQUIRE(faded.size() == 40);
+    CAPTURE(at_once, faded);
+    // Without recovery, the solid layers right above the neck already print at their own speed (21 and 22 alike).
+    CHECK_THAT(at_once[21], Catch::Matchers::WithinRel(at_once[22], 0.01));
+    // With 5 recovery layers (20-24) they start slower and get faster layer by layer, and from layer 24 on they print
+    // as without recovery.
+    CHECK(faded[20] > at_once[20] * 1.5);
+    CHECK(faded[20] > faded[21]);
+    CHECK(faded[21] > faded[22]);
+    CHECK(faded[22] > at_once[22]);
+    CHECK_THAT(faded[24], Catch::Matchers::WithinRel(at_once[24], 0.01));
+    CHECK_THAT(faded[30], Catch::Matchers::WithinRel(at_once[30], 0.01));
 }

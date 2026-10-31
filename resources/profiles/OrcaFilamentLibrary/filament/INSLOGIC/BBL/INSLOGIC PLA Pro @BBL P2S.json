@@ -14,15 +14,19 @@
 		"12"
 	],
 	"filament_scarf_seam_type": [
+		"all",
 		"all"
 	],
 	"filament_scarf_height": [
+		"10%",
 		"10%"
 	],
 	"filament_scarf_gap": [
+		"0%",
 		"0%"
 	],
 	"filament_scarf_length": [
+		"10",
 		"10"
 	],
 	"filament_change_length": [

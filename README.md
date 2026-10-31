@@ -41,7 +41,7 @@ Orca a great slicer and adds:
    under safety rules built into Forca. **Forca has no AI built in:** no AI model, no AI account, nothing sent to an
    AI service. If you don't bring one, there is no AI.
 9. **OpenSCAD files** — open a `.scad` model directly, change its Customizer parameters and render it again in place,
-   with a small editor for quick fixes. Forca uses your own OpenSCAD.
+   edit it in OpenSCAD or a small built-in editor, and get its colours as filaments. Forca uses your own OpenSCAD.
 10. **Filament profile import with a review** — bring filament profiles from OrcaSlicer, Bambu Studio and Forca in,
     see what each one changes first, and repair presets whose base is gone.
 
@@ -69,6 +69,8 @@ A per-filament guided flow in its own tab: **Temperature → Max Volumetric Spee
 - Slice & send straight to the printer, or generate only (SD card).
 - Progress bar and before/after table; results go into **one new "(calibrated)" filament preset** — your starting
   preset is never changed.
+- **Flow by weight:** a third Flow Rate method weighs a printed solid plate on a 0.01 g scale against what its slice
+  says it should weigh, with an optional 1 m filament weighing that checks the density first.
 - **Hole size (optional):** prints a bar with 3–20 mm holes; from the diameters you measure it suggests X-Y hole
   compensation in mm and in % of size, and puts both into your process preset (unsaved, so you decide).
 - **Printer calibration**, once per printer and nozzle: **Input Shaping** (frequency, then damping), **Cornering**
@@ -119,6 +121,17 @@ use the new settings.
 - Four settings Bambu Studio names differently are kept when you open its projects and profiles, and opening a newer
   Bambu Studio project lists any settings Forca still doesn't know (OrcaSlicer only writes them to its log).
 - **P2S and X2D** print outer walls clockwise, as Bambu Studio does on those printers.
+- **Sub-top surface pattern** (Bambu Studio 2.8.3): its own pattern for the solid layer that holds up a visible top
+  surface, so fast internal solid infill can keep a smooth foundation under the top (Strength page). It stays the
+  internal solid pattern until you pick one.
+- **Spiral ironing** (Bambu Studio 2.8.3): Ironing pattern "Archimedean Chords" irons each top surface in a spiral
+  from its centre outwards, for round caps, badges and broad cosmetic tops.
+- **Joined monotonic lines** (Bambu Studio's top surface joins, Strength page, on by default): with the Monotonic line
+  pattern the nozzle moves to the next line without extruding, at the surface's own speed and acceleration, instead of
+  a travel for every line. A top surface prints faster (about 3 minutes less on a one-hour Bambu H2S plate).
+- **Scarf seams per filament**: a filament can set its own scarf joint seam (Setting Overrides page), so a silk PLA
+  gets a scarf while the rest of the plate doesn't, and Bambu Studio filament profiles keep theirs when imported. Unset,
+  the process setting applies as before.
 
 ## Open Bamboo Networking (optional)
 **Preferences → Bambu network plug-in → "Network plug-in source"** switches between Bambu Lab's network plug-in and
@@ -144,15 +157,15 @@ Lab's plug-in stays the default, and if it ever crashes Forca, the Device tab of
   code (from its screen) in the printer's network settings.
 - **Klipper printers:** a **Search** button in the network settings finds Fluidd or Mainsail on the printer for the
   Device tab, and a printer set up with Moonraker's port 7125 now opens Fluidd / Mainsail instead of Moonraker's API.
-- **Filament sync from Happy Hare and Moonraker lane data** includes two OrcaSlicer fixes that aren't merged upstream
-  yet (*experimental*). On some setups (KX-Bridge) filaments can still land in the wrong slots or come in as generic
+- **Filament sync from Happy Hare and Moonraker lane data** (*experimental*) includes an OrcaSlicer fix that isn't
+  merged upstream yet, for Happy Hare printers whose lane data is still empty; a lane's own filament id picks the preset. On some setups (KX-Bridge) filaments can still land in the wrong slots or come in as generic
   presets; a fix is in testing.
 
 ## Forca AI (experimental, off by default)
 **Bring your own AI — or don't.** Forca doesn't contain an AI and doesn't need one. Forca AI is only a door that
 *your* AI app can use, and it stays shut unless you open it: while it's off, the connection isn't running at all,
-and Forca works exactly like a slicer with no AI. You choose which AI to use (Claude Desktop, Claude Code, or any
-other app that supports MCP, cloud or local), and your account and data stay with that app.
+and Forca works exactly like a slicer with no AI. You choose which AI to use (Claude Code, Claude Desktop, or any
+other app on your computer that supports MCP, with a cloud or local model), and your account and data stay with that app.
 
 When you do turn it on, it lets an AI assistant (Claude Code, or any app that speaks MCP) see and operate Forca — load and arrange models,
 choose presets, add support regions, slice and read the results, save a copy. For printers you choose, it can read
@@ -172,7 +185,9 @@ printer whose bed you marked clear, after a 10-second countdown you can cancel. 
 
 With the print journal on, the AI can also read it, including the Insights and a comparison of two prints, so it sees
 the same patterns you do. One key works for every Forca you run on your computer, and the Forca AI window is
-translated into all 22 languages.
+translated into all 22 languages. The window gives the Claude Code command and the settings for Claude Desktop,
+Codex (ChatGPT) and any other MCP app (for example LM Studio with a local model);
+[the Forca AI guide](docs/forca/guides/forca-ai.md) has the steps.
 
 See [SECURITY.md](SECURITY.md) for how it's protected.
 
@@ -190,7 +205,10 @@ shows the file's Customizer (groups, captions, dropdowns, checkboxes) inside For
 in place, keeping its position, modifiers and per-part settings, as one undo step. The project remembers the file, its
 text and your values, so it re-renders on another computer or after the file is renamed. **Edit source...** opens the
 file in a small editor with OpenSCAD's messages under it and the lines with a problem marked, for a quick fix without
-leaving Forca.
+leaving Forca. **Edit in OpenSCAD** opens it in OpenSCAD itself, and Forca offers to render it again when you save
+there; **File → Import → New OpenSCAD model...** starts one from a starter file. A model's `color()`s become the
+closest filaments, painted on its faces, and with [Forca AI](#forca-ai-experimental-off-by-default) your own AI
+assistant can design a part in OpenSCAD and render it onto the plate.
 
 Forca doesn't include OpenSCAD: it runs the one you install (a development snapshot from 2025 or later; choose it in
 **Preferences → OpenSCAD**). **[OpenSCAD in Forca: the guide](docs/forca/openscad.md)** shows every step.
@@ -206,6 +224,11 @@ When a filament preset of yours can't load because the preset it was based on is
 lets you pick a new one.
 
 ## Smaller changes
+- **Slowdown recovery layers** (filament, Cooling): after a layer slowed down for cooling, the speed comes back over
+  this many layers instead of at once, so a wide part above a thin neck doesn't show a band. Off by default.
+  [Cooling slowdown](docs/forca/guides/cooling.md) also explains Consistent surface, which keeps the outer wall at speed.
+- **Favourite settings:** right-click a process setting's name and choose **Add to favorites** to put it on a
+  **Favorites** page, first in the process settings. A preference of yours, not part of any preset.
 - **Its own settings folder** (`%APPDATA%\ForcaSlicer`). On first start Forca offers to copy your OrcaSlicer
   settings; it never changes OrcaSlicer's.
 - **No Orca Cloud and no OrcaSlicer update server.** Forca doesn't sign in to or sync with Orca Cloud (the OrcaSlicer
@@ -213,7 +236,7 @@ lets you pick a new one.
   in Stealth mode), and bug reports and release links go to Forca, never to the OrcaSlicer team. Bambu Cloud is not
   affected.
 - **Import dialog file-type list:** "Supported files", "Model files without 3MF", 3MF, STL, STEP or OBJ; Forca
-  remembers your choice.
+  remembers your choice. "Replace with 3D file" (right-click > More) has the same list and remembers its own choice.
 - **A pause or colour change left above the top of a print** (for example from a taller model the project used to
   hold) no longer fires on the last layer. The layer slider hides such marks, so they couldn't be seen or removed.
 - **The input shaping and cornering calibrations switch off overhang slowdown**, so it can't skew those tests.

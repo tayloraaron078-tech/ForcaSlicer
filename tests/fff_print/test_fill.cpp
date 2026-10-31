@@ -816,6 +816,152 @@ TEST_CASE("Ironing spacing below the minimum irons at the minimum spacing", "[Fi
     CHECK_THAT(clamped.second, Catch::Matchers::WithinRel(minimum.second, 1e-9));
 }
 
+// Forca: Bambu Studio's spiral ironing ("ironingarchimedeanspiral"). Each ironed area gets an Archimedean spiral that
+// starts at the area's centre and works outwards, a hole is crossed by travels, and every piece runs outwards.
+TEST_CASE("Spiral ironing starts at the centre and works outwards", "[Fill]")
+{
+    DynamicPrintConfig config;
+    config.set_deserialize_strict("ironing_pattern", "ironingarchimedeanspiral");
+    REQUIRE(config.opt_enum<InfillPattern>("ironing_pattern") == ipIroningArchimedeanSpiral);
+
+    std::unique_ptr<Fill> filler(Fill::new_from_type(ipIroningArchimedeanSpiral));
+    filler->spacing      = 0.2; // mm
+    filler->angle        = 0.f;
+    filler->bounding_box = BoundingBox(Point(0, 0), Point::new_scale(20, 20));
+    FillParams params;
+    params.density = 1.f;
+    // A 20 mm square with a 3 mm hole off the centre.
+    ExPolygon area({Point(0, 0), Point::new_scale(20, 0), Point::new_scale(20, 20), Point::new_scale(0, 20)});
+    area.holes.emplace_back(Polygon({Point::new_scale(13, 13), Point::new_scale(13, 16), Point::new_scale(16, 16), Point::new_scale(16, 13)}));
+    Surface surface(stTop, area);
+    const Polylines pieces = filler->fill_surface(&surface, params);
+    REQUIRE(pieces.size() > 1); // the hole cuts the spiral
+
+    const Vec2d  centre    = Point::new_scale(10, 10).cast<double>();
+    const auto   radius    = [&centre](const Point &p) { return (p.cast<double>() - centre).norm(); };
+    const double tolerance = scale_(filler->spacing);
+    CHECK(radius(pieces.front().first_point()) < tolerance);
+    for (size_t i = 0; i < pieces.size(); ++i) {
+        INFO("piece " << i);
+        CHECK(radius(pieces[i].first_point()) <= radius(pieces[i].last_point()) + tolerance);
+        if (i > 0)
+            CHECK(radius(pieces[i].first_point()) >= radius(pieces[i - 1].first_point()) - tolerance);
+    }
+}
+
+// The internal solid infill of a layer, as the start and end points of its extrusions: two fills with different
+// patterns differ here.
+static std::vector<Point> solid_infill_ends(const Layer &layer)
+{
+    std::vector<Point> ends;
+    for (const LayerRegion *layerm : layer.regions()) {
+        const ExtrusionEntityCollection fills = layerm->fills.flatten();
+        for (const ExtrusionEntity *entity : fills.entities)
+            if (entity->role() == erSolidInfill) {
+                ends.push_back(entity->first_point());
+                ends.push_back(entity->last_point());
+            }
+    }
+    return ends;
+}
+
+// Forca: Bambu Studio 2.8.3's sub-top surface pattern. A 20 mm cube at 0.2 mm is 100 layers; with 4 top shells,
+// layer 99 is the top surface, 98 the solid layer holding it up, 97 and 96 plain internal solid.
+TEST_CASE("The solid layer under a top surface takes the sub-top pattern", "[Fill]")
+{
+    const auto fills_for = [](const std::string &sub_top_pattern) {
+        Print print;
+        Slic3r::Test::init_and_process_print({Slic3r::Test::cube(20)}, print,
+                                            {{"layer_height", 0.2},
+                                             {"initial_layer_print_height", 0.2},
+                                             {"top_shell_layers", 4},
+                                             {"sparse_infill_density", "15%"},
+                                             {"top_surface_pattern", "rectilinear"},
+                                             {"internal_solid_infill_pattern", "rectilinear"},
+                                             {"sub_top_surface_pattern", sub_top_pattern}});
+        std::vector<std::vector<Point>> layers;
+        for (const Layer *layer : print.objects().front()->layers())
+            layers.push_back(solid_infill_ends(*layer));
+        return layers;
+    };
+
+    const auto same = fills_for("sameasinternalsolid");
+    REQUIRE(same.size() == 100);
+    REQUIRE(!same[98].empty());
+    // The internal solid pattern itself, named, is the same fill as the default.
+    CHECK(fills_for("rectilinear")[98] == same[98]);
+
+    const auto concentric = fills_for("concentric");
+    CHECK(concentric[98] != same[98]);
+    CHECK(concentric[97] == same[97]);
+    CHECK(concentric[96] == same[96]);
+}
+
+namespace {
+struct TopSurfaceFill
+{
+    size_t entities{0};
+    size_t joins{0};
+    double longest_join{0.};
+    double extruded{0.};
+};
+
+void add_top_surface(const ExtrusionEntity &entity, TopSurfaceFill &fill)
+{
+    if (const auto *collection = dynamic_cast<const ExtrusionEntityCollection *>(&entity)) {
+        for (const ExtrusionEntity *child : collection->entities)
+            add_top_surface(*child, fill);
+        return;
+    }
+    if (entity.role() != erTopSolidInfill)
+        return;
+    ++fill.entities;
+    const auto add_path = [&fill](const ExtrusionPath &path) {
+        const double length = unscale<double>(path.length());
+        if (path.is_force_no_extrusion()) {
+            ++fill.joins;
+            fill.longest_join = std::max(fill.longest_join, length);
+        } else
+            fill.extruded += length;
+    };
+    if (const auto *multi_path = dynamic_cast<const ExtrusionMultiPath *>(&entity))
+        for (const ExtrusionPath &path : multi_path->paths)
+            add_path(path);
+    else if (const auto *path = dynamic_cast<const ExtrusionPath *>(&entity))
+        add_path(*path);
+}
+} // namespace
+
+// Forca: Bambu Studio's monotonic line joins. A 20 mm cube at 0.2 mm is 100 layers; the last is its top surface.
+TEST_CASE("Monotonic lines are joined by moves that don't extrude", "[Fill]")
+{
+    const auto top_fill = [](const char *join) {
+        Print print;
+        Slic3r::Test::init_and_process_print({Slic3r::Test::cube(20)}, print,
+                                            {{"layer_height", 0.2},
+                                             {"initial_layer_print_height", 0.2},
+                                             {"top_surface_pattern", "monotonicline"},
+                                             {"top_surface_line_width", 0.42},
+                                             {"monotonic_line_join", join}});
+        TopSurfaceFill fill;
+        for (const LayerRegion *region : print.objects().front()->layers().back()->regions())
+            for (const ExtrusionEntity *entity : region->fills.entities)
+                add_top_surface(*entity, fill);
+        return fill;
+    };
+
+    const TopSurfaceFill separate = top_fill("0");
+    const TopSurfaceFill joined   = top_fill("1");
+    REQUIRE(separate.entities > 10);
+    CHECK(separate.joins == 0);
+    // The same lines, each join putting two of them into one path.
+    CHECK_THAT(joined.extruded, Catch::Matchers::WithinRel(separate.extruded, 1e-6));
+    CHECK(joined.joins > 0);
+    CHECK(joined.entities + joined.joins == separate.entities);
+    // Only neighbouring lines are joined: at most 3 line widths apart.
+    CHECK(joined.longest_join <= 3 * 0.42 + 0.05);
+}
+
 TEST_CASE("Concentric fill at zero spacing returns without paths", "[Fill]")
 {
     std::unique_ptr<Fill> filler(Fill::new_from_type(ipConcentric));

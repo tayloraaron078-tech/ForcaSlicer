@@ -199,9 +199,16 @@ private:
     void on_height_changed(wxCommandEvent& evt);        // measured height -> result helper (MVS, PA Tower, Retraction)
     void on_result_value_changed(wxCommandEvent& evt);  // live flow-ratio formula as the block number is typed
 
-    // Flow Rate: Classic (pass 1 coarse %, pass 2 fine %) or Orca YOLO (Recommended, then Perfectionist).
-    enum FlowMethod { FLOW_CLASSIC = 0, FLOW_YOLO = 1 }; // m_flow_method choice order
+    // Flow Rate: Classic (pass 1 coarse %, pass 2 fine %), Orca YOLO (Recommended, then Perfectionist), or (Forca) one
+    // weighed plate: the slice says what it should weigh, the scale what it does (libslic3r ForcaCalibModel).
+    enum FlowMethod { FLOW_CLASSIC = 0, FLOW_YOLO = 1, FLOW_WEIGHT = 2 }; // m_flow_method choice order
     bool   flow_is_yolo() const;
+    bool   flow_is_weight() const;
+    double weight_plate_expected_grams() const;  // the current plate's slice, without skirt, brim and purge (0 = none)
+    double current_filament_density() const;     // filament_density of the selected filament (0 = unset)
+    double weight_check_density() const;         // from the weighed metre of filament (0 = not entered or invalid)
+    double weight_flow_ratio() const;            // from the result page's weights (0 = not computable yet)
+    void   launch_weight_plate(bool skip_confirm);
     double current_flow_ratio() const;                   // filament_flow_ratio of the selected filament
     double new_flow_ratio(double block_value) const;     // classic: cur*(1+N/100); YOLO: cur+N
     void   update_flow_labels();                         // pass label + coaching for method/pass/recheck
@@ -248,6 +255,9 @@ private:
     wxTextCtrl*   m_shrink_x        { nullptr };
     wxTextCtrl*   m_shrink_y        { nullptr };
     wxTextCtrl*   m_shrink_z        { nullptr };
+    wxPanel*      m_weight_inputs   { nullptr }; // Flow by weight: what the slice expects + the optional metre check
+    wxTextCtrl*   m_weight_expected { nullptr };
+    wxTextCtrl*   m_weight_meter    { nullptr };
     wxPanel*      m_hole_inputs     { nullptr }; // Hole size: one measured diameter per hole
     std::vector<wxTextCtrl*> m_hole_values;
     wxTextCtrl*   m_preset_name     { nullptr };

@@ -64,6 +64,6 @@ files, worded as a repair, with a parent suggested for each. Nothing changes unl
 ## Limits
 
 - The review covers filament presets; process and printer presets in the same files import as before.
-- Bambu Studio's per-filament hole and contour compensation and its per-filament scarf seam settings have no Forca
-  equivalent yet, so they end up in the notes.
+- Bambu Studio's per-filament hole and contour compensation has no Forca equivalent yet, so it ends up in the notes.
+  Its per-filament scarf seam settings are Forca settings (see `bambu-studio-settings.md`); the import maps them.
 - A file without a `version` can't be read as a preset.

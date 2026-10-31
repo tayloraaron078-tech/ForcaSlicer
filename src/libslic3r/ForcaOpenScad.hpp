@@ -84,6 +84,27 @@ std::string forca_openscad_unquote(const std::string &value);
 // The WARNING / ERROR lines of OpenSCAD's console output (stderr), without the ECHO and progress lines.
 std::vector<std::string> forca_openscad_problems(const std::string &console_output);
 
+// The colours of an OpenSCAD 3MF (export-3mf/color-mode=model): OpenSCAD writes one 3MF material per color() and gives
+// each triangle its material. OrcaSlicer's 3MF reader ignores per-triangle materials, so Forca reads them itself.
+struct OpenScadColors
+{
+    std::vector<std::string>      colors;              // "#RRGGBB" of each material, by index
+    int                           default_index = -1;  // OpenSCAD's "Default" material (no color() given), or -1
+    std::vector<std::vector<int>> triangles;           // per object in file order: each triangle's material, -1 = none
+};
+// From the 3MF's 3D/3dmodel.model XML text.
+OpenScadColors forca_openscad_colors_from_model_xml(const std::string &xml);
+// From the 3MF file; empty when it can't be read.
+OpenScadColors forca_openscad_read_colors(const std::string &path_3mf);
+
+// A JSON value (number, boolean, string or a list of them, as JSON text) in OpenSCAD syntax for -D, as the Customizer
+// values are. Throws std::runtime_error for anything else (an object, null, text that isn't JSON).
+std::string forca_openscad_value_from_json(const std::string &json_text);
+
+// The .scad file "New OpenSCAD model" starts from: a rounded box whose sizes are Customizer parameters, with comments
+// saying how parameters work.
+std::string forca_openscad_starter_model();
+
 // A line of a .scad file that one of OpenSCAD's warnings or errors names ("... in file box.scad, line 9").
 struct OpenScadProblemLine
 {

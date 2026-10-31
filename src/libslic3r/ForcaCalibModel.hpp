@@ -40,6 +40,21 @@ struct ForcaHoleFit
 // than max(1 mm, 20 %) off its designed size is treated as a typo (Implausible).
 ForcaHoleFit forca_hole_fit(const std::vector<double>& designed, const std::vector<double>& measured);
 
+// Forca: weight-based flow calibration (Calibration Wizard, Flow Rate method "Weigh a plate"). A solid plate whose
+// weight the slice predicts; the user weighs the print on a 0.01 g scale (about 6-7 g of PLA, so 0.2 % resolution).
+constexpr double FORCA_WEIGHT_PLATE_X = 40.; // mm
+constexpr double FORCA_WEIGHT_PLATE_Y = 40.;
+constexpr double FORCA_WEIGHT_PLATE_H = 3.;
+// Adds the plate to an empty object, its corner at the origin.
+void forca_build_flow_weight_plate(ModelObject& object);
+// The flow ratio that makes the printer deliver what the slice asks for. The slice's grams already include the flow
+// ratio the plate was printed with (GCode::_extrude), so measured / expected is the printer's own extrusion error and
+// the new ratio is its inverse, expected / measured, whatever the old ratio was. 0 when a weight isn't positive.
+double forca_flow_ratio_from_weight(double expected_g, double measured_g);
+// Filament density (g/cm3) from the weight of 1 m of filament (g) and its diameter (mm): a 1 m length is pi r^2 cm3
+// (r in mm). 0 when a value isn't positive.
+double forca_density_from_meter_weight(double grams_per_meter, double diameter_mm);
+
 } // namespace Slic3r
 
 #endif // slic3r_ForcaCalibModel_hpp_

@@ -41,6 +41,8 @@ namespace Slic3r::GUI { class Field; }
 
 namespace Slic3r { namespace GUI {
 
+class OptionStateRegistry;
+
 //  Static text shown among the options.
 class OG_CustomCtrl :public wxPanel
 {
@@ -97,6 +99,7 @@ class OG_CustomCtrl :public wxPanel
     };
 
     std::vector<CtrlLine> ctrl_lines;
+    const OptionStateRegistry* m_option_state_registry{nullptr};
 
 public:
     OG_CustomCtrl(  wxWindow* parent,
@@ -107,9 +110,12 @@ public:
                     const wxString& name = wxEmptyString);
     ~OG_CustomCtrl() {}
 
+    void set_option_state_registry(const OptionStateRegistry* registry) { m_option_state_registry = registry; }
+
     void    OnPaint(wxPaintEvent&);
     void    OnMotion(wxMouseEvent& event);
     void    OnLeftDown(wxMouseEvent& event);
+    void    OnRightDown(wxMouseEvent& event); // Forca: OptionsGroup::label_context_menu
     void    OnLeaveWin(wxMouseEvent& event);
 
     void    init_ctrl_lines();

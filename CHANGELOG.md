@@ -1,7 +1,7 @@
 # Forca Slicer — Changelog
 
 All notable changes Forca makes on top of its OrcaSlicer base (the `2.5.0-dev` line, merged up to `main`
-`baff031626` on 2026-10-25; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
+`7ac46c9a61` on 2026-10-31; originally pinned at `c0c2cc5068`). OrcaSlicer's own changes are not listed here — see the
 [OrcaSlicer releases](https://github.com/OrcaSlicer/OrcaSlicer/releases).
 
 Forca has its own version number from `0.1.0-alpha.1` on. Entries up to the first public alpha are grouped by date,
@@ -13,6 +13,75 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 (OrcaSlicer's own commits, such as `8c03985818`, are in it.)
 
 ## Unreleased
+
+## 0.1.0-alpha.9 — 2026-10-31
+
+### Added
+- **Feedback notification:** after your 5th slice Forca asks once, in a small notification, how it is working for
+  you; **Share feedback** opens Forca's GitHub Discussions. It never shows again, and nothing is sent unless you
+  write something yourself.
+- **Edit in OpenSCAD** (right-click an OpenSCAD object): opens the file in OpenSCAD's own window, and when you save it
+  there, Forca offers to render the model again with your values.
+- **New OpenSCAD model** (File > Import): saves a starter `.scad` file with Customizer parameters, puts it on the plate
+  and opens it in OpenSCAD.
+- **OpenSCAD colours become filaments:** each `color()` goes to the closest filament in the project, and the model's
+  faces are painted with it.
+- **Forca AI can design in OpenSCAD:** `forca_openscad_render` renders a `.scad` file, or code the AI writes (saved in
+  `Documents\Forca AI\OpenSCAD`), onto the plate and returns OpenSCAD's messages, and `forca_openscad_params` reads a
+  file's parameters. [The OpenSCAD guide](docs/forca/openscad.md) covers all of it.
+- **Importing a Bambu Studio built-in preset** (a file from its `system` folder) now says "Already built into Forca"
+  (with the matching preset) or that Forca doesn't have it yet, instead of "Can't be read as a preset".
+- **Slowdown recovery layers** (filament setting, Cooling page): after a layer slowed down for its minimum layer time,
+  the speed comes back in equal steps over this many layers instead of at once, so a model whose layers suddenly get
+  longer doesn't show a band where the speed jumps. Slowing down still happens at once. 0 (default) keeps prints as
+  they are. New guide: [Cooling slowdown](docs/forca/guides/cooling.md).
+- **Favourite settings:** right-click a process setting's name and choose "Add to favorites"; a Favorites page, first
+  in the process settings, collects them (only while it has any). Stored as a preference, never in presets or projects.
+- **Flow by weight** (Calibration Wizard): a third Flow Rate method, "Weigh a printed plate". Forca prints a solid
+  40 x 40 x 3 mm plate, takes its expected weight from the slice (without skirt, brim and purge), and sets the flow
+  ratio to expected / measured. An optional weighed metre of filament checks the density first and saves it.
+- **Sub-top surface pattern** (Bambu Studio 2.8.3): the solid layer that holds up a visible top surface can have its
+  own pattern (Strength page, next to the internal solid infill pattern). Its default, "Same as internal solid
+  infill", keeps prints as they are; Bambu Studio projects and profiles that set it keep their pattern.
+- **Spiral ironing** (Bambu Studio 2.8.3): a third ironing pattern, "Archimedean Chords", irons each top surface in a
+  spiral from its centre outwards. Bambu Studio projects and profiles that use it keep it.
+- **Scarf seams per filament** (Bambu Studio's settings): a filament can set its own scarf joint seam type, start
+  height, gap and length on its Setting Overrides page; its walls use them instead of the process ones, unless the
+  process, an object or a modifier turns on "Override filament scarf seam setting". Off by default, so nothing changes
+  until a filament sets one. Imported Bambu Studio filaments keep their scarf seam (one set to "None" imports without
+  one), and a process's "Scarf slope gap" becomes the seam gap.
+- **Forca AI with Claude Desktop's chat:** the Forca AI window's new **Connect from** choice gives the settings for
+  Claude Desktop (through the mcp-remote helper, which needs Node.js) as well as the Claude Code command. Steps in
+  [the Forca AI guide](docs/forca/guides/forca-ai.md#connect-claude-desktops-chat).
+- **Forca AI with Codex and other AI apps:** **Connect from** also gives the settings for Codex (OpenAI's agent in
+  the ChatGPT desktop app) and, under **Other app (MCP)**, the address and key for any app that uses MCP servers, such
+  as LM Studio for local models or chat apps running Grok. Steps in
+  [the Forca AI guide](docs/forca/guides/forca-ai.md#connect-codex-chatgpt).
+- **Join monotonic lines** (process setting, Strength > Top/bottom shells, on by default): with the Monotonic line
+  pattern the nozzle moves to the next line without extruding, at the surface's speed and acceleration, as Bambu
+  Studio does, instead of switching to travel speed and acceleration for every line (a one-hour plate on a Bambu
+  H2S printed in 58 instead of 61 minutes). Turn it off to get the old toolpaths.
+- **Replace with 3D file** (right-click > More) has the Import dialog's file-type list ("Supported files", "Model files
+  without 3MF", 3MF, STL, STEP or OBJ) and remembers the last choice.
+
+### Changed
+- **Merged OrcaSlicer up to `main` `7ac46c9a61` (2026-10-30)**: fixes for a lightning infill hang, a crash opening a
+  project with missing settings, a slicing crash on a thin object with a raft, Slice sometimes needing a second click,
+  tree supports inside the XY clearance and Moonraker printers receiving a 3MF as G-code; Creality Hi CFS filament
+  sync, configurable tab shortcuts, a reason shown for greyed-out settings, the Basque language, wxWidgets with a
+  Wayland fix and OpenCV 4.14. Klipper lanes now match a filament preset by the lane's `filament_id` only, as
+  OrcaSlicer does (no longer by `setting_id` or preset name). OrcaSlicer now checks a Klipper printer's free space
+  before sending; Forca only refuses to send when the printer reports a full disk, so bridges that can't answer
+  (KX-Bridge for the Anycubic Kobra X) keep working.
+
+### Fixed
+- **Switching between light and dark mode** (Preferences) left the Calibration Wizard's dropdowns and buttons dark,
+  and the process settings header (preset, save, search and the Quality / Strength ... tabs) in the old colours,
+  until Forca was restarted.
+- **The print time estimate counted waits after the print.** On printers without pre-heating (the H2S, X1, P1 and A1,
+  for example) the estimate and the printer's countdown included the end G-code's waits, such as the H2S's 6 minutes
+  of filtration after the print is done. Forca now marks where the end G-code starts, as Bambu Studio does, so those
+  waits are left out.
 
 ## 0.1.0-alpha.8 — 2026-10-26
 

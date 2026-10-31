@@ -80,11 +80,16 @@ void ExtrusionPath::_inflate_collection(const Polylines &polylines, ExtrusionEnt
 
 void ExtrusionPath::polygons_covered_by_width(Polygons &out, const float scaled_epsilon) const
 {
+    // Forca: a move that doesn't extrude covers nothing.
+    if (m_no_extrusion)
+        return;
     polygons_append(out, offset(this->polyline.to_polyline(), float(scale_(this->width/2)) + scaled_epsilon));
 }
 
 void ExtrusionPath::polygons_covered_by_spacing(Polygons &out, const float scaled_epsilon) const
 {
+    if (m_no_extrusion)
+        return;
     // Instantiating the Flow class to get the line spacing.
     // Don't know the nozzle diameter, setting to zero. It shall not matter it shall be optimized out by the compiler.
     bool bridge = is_bridge(this->role());

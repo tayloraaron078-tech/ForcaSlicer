@@ -251,3 +251,37 @@ TEST_CASE("The hole plate slices into a bar with one hole per size", "[ForcaCali
     for (size_t i = 0; i < sizes.size(); ++i)
         CHECK_THAT(diameters[i], WithinAbs(sizes[i], 0.02));
 }
+
+// Forca: weight-based flow calibration (Calibration Wizard, Flow Rate "Weigh a plate").
+TEST_CASE("The flow weight plate is a solid 40 x 40 x 3 mm block", "[ForcaCalibModel]")
+{
+    Model        model;
+    ModelObject *object = model.add_object();
+    forca_build_flow_weight_plate(*object);
+    REQUIRE(object->volumes.size() == 1);
+    TriangleMesh mesh = object->volumes.front()->mesh(); // volume() is not const
+    CHECK_THAT(mesh.volume(), Catch::Matchers::WithinRel(FORCA_WEIGHT_PLATE_X * FORCA_WEIGHT_PLATE_Y * FORCA_WEIGHT_PLATE_H, 1e-6));
+    const BoundingBoxf3 bb = mesh.bounding_box();
+    CHECK_THAT(bb.size().z(), Catch::Matchers::WithinAbs(FORCA_WEIGHT_PLATE_H, 1e-6));
+}
+
+TEST_CASE("A weighed plate gives the inverse of the printer's extrusion error as the flow ratio", "[ForcaCalibModel]")
+{
+    // The slice expects 7.00 g. A plate 5 % heavy means the printer extrudes 5 % too much.
+    CHECK_THAT(forca_flow_ratio_from_weight(7.0, 7.35), Catch::Matchers::WithinAbs(1. / 1.05, 1e-9));
+    // 5 % light: 5 % too little.
+    CHECK_THAT(forca_flow_ratio_from_weight(7.0, 6.65), Catch::Matchers::WithinAbs(1. / 0.95, 1e-9));
+    // As expected: the printer is right, flow 1.
+    CHECK_THAT(forca_flow_ratio_from_weight(7.0, 7.0), Catch::Matchers::WithinAbs(1., 1e-12));
+    CHECK(forca_flow_ratio_from_weight(0., 7.0) == 0.);
+    CHECK(forca_flow_ratio_from_weight(7.0, 0.) == 0.);
+}
+
+TEST_CASE("The weight of a metre of filament gives its density", "[ForcaCalibModel]")
+{
+    // 1 m of 1.75 mm filament is pi * 0.875^2 = 2.405 cm3; at 1.24 g/cm3 (PLA) it weighs 2.983 g.
+    const double grams = 1.24 * PI * 0.875 * 0.875;
+    CHECK_THAT(forca_density_from_meter_weight(grams, 1.75), Catch::Matchers::WithinAbs(1.24, 1e-9));
+    CHECK(forca_density_from_meter_weight(0., 1.75) == 0.);
+    CHECK(forca_density_from_meter_weight(2.98, 0.) == 0.);
+}

@@ -1,0 +1,59 @@
+{
+  "_comment": "Strings of the Join monotonic lines setting (PrintConfig.cpp monotonic_line_join). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Join monotonic lines",
+      "translations": {
+        "ca": "Unir les línies monotòniques",
+        "cs": "Spojit monotonní linie",
+        "de": "Monotonische Linien verbinden",
+        "es": "Unir líneas monotónicas",
+        "eu": "Lerro monotonikoak elkartu",
+        "fr": "Relier les lignes monotones",
+        "hu": "Monotonikus vonalak összekötése",
+        "it": "Unisci le linee monotoniche",
+        "ja": "単調線をつなぐ",
+        "ko": "단조선 연결",
+        "lt": "Sujungti monotoniškas linijas",
+        "nl": "Monotone lijnen verbinden",
+        "pl": "Łącz linie monotoniczne",
+        "pt_BR": "Unir linhas monótonas",
+        "ru": "Соединять линии аккуратной штриховки",
+        "sv": "Sammanfoga monotona linjer",
+        "th": "เชื่อมเส้นโมโนโทนิค",
+        "tr": "Monotonik çizgileri birleştir",
+        "uk": "Зʼєднувати монотонні лінії",
+        "vi": "Nối các đường đơn điệu",
+        "zh_CN": "连接单调线",
+        "zh_TW": "連接單調線"
+      }
+    },
+    {
+      "msgid": "With the Monotonic line pattern, move from one line to the next without extruding instead of travelling, as Bambu Studio does. The nozzle keeps the surface's speed and acceleration, which saves time on every top surface.",
+      "translations": {
+        "ca": "Amb el patró Línia monotònica, passa d'una línia a la següent sense extruir en lloc de fer un recorregut, com fa Bambu Studio. El broquet manté la velocitat i l'acceleració de la superfície, cosa que estalvia temps a cada superfície superior.",
+        "cs": "U vzoru Monotonní linie přejde z jedné linie na další bez vytlačování místo přejezdu, jako Bambu Studio. Tryska si zachová rychlost a zrychlení povrchu, což ušetří čas na každém horním povrchu.",
+        "de": "Beim Muster Monotonische Linie fährt die Düse ohne Extrusion von einer Linie zur nächsten statt im Eilgang, wie in Bambu Studio. Sie behält Geschwindigkeit und Beschleunigung der Oberfläche bei, was bei jeder oberen Oberfläche Zeit spart.",
+        "es": "Con el patrón Línea Monotónica, pasa de una línea a la siguiente sin extruir en lugar de hacer un desplazamiento, como hace Bambu Studio. La boquilla mantiene la velocidad y la aceleración de la superficie, lo que ahorra tiempo en cada superficie superior.",
+        "eu": "Lerro monotonikoa ereduarekin, lerro batetik hurrengora estruitu gabe igarotzen da desplazamendurik egin beharrean, Bambu Studiok egiten duen bezala. Pitak gainazalaren abiadura eta azelerazioa mantentzen ditu, eta horrek denbora aurrezten du goiko gainazal bakoitzean.",
+        "fr": "Avec le motif Ligne monotone, passe d'une ligne à la suivante sans extruder au lieu d'effectuer un déplacement, comme le fait Bambu Studio. La buse garde la vitesse et l'accélération de la surface, ce qui fait gagner du temps sur chaque surface supérieure.",
+        "hu": "A Monotonikus vonal mintánál mozgás helyett extrudálás nélkül halad át az egyik vonalról a következőre, ahogy a Bambu Studio is. A fúvóka megtartja a felület sebességét és gyorsulását, ami minden felső felületen időt takarít meg.",
+        "it": "Con il motivo Linea monotonica, passa da una linea alla successiva senza estrudere invece di fare uno spostamento, come fa Bambu Studio. L'ugello mantiene la velocità e l'accelerazione della superficie, risparmiando tempo su ogni superficie superiore.",
+        "ja": "単調線パターンで、移動の代わりに押し出しなしで次の線へ進みます (Bambu Studio と同じ)。ノズルは表面の速度と加速度を保つため、上面ごとに時間を節約できます。",
+        "ko": "단조선 패턴에서 이동 대신 압출 없이 다음 선으로 넘어갑니다(Bambu Studio와 동일). 노즐이 표면의 속도와 가속도를 유지하므로 상단 표면마다 시간이 절약됩니다.",
+        "lt": "Naudojant Monotoniškų linijų raštą, užuot atlikus tuščiąją eigą, pereinama nuo vienos linijos prie kitos neekstruduojant, kaip tai daro Bambu Studio. Purkštukas išlaiko paviršiaus greitį ir pagreitį, todėl sutaupoma laiko kiekviename viršutiniame paviršiuje.",
+        "nl": "Bij het patroon Monotone lijn gaat de nozzle zonder te extruderen naar de volgende lijn in plaats van te verplaatsen, zoals Bambu Studio doet. De nozzle houdt de snelheid en versnelling van het vlak aan, wat op elk bovenvlak tijd bespaart.",
+        "pl": "We wzorze Linia monotoniczna dysza przechodzi do następnej linii bez ekstruzji zamiast wykonywać przemieszczenie, tak jak w Bambu Studio. Zachowuje prędkość i przyspieszenie powierzchni, co oszczędza czas na każdej górnej powierzchni.",
+        "pt_BR": "Com o padrão Linha monótona, passa de uma linha para a próxima sem extrudar em vez de fazer um deslocamento, como o Bambu Studio faz. O bico mantém a velocidade e a aceleração da superfície, o que economiza tempo em cada superfície superior.",
+        "ru": "При шаблоне «Аккуратная штриховка» сопло переходит к следующей линии без экструзии вместо перемещения, как в Bambu Studio. Оно сохраняет скорость и ускорение поверхности, что экономит время на каждой верхней поверхности.",
+        "sv": "Med mönstret Monoton linje går munstycket till nästa linje utan att extrudera i stället för att flytta, som Bambu Studio gör. Munstycket behåller ytans hastighet och acceleration, vilket sparar tid på varje toppyta.",
+        "th": "เมื่อใช้รูปแบบเส้นโมโนโทนิค หัวฉีดจะไปยังเส้นถัดไปโดยไม่ฉีดเส้นแทนการเดินหัวเปล่า เช่นเดียวกับ Bambu Studio หัวฉีดคงความเร็วและความเร่งของพื้นผิวไว้ จึงประหยัดเวลาในทุกผิวด้านบน",
+        "tr": "Monotonik çizgi deseninde, Bambu Studio'da olduğu gibi seyahat yerine ekstrüzyon yapmadan bir çizgiden sonrakine geçilir. Nozul yüzeyin hızını ve hızlanmasını korur, bu da her üst yüzeyde zaman kazandırır.",
+        "uk": "З шаблоном «Монотонний прямолінійний» сопло переходить до наступної лінії без екструзії замість переміщення, як у Bambu Studio. Воно зберігає швидкість і прискорення поверхні, що заощаджує час на кожній верхній поверхні.",
+        "vi": "Với mẫu Đường đơn điệu, đầu phun chuyển sang đường kế tiếp mà không đùn nhựa thay vì di chuyển, giống như Bambu Studio. Đầu phun giữ tốc độ và gia tốc của bề mặt, giúp tiết kiệm thời gian ở mỗi bề mặt trên.",
+        "zh_CN": "使用单调线图案时，像 Bambu Studio 一样不挤出地移到下一条线，而不是空驶。喷嘴保持表面的速度和加速度，从而在每个顶面上节省时间。",
+        "zh_TW": "使用單調線圖案時，像 Bambu Studio 一樣不擠出地移到下一條線，而不是空駛。噴嘴保持表面的速度和加速度，從而在每個頂面上節省時間。"
+      }
+    }
+  ]
+}
