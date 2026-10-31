@@ -101,8 +101,9 @@ wxStaticText* add_text(wxWindow* parent, wxBoxSizer* sizer, const wxString& text
 
 bool forca_before_you_print_enabled()
 {
+    // Preferences stores it with set_bool ("true"), so read it with is_true, which also takes "1".
     const std::string v = wxGetApp().app_config->get("forca_before_you_print");
-    return v.empty() || v == "1";
+    return v.empty() || AppConfig::is_true(v);
 }
 
 ForcaBeforeYouPrintPanel::ForcaBeforeYouPrintPanel(wxWindow* parent, int wrap_width)

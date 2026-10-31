@@ -75,6 +75,8 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
   (KX-Bridge for the Anycubic Kobra X) keep working.
 
 ### Fixed
+- **"Before you print" never showed** in the send dialogs (since alpha.6): Forca read its Preferences setting as off
+  even while it was ticked.
 - **Switching between light and dark mode** (Preferences) left the Calibration Wizard's dropdowns and buttons dark,
   and the process settings header (preset, save, search and the Quality / Strength ... tabs) in the old colours,
   until Forca was restarted.
