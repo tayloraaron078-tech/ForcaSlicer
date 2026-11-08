@@ -123,6 +123,20 @@
 				<div class="MenuDesc">3mf</div>
 			</div>
 		</div>		
+		<!-- Forca: the last project, filled from the recent list -->
+		<div id="ContinueItem" class="MenuItem" style="display:none" tabindex="0" role="button">
+			<div class="MenuIcon"><img id="ContinueImg" alt="" onerror="this.onerror=null;this.src='img/d.png';"></div>
+			<div class="ContinueText">
+				<div class="MenuDesc" data-i18n="continue_project">Continue where you left off</div>
+				<div id="ContinueName" class="TextS1"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Forca: one card per printer (ForcaHomePrinters.cpp), refreshed every few seconds -->
+	<div id="PrinterArea" style="display:none">
+		<div class="Content-Title TextS1" data-i18n="printers">Printers</div>
+		<div id="PrinterList"></div>
 	</div>
 	
 	<div id="DebugText"></div>	

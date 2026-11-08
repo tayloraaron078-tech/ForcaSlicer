@@ -15,6 +15,7 @@
 #include "libslic3r/Slicing.hpp"
 #include "libslic3r/Print.hpp"
 #include "libslic3r/Flow.hpp"
+#include "libslic3r/Layer.hpp"
 #include "libslic3r/Point.hpp"
 #include "libslic3r/Support/SupportParameters.hpp"
 #include "libslic3r/Support/SupportLayer.hpp"
@@ -108,6 +109,19 @@ struct TreeSupportMeshGroupSettings {
         this->support_tree_top_rate       = config.tree_support_top_rate.value; // percent
     //    this->support_tree_tip_diameter = this->support_line_width;
         this->support_tree_tip_diameter = std::clamp(scaled<coord_t>(config.tree_support_tip_diameter.value), (coord_t)0, this->support_tree_branch_diameter);
+
+        // Forca: with a variable layer height the object layers are not where the uniform layer_z() puts them,
+        // so keep their real print_z and plan the tree on them. Fixed layers leave it empty and take the uniform path.
+        if (print_object.model_object()->has_custom_layering()) {
+            std::vector<coordf_t> layer_height_profile;
+            PrintObject::update_layer_height_profile(*print_object.model_object(), slicing_params, layer_height_profile);
+            if (layer_height_profile.size() >= 4 && ! check_object_layers_fixed(slicing_params, layer_height_profile)) {
+                this->object_layer_print_z.reserve(print_object.layer_count());
+                // The tree works in local Z, as layer_z() does (a belt printer shifts the object layers globally).
+                for (const Layer *layer : print_object.layers())
+                    this->object_layer_print_z.emplace_back(layer->print_z - print_object.belt_global_z_offset());
+            }
+        }
     }
 
 /*********************************************************************/
@@ -270,6 +284,9 @@ struct TreeSupportMeshGroupSettings {
     // minimum: min_wall_line_width, minimum warning: min_wall_line_width+0.05, maximum_value: support_tree_branch_diameter, value: support_line_width
     coord_t                         support_tree_tip_diameter               { scaled<coord_t>(0.4) };
 
+    // Forca: print_z of every object layer when the object has a variable layer height, empty for fixed layers.
+    std::vector<coordf_t>           object_layer_print_z;
+
     // Support Interface Priority
     // How support interface and support will interact when they overlap. Currently only implemented for support roof.
     //enum                           support_interface_priority { support_lines_overwrite_interface_area };
@@ -369,7 +386,92 @@ public:
                 }
             }
         }
+
+        this->max_z_distance_top_layers = this->z_distance_top_layers;
+        if (! mesh_group_settings.object_layer_print_z.empty()) {
+            // Forca: variable layer height. A branch may lean by the support angle over each layer's own height,
+            // and the Z gaps are measured in mm, so both are worked out per layer. Everything counted in layers
+            // (tip, radius growth, interface layers) keeps the nominal layer height.
+            this->variable_layer_z = this->raft_layers;
+            append(this->variable_layer_z, mesh_group_settings.object_layer_print_z);
+            const size_t num_layers = this->variable_layer_z.size();
+            const double tan_angle      = tan(mesh_group_settings.support_tree_angle);
+            const double tan_angle_slow = tan(mesh_group_settings.support_tree_angle_slow);
+            this->maximum_move_distance_per_layer.assign(num_layers, 0);
+            this->maximum_move_distance_slow_per_layer.assign(num_layers, 0);
+            this->z_distance_top_layers_per_layer.assign(num_layers, 0);
+            this->z_distance_bottom_layers_per_layer.assign(num_layers, 0);
+            this->max_z_distance_top_layers = 0;
+            for (size_t layer_idx = 0; layer_idx < num_layers; ++ layer_idx) {
+                const double height = scaled<double>(this->variable_layer_height(layer_idx));
+                this->maximum_move_distance_per_layer[layer_idx]      = coord_t(tan_angle * height);
+                this->maximum_move_distance_slow_per_layer[layer_idx] = coord_t(tan_angle_slow * height);
+                this->z_distance_top_layers_per_layer[layer_idx]    = this->gap_layers_above(layer_idx, unscaled<double>(mesh_group_settings.support_top_distance));
+                this->z_distance_bottom_layers_per_layer[layer_idx] = this->gap_layers_below(layer_idx, unscaled<double>(mesh_group_settings.support_bottom_distance));
+                this->max_z_distance_top_layers = std::max(this->max_z_distance_top_layers, this->z_distance_top_layers_per_layer[layer_idx]);
+            }
+        }
     }
+
+    bool has_variable_layer_height() const { return ! variable_layer_z.empty(); }
+
+    // How far an influence area may move between layer_idx and the layer below it.
+    coord_t maximum_move_distance_at(const LayerIndex layer_idx) const {
+        return layer_idx >= 0 && size_t(layer_idx) < maximum_move_distance_per_layer.size() ? maximum_move_distance_per_layer[layer_idx] : maximum_move_distance;
+    }
+    coord_t maximum_move_distance_slow_at(const LayerIndex layer_idx) const {
+        return layer_idx >= 0 && size_t(layer_idx) < maximum_move_distance_slow_per_layer.size() ? maximum_move_distance_slow_per_layer[layer_idx] : maximum_move_distance_slow;
+    }
+    // Empty layers the top Z gap leaves above a support at layer_idx.
+    size_t z_distance_top_layers_at(const LayerIndex layer_idx) const {
+        return layer_idx >= 0 && size_t(layer_idx) < z_distance_top_layers_per_layer.size() ? z_distance_top_layers_per_layer[layer_idx] : z_distance_top_layers;
+    }
+    // Empty layers the bottom Z gap leaves below a support at layer_idx resting on the model.
+    size_t z_distance_bottom_layers_at(const LayerIndex layer_idx) const {
+        return layer_idx >= 0 && size_t(layer_idx) < z_distance_bottom_layers_per_layer.size() ? z_distance_bottom_layers_per_layer[layer_idx] : z_distance_bottom_layers;
+    }
+    // The support layer whose top touches an overhang at overhang_layer_idx: the highest one that keeps its top Z gap
+    // below the overhang. May be negative when there is no room for it.
+    LayerIndex support_layer_below_overhang(const LayerIndex overhang_layer_idx) const {
+        if (! has_variable_layer_height())
+            return overhang_layer_idx - LayerIndex(z_distance_top_layers) - 1;
+        LayerIndex layer_idx = overhang_layer_idx - 1;
+        while (layer_idx >= 0 && layer_idx + LayerIndex(z_distance_top_layers_at(layer_idx)) >= overhang_layer_idx)
+            -- layer_idx;
+        return layer_idx;
+    }
+    // Layers above layer_idx that a Z gap of distance (mm) leaves empty. A layer counts when at least half of it lies
+    // in the gap, which gives round(distance / layer_height) for uniform layers.
+    size_t gap_layers_above(const size_t layer_idx, const double distance) const {
+        size_t num_layers = 0;
+        double gap        = 0.;
+        for (size_t i = layer_idx + 1; i < variable_layer_z.size(); ++ i, ++ num_layers) {
+            const double height = variable_layer_height(i);
+            if (gap + 0.5 * height > distance + EPSILON)
+                break;
+            gap += height;
+        }
+        return num_layers;
+    }
+    // Layers below layer_idx that a Z gap of distance (mm) leaves empty, counted as gap_layers_above().
+    size_t gap_layers_below(const size_t layer_idx, const double distance) const {
+        size_t num_layers = 0;
+        double gap        = 0.;
+        for (size_t i = layer_idx; i > 0; -- i, ++ num_layers) {
+            const double height = variable_layer_height(i - 1);
+            if (gap + 0.5 * height > distance + EPSILON)
+                break;
+            gap += height;
+        }
+        return num_layers;
+    }
+
+private:
+    double variable_layer_height(const size_t layer_idx) const {
+        return std::max(0., variable_layer_z[layer_idx] - (layer_idx == 0 ? 0. : variable_layer_z[layer_idx - 1]));
+    }
+
+public:
 
     // some static variables dependent on other meshes that are not currently processed.
     // Has to be static because TreeSupportConfig will be used in TreeModelVolumes as this reduces redundancy.
@@ -517,6 +619,16 @@ public:
     // Extra raft layers below the object.
     std::vector<coordf_t> raft_layers;
 
+    // Forca: variable layer height only, empty otherwise. print_z of every tree layer (raft layers, then object
+    // layers) and the per-layer values the *_at() accessors return.
+    std::vector<coordf_t> variable_layer_z;
+    std::vector<coord_t>  maximum_move_distance_per_layer;
+    std::vector<coord_t>  maximum_move_distance_slow_per_layer;
+    std::vector<size_t>   z_distance_top_layers_per_layer;
+    std::vector<size_t>   z_distance_bottom_layers_per_layer;
+    // Largest top Z gap in layers over all layers.
+    size_t                max_z_distance_top_layers { 0 };
+
 public:
     bool operator==(const TreeSupportSettings& other) const
     {
@@ -551,6 +663,7 @@ public:
                     )
 #endif
                && raft_layers == other.raft_layers
+               && variable_layer_z == other.variable_layer_z
             ;
     }
 
@@ -625,7 +738,11 @@ inline void tree_supports_show_error(std::string_view message, bool critical)
 
 inline double layer_z(const SlicingParameters &slicing_params, const TreeSupportSettings &config, const size_t layer_idx)
 {
-    return layer_idx >= config.raft_layers.size() ? 
+    // Forca: variable layer height, the real print_z (continued at the nominal layer height above the object).
+    if (config.has_variable_layer_height())
+        return layer_idx < config.variable_layer_z.size() ? config.variable_layer_z[layer_idx] :
+            config.variable_layer_z.back() + double(layer_idx + 1 - config.variable_layer_z.size()) * slicing_params.layer_height;
+    return layer_idx >= config.raft_layers.size() ?
         slicing_params.object_print_z_min + slicing_params.first_object_layer_height + (layer_idx - config.raft_layers.size()) * slicing_params.layer_height :
         config.raft_layers[layer_idx];
 }
@@ -640,6 +757,13 @@ inline double first_object_support_layer_z(const SlicingParameters &slicing_para
 // Lowest collision layer
 inline LayerIndex layer_idx_ceil(const SlicingParameters &slicing_params, const TreeSupportSettings &config, const double z)
 {
+    // Forca: variable layer height, the first layer at or above z.
+    if (config.has_variable_layer_height()) {
+        const std::vector<coordf_t> &zs = config.variable_layer_z;
+        if (z > zs.back() + EPSILON)
+            return LayerIndex(zs.size()) - 1 + LayerIndex(std::ceil((z - zs.back() - EPSILON) / slicing_params.layer_height));
+        return LayerIndex(std::lower_bound(zs.begin(), zs.end(), z - EPSILON) - zs.begin());
+    }
     const double first_object_z = first_object_support_layer_z(slicing_params);
     if (!config.raft_layers.empty() && z < first_object_z - EPSILON) {
         auto it = std::lower_bound(config.raft_layers.begin(), config.raft_layers.end(), z - EPSILON);
@@ -651,6 +775,14 @@ inline LayerIndex layer_idx_ceil(const SlicingParameters &slicing_params, const 
 // Highest collision layer
 inline LayerIndex layer_idx_floor(const SlicingParameters &slicing_params, const TreeSupportSettings &config, const double z)
 {
+    // Forca: variable layer height, the last layer at or below z.
+    if (config.has_variable_layer_height()) {
+        const std::vector<coordf_t> &zs = config.variable_layer_z;
+        if (z > zs.back() + EPSILON)
+            return LayerIndex(zs.size()) - 1 + LayerIndex(std::floor((z - zs.back() + EPSILON) / slicing_params.layer_height));
+        const auto it = std::upper_bound(zs.begin(), zs.end(), z + EPSILON);
+        return it == zs.begin() ? 0 : LayerIndex(it - zs.begin()) - 1;
+    }
     const double first_object_z = first_object_support_layer_z(slicing_params);
     if (!config.raft_layers.empty() && z < first_object_z - EPSILON) {
         auto it = std::upper_bound(config.raft_layers.begin(), config.raft_layers.end(), z + EPSILON);
@@ -710,7 +842,8 @@ inline SupportGeneratorLayer& layer_allocate(
     return layer_initialize(layer, slicing_params, config, layer_idx);
 }
 
-// Used by generate_initial_areas() in parallel by multiple layers.
+// Adds top contact and interface areas to the support layers. add_roof() may be called from several threads,
+// add_roof_unguarded() only while no other thread is adding roofs.
 class InterfacePlacer {
 public:
     InterfacePlacer(
@@ -736,28 +869,10 @@ public:
     SupportGeneratorLayersPtr&  top_contacts_mutable() { return this->top_contacts; }
 
 public:
-    // Insert the contact layer and some of the interface and base interface layers below.
-    void add_roofs(std::vector<Polygons> &&new_roofs, const size_t insert_layer_idx)
-    {
-        if (! new_roofs.empty()) {
-            std::lock_guard<std::mutex> lock(m_mutex_layer_storage);
-            for (size_t idx = 0; idx < new_roofs.size(); ++ idx)
-                if (! new_roofs[idx].empty())
-                    add_roof_unguarded(std::move(new_roofs[idx]), insert_layer_idx - idx, idx);
-        }
-    }
-
     void add_roof(Polygons &&new_roof, const size_t insert_layer_idx, const size_t dtt_tip)
     {
         std::lock_guard<std::mutex> lock(m_mutex_layer_storage);
         add_roof_unguarded(std::move(new_roof), insert_layer_idx, dtt_tip);
-    }
-
-    // called by sample_overhang_area()
-    void add_roof_build_plate(Polygons &&overhang_areas, size_t dtt_roof)
-    {
-        std::lock_guard<std::mutex> lock(m_mutex_layer_storage);
-        this->add_roof_unguarded(std::move(overhang_areas), 0, std::min(dtt_roof, this->support_parameters.num_top_interface_layers));
     }
 
     void add_roof_unguarded(Polygons &&new_roofs, const size_t insert_layer_idx, const size_t dtt_roof)

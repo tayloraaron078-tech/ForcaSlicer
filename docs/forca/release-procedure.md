@@ -51,6 +51,11 @@ Runs the identity checks, then creates branch `public/candidate`: tree = `Multi_
 public `main` (+ the OrcaSlicer commit if this release merged a newer one). It verifies the tree and the author and
 prints what changes against the public `main`. Nothing leaves the computer. Review the summary.
 
+The candidate's tree replaces the public `main`'s, so a change made on GitHub since the last release (a file added
+through the web, such as `CODE_OF_CONDUCT.md` after alpha.8) disappears unless `Multi_Interface` has it too. Check
+`git diff --stat <public main> public/candidate` for files the release deletes, and bring any that should stay into
+`Multi_Interface` first, then run `-Prepare` again.
+
 ## 3. Publish the code (public)
 
 ```powershell

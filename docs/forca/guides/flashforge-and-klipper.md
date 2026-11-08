@@ -20,9 +20,13 @@ temperatures and filament, with **Pause** / **Resume**, **Stop** and the **light
 - After a print, the printer refuses the next job until the plate is confirmed clear. **Plate is clear** on the page
   does that once you've taken the print off.
 
+**Camera:** the printer's camera (the one it reports, else the camera on port 8080 that Flashforge's app sets up on an
+Adventurer 5M) shows live on the page, with **Pause view** / **Show live view**. The camera serves one viewer at a
+time: while Flashforge's app or another slicer watches it, the page says so and offers **Retry**. When Forca AI or
+Forca Academy takes a picture, the live view lets go for a moment and comes back by itself.
+
 With the [print journal](forca-academy.md) on, Forca follows prints sent to the printer to the end and records how
-they ended, as long as Forca is open and can reach the printer. Pictures from a Flashforge printer's built-in camera
-are untested.
+they ended, with camera pictures, as long as Forca is open and can reach the printer.
 
 ![A Flashforge printer's Device tab page](images/flashforge-device-tab.png)
 
@@ -42,3 +46,18 @@ are untested.
   presets.
 
 With the print journal on, Forca follows Klipper prints to the end too, while it's open and can reach the printer.
+
+### Snapmaker U1 camera (stock firmware)
+
+The U1's camera has no video stream on its stock firmware. It takes about one picture a second, and only while an
+app keeps asking for them. Until now only Snapmaker's own apps did. Forca asks while the U1's Device tab is open, and
+when Forca AI or Forca Academy wants a picture.
+
+To see the camera in the Device tab, add it to Fluidd once (Forca explains this the first time too):
+
+1. In the Device tab, open Fluidd's **Settings > Cameras** and add a camera.
+2. Set its service to **Adaptive MJPEG** and its snapshot URL to `/server/files/camera/monitor.jpg`.
+3. Save it. The picture updates about once a second while the tab is open.
+
+Forca AI and Forca Academy don't need this setting. The camera stays on for up to 6 minutes after Forca stops asking:
+the firmware turns it off on its own timer.

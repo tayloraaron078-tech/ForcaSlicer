@@ -50,6 +50,25 @@ plate as it is now.
 
 ![The Print Journal with a print selected](images/print-journal.png)
 
+## Recipes
+
+When a print came out well, keep its settings as a **recipe**: select it, mark it **Success** and press **Make a
+recipe**. Forca lists the settings in which the print differs from its process and filament presets; untick any you
+don't want, give the recipe a name (for example "PETG functional parts, 0.6 nozzle") and press **Save and use**.
+Forca saves new presets with that name, based on the presets the print used, and switches to them. It never changes
+or replaces an existing preset; if a preset already has the name, pick another.
+
+- **Compare with**: for prints with all their settings recorded, choose between the presets as they are now (every
+  difference, including changes you made to the presets since) and only what was changed when the print was sent.
+  Older prints only have the second.
+- A print with several filaments gets a filament preset for each one it used, named "<recipe> (filament 2)" and so on.
+- Printer settings are never part of a recipe.
+- A setting the journal kept only the start of (long G-code, for example) is shown but left out.
+
+Each recipe also gets a page in the Academy's `recipes` folder: the presets, what each one changes and the print it
+came from. `INDEX.md` lists the recipes, so an AI reading your Academy can suggest one. You can also make a recipe
+from the winning copy of an experiment ([Guided experiments](guided-experiments.md)).
+
 ## Insights
 
 **Insights** in the Print Journal groups your prints by printer, filament or process: how many went well, partly or
@@ -83,6 +102,8 @@ When you send a print, the send dialog shows **Before you print**:
 
 - how earlier prints with the same printer and filament went (with the journal on);
 - the settings you changed and didn't save;
+- how many places on the sliced plate may fail with no support under them, from **View > Print Risks**, which shows
+  where they are and what to try;
 - collapsed **Details**: the values that most often decide a print (layer height, infill, supports, brim, nozzle, and
   per filament its temperatures and max volumetric speed).
 
@@ -101,6 +122,7 @@ printers/  materials/              a page per printer and filament
 playbooks/                         a playbook per problem tag
 prints/<year>/<print>/             record.json, settings.json, notes.md, the pictures, photos/ and camera/
 experiments/                       experiments and saved comparisons
+recipes/                           a page per recipe
 ```
 
 Forca writes its facts between `<!-- forca:... -->` markers (in `notes.md`, the printer pages and `INDEX.md`). Text

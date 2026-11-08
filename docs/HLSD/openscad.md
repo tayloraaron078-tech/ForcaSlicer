@@ -36,7 +36,7 @@ is not involved.
 - **Forca AI** can use OpenSCAD: `forca_openscad_params` reads a file's parameters, and `forca_openscad_render`
   renders a `.scad` file, or code the AI writes, onto the plate (or in place of an OpenSCAD object) and returns
   OpenSCAD's messages with the lines they name, so the AI can fix its code and try again.
-- **Preferences > OpenSCAD** shows which OpenSCAD Forca uses and its version, with Browse, Find automatically and
+- **Preferences > Files > OpenSCAD** shows which OpenSCAD Forca uses and its version, with Browse, Find automatically and
   Download (OpenSCAD's development snapshots page).
 - Without a usable OpenSCAD, importing a `.scad` file says what to install or choose.
 

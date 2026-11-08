@@ -141,6 +141,30 @@ TEST_CASE("The modifier's filament prints only inside the modifier", "[ForcaRegi
     CHECK(region_filament.x_max < 30.5);
 }
 
+// The shrinkage compensation is decided from the filaments the model prints with; a modifier's interface filament is
+// one of them. Filaments 1 and 2 shrink 90 %, filament 3 does not, and only the modifier uses filament 3.
+TEST_CASE("Filament shrinkage compensation counts the modifier's interface filament", "[ForcaRegionalInterface]")
+{
+    const bool modifier = GENERATE(false, true);
+    CAPTURE(modifier);
+
+    DynamicPrintConfig config = multifilament_config(3, {
+        { "enable_support", "1" },
+        { "support_filament", "2" },
+        { "support_interface_filament", "2" },
+        { "filament_shrink", "90%,90%,100%" },
+    });
+    Model model;
+    Print print;
+    init_print({ make_cube(20, 20, 10) }, print, model, config, nullptr, false);
+    if (modifier) {
+        ModelVolume *v = model.objects.front()->add_volume(make_cube(10, 10, 4), ModelVolumeType::SUPPORT_INTERFACE_MODIFIER, false);
+        v->config.set_key_value("support_interface_filament", new ConfigOptionInt(3));
+    }
+    print.apply(model, config);
+    CHECK(print.has_same_shrinkage_compensations() == ! modifier);
+}
+
 // The fix plans the object's filament on the support-only interface layer; with a prime tower that plan drives the
 // tower's tool changes, so slice it with one too.
 TEST_CASE("Grid supports with a prime tower print the modifier's filament only inside the modifier", "[ForcaRegionalInterface]")

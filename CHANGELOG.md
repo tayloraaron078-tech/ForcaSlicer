@@ -14,14 +14,91 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+## 0.1.0-alpha.10 — 2026-11-08
+
+### Added
+- **Preset recipes (Forca Academy):** in the Print Journal, a print marked Success has **Make a recipe**, and so has
+  an experiment's **Compare the copies**. It lists the settings in which the print differs from its process and
+  filament presets; the ticked ones are saved as new presets based on those presets and put in use. Printer settings
+  are left out, an existing preset is never replaced, and each recipe gets a page in the Academy's `recipes` folder,
+  listed on `INDEX.md` for AI assistants.
+- **Organic supports with a variable layer height:** adaptive, smoothed or painted layer heights, and height ranges
+  with their own layer height, now slice with Organic (and Default) supports instead of stopping with "Variable layer
+  height is not supported with Organic supports". The supports are printed on the object's layers, a branch moves
+  per layer only as far as the support angle allows over that layer's height, and the top and bottom Z distances are
+  kept in mm. Objects with a fixed layer height are unchanged.
+- **Forca guides in the Troubleshoot Center:** a button next to OrcaSlicer's wiki and video opens Forca's own guides,
+  which cover what Forca adds.
+- **Favourites from search:** process settings in the search results have a star; click it to add the setting to the
+  Favorites page or remove it, without leaving the results.
+- **Forca AI with Klipper and Flashforge printers:** the printers in Forca's printer settings that have a print host,
+  including those set up on a printer preset and shown in the Device tab, can now be shared with the AI like Bambu
+  printers. On Klipper printers, and on Flashforge printers whose serial number and access code are set, the AI reads
+  their status and camera, may pause a print where you allowed it (and resume only its own pause), and can print under
+  a print grant: the printer must be the one Forca sends to, idle, with its bed clear, and the plate must use one
+  filament; after the 10 s countdown Forca uploads the file (G-code or `.gcode.3mf`, as the printer takes it) and
+  starts the print. Other print hosts can be shared for print requests only. Addresses and keys are never shown to the
+  AI.
+- **Printer cards on the Home tab:** each Bambu printer and each printer with a print host has a card with its state,
+  job, progress and time left; a click opens its Device tab or web page. A **Continue** card reopens the last project.
+- **Print Risks (View menu):** lists where the sliced plate may fail: overhangs that reach farther than the support
+  threshold angle allows, bridges longer than **Max bridge length**, and parts that start in mid-air, each with its
+  object, height, size and whether support is printed under it. Selecting one says what to try and shows its layer in
+  Preview. Numbered markers show each risk on the Preview as the layer slider reaches it (click one to select it), the
+  list follows each new slice, and with Forca Academy on it links the Bridging or Supports playbook and your journal
+  prints tagged with it on this printer and filament. **Before you print** in the send dialog says how many of them
+  have no support under them, and Forca AI reads the same list (`forca_risk_report`) to explain and fix them. Each
+  slice is checked once, however many of them ask.
+- **Camera on the Flashforge Device page:** the Adventurer 5M's camera (the one the printer reports, else port 8080)
+  shows live on Forca's Device page, with Pause view, and lets go of the stream when the tab is hidden. The camera
+  takes one viewer at a time, so when Flashforge's app or another slicer has it, the page says so and offers Retry.
+  When Forca AI or Forca Academy takes a picture, the page lets go of the stream and then picks it up again.
+- **Snapmaker U1 camera on stock firmware:** the U1 only takes camera pictures while an app keeps asking for them,
+  which until now only Snapmaker's own apps did. Forca keeps the camera on while the U1's Device tab is open, so
+  Fluidd shows it live once it has a camera on the U1's picture (Adaptive MJPEG, snapshot URL
+  `/server/files/camera/monitor.jpg`). The first time, Forca explains how to add it. Forca AI and Forca Academy take
+  fresh pictures from the U1 too, without that setting.
+
+### Changed
+- **Cooling slowdown logic** and its **Transition distance** (filament, Cooling page) now show in Advanced mode;
+  before, like Bambu Studio, only in Develop mode.
+- **Preferences** follow OrcaSlicer's new layout with **Files** and **Behaviour** pages. Forca Academy and Reset Forca
+  data stay at the end of General; **OpenSCAD** moved to Files, next to File import, and the opt-in for
+  `orcaslicer://` links moved to Files with the other web links.
+
+### Fixed
+- **Merged OrcaSlicer up to `main` `d8807e03db` (2026-11-07)**, past OrcaSlicer 2.5.0, so Forca's base is now the
+  2.6.0 development line (OrcaSlicer 2.5.0 calls Forca's projects newer and suggests an update; they still open):
+  Organic tree support tips are placed in a fixed order (the same model gives the same supports every time), faster
+  tree support, objects with different height ranges no longer share slices (or print in the wrong place), the prime
+  tower's requirements are only checked when a tower is printed, a failed export or upload keeps the slice, a crash
+  syncing filaments after a plate is deleted, gap infill with the wrong filament on classic walls, Wipe Inward
+  retraction, faster outlines with outline options in Preferences, the Device tab's custom camera source, plug-in
+  permissions, and new filament and printer profiles. The XML parser (expat 2.10) again refuses files that expand
+  entities without limit, so a crafted AMF can no longer freeze Forca. The translation catalogs are OrcaSlicer's.
+- **The setup wizard's check for new printers** no longer asks OrcaSlicer's profile server; like Forca's other
+  profile updates it stays offline.
+- **Translations** for Print Risks, the Flashforge camera, the Snapmaker U1 camera tip and print grants on Klipper
+  and Flashforge printers, in all 22 languages.
+- **Forca AI camera pictures from a Flashforge Adventurer 5M:** its camera serves only a live stream, so the AI's
+  camera look, the picture with an AI pause and the bed check now take the stream's first frame.
+- **Print grant copies of a `.3mf`:** one copy of a grant file is all of its parts, not one copy per object, also when
+  they need several plates. Each plate is its own print, and the bed must be clear before each one.
+- **Slicing a Bambu Studio project from the command line** no longer stops with "Unsupported 3MF version" when
+  the project comes from Bambu Studio 2.6 or newer. The check compared Bambu Studio's version with OrcaSlicer's own;
+  it now applies only to files made by OrcaSlicer or Forca, as in the main window.
+- **Filament shrinkage** now counts the filaments of support-interface regions (modifier boxes and painted regions):
+  one whose shrinkage differs from the object's switches the compensation off, with the usual warning, instead of being
+  ignored.
+
 ## 0.1.0-alpha.9 — 2026-10-31
 
 ### Added
 - **Feedback notification:** after your 5th slice Forca asks once, in a small notification, how it is working for
   you; **Share feedback** opens Forca's GitHub Discussions. It never shows again, and nothing is sent unless you
   write something yourself.
-- **Edit in OpenSCAD** (right-click an OpenSCAD object): opens the file in OpenSCAD's own window, and when you save it
-  there, Forca offers to render the model again with your values.
+- **Edit in OpenSCAD** (right-click an OpenSCAD object > Edit in OpenSCAD): opens the file in OpenSCAD's own window,
+  and when you save it there, Forca offers to render the model again with your values.
 - **New OpenSCAD model** (File > Import): saves a starter `.scad` file with Customizer parameters, puts it on the plate
   and opens it in OpenSCAD.
 - **OpenSCAD colours become filaments:** each `color()` goes to the closest filament in the project, and the model's

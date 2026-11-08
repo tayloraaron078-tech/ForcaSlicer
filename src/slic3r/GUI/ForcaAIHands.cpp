@@ -4,6 +4,7 @@
 #include "ForcaAI.hpp"
 #include "ForcaAIFiles.hpp"
 #include "ForcaAIKeys.hpp"
+#include "ForcaPrintRiskDialog.hpp" // forca_plate_risks
 
 #include "GUI.hpp"
 #include "GUI_App.hpp"
@@ -16,6 +17,7 @@
 #include "Selection.hpp"
 #include "Tab.hpp"
 #include "Jobs/Worker.hpp"
+#include "libslic3r/ForcaPrintRisk.hpp"
 #include "libslic3r/Format/bbs_3mf.hpp"
 #include "libslic3r/Format/ProjectStrategy.hpp" // LoadStrategy, SaveStrategy
 #include "libslic3r/GCode/GCodeProcessor.hpp"
@@ -990,6 +992,62 @@ ForcaAIResult tool_slice_result(const json& args)
     return ForcaAIResult::json(j);
 }
 
+// Print Risks, for the AI: the same list as View > Print Risks.
+ForcaAIResult tool_risk_report(const json& args)
+{
+    std::string err;
+    Plater*     p = plater_ready(err);
+    if (!p)
+        return ForcaAIResult::error(err);
+    PartPlateList& plates = p->get_partplate_list();
+    const int      plate  = args.value("plate", plates.get_curr_plate_index() + 1) - 1;
+    if (plate < 0 || plate >= plates.get_plate_count())
+        return ForcaAIResult::error("plate must be between 1 and " + std::to_string(plates.get_plate_count()) + ".");
+    std::vector<ForcaPlateRisk> risks;
+    if (!forca_plate_risks(plate, risks))
+        return ForcaAIResult::error("Plate " + std::to_string(plate + 1) +
+                                    " is not sliced (or is slicing, or is not an FFF print). Call forca_slice first.");
+    json list = json::array();
+    for (size_t n = 0; n < risks.size(); ++n) {
+        const ForcaPlateRisk& r    = risks[n];
+        const auto            mm   = [](double v) { return std::round(v * 100) / 100; };
+        json                  item = { { "n", n + 1 },
+                                       { "object", r.object },
+                                       { "z_mm", { mm(r.risk.z_min), mm(r.risk.z_max) } },
+                                       { "layers", { r.risk.first_layer + 1, r.risk.last_layer + 1 } },
+                                       { "area_mm2", mm(r.risk.area) },
+                                       { "support_printed_under_it", r.risk.supported },
+                                       { "object_support_on", r.support_on } };
+        switch (r.risk.type) {
+        case PrintRiskType::Overhang:
+            item["type"]            = "overhang";
+            item["reach_mm"]        = mm(r.risk.distance);
+            item["rule"]            = "reaches farther past the layer below than the support threshold angle allows";
+            item["threshold_deg"]   = r.threshold_deg;
+            break;
+        case PrintRiskType::LongBridge:
+            item["type"]            = "long_bridge";
+            item["span_mm"]         = mm(r.risk.distance);
+            item["rule"]            = "a bridge longer than max_bridge_length";
+            item["max_bridge_mm"]   = r.max_bridge;
+            break;
+        case PrintRiskType::FloatingIsland:
+            item["type"] = "floating_island";
+            item["rule"] = "a new part of the slice with nothing printed under it";
+            break;
+        }
+        json at = json::array(); // where on the bed, mm, one per instance
+        for (const Vec3d& pt : r.points)
+            at.push_back({ mm(pt.x()), mm(pt.y()) });
+        item["at_xy_mm"] = at;
+        list.push_back(item);
+    }
+    return ForcaAIResult::json({ { "plate", plate + 1 }, { "count", risks.size() }, { "risks", list },
+                                 { "hint", "The user sees the same list, numbered, under View > Print Risks. Fixes to "
+                                           "suggest: support (enable_support, support_threshold_angle), orientation, "
+                                           "thick_bridges and a lower bridge speed; slice again to check." } });
+}
+
 // The slice report of a sliced plate (0-based); also shown on the print approval card (ForcaAIPrint.cpp).
 json plate_report(int plate_idx, std::string& err)
 {
@@ -1200,6 +1258,7 @@ ForcaAIResult tool_undo(const json&)
 } // namespace
 
 json forca_ai_plate_report(int plate, std::string& err) { return plate_report(plate, err); }
+bool forca_set_filament_slot(size_t idx, const std::string& name, std::string& err) { return set_filament_slot(idx, name, err); }
 
 void register_forca_ai_hand_tools(ForcaAI& ai)
 {
@@ -1311,6 +1370,12 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
         "The state of the slice started by forca_slice. When done: print time, filament length/weight/cost, filament "
         "changes, layers, and Forca's slicing warnings.",
         object_schema(), tool_slice_result });
+
+    ai.register_tool({ "forca_risk_report", "Print risks",
+        "Where a sliced plate (default: current) may fail, as View > Print Risks lists it: overhangs past the support "
+        "threshold angle, bridges longer than max_bridge_length and islands that start in mid-air, each with its object, "
+        "height, layers, size, position and whether support is printed under it. Slice first.",
+        object_schema({ { "plate", { { "type", "integer" }, { "minimum", 1 } } } }), tool_risk_report });
 
     ai.register_tool({ "forca_view", "Change the view",
         "Show the 3D editor or the sliced Preview, and/or point the camera (iso, top, bottom, front, rear, left, "

@@ -19,7 +19,7 @@ namespace GUI {
 // upload that finished with "print" as its post-action. Nothing is ever uploaded; the folder is the user's.
 //
 //   <folder>/AGENTS.md, INDEX.md, lessons.md            written once, never overwritten (the user owns them)
-//   <folder>/printers/ materials/ playbooks/ experiments/
+//   <folder>/printers/ materials/ playbooks/ experiments/ recipes/
 //   <folder>/prints/YYYY/YYYY-MM-DD_HHMM_<slug>/        record.json, notes.md, thumbnail.png, photos/
 
 bool                    forca_academy_enabled();

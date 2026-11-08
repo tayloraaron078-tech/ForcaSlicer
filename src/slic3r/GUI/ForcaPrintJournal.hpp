@@ -45,6 +45,7 @@ private:
     void update_photos();
     void update_state();
     void update_compare(); // "Compare" needs exactly two selected prints
+    void update_recipe();  // "Make a recipe" needs a print recorded as a success
 
     std::vector<ForcaAcademyPrint>       m_prints;
     std::vector<boost::filesystem::path> m_only; // when not empty, the list shows only these prints
@@ -64,6 +65,7 @@ private:
     wxTextCtrl*              m_note       = nullptr;
     wxStaticText*            m_photos     = nullptr;
     wxButton*                m_save       = nullptr;
+    wxButton*                m_recipe     = nullptr;
     wxButton*                m_add_print  = nullptr;
     wxButton*                m_compare    = nullptr;
 };

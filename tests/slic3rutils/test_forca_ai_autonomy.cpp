@@ -63,7 +63,7 @@ TEST_CASE("A grant plate may hold only the grant's files, up to the copies still
     const std::vector<ForcaAIGrantFile> files = { { "lid.stl", 4, 1, "" }, { "box.step", 2, 0, "" } };
     std::vector<int>                    count;
 
-    // 3 lids (4 asked, 1 sent) and 2 boxes: exactly what is still owed.
+    // 3 lids (4 asked, 1 sent; one part each) and 2 boxes: exactly what is still owed.
     CHECK(forca_ai_grant_files_reason(files, { { "lid.stl", 2 }, { "box.step", 2 }, { "lid.stl", 1 } }, count).empty());
     REQUIRE(count.size() == 2);
     CHECK(count[0] == 3);
@@ -74,6 +74,44 @@ TEST_CASE("A grant plate may hold only the grant's files, up to the copies still
     // Anything not from the grant's files, or made in Forca (no source file).
     CHECK_FALSE(forca_ai_grant_files_reason(files, { { "lid.stl", 1 }, { "benchy.stl", 1 } }, count).empty());
     CHECK_FALSE(forca_ai_grant_files_reason(files, { { "", 1 } }, count).empty());
+}
+
+TEST_CASE("One copy of a grant .3mf is all of its parts", "[ForcaAIAutonomy]")
+{
+    // A .3mf of 3 parts, 2 copies asked: 6 parts owed.
+    const std::vector<ForcaAIGrantFile> files = { { "set.3mf", 2, 0, "", 3 } };
+    std::vector<int>                    count;
+
+    // Its 3 parts once each.
+    CHECK(forca_ai_grant_files_reason(files, { { "set.3mf", 1 }, { "set.3mf", 1 }, { "set.3mf", 1 } }, count).empty());
+    CHECK(count[0] == 3);
+    // Each part twice: both copies.
+    CHECK(forca_ai_grant_files_reason(files, { { "set.3mf", 2 }, { "set.3mf", 2 }, { "set.3mf", 2 } }, count).empty());
+    CHECK(count[0] == 6);
+    // 7 parts: one more than 2 copies hold.
+    CHECK_FALSE(forca_ai_grant_files_reason(files, { { "set.3mf", 3 }, { "set.3mf", 2 }, { "set.3mf", 2 } }, count).empty());
+}
+
+TEST_CASE("One copy of a grant file may span several plates", "[ForcaAIAutonomy]")
+{
+    // A .3mf of 3 parts, 1 copy asked. The first plate sends 2 of them.
+    ForcaAIGrantFile file{ "two plates.3mf", 1, 0, "", 3 };
+    std::vector<int> count;
+    CHECK(forca_ai_grant_files_reason({ file }, { { "two plates.3mf", 2 } }, count).empty());
+    CHECK(count[0] == 2);
+    file.sent += count[0];
+    CHECK(file.copies_sent() == 0);
+    CHECK(file.parts_owed() == 1);
+
+    // The second plate may send the last part, but not two.
+    CHECK_FALSE(forca_ai_grant_files_reason({ file }, { { "two plates.3mf", 2 } }, count).empty());
+    CHECK(forca_ai_grant_files_reason({ file }, { { "two plates.3mf", 1 } }, count).empty());
+    file.sent += count[0];
+    CHECK(file.copies_sent() == 1);
+    CHECK(file.parts_owed() == 0);
+
+    // Nothing more once the copy is complete.
+    CHECK_FALSE(forca_ai_grant_files_reason({ file }, { { "two plates.3mf", 1 } }, count).empty());
 }
 
 TEST_CASE("Grant files match however the path is spelled", "[ForcaAIAutonomy]")

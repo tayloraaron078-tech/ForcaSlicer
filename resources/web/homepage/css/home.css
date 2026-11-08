@@ -1147,3 +1147,126 @@ body.cloud-mode #LeftBoard
 	cursor: pointer!important;
 	pointer-events: auto!important;
 }
+
+/*----Forca: continue card and printer cards----*/
+#ContinueItem
+{
+	width: auto;
+	min-width: 253px;
+	max-width: 420px;
+	padding-right: 22px;
+}
+
+#ContinueImg
+{
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+.ContinueText
+{
+	min-width: 0;
+}
+
+#ContinueName
+{
+	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#PrinterArea
+{
+	flex: 0 0 auto;
+}
+
+#PrinterList
+{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.PrinterCard
+{
+	width: 220px;
+	box-sizing: border-box;
+	padding: 12px 14px;
+	border: 1px solid var(--border-color);
+	border-radius: 13px;
+	color: var(--fg-color-text);
+	font-size: 13px;
+	line-height: 18px;
+}
+
+.PrinterCard.Selected { border-color: var(--main-color); }
+
+.PrinterCard.Clickable { cursor: pointer; }
+
+.PrinterCard.Clickable:hover,
+.PrinterCard.Clickable:focus-visible
+{
+	border-color: var(--main-color);
+	background-color: var(--focus-bg-box);
+	outline: none;
+}
+
+.PrinterHead
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.PrinterName,
+.PrinterJob,
+.PrinterError
+{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.PrinterName { font-weight: 700; }
+
+.PrinterDot
+{
+	flex: 0 0 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: var(--fg-color-disabled);
+}
+
+.State_printing .PrinterDot,
+.State_preparing .PrinterDot,
+.State_idle .PrinterDot,
+.State_finished .PrinterDot,
+.State_online .PrinterDot { background-color: var(--main-color-fixed); }
+
+.State_paused .PrinterDot,
+.State_stopped .PrinterDot { background-color: var(--warn-color); }
+
+.State_failed .PrinterDot { background-color: var(--alert-color); }
+
+.PrinterType,
+.PrinterProgress { color: var(--fg-color-label); }
+
+.PrinterState { margin-top: 6px; font-weight: 700; }
+
+.PrinterBar
+{
+	margin-top: 6px;
+	height: 4px;
+	border-radius: 2px;
+	background-color: var(--bg-color-secondary);
+	overflow: hidden;
+}
+
+.PrinterBar > div
+{
+	height: 100%;
+	background-color: var(--main-color-fixed);
+}
+
+.PrinterError { color: var(--alert-color); }

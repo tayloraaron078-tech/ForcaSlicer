@@ -36,6 +36,7 @@ add_executable(${_TEST_NAME}_tests
 	test_forca_height_ranges.cpp
 	test_forca_hole_compensation.cpp
 	test_forca_object_filament.cpp
+	test_forca_print_risk.cpp
 	test_forca_regional_interface.cpp
 	test_gcode_benchmark.cpp
 	test_slicing_pipeline_hook.cpp

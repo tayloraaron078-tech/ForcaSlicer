@@ -1,4 +1,5 @@
 #include "ForcaAcademy.hpp"
+#include "ForcaRecipe.hpp" // forca_recipe_list (INDEX facts)
 
 #include "ForcaAI.hpp" // forca_ai_plate_report
 #include "ForcaAIFiles.hpp" // forca_ai_may_write / forca_ai_record_write (INDEX.md facts)
@@ -114,6 +115,8 @@ AI assistants). Everything is plain Markdown and JSON, so any AI can read it wit
   to the prints that prove them.
 - `lessons.md` -- distilled rules, each with a confidence and links to its evidence prints.
 - `experiments/` -- A/B setting trials and their results.
+- `recipes/` -- presets saved from prints that came out well: what each recipe changes from its parent presets and
+  the print it came from. Suggest a recipe when the printer, material and goal match.
 
 ## Recording
 - A lesson is promoted when a pattern repeats, and corrected when a later print contradicts it. Say how sure it is
@@ -212,14 +215,14 @@ fs::path forca_academy_folder_in(const fs::path& chosen)
 const std::vector<std::string>& forca_academy_own_entries()
 {
     static const std::vector<std::string> entries = { "AGENTS.md", "INDEX.md",    "lessons.md",  "prints", "printers",
-                                                      "materials", "playbooks",   "experiments", "forca" };
+                                                      "materials", "playbooks",   "experiments", "recipes", "forca" };
     return entries;
 }
 
 bool forca_academy_ensure_skeleton(const fs::path& dir, std::string& err)
 {
     boost::system::error_code ec;
-    for (const char* sub : { "prints", "printers", "materials", "playbooks", "experiments" }) {
+    for (const char* sub : { "prints", "printers", "materials", "playbooks", "experiments", "recipes" }) {
         fs::create_directories(dir / sub, ec);
         if (ec) {
             err = "Could not create " + (dir / sub).string() + ": " + ec.message();
@@ -1010,6 +1013,12 @@ std::string forca_academy_index_facts(const fs::path& dir, const std::vector<For
                   std::to_string(p.window) + (p.on_success > 0 ? ", " + std::to_string(p.on_success) + " of them successful" : std::string()) +
                   ") -- [playbooks/" + p.tag + ".md](playbooks/" + p.tag + ".md)\n";
         }
+    }
+
+    if (const auto recipes = forca_recipe_list(dir); !recipes.empty()) {
+        md += "\n**Recipes** (recipes/, presets saved from prints that came out well):\n";
+        for (size_t i = 0; i < recipes.size() && i < 10; ++i)
+            md += "- [" + recipes[i].second + "](recipes/" + recipes[i].first + ".md)\n";
     }
 
     std::vector<std::string> lessons;

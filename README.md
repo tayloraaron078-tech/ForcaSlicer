@@ -80,6 +80,12 @@ A per-filament guided flow in its own tab: **Temperature → Max Volumetric Spee
 
 <img width="1906" height="1026" alt="Screenshot 2026-10-03 210209" src="https://github.com/user-attachments/assets/d9b69b5b-ec0a-406b-acbf-ba388dec8257" />
   
+## Print Risks
+**View → Print Risks** lists where the sliced plate may fail: overhangs that reach farther than the support threshold
+angle allows, bridges longer than Max bridge length, and parts that start in mid-air, each with whether support is
+printed under it. Select one to see what to try and jump to its layer; numbered markers show them on the Preview.
+"Before you print" says how many have no support under them. **[The Print Risks guide](docs/forca/guides/print-risks.md)**
+
 ## Forca Academy (print journal, off by default)
 Turn it on in **Preferences → Forca Academy** and every print Forca sends gets its own folder in
 `Documents\Forca Academy` (or a "Forca Academy" folder in a place you choose): the printer, presets and filaments (on Bambu printers, the AMS
@@ -102,7 +108,8 @@ outcome), and save the pair as an **experiment** to record which change worked. 
 back with one printer and filament, Insights point it out as a **possible pattern** and help you turn it into a
 **lesson**, or **plan an experiment**: pick one setting and a few values to try, and Forca builds a test plate with
 one copy per value (the current value as copy A) to print and compare. After printing, Forca asks how each copy
-came out, proposes the winner and can put the winning value into your preset. Forca also writes a starter **playbook** for each problem (likely causes, checks, and the Forca settings
+came out, proposes the winner and can put the winning value into your preset. A print that came out well becomes a
+**recipe**: its settings saved as new presets to print with again. Forca also writes a starter **playbook** for each problem (likely causes, checks, and the Forca settings
 and calibration tests for it) and keeps a summary block on the folder's INDEX page. Forca proposes; you decide what
 goes into your lessons.
 
@@ -153,10 +160,14 @@ Lab's plug-in stays the default, and if it ever crashes Forca, the Device tab of
 ## Non-Bambu printers
 - **Stock Flashforge printers** (Adventurer 5M / 5X ...) have no web interface, so their Device tab used to show
   "refused to connect". Forca shows its own status page instead: state, file, progress, layer, times, temperatures,
-  filament, Pause / Resume / Stop and the light, and "Plate is clear" after a print. It needs the printer's access
-  code (from its screen) in the printer's network settings.
+  filament, Pause / Resume / Stop and the light, "Plate is clear" after a print, and the camera live. It needs the
+  printer's access code (from its screen) in the printer's network settings.
 - **Klipper printers:** a **Search** button in the network settings finds Fluidd or Mainsail on the printer for the
   Device tab, and a printer set up with Moonraker's port 7125 now opens Fluidd / Mainsail instead of Moonraker's API.
+- **Snapmaker U1 camera on stock firmware:** the U1's camera only takes pictures while an app keeps asking, which
+  until now only Snapmaker's own apps did. Forca does it while the U1's Device tab is open, so Fluidd shows the camera
+  live, and Forca AI and Forca Academy get fresh pictures from it. The first time, Forca shows the one Fluidd setting
+  it needs.
 - **Filament sync from Happy Hare and Moonraker lane data** (*experimental*) includes an OrcaSlicer fix that isn't
   merged upstream yet, for Happy Hare printers whose lane data is still empty; a lane's own filament id picks the preset. On some setups (KX-Bridge) filaments can still land in the wrong slots or come in as generic
   presets; a fix is in testing.
@@ -168,8 +179,8 @@ and Forca works exactly like a slicer with no AI. You choose which AI to use (Cl
 other app on your computer that supports MCP, with a cloud or local model), and your account and data stay with that app.
 
 When you do turn it on, it lets an AI assistant (Claude Code, or any app that speaks MCP) see and operate Forca — load and arrange models,
-choose presets, add support regions, slice and read the results, save a copy. For printers you choose, it can read
-status and take a camera snapshot (Bambu, over your local network).
+choose presets, add support regions, slice and read the results (including the Print Risks list), save a copy. For printers you choose, it can read
+status and take a camera snapshot over your local network: Bambu, Klipper (Moonraker) and stock Flashforge printers.
 
 Built-in rules the AI cannot switch off:
 - It **never saves over your files or presets** — its saves get new "(Claude <date>)" names.
@@ -211,7 +222,7 @@ closest filaments, painted on its faces, and with [Forca AI](#forca-ai-experimen
 assistant can design a part in OpenSCAD and render it onto the plate.
 
 Forca doesn't include OpenSCAD: it runs the one you install (a development snapshot from 2025 or later; choose it in
-**Preferences → OpenSCAD**). **[OpenSCAD in Forca: the guide](docs/forca/openscad.md)** shows every step.
+**Preferences → Files → OpenSCAD**). **[OpenSCAD in Forca: the guide](docs/forca/openscad.md)** shows every step.
 
 <img width="649" alt="OpenSCAD parameters in Forca" src="docs/forca/images/openscad/parameters.png" />
 
@@ -224,11 +235,15 @@ When a filament preset of yours can't load because the preset it was based on is
 lets you pick a new one.
 
 ## Smaller changes
+- **Organic supports with a variable layer height:** adaptive, smoothed or painted layer heights and height ranges
+  with their own layer height now slice with Organic supports (OrcaSlicer refuses them). The supports print on the
+  object's layers, branches lean no more than the support angle on thin layers, and the top and bottom Z distances
+  stay the same in mm.
 - **Slowdown recovery layers** (filament, Cooling): after a layer slowed down for cooling, the speed comes back over
   this many layers instead of at once, so a wide part above a thin neck doesn't show a band. Off by default.
   [Cooling slowdown](docs/forca/guides/cooling.md) also explains Consistent surface, which keeps the outer wall at speed.
-- **Favourite settings:** right-click a process setting's name and choose **Add to favorites** to put it on a
-  **Favorites** page, first in the process settings. A preference of yours, not part of any preset.
+- **Favourite settings:** right-click a process setting's name and choose **Add to favorites** (or click its star in the
+  search results) to put it on a **Favorites** page, first in the process settings. A preference of yours, not part of any preset.
 - **Its own settings folder** (`%APPDATA%\ForcaSlicer`). On first start Forca offers to copy your OrcaSlicer
   settings; it never changes OrcaSlicer's.
 - **No Orca Cloud and no OrcaSlicer update server.** Forca doesn't sign in to or sync with Orca Cloud (the OrcaSlicer

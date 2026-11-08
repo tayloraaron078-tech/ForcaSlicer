@@ -614,8 +614,14 @@ private:
 	PageShp			m_favorites_page;
 	void			fill_favorites_page();    // its option lines from the stored list (no group, so hidden, when empty)
 	void			rebuild_favorites_page(); // after the list changed: refill, re-list the pages, re-activate
+	std::string		favorite_entry_of(const std::string& opt_key) const; // the entry of the line showing opt_key
+	void			set_favorite(const std::string& entry, bool favorite);
 public:
 	void			show_setting_menu(const std::vector<t_config_option_key>& opt_ids) override;
+	// For the search results' star: whether the line showing opt_key is a favourite, and starring/unstarring it.
+	bool			has_favorites_page() const { return m_favorites_page != nullptr; }
+	bool			is_favorite_setting(const std::string& opt_key) const;
+	void			toggle_favorite_setting(const std::string& opt_key);
 };
 
 class TabPrintModel : public TabPrint

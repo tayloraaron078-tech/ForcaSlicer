@@ -10,10 +10,27 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/asio/buffer.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/steady_timer.hpp>
+#include <boost/beast/core/error.hpp>
+#include <boost/beast/core/flat_buffer.hpp>
+#include <boost/beast/core/stream_traits.hpp>
+#include <boost/beast/core/tcp_stream.hpp>
+#include <boost/beast/websocket/rfc6455.hpp>
+#include <boost/beast/websocket/stream.hpp>
+#include <boost/beast/websocket/stream_base.hpp>
 
 #include <algorithm>
+#include <chrono>
+#include <cstddef>
 #include <cstring>
+#include <functional>
+#include <map>
+#include <mutex>
 #include <string>
+#include <thread>
 #include <libslic3r/Config.hpp>
 #include <utility>
 #include <exception>
@@ -28,6 +45,7 @@ namespace {
 
 constexpr long TIMEOUT_CONNECT_S = 5;
 constexpr long TIMEOUT_MAX_S     = 15;
+constexpr long TIMEOUT_PAUSE_S   = 120;
 
 std::string str(const json& j, const char* key)
 {
@@ -121,6 +139,34 @@ bool fetch_jpeg(const std::string& url, std::string& jpeg, std::string& err)
         return false;
     }
     return true;
+}
+
+// The first picture of an mjpg stream. The Adventurer 5M's mjpg-streamer serves only the stream (?action=snapshot
+// never answers), so the picture is read from it and the download stopped there.
+bool fetch_stream_frame(const std::string& url, std::string& jpeg, std::string& err)
+{
+    constexpr size_t max_stream_bytes = 16 * 1024 * 1024;
+    bool             got              = false;
+    auto             http             = Http::get(url);
+    http.timeout_connect(TIMEOUT_CONNECT_S)
+        .timeout_max(TIMEOUT_MAX_S)
+        .size_limit(max_stream_bytes)
+        .on_progress([&](Http::Progress p, bool& cancel) {
+            if (!got && forca_first_mjpeg_frame(p.buffer, jpeg))
+                got = cancel = true;
+        })
+        .on_complete([&](std::string body, unsigned) {
+            if (!got)
+                got = forca_first_mjpeg_frame(body, jpeg);
+            if (!got)
+                err = "the camera did not send a picture";
+        })
+        .on_error([&](std::string, std::string error, unsigned status) {
+            if (!got)
+                err = error + " (HTTP " + std::to_string(status) + ")";
+        })
+        .perform_sync();
+    return got;
 }
 
 // POST to a Flashforge printer's local API with its serial number and access code; `body` gets a reply whose code is 0.
@@ -249,6 +295,7 @@ ForcaHostStatus forca_parse_flashforge_detail(const json& detail)
     s.bed_target_c    = num(detail, "platTargetTemp");
     s.chamber_c       = num(detail, "chamberTemp");
     s.light_on        = str(detail, "lightStatus") == "open";
+    s.camera_url      = boost::algorithm::trim_copy(str(detail, "cameraStreamUrl"));
     if (s.state == ForcaHostState::Failed)
         s.message = str(detail, "errorCode");
     return s;
@@ -266,6 +313,24 @@ std::string forca_camera_snapshot_url(const std::string& camera_url)
         boost::algorithm::ends_with(lower, ".jpeg") || url.find('?') != std::string::npos)
         return url;
     return (boost::algorithm::ends_with(url, "/") ? url : url + "/") + "?action=snapshot";
+}
+
+std::string forca_flashforge_camera_url(const std::string& print_host, const ForcaHostStatus& status)
+{
+    return !status.camera_url.empty() ? status.camera_url : "http://" + host_name(print_host) + ":8080/?action=stream";
+}
+
+bool forca_first_mjpeg_frame(const std::string& data, std::string& jpeg)
+{
+    static const std::string soi("\xFF\xD8\xFF", 3), eoi("\xFF\xD9", 2);
+    const size_t start = data.find(soi);
+    if (start == std::string::npos)
+        return false;
+    const size_t end = data.find(eoi, start + soi.size());
+    if (end == std::string::npos)
+        return false;
+    jpeg = data.substr(start, end + eoi.size() - start);
+    return true;
 }
 
 std::string forca_moonraker_job_end(const std::string& s)
@@ -330,6 +395,267 @@ bool forca_fetch_host_status(const DynamicPrintConfig& config, ForcaHostStatus& 
     return false;
 }
 
+// ---- Snapmaker U1 camera (stock firmware) ---------------------------------------------------------------------------
+
+bool forca_u1_camera_root_listed(const json& roots_reply)
+{
+    const auto result = roots_reply.find("result");
+    if (result == roots_reply.end() || !result->is_array())
+        return false;
+    return std::any_of(result->begin(), result->end(), [](const json& root) { return root.is_object() && str(root, "name") == "camera"; });
+}
+
+double forca_u1_monitor_stamp(const json& list_reply)
+{
+    const auto result = list_reply.find("result");
+    if (result != list_reply.end() && result->is_array())
+        for (const json& file : *result)
+            if (file.is_object() && str(file, "path") == "monitor.jpg")
+                return num(file, "modified");
+    return -1;
+}
+
+namespace {
+constexpr double U1_RENEW_S = 240; // the firmware stops the monitor 360 s after the last start_monitor
+constexpr double U1_IDLE_S  = 60;  // stop once no viewer has asked for this long
+} // namespace
+
+ForcaU1CameraStep forca_u1_camera_step(double now, double wanted, double started)
+{
+    if (now - wanted >= U1_IDLE_S)
+        return ForcaU1CameraStep::Stop;
+    if (started < 0 || now - started >= U1_RENEW_S)
+        return ForcaU1CameraStep::Start;
+    return ForcaU1CameraStep::Wait;
+}
+
+namespace {
+
+using U1Clock = std::chrono::steady_clock;
+
+double u1_seconds() { return std::chrono::duration<double>(U1Clock::now().time_since_epoch()).count(); }
+
+struct U1Keeper
+{
+    std::string api_key;
+    double      wanted  = 0;
+    bool        running = false;
+};
+
+// Never destroyed: a keeper thread may still run while the app exits.
+std::mutex&                        s_u1_mutex = *new std::mutex;
+std::map<std::string, U1Keeper>&   s_u1       = *new std::map<std::string, U1Keeper>; // base_url -> keeper
+std::map<std::string, bool>&       s_u1_hosts = *new std::map<std::string, bool>;     // base_url -> is a U1
+
+// The keeper's next step; on Stop it is marked ended, so the next forca_u1_camera_want starts a new one.
+ForcaU1CameraStep u1_step(const std::string& url, double started, std::string& api_key)
+{
+    std::lock_guard<std::mutex> lock(s_u1_mutex);
+    U1Keeper&                   k    = s_u1[url];
+    const ForcaU1CameraStep     step = forca_u1_camera_step(u1_seconds(), k.wanted, started);
+    if (step == ForcaU1CameraStep::Stop)
+        k.running = false;
+    api_key = k.api_key;
+    return step;
+}
+
+std::string u1_request(const char* method, int id)
+{
+    json params = { { "domain", "lan" } };
+    if (std::strcmp(method, "camera.start_monitor") == 0)
+        params["interval"] = 0;
+    return json{ { "jsonrpc", "2.0" }, { "method", method }, { "params", params }, { "id", id } }.dump();
+}
+
+// One websocket to Moonraker, held while the camera is wanted: start_monitor on open and every U1_RENEW_S,
+// stop_monitor when no viewer asked for U1_IDLE_S. Moonraker's notifications are read and dropped.
+void u1_keep_camera(const std::string& url)
+{
+    namespace beast = boost::beast;
+    namespace asio  = boost::asio;
+    namespace ws    = beast::websocket;
+    std::string api_key;
+    for (;;) {
+        if (u1_step(url, -1, api_key) == ForcaU1CameraStep::Stop)
+            return;
+        try {
+            std::string host = url.substr(url.find("//") + 2), port = "80";
+            if (const size_t colon = host.find(':'); colon != std::string::npos) {
+                port = host.substr(colon + 1);
+                host.erase(colon);
+            }
+            asio::io_context              ioc;
+            asio::ip::tcp::resolver       resolver(ioc);
+            ws::stream<beast::tcp_stream> sock(ioc);
+            beast::get_lowest_layer(sock).expires_after(std::chrono::seconds(TIMEOUT_CONNECT_S));
+            beast::get_lowest_layer(sock).connect(resolver.resolve(host, port));
+            sock.set_option(ws::stream_base::decorator([api_key](ws::request_type& req) {
+                if (!api_key.empty())
+                    req.set("X-Api-Key", api_key);
+            }));
+            sock.handshake(host + (port == "80" ? "" : ":" + port), "/websocket");
+            beast::get_lowest_layer(sock).expires_never();
+
+            asio::steady_timer timer(ioc);
+            bool               stopping = false, lost = false, writing = false;
+            beast::flat_buffer in;
+            std::function<void()> read_next = [&]() {
+                sock.async_read(in, [&](beast::error_code ec, std::size_t) {
+                    in.consume(in.size());
+                    if (!ec)
+                        read_next();
+                    else if (!stopping) { // the printer went away: reconnect while the camera is wanted
+                        lost = true;
+                        timer.cancel();
+                    }
+                });
+            };
+            read_next();
+            std::string           out;
+            int                   id      = 9000;
+            double                started = -1;
+            std::function<void()> tick    = [&]() {
+                const ForcaU1CameraStep step = writing ? ForcaU1CameraStep::Wait : u1_step(url, started, api_key);
+                if (step == ForcaU1CameraStep::Stop) {
+                    stopping = true;
+                    out      = u1_request("camera.stop_monitor", ++id);
+                    sock.async_write(asio::buffer(out), [&](beast::error_code, std::size_t) {
+                        sock.async_close(ws::close_code::normal, [](beast::error_code) {});
+                    });
+                    return;
+                }
+                if (step == ForcaU1CameraStep::Start) {
+                    started = u1_seconds();
+                    out     = u1_request("camera.start_monitor", ++id);
+                    writing = true;
+                    sock.async_write(asio::buffer(out), [&](beast::error_code, std::size_t) { writing = false; });
+                }
+                timer.expires_after(std::chrono::seconds(1));
+                timer.async_wait([&](beast::error_code ec) {
+                    if (!ec)
+                        tick();
+                });
+            };
+            tick();
+            ioc.run();
+            if (!lost)
+                return; // stopped
+            BOOST_LOG_TRIVIAL(info) << "Forca: U1 camera connection to " << url << " lost";
+        } catch (const std::exception& e) {
+            BOOST_LOG_TRIVIAL(warning) << "Forca: U1 camera connection to " << url << " failed: " << e.what();
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(5)); // the printer is busy or away: try again while wanted
+    }
+}
+
+} // namespace
+
+bool forca_is_u1_camera_host(const std::string& print_host, const std::string& api_key)
+{
+    const std::string url = base_url(print_host);
+    {
+        std::lock_guard<std::mutex> lock(s_u1_mutex);
+        if (auto it = s_u1_hosts.find(url); it != s_u1_hosts.end())
+            return it->second;
+    }
+    std::string body, err;
+    if (!http_get(url + "/server/files/roots", api_key, body, err))
+        return false; // not cached: the printer may be off now
+    const bool is_u1 = forca_u1_camera_root_listed(json::parse(body, nullptr, false));
+    std::lock_guard<std::mutex> lock(s_u1_mutex);
+    s_u1_hosts[url] = is_u1;
+    return is_u1;
+}
+
+void forca_u1_camera_want(const std::string& print_host, const std::string& api_key)
+{
+    const std::string url = base_url(print_host);
+    std::lock_guard<std::mutex> lock(s_u1_mutex);
+    U1Keeper&                   k = s_u1[url];
+    k.wanted                      = u1_seconds();
+    k.api_key                     = api_key;
+    if (!k.running) {
+        k.running = true;
+        std::thread([url]() { u1_keep_camera(url); }).detach();
+    }
+}
+
+bool forca_u1_snapshot_camera_listed(const json& webcams_reply)
+{
+    const auto result = webcams_reply.find("result");
+    if (result == webcams_reply.end() || !result->is_object() || !result->contains("webcams") || !(*result)["webcams"].is_array())
+        return false;
+    const std::string path = FORCA_U1_SNAPSHOT_PATH;
+    for (const json& cam : (*result)["webcams"]) { // the address as typed: the path alone, or with the printer's address
+        const std::string snapshot = cam.is_object() ? str(cam, "snapshot_url") : std::string();
+        if (snapshot.size() >= path.size() && snapshot.compare(snapshot.size() - path.size(), path.size(), path) == 0)
+            return true;
+    }
+    return false;
+}
+
+bool forca_fetch_u1_snapshot_camera(const std::string& print_host, const std::string& api_key, bool& saved)
+{
+    std::string body, err;
+    if (!http_get(base_url(print_host) + "/server/webcams/list", api_key, body, err))
+        return false;
+    saved = forca_u1_snapshot_camera_listed(json::parse(body, nullptr, false));
+    return true;
+}
+
+namespace {
+
+// A U1 picture taken after this call: the camera is woken (or kept on) and monitor.jpg read once it has changed.
+bool fetch_u1_frame(const std::string& print_host, const std::string& api_key, std::string& jpeg, std::string& err)
+{
+    const std::string url   = base_url(print_host);
+    const auto        stamp = [&]() {
+        std::string body, e;
+        return http_get(url + "/server/files/list?root=camera", api_key, body, e)
+                   ? forca_u1_monitor_stamp(json::parse(body, nullptr, false)) : -1.;
+    };
+    const double before = stamp();
+    forca_u1_camera_want(print_host, api_key);
+    for (int i = 0; i < 20; ++i) { // the first picture lands about 1 s after the start
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        const double now = stamp();
+        if (now >= 0 && now != before)
+            return fetch_jpeg(url + FORCA_U1_SNAPSHOT_PATH, jpeg, err);
+    }
+    err = "the U1's camera did not send a new picture within 10 seconds";
+    return false;
+}
+
+std::mutex                               s_viewers_mutex;
+std::map<std::string, ForcaCameraViewer> s_viewers; // print_host -> Forca's live view of its camera
+} // namespace
+
+void forca_set_camera_viewer(const std::string& print_host, ForcaCameraViewer viewer)
+{
+    std::lock_guard<std::mutex> lock(s_viewers_mutex);
+    if (viewer)
+        s_viewers[print_host] = std::move(viewer);
+    else
+        s_viewers.erase(print_host);
+}
+
+ForcaCameraLease::ForcaCameraLease(const std::string& print_host)
+{
+    {
+        std::lock_guard<std::mutex> lock(s_viewers_mutex);
+        if (auto it = s_viewers.find(print_host); it != s_viewers.end())
+            m_viewer = it->second;
+    }
+    if (m_viewer)
+        m_released = m_viewer(true);
+}
+
+ForcaCameraLease::~ForcaCameraLease()
+{
+    if (m_viewer)
+        m_viewer(false);
+}
+
 bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jpeg, std::string& err)
 {
     const std::string kind = forca_host_status_kind(config);
@@ -345,13 +671,22 @@ bool forca_fetch_host_snapshot(const DynamicPrintConfig& config, std::string& jp
             if (!flashforge_post(config, "detail", json::object(), body, err))
                 return false;
             const json reply = json::parse(body);
-            snapshot         = forca_camera_snapshot_url(str(reply.contains("detail") ? reply["detail"] : reply, "cameraStreamUrl"));
-            if (snapshot.empty()) {
-                err = "no camera";
+            const std::string stream =
+                forca_flashforge_camera_url(host, forca_parse_flashforge_detail(reply.contains("detail") ? reply["detail"] : reply));
+            // Forca's own Device page may be the camera's one viewer: it lets go while the picture is taken.
+            ForcaCameraLease lease(host);
+            if (lease.released())
+                std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+            if (!fetch_stream_frame(stream, jpeg, err)) {
+                err = "the camera did not answer: it serves one viewer at a time, so it may be open in Flashforge's app or "
+                      "another slicer, or the printer has no camera (" + err + ")";
                 return false;
             }
-            return fetch_jpeg(snapshot, jpeg, err);
+            return true;
         }
+        // A U1 first: a Fluidd camera saved on its monitor.jpg would read a stale picture while the camera sleeps.
+        if (forca_is_u1_camera_host(host, config.opt_string("printhost_apikey")))
+            return fetch_u1_frame(host, config.opt_string("printhost_apikey"), jpeg, err);
         if (!http_get(base_url(host) + "/server/webcams/list", config.opt_string("printhost_apikey"), body, err))
             return false;
         const json reply = json::parse(body);
@@ -411,6 +746,93 @@ bool forca_flashforge_control(const DynamicPrintConfig& config, const std::strin
     return false;
 }
 
+ForcaHostCaps forca_host_caps(const DynamicPrintConfig& config)
+{
+    ForcaHostCaps     caps;
+    const std::string kind = forca_host_status_kind(config);
+    if (kind == "flashforge" &&
+        (config.opt_string("flashforge_serial_number").empty() || config.opt_string("printhost_apikey").empty()))
+        return caps; // without them only the old 8899 protocol answers, which Forca doesn't read
+    if (kind.empty())
+        return caps;
+    caps.status = caps.camera = caps.pause = caps.grant = true;
+    return caps;
+}
+
+std::string forca_host_state_name(ForcaHostState state)
+{
+    switch (state) {
+    case ForcaHostState::Idle: return "idle";
+    case ForcaHostState::Preparing: return "preparing";
+    case ForcaHostState::Printing: return "printing";
+    case ForcaHostState::Paused: return "paused";
+    case ForcaHostState::Finished: return "finished";
+    case ForcaHostState::Stopped: return "stopped";
+    case ForcaHostState::Failed: return "failed";
+    default: return "unknown";
+    }
+}
+
+bool forca_host_busy(ForcaHostState state) { return !forca_host_idle(state) && state != ForcaHostState::Failed; }
+
+bool forca_host_idle(ForcaHostState state)
+{
+    return state == ForcaHostState::Idle || state == ForcaHostState::Finished || state == ForcaHostState::Stopped;
+}
+
+std::string forca_host_job_key(const ForcaHostStatus& status)
+{
+    return job_stem(status.file.empty() ? status.last_job_file : status.file);
+}
+
+std::string forca_host_pause_refusal(const ForcaHostStatus& status)
+{
+    switch (status.state) {
+    case ForcaHostState::Printing: return {};
+    case ForcaHostState::Paused: return "the print is already paused";
+    case ForcaHostState::Preparing: return "the printer is still preparing (heating or leveling) and ignores a pause until the first layer";
+    default: return "the printer is not printing (" + (status.raw_state.empty() ? std::string("state unknown") : "state " + status.raw_state) + ")";
+    }
+}
+
+std::string forca_moonraker_print_url(const std::string& print_host, const std::string& action)
+{
+    return base_url(print_host) + "/printer/print/" + action;
+}
+
+bool forca_same_print_host(const std::string& a, const std::string& b)
+{
+    return !boost::algorithm::trim_copy(a).empty() && boost::algorithm::iequals(base_url(a), base_url(b));
+}
+
+bool forca_host_pause_print(const DynamicPrintConfig& config, bool pause, std::string& err)
+{
+    const std::string kind = forca_host_status_kind(config);
+    if (kind == "flashforge")
+        return forca_flashforge_control(config, "jobCtl_cmd", { { "jobID", "" }, { "action", pause ? "pause" : "continue" } }, err);
+    if (kind != "moonraker") {
+        err = "Forca can't pause this printer";
+        return false;
+    }
+    bool              ok  = false;
+    const std::string key = config.opt_string("printhost_apikey");
+    auto              http = Http::post(forca_moonraker_print_url(config.opt_string("print_host"), pause ? "pause" : "resume"));
+    // Moonraker answers when Klipper's PAUSE / RESUME macro ends, and a RESUME that reheats the nozzle (the Elegoo
+    // Giga's) runs longer than a status read may: 15 s timed out while the printer went on to resume.
+    http.timeout_connect(TIMEOUT_CONNECT_S).timeout_max(TIMEOUT_PAUSE_S);
+    if (!key.empty())
+        http.header("X-Api-Key", key);
+    http.on_complete([&](std::string, unsigned) { ok = true; })
+        .on_error([&](std::string body, std::string error, unsigned status) {
+            err = error + " (HTTP " + std::to_string(status) + ")";
+            const json reply = json::parse(body, nullptr, false);
+            if (reply.is_object() && reply.contains("error") && reply["error"].is_object())
+                err = reply["error"].value("message", err);
+        })
+        .perform_sync();
+    return ok;
+}
+
 std::string forca_web_interface_name(const std::string& html)
 {
     const std::string page = boost::algorithm::to_lower_copy(html.substr(0, 4096)); // the <head> is enough
@@ -447,9 +869,7 @@ bool forca_find_host_config(const std::string& host, DynamicPrintConfig& config)
     PresetBundle* bundle = wxGetApp().preset_bundle;
     if (!bundle || host.empty())
         return false;
-    const auto same = [&](const DynamicPrintConfig& c) {
-        return c.has("print_host") && boost::algorithm::iequals(base_url(c.opt_string("print_host")), base_url(host));
-    };
+    const auto same = [&](const DynamicPrintConfig& c) { return c.has("print_host") && forca_same_print_host(c.opt_string("print_host"), host); };
     if (const DynamicPrintConfig* selected = bundle->physical_printers.get_selected_printer_config(); selected && same(*selected)) {
         config = *selected;
         return true;

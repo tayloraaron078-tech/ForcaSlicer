@@ -4,6 +4,10 @@
 #include "I18N.hpp"
 #include "PrinterWebView.hpp"
 #include "ForcaFlashforgePanel.hpp" // Forca: Flashforge status page
+#include "ForcaHostStatus.hpp"      // Forca: Snapmaker U1 camera
+#include "MsgDialog.hpp"
+#include "format.hpp"
+#include "libslic3r/AppConfig.hpp"
 #include "slic3r/GUI/GUI_App.hpp"
 #include "slic3r/GUI/Widgets/WebView.hpp"
 #include "slic3r/Utils/PrintHost.hpp"
@@ -24,6 +28,8 @@
 #include <wx/webview.h>
 #include <wx/utils.h>
 #include <wx/buffer.h>
+#include <wx/timer.h>
+#include <wx/window.h>
 
 using json = nlohmann::json;
 
@@ -315,6 +321,65 @@ private:
 
 } // namespace
 
+// Forca: a Klipper printer's web interface. On a Snapmaker U1 with stock firmware the camera only takes pictures while
+// a client keeps it awake, so while this page shows, Forca does (a camera saved in Fluidd on monitor.jpg then moves).
+// The first time a U1 without that camera shows here, Forca says how to add it.
+class ForcaKlipperWebViewHandler final : public PrinterWebViewHandler
+{
+public:
+    explicit ForcaKlipperWebViewHandler(PrinterWebView& owner) : PrinterWebViewHandler(owner)
+    {
+        m_timer.Bind(wxEVT_TIMER, [this](wxTimerEvent&) { keep_camera(); });
+        m_timer.Start(20000);
+    }
+
+    ~ForcaKlipperWebViewHandler() override { *m_alive = false; }
+
+    void on_loaded(wxWebViewEvent&) override { keep_camera(); }
+
+private:
+    static constexpr const char* TIP_KEY = "forca_u1_camera_tip_shown";
+
+    void keep_camera()
+    {
+        DynamicPrintConfig* cfg = get_active_printer_config();
+        if (cfg == nullptr || !owner().IsShownOnScreen())
+            return;
+        const bool ask_tip = !m_tip_checked && wxGetApp().app_config != nullptr && wxGetApp().app_config->get(TIP_KEY) != "1";
+        m_tip_checked      = true;
+        std::thread([this, alive = m_alive, ask_tip, host = cfg->opt_string("print_host"), key = cfg->opt_string("printhost_apikey")]() {
+            if (!forca_is_u1_camera_host(host, key))
+                return;
+            forca_u1_camera_want(host, key);
+            bool saved = false;
+            if (!ask_tip || !forca_fetch_u1_snapshot_camera(host, key, saved))
+                return;
+            wxGetApp().CallAfter([this, alive, saved]() {
+                if (!*alive || wxGetApp().is_closing() || wxGetApp().app_config == nullptr || wxGetApp().app_config->get(TIP_KEY) == "1")
+                    return;
+                wxGetApp().app_config->set(TIP_KEY, "1");
+                if (saved || !owner().IsShownOnScreen())
+                    return;
+                // TRN %1% is the address of the camera picture on the printer, e.g. /server/files/camera/monitor.jpg
+                MessageDialog dlg(&owner(),
+                                  format_wxstr(_L("The Snapmaker U1's camera only takes still pictures on its stock firmware, and Forca "
+                                                  "keeps it taking them while this tab is open. To see them here, add the camera to Fluidd "
+                                                  "once: in Fluidd, open Settings > Cameras, add a camera, set its service to Adaptive MJPEG "
+                                                  "and its snapshot URL to %1%, and save it.\n\n"
+                                                  "Forca AI and Forca Academy take pictures "
+                                                  "from the camera without this setting."),
+                                               FORCA_U1_SNAPSHOT_PATH),
+                                  _L("Show the U1's camera"), wxOK | wxICON_INFORMATION);
+                dlg.ShowModal();
+            });
+        }).detach();
+    }
+
+    wxTimer                            m_timer;
+    bool                               m_tip_checked = false;
+    std::shared_ptr<std::atomic<bool>> m_alive       = std::make_shared<std::atomic<bool>>(true);
+};
+
 std::unique_ptr<PrinterWebViewHandler> create_printer_webview_handler(PrinterWebView& owner)
 {
     auto     cfg = get_active_printer_config();
@@ -330,6 +395,8 @@ std::unique_ptr<PrinterWebViewHandler> create_printer_webview_handler(PrinterWeb
                 return forca_make_flashforge_handler(owner);
             return nullptr;
         default:
+            if (forca_host_status_kind(*cfg) == "moonraker")
+                return std::make_unique<ForcaKlipperWebViewHandler>(owner);
             return nullptr;
     }
 }

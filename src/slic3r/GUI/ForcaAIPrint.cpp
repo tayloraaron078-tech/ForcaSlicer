@@ -314,9 +314,10 @@ ForcaAIResult tool_request_print(const json& args)
             forca_ai_grant_send(std::move(job));
         });
         return ForcaAIResult::json({ { "request", id }, { "state", "sending" },
-                                     { "note", "Under the user's print grant: Forca opens its print dialog, waits until it is "
-                                               "ready with nothing to confirm, counts down 10 s (the user can cancel) and "
-                                               "presses Send. Check forca_print_request_status for 'sent'." } });
+                                     { "note", "Under the user's print grant: Forca counts down 10 s (the user can cancel) and "
+                                               "sends it -- through its print dialog for a Bambu printer, by uploading and "
+                                               "starting it for a print-host printer. Check forca_print_request_status for "
+                                               "'sent'." } });
     }
 
     if (s_request.state == "pending")
@@ -365,14 +366,15 @@ void register_forca_ai_print_tools(ForcaAI& ai)
         "dialog opens for them to choose the printer / slots and send. At the Advanced control level there is no card: "
         "the print dialog opens at once. You cannot approve a request. Only with a print grant the user gave "
         "(forca_status -> print_grant) may you pass start: true: Forca then sends it itself, on a grant printer that is "
-        "idle and whose bed is clear, after a 10 s countdown the user can cancel.",
+        "idle and whose bed is clear, after a 10 s countdown the user can cancel. A print-host printer (id \"host:...\") "
+        "under a grant must be the printer Forca sends to now, and the plate must use one filament.",
         { { "type", "object" },
           { "properties", { { "plate", { { "type", "integer" }, { "minimum", 1 } } },
                             { "reason", { { "type", "string" }, { "description", "One or two sentences for the user: what and why." } } },
                             { "start", { { "type", "boolean" }, { "description", "Send it under the user's print grant (see print_grant in forca_status)." } } },
                             { "printer", { { "type", "string" }, { "description", "With start: the grant printer (id or name; default: the grant's only one)." } } },
                             { "bed_check", { { "type", "integer" }, { "description", "With start: a forca_bed_check number, if the grant allows camera bed checks and the user has not marked the bed clear." } } },
-                            { "trays", { { "type", "object" }, { "description", "With start: the printer slot each filament the plate uses prints from, e.g. {\"1\": \"Ext\"} or {\"1\": \"A4\", \"2\": \"B1\"} (forca_printer_status -> filament_sources). Required." } } } } } },
+                            { "trays", { { "type", "object" }, { "description", "With start: the printer slot each filament the plate uses prints from, e.g. {\"1\": \"Ext\"} or {\"1\": \"A4\", \"2\": \"B1\"} (forca_printer_status -> filament_sources). Required for Bambu printers; not used for print-host printers." } } } } } },
         tool_request_print });
 
     ai.register_tool({ "forca_print_request_status", "Print request status",

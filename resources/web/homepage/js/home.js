@@ -15,8 +15,11 @@ function OnInit()
 	SendMsg_GetBambuLoginInfo();
 	SendMsg_GetRecentFile();
 	SendMsg_GetStaffPick();
+	SendMsg_GetPrinterCards();
+	setInterval(SendMsg_GetPrinterCards, 5000);
 
 	Set_AccountMenu_Event();
+	Set_ContinueItem_Event();
 }
 
 //------最佳打开文件的右键菜单功能----------
@@ -160,6 +163,8 @@ function HandleStudio( pVal )
     ShowStaffPick(m_HotModelList);
   } else if (strCmd == "SetLoginPanelVisibility") {
     SetLoginPanelVisibility(pVal["data"]["visible"]);
+  } else if (strCmd == "forca_printer_cards") {
+    ShowPrinterCards(pVal["printers"] || []);
   }
 }
 
@@ -390,6 +395,7 @@ function ShowRecentFileList( pList )
 	
 	$("#FileList").html(strHtml);	
 	TranslatePage();   // translate the data-i18n attributes on the freshly inserted cards
+	ShowContinueItem(pList);
 	
     Set_RecentFile_MouseRightBtn_Event();
 	UpdateRecentClearBtnDisplay();
@@ -674,6 +680,96 @@ function OpenOneStaffPickModel( ModelID )
 	SendWXMessage( JSON.stringify(tSend) );		
 }
 
+
+//--------------Forca: continue card-------
+var m_ContinuePath = "";
+
+function ShowContinueItem(pList)
+{
+	// The newest project that is still on disk ("time" holds a date, not "File is missing").
+	let last = pList.find(f => !isNaN(String(f["time"])[0]));
+	if (!last) {
+		m_ContinuePath = "";
+		$("#ContinueItem").hide();
+		return;
+	}
+	m_ContinuePath = last["path"];
+	$("#ContinueImg").attr("src", last["image"] || sImages[m_ContinuePath] || "img/d.png");
+	$("#ContinueName").text(last["project_name"]);
+	$("#ContinueItem").attr("title", m_ContinuePath).show();
+}
+
+function Set_ContinueItem_Event()
+{
+	$("#ContinueItem").on("click", function () {
+		if (m_ContinuePath !== "") OnOpenRecentFile(encodeURI(m_ContinuePath));
+	}).on("keydown", function (e) {
+		if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.click(); }
+	});
+}
+
+//--------------Forca: printer cards-------
+function SendMsg_GetPrinterCards() { SendSimpleCommand("forca_printer_cards"); }
+
+var PrinterStateText = {
+	printing:   () => T("printer_printing", "Printing"),
+	paused:     () => T("printer_paused", "Paused"),
+	preparing:  () => T("printer_preparing", "Preparing"),
+	idle:       () => T("printer_idle", "Idle"),
+	finished:   () => T("printer_finished", "Finished"),
+	stopped:    () => T("printer_stopped", "Stopped"),
+	failed:     () => T("printer_failed", "Failed"),
+	offline:    () => T("printer_offline", "Offline"),
+	connecting: () => T("printer_connecting", "Connecting..."),
+	online:     () => T("printer_online", "Online"),
+	no_status:  () => T("printer_no_status", "No status"),
+	unknown:    () => T("printer_unknown", "Unknown")
+};
+
+function PrinterTimeLeft(nMin)
+{
+	if (nMin >= 60) return T("time_left_hours", "%s h %s min left", Math.floor(nMin / 60), nMin % 60);
+	return T("time_left_minutes", "%s min left", nMin);
+}
+
+function ShowPrinterCards(pList)
+{
+	let list = $("#PrinterList").empty();
+	$("#PrinterArea").toggle(pList.length > 0);
+
+	pList.forEach(function (p) {
+		let state = PrinterStateText[p["state"]] ? p["state"] : "unknown";
+		// Text only: names and jobs come from the printers and are never read as markup.
+		let card = $('<div class="PrinterCard"></div>').addClass("State_" + state).toggleClass("Selected", !!p["selected"]);
+		let head = $('<div class="PrinterHead"></div>').appendTo(card);
+		$('<span class="PrinterDot"></span>').appendTo(head);
+		$('<span class="PrinterName TextS1"></span>').text(p["name"]).attr("title", p["name"]).appendTo(head);
+		$('<div class="PrinterType"></div>').text(p["type"]).appendTo(card);
+		$('<div class="PrinterState"></div>').text(PrinterStateText[state]()).appendTo(card);
+		if (p["job"])
+			$('<div class="PrinterJob"></div>').text(p["job"]).attr("title", p["job"]).appendTo(card);
+		if (p["progress_pct"] !== undefined) {
+			let bar = $('<div class="PrinterBar"><div></div></div>').appendTo(card);
+			bar.children().css("width", Math.max(0, Math.min(100, p["progress_pct"])) + "%");
+			let line = p["progress_pct"] + "%";
+			if (p["remaining_min"] !== undefined) line += " · " + PrinterTimeLeft(p["remaining_min"]);
+			$('<div class="PrinterProgress"></div>').text(line).appendTo(card);
+		}
+		if (p["error"])
+			$('<div class="PrinterError"></div>').text(p["error"]).attr("title", p["error"]).appendTo(card);
+
+		if (p["open"]) {
+			card.addClass("Clickable").attr({ tabindex: "0", role: "button",
+				title: p["open"] === "web" ? T("open_printer_web", "Open the printer's web page") : T("open_printer_device", "Open in the Device tab") });
+			card.on("click", function () {
+				SendWXMessage(JSON.stringify({ sequence_id: Math.round(new Date() / 1000), command: "forca_open_printer", data: { id: p["id"] } }));
+			}).on("keydown", function (e) {
+				if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.click(); }
+			});
+		}
+		list.append(card);
+	});
+}
 
 //---------------Global-----------------
 window.postMessage = HandleStudio;

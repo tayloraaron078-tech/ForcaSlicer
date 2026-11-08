@@ -3818,19 +3818,49 @@ void TabPrint::show_setting_menu(const std::vector<t_config_option_key>& opt_ids
 
     wxMenu menu;
     wxMenuItem* item = menu.Append(wxID_ANY, favorite ? _L("Remove from favorites") : _L("Add to favorites"));
-    menu.Bind(wxEVT_MENU, [this, key, favorite](wxCommandEvent&) {
-        std::vector<std::string> keys = forca_favorite_settings();
-        if (favorite)
-            keys.erase(std::remove_if(keys.begin(), keys.end(),
-                                      [&key](const std::string& stored) { return forca_favorite_is_line(stored, key); }),
-                       keys.end());
-        else
-            keys.push_back(key);
-        forca_set_favorite_settings(keys);
-        // After the menu has closed: the rebuild replaces the controls the click came from.
-        CallAfter([this]() { rebuild_favorites_page(); });
-    }, item->GetId());
+    menu.Bind(wxEVT_MENU, [this, key, favorite](wxCommandEvent&) { set_favorite(key, !favorite); }, item->GetId());
     PopupMenu(&menu);
+}
+
+void TabPrint::set_favorite(const std::string& entry, bool favorite)
+{
+    std::vector<std::string> keys = forca_favorite_settings();
+    keys.erase(std::remove_if(keys.begin(), keys.end(),
+                              [&entry](const std::string& stored) { return forca_favorite_is_line(stored, entry); }),
+               keys.end());
+    if (favorite)
+        keys.push_back(entry);
+    forca_set_favorite_settings(keys);
+    // Later: the rebuild replaces the controls a right-click came from.
+    CallAfter([this]() { rebuild_favorites_page(); });
+}
+
+std::string TabPrint::favorite_entry_of(const std::string& opt_key) const
+{
+    for (const PageShp& page : m_pages) {
+        if (page == m_favorites_page)
+            continue;
+        for (const ConfigOptionsGroupShp& group : page->m_optgroups)
+            for (const Line& line : group->get_lines()) {
+                const std::string entry = forca_favorite_entry(forca_option_ids(line));
+                if (!line.get_options().empty() && forca_favorite_is_line(opt_key, entry))
+                    return entry;
+            }
+    }
+    return opt_key;
+}
+
+bool TabPrint::is_favorite_setting(const std::string& opt_key) const
+{
+    const std::string              entry     = favorite_entry_of(opt_key);
+    const std::vector<std::string> favorites = forca_favorite_settings();
+    return std::any_of(favorites.begin(), favorites.end(),
+                       [&entry](const std::string& stored) { return forca_favorite_is_line(stored, entry); });
+}
+
+void TabPrint::toggle_favorite_setting(const std::string& opt_key)
+{
+    set_favorite(favorite_entry_of(opt_key), !is_favorite_setting(opt_key));
 }
 
 // Forca: a filament that sets its own scarf joint (Setting Overrides page) replaces these settings for its walls,
@@ -4013,7 +4043,8 @@ void TabPrint::update()
             toggle_options();
         // update() could be called during undo/redo execution
         // Update of objectList can cause a crash in this case (because m_objects doesn't match ObjectList)
-        if (m_type != Preset::TYPE_MODEL && !wxGetApp().plater()->inside_snapshot_capture())
+        // Before the main window is shown no object can be selected, and the refresh would only lay out the sidebar.
+        if (m_type != Preset::TYPE_MODEL && !wxGetApp().plater()->inside_snapshot_capture() && wxGetApp().mainframe->IsShown())
             wxGetApp().obj_list()->update_and_show_object_settings_item();
 
         wxGetApp().mainframe->on_config_changed(m_config);

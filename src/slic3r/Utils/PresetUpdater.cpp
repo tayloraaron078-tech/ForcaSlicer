@@ -304,7 +304,9 @@ void PresetUpdater::priv::set_download_prefs(AppConfig *app_config)
 	version_check_url = app_config->version_check_url();
 
 	auto profile_update_url = app_config->profile_update_url();
-	if (!profile_update_url.empty() && app_config->get_bool("enable_ota"))
+	// Dev builds keep the profiles from their own source tree; an over-the-air bundle would replace them.
+	const bool dev_build = boost::algorithm::icontains(std::string(SoftFever_VERSION), "dev");
+	if (!profile_update_url.empty() && !dev_build)
 		enabled_config_update = true;
 	else
 		enabled_config_update = false;
@@ -1385,6 +1387,9 @@ void PresetUpdater::check_vendor_update(const std::string& vendor_id)
 {
     if (!p->enabled_config_update) return;
     if (vendor_id.empty()) return;
+    // Stealth mode can be switched off mid-session, so it is checked before the vendor is marked
+    // as checked: the next printer change after that still queries the server.
+    if (GUI::wxGetApp().app_config->get_stealth_mode()) return;
 
     if (!p->checked_vendors.insert(vendor_id).second)
         return;
@@ -1416,6 +1421,13 @@ void PresetUpdater::check_vendor_update(const std::string& vendor_id)
 void PresetUpdater::priv::check_new_vendors(const std::set<std::string>& system_vendors,
                                              std::function<void(std::vector<std::string>, bool)> callback)
 {
+    if (!FORCA_ORCA_PROFILE_UPDATES_ENABLED) { // Forca (B2): no profile downloads from Orca's server, as sync_vendor_config
+        GUI::wxGetApp().CallAfter([callback]() {
+            if (callback)
+                callback({}, false); // no new vendors, nothing declined
+        });
+        return;
+    }
     vendor_check_threads.emplace_back([this, system_vendors, callback]() {
         AppConfig* app_config = GUI::wxGetApp().app_config;
         std::string url       = app_config->profile_update_url() + "/new?orcaslicer_version=" + Http::url_encode(SoftFever_VERSION);

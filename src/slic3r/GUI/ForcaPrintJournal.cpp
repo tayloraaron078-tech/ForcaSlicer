@@ -3,6 +3,7 @@
 #include "GUI.hpp" // from_u8 / into_u8 / from_path / into_path / show_error / desktop_open_any_folder
 #include "ForcaBeforeYouPrint.hpp" // forca_option_label / forca_option_value
 #include "ForcaExperimentDialog.hpp"
+#include "ForcaRecipeDialog.hpp"
 #include "ForcaReset.hpp"
 #include "GUI_App.hpp"
 #include "I18N.hpp"
@@ -799,7 +800,11 @@ ForcaPrintJournalDialog::ForcaPrintJournalDialog(wxWindow* parent, std::vector<f
     const wxString results[] = { _L("Not recorded"), _L("Success"), _L("Partial"), _L("Failed") };
     m_result = new wxRadioBox(m_detail, wxID_ANY, _L("Result"), wxDefaultPosition, wxDefaultSize, 4, results, 4, wxRA_SPECIFY_COLS);
     det->Add(m_result, 0, wxEXPAND | wxBOTTOM, pad);
-    m_result->Bind(wxEVT_RADIOBOX, [this](wxCommandEvent&) { if (!m_loading) m_dirty = true; });
+    m_result->Bind(wxEVT_RADIOBOX, [this](wxCommandEvent&) {
+        if (!m_loading)
+            m_dirty = true;
+        update_recipe();
+    });
 
     auto* tag_box = new wxStaticBoxSizer(wxVERTICAL, m_detail, _L("What went wrong (optional)"));
     auto* grid    = new wxGridSizer(2, FromDIP(4), FromDIP(12));
@@ -899,9 +904,24 @@ ForcaPrintJournalDialog::ForcaPrintJournalDialog(wxWindow* parent, std::vector<f
             desktop_open_any_folder(m_prints[m_row].folder.string());
     });
 
+    // Forca: "Make a recipe" (ForcaRecipeDialog.hpp) from a successful print. Not on a filtered journal: that one is
+    // opened from a send dialog, and a recipe switches the presets.
+    auto* save_row = new wxBoxSizer(wxHORIZONTAL);
+    m_recipe       = new wxButton(m_detail, wxID_ANY, _L("Make a recipe") + dots);
+    m_recipe->SetToolTip(_L("Save this print's settings as new presets to print with again. For a print recorded as a success."));
+    m_recipe->Show(m_only.empty());
     m_save = new wxButton(m_detail, wxID_ANY, _L("Save"));
-    det->Add(m_save, 0, wxALIGN_RIGHT);
+    save_row->Add(m_recipe, 0, wxRIGHT, FromDIP(6));
+    save_row->AddStretchSpacer(1);
+    save_row->Add(m_save, 0);
+    det->Add(save_row, 0, wxEXPAND);
     m_save->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { save(); });
+    m_recipe->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        save_if_changed();
+        if (m_row >= 0 && size_t(m_row) < m_prints.size() && m_prints[m_row].result == "success" &&
+            forca_make_recipe_from_print(this, m_prints[m_row].folder))
+            Close(); // the recipe's presets are in use in the main window
+    });
 
     m_detail->SetSizer(det);
     body->Add(m_detail, 0, wxEXPAND);
@@ -968,6 +988,12 @@ void ForcaPrintJournalDialog::update_compare()
 {
     if (m_compare)
         m_compare->Enable(m_list->GetSelectedItemCount() == 2);
+}
+
+void ForcaPrintJournalDialog::update_recipe()
+{
+    if (m_recipe)
+        m_recipe->Enable(m_row >= 0 && m_result->GetSelection() == 1); // Success
 }
 
 void ForcaPrintJournalDialog::update_state()
@@ -1082,6 +1108,7 @@ void ForcaPrintJournalDialog::show_print(long row)
         m_tags[i]->SetValue(std::find(set.begin(), set.end(), json(all[i].key)) != set.end());
     m_note->ChangeValue(from_u8(outcome.value("note", std::string())));
     update_photos();
+    update_recipe();
     m_loading = false;
     Layout();
 }

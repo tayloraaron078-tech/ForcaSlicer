@@ -41,6 +41,7 @@ add_executable(${_TEST_NAME}_tests
     test_plugin_lifecycle.cpp
     test_plugin_resource_texture.cpp
     test_plugin_printer_agent.cpp
+    test_post_processor.cpp
     test_printhost.cpp
     test_slicing_pipeline_bindings.cpp
     test_slicing_pipeline_config.cpp
@@ -52,8 +53,11 @@ add_executable(${_TEST_NAME}_tests
     test_forca_calibration_wizard.cpp
     test_forca_academy.cpp
     test_forca_experiment.cpp
+    test_forca_recipe.cpp
     test_forca_host_status.cpp
+    test_forca_home_printers.cpp
     test_forca_ai_autonomy.cpp
+    test_forca_print_risk_dialog.cpp
     test_forca_ai_connection.cpp
     test_forca_reset.cpp
     test_forca_ai_keys.cpp
@@ -61,7 +65,10 @@ add_executable(${_TEST_NAME}_tests
     test_forca_moonraker_agent.cpp
     test_forca_webview.cpp
     test_plugin_json_depth.cpp
+    test_plugin_permission_validation.cpp
     test_shortcuts.cpp
+    test_speed_dial_dismiss.cpp
+    test_speed_dial_position.cpp
     test_texture_color_palette.cpp
     test_texture_island_view.cpp
     test_timelapse_codecs.cpp
@@ -70,6 +77,7 @@ add_executable(${_TEST_NAME}_tests
     test_user_manager.cpp
     test_sequential_clearance.cpp
     test_object_list.cpp
+    test_geometry_import.cpp
     ../fff_print/test_helpers.cpp
     )
 

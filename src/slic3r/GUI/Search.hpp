@@ -133,6 +133,9 @@ public:
     SearchDialog* m_sdialog{ nullptr };
     SearchObjectDialog* m_search_object_dialog{ nullptr };
     GUI::ObjectDataViewModelNode* m_item{ nullptr };
+    // Forca: a process setting's favourites star at the right end: the setting's key, empty for no star.
+    std::string   m_favorite_key;
+    bool          m_favorite{ false };
 
     SearchItem(wxWindow *parent, wxString text, int index, SearchDialog *sdialog = nullptr, SearchObjectDialog* search_dialog = nullptr,
                wxString tooltip = "", wxString availability = {});
@@ -144,6 +147,7 @@ public:
     void   on_mouse_leave(wxMouseEvent &evt);
     void   on_mouse_left_down(wxMouseEvent &evt);
     void   on_mouse_left_up(wxMouseEvent &evt);
+    wxRect star_rect() const;
 };
 
 //------------------------------------------

@@ -1,0 +1,708 @@
+{
+  "_comment": "Print Risks (src/slic3r/GUI/ForcaPrintRiskDialog.cpp, the risk line in ForcaBeforeYouPrint.cpp), the Flashforge Device page camera (ForcaFlashforgePanel.cpp), the Snapmaker U1 camera tip (PrinterWebViewHandler.cpp) and the print grant sends to Klipper / Flashforge printers (ForcaAIAutonomy.cpp, ForcaAIDialog.cpp). Terms follow each catalog's existing words for Preview, support, bridge, Max bridge length, Thick external bridges, On build plate only, View and print grant (forca_translations_ai.json); Guarded, Fluidd's own menu names and Adaptive MJPEG stay in English. Plural entries give one form per plural form of the catalog. tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Forca AI",
+      "translations": {
+        "ca": "Forca AI", "cs": "Forca AI", "de": "Forca AI", "es": "Forca AI", "eu": "Forca AI", "fr": "Forca AI",
+        "hu": "Forca AI", "it": "Forca AI", "ja": "Forca AI", "ko": "Forca AI", "lt": "Forca AI", "nl": "Forca AI",
+        "pl": "Forca AI", "pt_BR": "Forca AI", "ru": "Forca AI", "sv": "Forca AI", "th": "Forca AI", "tr": "Forca AI",
+        "uk": "Forca AI", "vi": "Forca AI", "zh_CN": "Forca AI", "zh_TW": "Forca AI"
+      }
+    },
+    {
+      "msgid": "The AI is sending this print to %s in %d s (print grant #%d).",
+      "translations": {
+        "ca": "La IA enviarà aquesta impressió a %s d'aquí a %d s (permís d'impressió #%d).",
+        "cs": "AI odešle tento tisk na %s za %d s (oprávnění k tisku #%d).",
+        "de": "Die KI sendet diesen Druck an %s in %d s (Druckfreigabe #%d).",
+        "es": "La IA enviará esta impresión a %s en %d s (permiso de impresión #%d).",
+        "eu": "IAk inprimaketa hau %s-(e)ra bidaliko du %d s barru (inprimatze-baimena #%d).",
+        "fr": "L'IA envoie cette impression à %s dans %d s (autorisation d'impression #%d).",
+        "hu": "Az MI ide küldi ezt a nyomtatást: %s, %d mp múlva (nyomtatási engedély #%d).",
+        "it": "L'IA invierà questa stampa a %s tra %d s (autorizzazione di stampa #%d).",
+        "ja": "AI はこのプリントを %s に送信します（%d 秒後、プリント許可 #%d）。",
+        "ko": "AI가 이 출력을 %s(으)로 전송합니다(%d초 후, 출력 권한 #%d).",
+        "lt": "DI išsiųs šį spausdinimą į %s po %d s (spausdinimo leidimas #%d).",
+        "nl": "De AI verstuurt deze print naar %s over %d s (printtoestemming #%d).",
+        "pl": "AI wyśle ten wydruk do %s za %d s (zezwolenie na druk #%d).",
+        "pt_BR": "A IA enviará esta impressão para %s em %d s (permissão de impressão #%d).",
+        "ru": "ИИ отправит эту печать на %s через %d с (разрешение на печать #%d).",
+        "sv": "AI:n skickar den här utskriften till %s om %d s (utskriftstillstånd #%d).",
+        "th": "AI จะส่งงานพิมพ์นี้ไปยัง %s ในอีก %d วินาที (สิทธิ์การพิมพ์ #%d)",
+        "tr": "Yapay zekâ bu baskıyı %s yazıcısına %d sn içinde gönderiyor (baskı izni #%d).",
+        "uk": "ШІ надішле цей друк на %s через %d с (дозвіл на друк #%d).",
+        "vi": "AI sẽ gửi bản in này đến %s sau %d giây (quyền in #%d).",
+        "zh_CN": "AI 将把此打印发送到 %s（%d 秒后，打印授权 #%d）。",
+        "zh_TW": "AI 將把此列印傳送到 %s（%d 秒後，列印授權 #%d）。"
+      }
+    },
+    {
+      "msgid": "Within this grant the AI may start prints itself, with no click from you: Forca counts down 10 seconds (you can cancel) and sends the print - through its print dialog for a Bambu printer, by uploading and starting it for a Klipper or Flashforge printer. It only sends to an idle printer whose bed is clear, and only when there is nothing to ask you. A wrong print can still damage your printer or waste filament, and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca.",
+      "translations": {
+        "ca": "Dins d'aquest permís, la IA pot iniciar impressions ella mateixa, sense cap clic teu: Forca compta 10 segons enrere (pots cancel·lar) i envia la impressió, amb el seu diàleg d'impressió per a una impressora Bambu, o pujant-la i iniciant-la per a una impressora Klipper o Flashforge. Només envia a una impressora inactiva amb el llit lliure, i només quan no hi ha res a preguntar-te. Una impressió incorrecta encara pot fer malbé la impressora o malbaratar filament, i una impressora funcionant sense vigilància és un risc d'incendi: dona només el que et faci sentir còmode. El permís acaba quan s'esgota, quan s'acaba el temps, quan el revoques, tries Guarded o reinicies Forca.",
+        "cs": "V rámci tohoto oprávnění smí AI spouštět tisky sama, bez vašeho kliknutí: Forca odpočítá 10 sekund (můžete zrušit) a odešle tisk, u tiskárny Bambu přes svůj dialog tisku, u tiskárny Klipper nebo Flashforge jeho nahráním a spuštěním. Odesílá jen na nečinnou tiskárnu s volnou podložkou, a jen když se vás není na co ptát. Chybný tisk přesto může poškodit tiskárnu nebo zbytečně spotřebovat filament a tiskárna běžící bez dozoru představuje riziko požáru: dejte jen tolik, kolik vám vyhovuje. Oprávnění skončí, když se vyčerpá, když vyprší čas, když ho odvoláte, zvolíte Guarded nebo restartujete Forca.",
+        "de": "Innerhalb dieser Freigabe darf die KI Drucke selbst starten, ohne Klick von dir: Forca zählt 10 Sekunden herunter (du kannst abbrechen) und sendet den Druck, bei einem Bambu-Drucker über seinen Druckdialog, bei einem Klipper- oder Flashforge-Drucker durch Hochladen und Starten. Gesendet wird nur an einen untätigen Drucker mit freiem Druckbett und nur, wenn es dich nichts zu fragen gibt. Ein falscher Druck kann trotzdem deinen Drucker beschädigen oder Filament verschwenden, und ein unbeaufsichtigt laufender Drucker ist eine Brandgefahr: Gib nur so viel frei, wie dir angenehm ist. Die Freigabe endet, wenn sie aufgebraucht ist, die Zeit abläuft, du sie widerrufst, Guarded wählst oder Forca neu startest.",
+        "es": "Dentro de este permiso, la IA puede iniciar impresiones por sí misma, sin que hagas clic: Forca cuenta 10 segundos (puedes cancelar) y envía la impresión, con su diálogo de impresión en una impresora Bambu, o subiéndola e iniciándola en una impresora Klipper o Flashforge. Solo envía a una impresora inactiva con la cama libre, y solo cuando no hay nada que preguntarte. Una impresión errónea aún puede dañar tu impresora o desperdiciar filamento, y una impresora funcionando sin vigilancia es un riesgo de incendio: da solo lo que te resulte cómodo. El permiso termina cuando se agota, cuando se acaba el tiempo, cuando lo revocas, eliges Guarded o reinicias Forca.",
+        "eu": "Baimen honen barruan, IAk inprimaketak berak abiaraz ditzake, zuk klikik egin gabe: Forcak 10 segundoko atzerako kontaketa egiten du (bertan behera utz dezakezu) eta inprimaketa bidaltzen du, Bambu inprimagailu batean bere inprimatzeko elkarrizketa-koadroaren bidez, eta Klipper edo Flashforge inprimagailu batean igo eta abiaraziz. Ohea libre duen inprimagailu inaktibo batera soilik bidaltzen du, eta zuri ezer galdetu behar ez denean soilik. Inprimaketa oker batek inprimagailua honda dezake edo filamentua alferrik gal dezake, eta zaintzarik gabe dabilen inprimagailua sute-arriskua da: eman eroso sentiarazten zaituena soilik. Baimena amaitzen da agortzen denean, denbora bukatzen denean, baliogabetzen duzunean, Guarded aukeratzen duzunean edo Forca berrabiarazten duzunean.",
+        "fr": "Dans le cadre de cette autorisation, l'IA peut lancer des impressions elle-même, sans clic de votre part : Forca décompte 10 secondes (vous pouvez annuler) et envoie l'impression, par sa boîte de dialogue d'impression pour une imprimante Bambu, en la téléversant et en la lançant pour une imprimante Klipper ou Flashforge. Elle n'envoie qu'à une imprimante inactive dont le plateau est libre, et seulement s'il n'y a rien à vous demander. Une mauvaise impression peut quand même endommager votre imprimante ou gaspiller du filament, et une imprimante qui tourne sans surveillance présente un risque d'incendie : n'accordez que ce qui vous convient. L'autorisation prend fin lorsqu'elle est épuisée, quand le temps est écoulé, quand vous la révoquez, choisissez Guarded ou redémarrez Forca.",
+        "hu": "Ezen az engedélyen belül az MI maga indíthat nyomtatásokat, az Ön kattintása nélkül: a Forca 10 másodpercet visszaszámol (megszakíthatja), majd elküldi a nyomtatást, Bambu nyomtatónál a nyomtatási párbeszédablakán át, Klipper vagy Flashforge nyomtatónál feltöltéssel és indítással. Csak tétlen, szabad asztalú nyomtatóra küld, és csak akkor, ha nincs mit kérdeznie Öntől. Egy hibás nyomtatás így is károsíthatja a nyomtatót vagy pazarolhatja a filamentet, és a felügyelet nélkül működő nyomtató tűzveszélyes: csak annyit adjon, amennyi mellett nyugodt. Az engedély véget ér, ha elfogy, ha lejár az idő, ha visszavonja, a Guarded szintet választja vagy újraindítja a Forcát.",
+        "it": "Con questa autorizzazione l'IA può avviare stampe da sola, senza un tuo clic: Forca conta alla rovescia 10 secondi (puoi annullare) e invia la stampa, tramite la sua finestra di stampa per una stampante Bambu, caricandola e avviandola per una stampante Klipper o Flashforge. Invia solo a una stampante inattiva con il piatto libero, e solo quando non c'è nulla da chiederti. Una stampa sbagliata può comunque danneggiare la stampante o sprecare filamento, e una stampante che funziona senza sorveglianza è un rischio d'incendio: concedi solo ciò che ti fa sentire tranquillo. L'autorizzazione termina quando è esaurita, quando scade il tempo, quando la revochi, scegli Guarded o riavvii Forca.",
+        "ja": "この許可の範囲内で、AI はあなたのクリックなしに自らプリントを開始できます。Forca は 10 秒カウントダウンし（キャンセル可能）、プリントを送信します。Bambu プリンターではプリントダイアログを通して、Klipper または Flashforge プリンターではアップロードして開始します。送信先はベッドが空いているアイドル状態のプリンターだけで、あなたに確認することがない場合に限ります。それでも誤ったプリントでプリンターが損傷したりフィラメントが無駄になったりすることがあり、無人で動くプリンターは火災の危険があります。安心できる範囲だけ許可してください。許可は使い切ったとき、時間切れのとき、取り消したとき、Guarded を選んだとき、または Forca を再起動したときに終了します。",
+        "ko": "이 권한 범위 안에서 AI는 사용자의 클릭 없이 스스로 출력을 시작할 수 있습니다. Forca가 10초를 카운트다운한 뒤(취소 가능) 출력을 전송합니다. Bambu 프린터는 출력 대화 상자를 통해, Klipper 또는 Flashforge 프린터는 업로드하고 시작하여 전송합니다. 베드가 비어 있는 유휴 프린터로만, 그리고 사용자에게 물어볼 것이 없을 때만 전송합니다. 그래도 잘못된 출력은 프린터를 손상시키거나 필라멘트를 낭비할 수 있으며, 무인으로 작동하는 프린터는 화재 위험이 있습니다. 안심할 수 있는 만큼만 허용하세요. 권한은 모두 사용했을 때, 시간이 다 되었을 때, 취소했을 때, Guarded를 선택했을 때 또는 Forca를 다시 시작했을 때 끝납니다.",
+        "lt": "Pagal šį leidimą DI gali pati pradėti spausdinimus, jums nespustelėjus: Forca skaičiuoja 10 sekundžių atgal (galite atšaukti) ir išsiunčia spausdinimą, Bambu spausdintuvui per savo spausdinimo dialogą, Klipper ar Flashforge spausdintuvui jį įkeldama ir paleisdama. Siunčia tik į neveikiantį spausdintuvą su laisvu pagrindu ir tik tada, kai nėra ko jūsų klausti. Netinkamas spausdinimas vis tiek gali sugadinti spausdintuvą ar iššvaistyti giją, o be priežiūros veikiantis spausdintuvas kelia gaisro pavojų: suteikite tik tiek, kiek jums priimtina. Leidimas baigiasi, kai išnaudojamas, kai baigiasi laikas, kai jį atšaukiate, pasirenkate Guarded arba paleidžiate Forca iš naujo.",
+        "nl": "Binnen deze toestemming mag de AI zelf prints starten, zonder klik van jou: Forca telt 10 seconden af (je kunt annuleren) en verstuurt de print, via het printvenster voor een Bambu-printer, door hem te uploaden en te starten voor een Klipper- of Flashforge-printer. Er wordt alleen verstuurd naar een inactieve printer met een vrij printbed, en alleen als er niets aan je te vragen is. Een verkeerde print kan je printer toch beschadigen of filament verspillen, en een printer die onbeheerd draait is een brandrisico: geef alleen wat je prettig vindt. De toestemming eindigt als ze op is, als de tijd om is, als je ze intrekt, Guarded kiest of Forca opnieuw start.",
+        "pl": "W ramach tego zezwolenia AI może sama uruchamiać wydruki, bez Twojego kliknięcia: Forca odlicza 10 sekund (możesz anulować) i wysyła wydruk, przez swoje okno drukowania w przypadku drukarki Bambu, a przez przesłanie i uruchomienie w przypadku drukarki Klipper lub Flashforge. Wysyła tylko do bezczynnej drukarki z wolnym stołem i tylko wtedy, gdy nie ma o co Cię pytać. Błędny wydruk nadal może uszkodzić drukarkę lub zmarnować filament, a drukarka pracująca bez nadzoru stwarza ryzyko pożaru: daj tylko tyle, ile Ci odpowiada. Zezwolenie kończy się, gdy zostanie wykorzystane, gdy minie czas, gdy je cofniesz, wybierzesz Guarded lub uruchomisz Forca ponownie.",
+        "pt_BR": "Dentro desta permissão, a IA pode iniciar impressões sozinha, sem clique seu: o Forca faz uma contagem regressiva de 10 segundos (você pode cancelar) e envia a impressão, pela janela de impressão no caso de uma impressora Bambu, ou enviando o arquivo e iniciando-o no caso de uma impressora Klipper ou Flashforge. Só envia para uma impressora ociosa com a mesa livre, e só quando não há nada a perguntar a você. Uma impressão errada ainda pode danificar sua impressora ou desperdiçar filamento, e uma impressora funcionando sem supervisão é um risco de incêndio: conceda só o que deixa você tranquilo. A permissão termina quando se esgota, quando o tempo acaba, quando você a revoga, escolhe Guarded ou reinicia o Forca.",
+        "ru": "В рамках этого разрешения ИИ может сам запускать печать, без вашего щелчка: Forca отсчитывает 10 секунд (можно отменить) и отправляет печать — через своё окно печати для принтера Bambu, загрузкой и запуском для принтера Klipper или Flashforge. Отправка идёт только на простаивающий принтер со свободным столом и только когда вас не о чем спрашивать. Ошибочная печать всё равно может повредить принтер или впустую израсходовать материал, а принтер, работающий без присмотра, пожароопасен: давайте ровно столько, сколько вам комфортно. Разрешение заканчивается, когда исчерпано, когда истекло время, когда вы его отзываете, выбираете Guarded или перезапускаете Forca.",
+        "sv": "Inom det här tillståndet får AI:n starta utskrifter själv, utan klick från dig: Forca räknar ner 10 sekunder (du kan avbryta) och skickar utskriften, via utskriftsdialogen för en Bambu-skrivare, genom att ladda upp och starta den för en Klipper- eller Flashforge-skrivare. Den skickar bara till en inaktiv skrivare vars byggplatta är tom, och bara när det inte finns något att fråga dig. En felaktig utskrift kan ändå skada skrivaren eller slösa filament, och en skrivare som går utan tillsyn är en brandrisk: ge bara det du känner dig bekväm med. Tillståndet upphör när det är förbrukat, när tiden är slut, när du återkallar det, väljer Guarded eller startar om Forca.",
+        "th": "ภายในสิทธิ์นี้ AI สามารถเริ่มงานพิมพ์ได้เองโดยไม่ต้องให้คุณคลิก: Forca จะนับถอยหลัง 10 วินาที (คุณยกเลิกได้) แล้วส่งงานพิมพ์ ผ่านหน้าต่างพิมพ์สำหรับเครื่องพิมพ์ Bambu หรืออัปโหลดแล้วเริ่มพิมพ์สำหรับเครื่องพิมพ์ Klipper หรือ Flashforge โดยจะส่งไปยังเครื่องพิมพ์ที่ว่างและฐานพิมพ์โล่งเท่านั้น และเฉพาะเมื่อไม่มีอะไรต้องถามคุณ งานพิมพ์ที่ผิดพลาดยังอาจทำให้เครื่องพิมพ์เสียหายหรือเปลืองเส้นพลาสติก และเครื่องพิมพ์ที่ทำงานโดยไม่มีคนดูแลมีความเสี่ยงต่อไฟไหม้: ให้สิทธิ์เท่าที่คุณสบายใจเท่านั้น สิทธิ์จะสิ้นสุดเมื่อใช้หมด เมื่อหมดเวลา เมื่อคุณเพิกถอน เลือก Guarded หรือรีสตาร์ท Forca",
+        "tr": "Bu izin kapsamında yapay zekâ, sizin tıklamanıza gerek kalmadan baskıları kendisi başlatabilir: Forca 10 saniye geri sayar (iptal edebilirsiniz) ve baskıyı gönderir; Bambu yazıcıda yazdırma penceresi üzerinden, Klipper veya Flashforge yazıcıda dosyayı yükleyip başlatarak. Yalnızca yatağı boş olan, boşta bir yazıcıya ve yalnızca size soracak bir şey olmadığında gönderir. Yanlış bir baskı yine de yazıcınıza zarar verebilir veya filament israf edebilir, gözetimsiz çalışan bir yazıcı da yangın riski taşır: yalnızca içinizin rahat ettiği kadarını verin. İzin; tükendiğinde, süre dolduğunda, iptal ettiğinizde, Guarded'ı seçtiğinizde veya Forca'yı yeniden başlattığınızda sona erer.",
+        "uk": "У межах цього дозволу ШІ може сам запускати друк, без вашого клацання: Forca відраховує 10 секунд (можна скасувати) і надсилає друк — через своє вікно друку для принтера Bambu, завантаженням і запуском для принтера Klipper або Flashforge. Надсилає лише на неактивний принтер із вільним столом і лише тоді, коли вас нема про що питати. Помилковий друк усе одно може пошкодити принтер або змарнувати філамент, а принтер, що працює без нагляду, є пожежонебезпечним: надавайте лише стільки, скільки вам комфортно. Дозвіл закінчується, коли вичерпано, коли сплив час, коли ви його відкликаєте, вибираєте Guarded або перезапускаєте Forca.",
+        "vi": "Trong phạm vi quyền này, AI có thể tự bắt đầu in mà bạn không cần nhấp: Forca đếm ngược 10 giây (bạn có thể hủy) rồi gửi bản in, qua hộp thoại in đối với máy in Bambu, hoặc bằng cách tải lên và bắt đầu in đối với máy in Klipper hay Flashforge. Nó chỉ gửi đến máy in đang rảnh có bàn in trống, và chỉ khi không có gì cần hỏi bạn. Một bản in sai vẫn có thể làm hỏng máy in hoặc lãng phí filament, và máy in chạy khi không có người trông là nguy cơ cháy: chỉ cấp những gì bạn thấy yên tâm. Quyền kết thúc khi dùng hết, khi hết thời gian, khi bạn thu hồi, chọn Guarded hoặc khởi động lại Forca.",
+        "zh_CN": "在此授权范围内，AI 可以自行开始打印，无需你点击：Forca 倒计时 10 秒（你可以取消）后发送打印，Bambu 打印机通过其打印对话框发送，Klipper 或 Flashforge 打印机则上传文件并开始打印。它只会发送到热床已清空的空闲打印机，并且只在无需询问你任何事情时发送。错误的打印仍可能损坏打印机或浪费耗材丝，而无人看管运行的打印机存在火灾风险：只授予你放心的范围。授权在用完、时间到期、你撤销它、选择 Guarded 或重启 Forca 时结束。",
+        "zh_TW": "在此授權範圍內，AI 可以自行開始列印，無需你點擊：Forca 倒數 10 秒（你可以取消）後傳送列印，Bambu 列印裝置透過其列印對話框傳送，Klipper 或 Flashforge 列印裝置則上傳檔案並開始列印。它只會傳送到列印板已清空的閒置列印裝置，且只在無需詢問你任何事時傳送。錯誤的列印仍可能損壞列印裝置或浪費線材，而無人看管運作的列印裝置有火災風險：只授予你放心的範圍。授權在用完、時間到期、你撤銷它、選擇 Guarded 或重新啟動 Forca 時結束。"
+      }
+    },
+    {
+      "msgid": "Print Risks found %1% place on this plate that may fail, with no support under it. View > Print Risks shows where and what to try.",
+      "msgid_plural": "Print Risks found %1% places on this plate that may fail, with no support under them. View > Print Risks shows where and what to try.",
+      "translations": {
+        "ca": ["Riscos d'impressió ha trobat %1% lloc d'aquesta placa que pot fallar, sense suport a sota. Vista > Riscos d'impressió mostra on és i què provar.", "Riscos d'impressió ha trobat %1% llocs d'aquesta placa que poden fallar, sense suport a sota. Vista > Riscos d'impressió mostra on són i què provar."],
+        "cs": ["Rizika tisku našla na této podložce %1% místo, které může selhat, bez podpory pod ním. Zobrazit > Rizika tisku ukáže kde a co zkusit.", "Rizika tisku našla na této podložce %1% místa, která mohou selhat, bez podpory pod nimi. Zobrazit > Rizika tisku ukáže kde a co zkusit.", "Rizika tisku našla na této podložce %1% míst, která mohou selhat, bez podpory pod nimi. Zobrazit > Rizika tisku ukáže kde a co zkusit."],
+        "de": ["Druckrisiken hat %1% Stelle auf dieser Platte gefunden, die fehlschlagen kann, ohne Stützen darunter. Ansicht > Druckrisiken zeigt, wo sie ist und was du versuchen kannst.", "Druckrisiken hat %1% Stellen auf dieser Platte gefunden, die fehlschlagen können, ohne Stützen darunter. Ansicht > Druckrisiken zeigt, wo sie sind und was du versuchen kannst."],
+        "es": ["Riesgos de impresión encontró %1% lugar en esta placa que puede fallar, sin soporte debajo. Vista > Riesgos de impresión muestra dónde está y qué probar.", "Riesgos de impresión encontró %1% lugares en esta placa que pueden fallar, sin soporte debajo. Vista > Riesgos de impresión muestra dónde están y qué probar."],
+        "eu": ["Inprimatze-arriskuak-ek huts egin dezakeen %1% leku aurkitu du plaka honetan, azpian euskarririk gabe. Bista > Inprimatze-arriskuak-ek non dagoen eta zer probatu erakusten du.", "Inprimatze-arriskuak-ek huts egin dezaketen %1% leku aurkitu ditu plaka honetan, azpian euskarririk gabe. Bista > Inprimatze-arriskuak-ek non dauden eta zer probatu erakusten du."],
+        "fr": ["Risques d'impression a trouvé %1% endroit de ce plateau qui peut échouer, sans support dessous. Affichage > Risques d'impression montre où il se trouve et quoi essayer.", "Risques d'impression a trouvé %1% endroits de ce plateau qui peuvent échouer, sans support dessous. Affichage > Risques d'impression montre où ils se trouvent et quoi essayer."],
+        "hu": ["A Nyomtatási kockázatok %1% olyan helyet talált ezen a tálcán, amely meghiúsulhat, és nincs alatta támasz. A Nézet > Nyomtatási kockázatok megmutatja, hol van, és mit érdemes kipróbálni.", "A Nyomtatási kockázatok %1% olyan helyet talált ezen a tálcán, amely meghiúsulhat, és nincs alattuk támasz. A Nézet > Nyomtatási kockázatok megmutatja, hol vannak, és mit érdemes kipróbálni."],
+        "it": ["Rischi di stampa ha trovato %1% punto di questo piatto che può fallire, senza supporto sotto. Vista > Rischi di stampa mostra dove si trova e cosa provare.", "Rischi di stampa ha trovato %1% punti di questo piatto che possono fallire, senza supporto sotto. Vista > Rischi di stampa mostra dove si trovano e cosa provare."],
+        "ja": ["プリントリスクで、このプレート上に下にサポートがなく失敗するおそれのある箇所が %1% 個見つかりました。表示 > プリントリスク で場所と対策を確認できます。"],
+        "ko": ["출력 위험에서 이 플레이트에 아래에 서포트가 없어 실패할 수 있는 곳을 %1%개 찾았습니다. 시점 > 출력 위험에서 위치와 시도할 방법을 볼 수 있습니다."],
+        "lt": ["Spausdinimo rizikos šioje plokštėje rado %1% vietą, kuri gali nepavykti, be atramų po ja. Vaizdas > Spausdinimo rizikos parodo, kur ji yra ir ką išbandyti.", "Spausdinimo rizikos šioje plokštėje rado %1% vietas, kurios gali nepavykti, be atramų po jomis. Vaizdas > Spausdinimo rizikos parodo, kur jos yra ir ką išbandyti.", "Spausdinimo rizikos šioje plokštėje rado %1% vietų, kurios gali nepavykti, be atramų po jomis. Vaizdas > Spausdinimo rizikos parodo, kur jos yra ir ką išbandyti."],
+        "nl": ["Printrisico's vond %1% plek op deze plaat die kan mislukken, zonder ondersteuning eronder. Weergave > Printrisico's laat zien waar en wat je kunt proberen.", "Printrisico's vond %1% plekken op deze plaat die kunnen mislukken, zonder ondersteuning eronder. Weergave > Printrisico's laat zien waar en wat je kunt proberen."],
+        "pl": ["Ryzyka wydruku znalazły na tej płycie %1% miejsce, które może się nie udać, bez podpory pod spodem. Widok > Ryzyka wydruku pokazuje gdzie i co wypróbować.", "Ryzyka wydruku znalazły na tej płycie %1% miejsca, które mogą się nie udać, bez podpory pod spodem. Widok > Ryzyka wydruku pokazuje gdzie i co wypróbować.", "Ryzyka wydruku znalazły na tej płycie %1% miejsc, które mogą się nie udać, bez podpory pod spodem. Widok > Ryzyka wydruku pokazuje gdzie i co wypróbować."],
+        "pt_BR": ["Riscos de impressão encontrou %1% lugar nesta placa que pode falhar, sem suporte embaixo. Visualizar > Riscos de impressão mostra onde está e o que tentar.", "Riscos de impressão encontrou %1% lugares nesta placa que podem falhar, sem suporte embaixo. Visualizar > Riscos de impressão mostra onde estão e o que tentar."],
+        "ru": ["Риски печати нашли на этой пластине %1% место, которое может не получиться, без поддержки под ним. Вид > Риски печати показывает, где оно и что попробовать.", "Риски печати нашли на этой пластине %1% места, которые могут не получиться, без поддержки под ними. Вид > Риски печати показывает, где они и что попробовать.", "Риски печати нашли на этой пластине %1% мест, которые могут не получиться, без поддержки под ними. Вид > Риски печати показывает, где они и что попробовать."],
+        "sv": ["Utskriftsrisker hittade %1% ställe på den här plattan som kan misslyckas, utan support under. Vy > Utskriftsrisker visar var och vad du kan prova.", "Utskriftsrisker hittade %1% ställen på den här plattan som kan misslyckas, utan support under. Vy > Utskriftsrisker visar var och vad du kan prova."],
+        "th": ["ความเสี่ยงในการพิมพ์พบ %1% จุดบนแผ่นนี้ที่อาจพิมพ์ไม่สำเร็จ โดยไม่มีส่วนรองรับอยู่ด้านล่าง มุมมอง > ความเสี่ยงในการพิมพ์ แสดงตำแหน่งและสิ่งที่ควรลอง"],
+        "tr": ["Baskı Riskleri bu plakada, altında destek olmadan başarısız olabilecek %1% yer buldu. Görünüm > Baskı Riskleri yerini ve neler denenebileceğini gösterir.", "Baskı Riskleri bu plakada, altında destek olmadan başarısız olabilecek %1% yer buldu. Görünüm > Baskı Riskleri yerlerini ve neler denenebileceğini gösterir."],
+        "uk": ["Ризики друку знайшли на цій пластині %1% місце, яке може не вдатися, без підтримки під ним. Вигляд > Ризики друку показує, де воно і що спробувати.", "Ризики друку знайшли на цій пластині %1% місця, які можуть не вдатися, без підтримки під ними. Вигляд > Ризики друку показує, де вони і що спробувати.", "Ризики друку знайшли на цій пластині %1% місць, які можуть не вдатися, без підтримки під ними. Вигляд > Ризики друку показує, де вони і що спробувати.", "Ризики друку знайшли на цій пластині %1% місця, які можуть не вдатися, без підтримки під ними. Вигляд > Ризики друку показує, де вони і що спробувати."],
+        "vi": ["Rủi ro khi in tìm thấy %1% chỗ trên bàn in này có thể hỏng, không có support bên dưới. Xem > Rủi ro khi in cho biết vị trí và cách thử khắc phục."],
+        "zh_CN": ["打印风险在此打印板上发现 %1% 处下方没有支撑、可能失败的位置。视图 > 打印风险 会显示位置和可尝试的方法。"],
+        "zh_TW": ["列印風險在此列印板上發現 %1% 處下方沒有支撐、可能失敗的位置。檢視 > 列印風險 會顯示位置和可嘗試的方法。"]
+      }
+    },
+    {
+      "msgid": "Pause view",
+      "translations": {
+        "ca": "Pausa la vista", "cs": "Pozastavit zobrazení", "de": "Ansicht pausieren", "es": "Pausar la vista",
+        "eu": "Pausatu ikuspegia", "fr": "Suspendre l'affichage", "hu": "Nézet szüneteltetése", "it": "Metti in pausa la vista",
+        "ja": "表示を一時停止", "ko": "보기 일시 정지", "lt": "Pristabdyti vaizdą", "nl": "Weergave pauzeren",
+        "pl": "Wstrzymaj podgląd", "pt_BR": "Pausar visualização", "ru": "Приостановить показ", "sv": "Pausa visningen",
+        "th": "หยุดภาพชั่วคราว", "tr": "Görüntüyü duraklat", "uk": "Призупинити показ", "vi": "Tạm dừng hình",
+        "zh_CN": "暂停画面", "zh_TW": "暫停畫面"
+      }
+    },
+    {
+      "msgid": "Show live view",
+      "translations": {
+        "ca": "Mostra la vista en directe", "cs": "Zobrazit živý obraz", "de": "Liveansicht zeigen", "es": "Mostrar vista en directo",
+        "eu": "Erakutsi zuzeneko ikuspegia", "fr": "Afficher la vue en direct", "hu": "Élő kép megjelenítése", "it": "Mostra la vista dal vivo",
+        "ja": "ライブビューを表示", "ko": "실시간 보기 표시", "lt": "Rodyti tiesioginį vaizdą", "nl": "Liveweergave tonen",
+        "pl": "Pokaż podgląd na żywo", "pt_BR": "Mostrar visualização ao vivo", "ru": "Показать живое видео", "sv": "Visa livevy",
+        "th": "แสดงภาพสด", "tr": "Canlı görüntüyü göster", "uk": "Показати живе зображення", "vi": "Hiện hình trực tiếp",
+        "zh_CN": "显示实时画面", "zh_TW": "顯示即時畫面"
+      }
+    },
+    {
+      "msgid": "The live view is paused.",
+      "translations": {
+        "ca": "La vista en directe està en pausa.", "cs": "Živý obraz je pozastaven.", "de": "Die Liveansicht ist pausiert.",
+        "es": "La vista en directo está en pausa.", "eu": "Zuzeneko ikuspegia pausatuta dago.", "fr": "La vue en direct est suspendue.",
+        "hu": "Az élő kép szünetel.", "it": "La vista dal vivo è in pausa.", "ja": "ライブビューは一時停止中です。",
+        "ko": "실시간 보기가 일시 정지되었습니다.", "lt": "Tiesioginis vaizdas pristabdytas.", "nl": "De liveweergave is gepauzeerd.",
+        "pl": "Podgląd na żywo jest wstrzymany.", "pt_BR": "A visualização ao vivo está pausada.", "ru": "Живое видео приостановлено.",
+        "sv": "Livevyn är pausad.", "th": "ภาพสดหยุดชั่วคราวอยู่", "tr": "Canlı görüntü duraklatıldı.",
+        "uk": "Живе зображення призупинено.", "vi": "Hình trực tiếp đang tạm dừng.", "zh_CN": "实时画面已暂停。", "zh_TW": "即時畫面已暫停。"
+      }
+    },
+    {
+      "msgid": "The camera does not answer. It shows one viewer at a time: close its view in Flashforge's app or another slicer, then select Retry. A camera set up in Flashforge's app streams on port 8080.",
+      "translations": {
+        "ca": "La càmera no respon. Només mostra la imatge a un espectador alhora: tanca'n la vista a l'aplicació de Flashforge o en un altre laminador i selecciona Reintentar. Una càmera configurada a l'aplicació de Flashforge emet pel port 8080.",
+        "cs": "Kamera neodpovídá. Obraz ukazuje vždy jen jednomu divákovi: zavřete její zobrazení v aplikaci Flashforge nebo v jiném sliceru a pak zvolte Zkusit znovu. Kamera nastavená v aplikaci Flashforge vysílá na portu 8080.",
+        "de": "Die Kamera antwortet nicht. Sie zeigt ihr Bild immer nur einem Betrachter: Schließe ihre Ansicht in der Flashforge-App oder einem anderen Slicer und wähle dann Wiederholen. Eine in der Flashforge-App eingerichtete Kamera sendet auf Port 8080.",
+        "es": "La cámara no responde. Solo muestra la imagen a un espectador a la vez: cierra su vista en la aplicación de Flashforge o en otro laminador y selecciona Reintentar. Una cámara configurada en la aplicación de Flashforge transmite por el puerto 8080.",
+        "eu": "Kamerak ez du erantzuten. Ikusle bakar bati erakusten dio irudia aldi berean: itxi haren ikuspegia Flashforge-ren aplikazioan edo beste xerra-tresna batean, eta hautatu Saiatu berriro. Flashforge-ren aplikazioan konfiguratutako kamerak 8080 atakan igortzen du.",
+        "fr": "La caméra ne répond pas. Elle n'affiche son image qu'à un seul spectateur à la fois : fermez sa vue dans l'application Flashforge ou dans un autre trancheur, puis sélectionnez Réessayer. Une caméra configurée dans l'application Flashforge diffuse sur le port 8080.",
+        "hu": "A kamera nem válaszol. Egyszerre csak egy nézőnek mutatja a képét: zárja be a nézetét a Flashforge alkalmazásában vagy egy másik szeletelőben, majd válassza az Újra lehetőséget. A Flashforge alkalmazásában beállított kamera a 8080-as porton sugároz.",
+        "it": "La telecamera non risponde. Mostra l'immagine a un solo spettatore alla volta: chiudi la sua vista nell'app di Flashforge o in un altro slicer, poi seleziona Riprova. Una telecamera configurata nell'app di Flashforge trasmette sulla porta 8080.",
+        "ja": "カメラが応答しません。映像は一度に 1 つの視聴者にしか表示されません。Flashforge のアプリや別のスライサーでカメラの表示を閉じてから、再試行を選んでください。Flashforge のアプリで設定したカメラはポート 8080 で配信します。",
+        "ko": "카메라가 응답하지 않습니다. 카메라는 한 번에 한 곳에만 영상을 보여 줍니다. Flashforge 앱이나 다른 슬라이서에서 카메라 보기를 닫은 뒤 재시도를 선택하세요. Flashforge 앱에서 설정한 카메라는 포트 8080으로 스트리밍합니다.",
+        "lt": "Kamera neatsako. Ji vienu metu rodo vaizdą tik vienam žiūrovui: uždarykite jos vaizdą Flashforge programėlėje ar kitame pjaustytuve, tada pasirinkite Kartoti. Flashforge programėlėje nustatyta kamera transliuoja per 8080 prievadą.",
+        "nl": "De camera antwoordt niet. Hij toont zijn beeld aan één kijker tegelijk: sluit de weergave in de app van Flashforge of een andere slicer en kies dan Opnieuw proberen. Een camera die in de app van Flashforge is ingesteld, streamt op poort 8080.",
+        "pl": "Kamera nie odpowiada. Pokazuje obraz tylko jednemu widzowi naraz: zamknij jej podgląd w aplikacji Flashforge lub w innym slicerze, a następnie wybierz Ponów. Kamera skonfigurowana w aplikacji Flashforge nadaje na porcie 8080.",
+        "pt_BR": "A câmera não responde. Ela mostra a imagem a um espectador por vez: feche a visualização dela no aplicativo da Flashforge ou em outro fatiador e selecione Tentar Novamente. Uma câmera configurada no aplicativo da Flashforge transmite na porta 8080.",
+        "ru": "Камера не отвечает. Она показывает изображение только одному зрителю за раз: закройте её просмотр в приложении Flashforge или в другом слайсере, затем выберите «Повтор». Камера, настроенная в приложении Flashforge, транслирует на порту 8080.",
+        "sv": "Kameran svarar inte. Den visar sin bild för en tittare i taget: stäng dess vy i Flashforges app eller i en annan slicer och välj sedan Försök igen. En kamera som är inställd i Flashforges app strömmar på port 8080.",
+        "th": "กล้องไม่ตอบสนอง กล้องแสดงภาพให้ผู้ชมได้ทีละรายเท่านั้น: ปิดการดูกล้องในแอปของ Flashforge หรือในสไลเซอร์อื่น แล้วเลือก ลองใหม่ กล้องที่ตั้งค่าในแอปของ Flashforge จะสตรีมทางพอร์ต 8080",
+        "tr": "Kamera yanıt vermiyor. Görüntüyü aynı anda yalnızca bir izleyiciye gösterir: Flashforge uygulamasında veya başka bir dilimleyicide görüntüsünü kapatın, ardından Yeniden dene'yi seçin. Flashforge uygulamasında kurulan bir kamera 8080 numaralı bağlantı noktasından yayın yapar.",
+        "uk": "Камера не відповідає. Вона показує зображення лише одному глядачеві одночасно: закрийте її перегляд у застосунку Flashforge або в іншому слайсері, а потім виберіть «Повторити спробу». Камера, налаштована в застосунку Flashforge, транслює на порту 8080.",
+        "vi": "Camera không phản hồi. Nó chỉ hiển thị hình cho một người xem mỗi lúc: hãy đóng phần xem camera trong ứng dụng Flashforge hoặc một slicer khác, rồi chọn Thử lại. Camera được thiết lập trong ứng dụng Flashforge phát trên cổng 8080.",
+        "zh_CN": "相机没有响应。它一次只向一个观看者显示画面：请在 Flashforge 的应用或其他切片软件中关闭它的画面，然后选择重试。在 Flashforge 应用中设置的相机通过端口 8080 传输。",
+        "zh_TW": "相機沒有回應。它一次只向一個觀看者顯示畫面：請在 Flashforge 的應用程式或其他切片軟體中關閉它的畫面，然後選擇重試。在 Flashforge 應用程式中設定的相機透過連接埠 8080 傳輸。"
+      }
+    },
+    {
+      "msgid": "Overhang",
+      "translations": {
+        "ca": "Voladís", "cs": "Převis", "de": "Überhang", "es": "Voladizo", "eu": "Hegalkina", "fr": "Surplomb",
+        "hu": "Túlnyúlás", "it": "Sporgenza", "ja": "オーバーハング", "ko": "오버행", "lt": "Iškyša", "nl": "Overhang",
+        "pl": "Nawis", "pt_BR": "Saliência", "ru": "Нависание", "sv": "Överhäng", "th": "ส่วนยื่น", "tr": "Çıkıntı",
+        "uk": "Нависання", "vi": "Phần nhô", "zh_CN": "悬垂", "zh_TW": "懸垂"
+      }
+    },
+    {
+      "msgid": "Long bridge",
+      "translations": {
+        "ca": "Pont llarg", "cs": "Dlouhý most", "de": "Lange Brücke", "es": "Puente largo", "eu": "Zubi luzea", "fr": "Pont long",
+        "hu": "Hosszú áthidalás", "it": "Ponte lungo", "ja": "長いブリッジ", "ko": "긴 브릿지", "lt": "Ilgas tiltas", "nl": "Lange brug",
+        "pl": "Długi most", "pt_BR": "Ponte longa", "ru": "Длинный мост", "sv": "Lång bro", "th": "สะพานยาว", "tr": "Uzun köprü",
+        "uk": "Довгий міст", "vi": "Cầu dài", "zh_CN": "长桥接", "zh_TW": "長橋接"
+      }
+    },
+    {
+      "msgid": "Floating island",
+      "translations": {
+        "ca": "Illa flotant", "cs": "Plovoucí ostrov", "de": "Schwebende Insel", "es": "Isla flotante", "eu": "Airean dagoen uhartea",
+        "fr": "Îlot flottant", "hu": "Lebegő sziget", "it": "Isola fluttuante", "ja": "浮いた島", "ko": "떠 있는 섬",
+        "lt": "Kybanti sala", "nl": "Zwevend eiland", "pl": "Wisząca wyspa", "pt_BR": "Ilha flutuante", "ru": "Висящий остров",
+        "sv": "Flytande ö", "th": "เกาะลอย", "tr": "Havada kalan ada", "uk": "Висячий острів", "vi": "Đảo lơ lửng",
+        "zh_CN": "悬空孤岛", "zh_TW": "懸空孤島"
+      }
+    },
+    {
+      "msgid": "%1% mm",
+      "translations": {
+        "ca": "%1% mm", "cs": "%1% mm", "de": "%1% mm", "es": "%1% mm", "eu": "%1% mm", "fr": "%1% mm", "hu": "%1% mm",
+        "it": "%1% mm", "ja": "%1% mm", "ko": "%1% mm", "lt": "%1% mm", "nl": "%1% mm", "pl": "%1% mm", "pt_BR": "%1% mm",
+        "ru": "%1% мм", "sv": "%1% mm", "th": "%1% มม.", "tr": "%1% mm", "uk": "%1% мм", "vi": "%1% mm", "zh_CN": "%1% mm",
+        "zh_TW": "%1% mm"
+      }
+    },
+    {
+      "msgid": "%1% to %2% mm",
+      "translations": {
+        "ca": "%1% a %2% mm", "cs": "%1% až %2% mm", "de": "%1% bis %2% mm", "es": "%1% a %2% mm", "eu": "%1%-%2% mm",
+        "fr": "%1% à %2% mm", "hu": "%1%–%2% mm", "it": "da %1% a %2% mm", "ja": "%1%～%2% mm", "ko": "%1%~%2% mm",
+        "lt": "nuo %1% iki %2% mm", "nl": "%1% tot %2% mm", "pl": "od %1% do %2% mm", "pt_BR": "%1% a %2% mm",
+        "ru": "от %1% до %2% мм", "sv": "%1% till %2% mm", "th": "%1% ถึง %2% มม.", "tr": "%1% - %2% mm",
+        "uk": "від %1% до %2% мм", "vi": "%1% đến %2% mm", "zh_CN": "%1% 至 %2% mm", "zh_TW": "%1% 至 %2% mm"
+      }
+    },
+    {
+      "msgid": "reaches %1% mm",
+      "translations": {
+        "ca": "sobresurt %1% mm", "cs": "přesahuje %1% mm", "de": "reicht %1% mm weit", "es": "sobresale %1% mm",
+        "eu": "%1% mm irteten da", "fr": "dépasse de %1% mm", "hu": "%1% mm-re nyúlik ki", "it": "sporge di %1% mm",
+        "ja": "%1% mm 張り出し", "ko": "%1% mm 돌출", "lt": "išsikiša %1% mm", "nl": "steekt %1% mm uit", "pl": "wystaje %1% mm",
+        "pt_BR": "avança %1% mm", "ru": "выступает на %1% мм", "sv": "sticker ut %1% mm", "th": "ยื่นออก %1% มม.",
+        "tr": "%1% mm uzanıyor", "uk": "виступає на %1% мм", "vi": "nhô ra %1% mm", "zh_CN": "伸出 %1% mm", "zh_TW": "伸出 %1% mm"
+      }
+    },
+    {
+      "msgid": "%1% mm span",
+      "translations": {
+        "ca": "%1% mm de llum", "cs": "rozpětí %1% mm", "de": "%1% mm Spannweite", "es": "%1% mm de luz", "eu": "%1% mm-ko tartea",
+        "fr": "portée de %1% mm", "hu": "%1% mm fesztáv", "it": "luce di %1% mm", "ja": "スパン %1% mm", "ko": "길이 %1% mm",
+        "lt": "%1% mm tarpatramis", "nl": "%1% mm overspanning", "pl": "rozpiętość %1% mm", "pt_BR": "vão de %1% mm",
+        "ru": "пролёт %1% мм", "sv": "%1% mm spännvidd", "th": "ช่วงยาว %1% มม.", "tr": "%1% mm açıklık", "uk": "проліт %1% мм",
+        "vi": "nhịp %1% mm", "zh_CN": "跨度 %1% mm", "zh_TW": "跨度 %1% mm"
+      }
+    },
+    {
+      "msgid": "%1% mm² area",
+      "translations": {
+        "ca": "%1% mm² d'àrea", "cs": "plocha %1% mm²", "de": "%1% mm² Fläche", "es": "%1% mm² de área", "eu": "%1% mm²-ko azalera",
+        "fr": "surface de %1% mm²", "hu": "%1% mm² terület", "it": "area di %1% mm²", "ja": "面積 %1% mm²", "ko": "면적 %1% mm²",
+        "lt": "%1% mm² plotas", "nl": "%1% mm² oppervlak", "pl": "pole %1% mm²", "pt_BR": "área de %1% mm²", "ru": "площадь %1% мм²",
+        "sv": "%1% mm² yta", "th": "พื้นที่ %1% ตร.มม.", "tr": "%1% mm² alan", "uk": "площа %1% мм²", "vi": "diện tích %1% mm²",
+        "zh_CN": "面积 %1% mm²", "zh_TW": "面積 %1% mm²"
+      }
+    },
+    {
+      "msgid": "This overhang reaches %1% mm past the layer below, farther than the support threshold angle (%2%°) allows without support. It may curl up or droop.",
+      "translations": {
+        "ca": "Aquest voladís sobresurt %1% mm de la capa de sota, més del que permet sense suport l'angle llindar del suport (%2%°). Es pot corbar cap amunt o penjar.",
+        "cs": "Tento převis přesahuje vrstvu pod sebou o %1% mm, víc, než bez podpory dovoluje prahový úhel podpory (%2%°). Může se zkroutit nahoru nebo prověsit.",
+        "de": "Dieser Überhang reicht %1% mm über die Schicht darunter hinaus, weiter, als der Schwellenwinkel der Stützen (%2%°) ohne Stützen erlaubt. Er kann sich hochbiegen oder durchhängen.",
+        "es": "Este voladizo sobresale %1% mm de la capa de abajo, más de lo que permite sin soporte el ángulo umbral del soporte (%2%°). Puede curvarse hacia arriba o caer.",
+        "eu": "Hegalkin hau %1% mm irteten da azpiko geruzatik, euskarriaren atalase-angeluak (%2%°) euskarririk gabe onartzen duena baino gehiago. Gorantz kiribildu edo zintzilik geratu daiteke.",
+        "fr": "Ce surplomb dépasse de %1% mm la couche du dessous, plus que ne le permet sans support l'angle de seuil du support (%2%°). Il peut se relever ou s'affaisser.",
+        "hu": "Ez a túlnyúlás %1% mm-rel nyúlik túl az alatta lévő rétegen, többel, mint amennyit a támasz küszöbszöge (%2%°) támasz nélkül megenged. Felpöndörödhet vagy lelóghat.",
+        "it": "Questa sporgenza va oltre lo strato sottostante di %1% mm, più di quanto l'angolo di soglia del supporto (%2%°) consenta senza supporto. Può arricciarsi verso l'alto o cedere.",
+        "ja": "このオーバーハングは下の積層から %1% mm 張り出しており、サポートなしでサポートの閾値角度（%2%°）が許す範囲を超えています。反り上がったり垂れ下がったりするおそれがあります。",
+        "ko": "이 오버행은 아래 레이어보다 %1% mm 더 나와 있어, 서포트 없이 서포트 임계값 각도(%2%°)가 허용하는 것보다 깁니다. 위로 말리거나 처질 수 있습니다.",
+        "lt": "Ši iškyša išsikiša %1% mm už apatinio sluoksnio, daugiau, nei be atramų leidžia atramų ribinis kampas (%2%°). Ji gali užsirietti arba nusvirti.",
+        "nl": "Deze overhang steekt %1% mm uit voorbij de laag eronder, verder dan de drempelhoek van de ondersteuning (%2%°) zonder ondersteuning toestaat. Hij kan omhoog krullen of doorzakken.",
+        "pl": "Ten nawis wystaje %1% mm poza warstwę pod nim, dalej, niż bez podpory pozwala kąt progowy podpory (%2%°). Może się podwinąć lub opaść.",
+        "pt_BR": "Esta saliência avança %1% mm além da camada de baixo, mais do que o ângulo limiar do suporte (%2%°) permite sem suporte. Ela pode enrolar para cima ou ceder.",
+        "ru": "Это нависание выступает на %1% мм за нижний слой — дальше, чем без поддержки позволяет пороговый угол поддержки (%2%°). Оно может загнуться вверх или провиснуть.",
+        "sv": "Det här överhänget sticker ut %1% mm förbi lagret under, längre än supportens gränsvinkel (%2%°) tillåter utan support. Det kan böja sig uppåt eller hänga ner.",
+        "th": "ส่วนยื่นนี้ยื่นเลยเลเยอร์ด้านล่าง %1% มม. ไกลกว่าที่มุมเกณฑ์ของส่วนรองรับ (%2%°) อนุญาตเมื่อไม่มีส่วนรองรับ อาจม้วนขึ้นหรือย้อยลงได้",
+        "tr": "Bu çıkıntı alttaki katmanın %1% mm ötesine uzanıyor; destek eşik açısının (%2%°) destek olmadan izin verdiğinden fazla. Yukarı kıvrılabilir veya sarkabilir.",
+        "uk": "Це нависання виступає на %1% мм за нижній шар — далі, ніж без підтримки дозволяє пороговий кут підтримки (%2%°). Воно може загнутися вгору або провиснути.",
+        "vi": "Phần nhô này vươn ra %1% mm so với lớp bên dưới, xa hơn mức góc ngưỡng của support (%2%°) cho phép khi không có support. Nó có thể cong lên hoặc võng xuống.",
+        "zh_CN": "此悬垂比下方层伸出 %1% mm，超过了无支撑时支撑阈值角度（%2%°）允许的范围。它可能翘起或下垂。",
+        "zh_TW": "此懸垂比下方層伸出 %1% mm，超過了無支撐時支撐臨界值角度（%2%°）允許的範圍。它可能翹起或下垂。"
+      }
+    },
+    {
+      "msgid": "Turn on support, or turn the model so this side faces the bed.",
+      "translations": {
+        "ca": "Activa el suport o gira el model perquè aquest costat quedi cap al llit.",
+        "cs": "Zapněte podporu, nebo model otočte, aby tato strana směřovala k podložce.",
+        "de": "Schalte Stützen ein oder drehe das Modell so, dass diese Seite zum Druckbett zeigt.",
+        "es": "Activa el soporte o gira el modelo para que este lado mire a la cama.",
+        "eu": "Aktibatu euskarria, edo biratu eredua alde hau oherantz begira gera dadin.",
+        "fr": "Activez le support, ou tournez le modèle pour que ce côté soit face au plateau.",
+        "hu": "Kapcsolja be a támaszt, vagy fordítsa el a modellt, hogy ez az oldala az asztal felé nézzen.",
+        "it": "Attiva il supporto, oppure ruota il modello in modo che questo lato sia rivolto verso il piatto.",
+        "ja": "サポートをオンにするか、この面がベッドを向くようにモデルを回転してください。",
+        "ko": "서포트를 켜거나, 이 면이 베드를 향하도록 모델을 돌리세요.",
+        "lt": "Įjunkite atramas arba pasukite modelį, kad ši pusė būtų nukreipta į pagrindą.",
+        "nl": "Zet ondersteuning aan, of draai het model zodat deze kant naar het bed wijst.",
+        "pl": "Włącz podpory albo obróć model tak, aby ta strona była skierowana do stołu.",
+        "pt_BR": "Ative o suporte ou gire o modelo para que este lado fique voltado para a mesa.",
+        "ru": "Включите поддержки или поверните модель так, чтобы эта сторона смотрела на стол.",
+        "sv": "Slå på support, eller vrid modellen så att den här sidan vetter mot bädden.",
+        "th": "เปิดส่วนรองรับ หรือหมุนโมเดลให้ด้านนี้หันเข้าหาฐานพิมพ์",
+        "tr": "Desteği açın veya modeli bu taraf tablaya bakacak şekilde döndürün.",
+        "uk": "Увімкніть підтримки або поверніть модель так, щоб ця сторона дивилася на стіл.",
+        "vi": "Bật support, hoặc xoay mô hình để mặt này hướng xuống bàn in.",
+        "zh_CN": "开启支撑，或旋转模型让这一面朝向热床。",
+        "zh_TW": "開啟支撐，或旋轉模型讓這一面朝向列印板。"
+      }
+    },
+    {
+      "msgid": "This bridge spans about %1% mm, more than Max bridge length (%2% mm). Long bridges sag.",
+      "translations": {
+        "ca": "Aquest pont fa uns %1% mm de llum, més que Longitud màxima del pont (%2% mm). Els ponts llargs pengen.",
+        "cs": "Tento most má rozpětí asi %1% mm, víc než Maximální délka mostů (%2% mm). Dlouhé mosty se prověšují.",
+        "de": "Diese Brücke ist etwa %1% mm lang, mehr als Max Brückenlänge (%2% mm). Lange Brücken hängen durch.",
+        "es": "Este puente tiene una luz de unos %1% mm, más que Distancia máxima de puentes sin soporte (%2% mm). Los puentes largos se combean.",
+        "eu": "Zubi honek %1% mm inguruko tartea du, Zubien geh. luzera (%2% mm) baino gehiago. Zubi luzeak zintzilik geratzen dira.",
+        "fr": "Ce pont a une portée d'environ %1% mm, plus que Longueur max des ponts (%2% mm). Les ponts longs s'affaissent.",
+        "hu": "Ez az áthidalás kb. %1% mm hosszú, több, mint a Maximum áthidalás hossza (%2% mm). A hosszú áthidalások belógnak.",
+        "it": "Questo ponte ha una luce di circa %1% mm, più di Lunghezza massima ponti (%2% mm). I ponti lunghi si incurvano.",
+        "ja": "このブリッジのスパンは約 %1% mm で、最大ブリッジ長さ（%2% mm）を超えています。長いブリッジはたるみます。",
+        "ko": "이 브릿지는 약 %1% mm로, 최대 브릿지 길이(%2% mm)보다 깁니다. 긴 브릿지는 처집니다.",
+        "lt": "Šio tilto tarpatramis apie %1% mm, daugiau nei Maksimalus tiltelio ilgis (%2% mm). Ilgi tiltai įlinksta.",
+        "nl": "Deze brug overspant ongeveer %1% mm, meer dan Maximale bruglengte (%2% mm). Lange bruggen zakken door.",
+        "pl": "Ten most ma rozpiętość około %1% mm, więcej niż Maksymalna długość mostu (%2% mm). Długie mosty się uginają.",
+        "pt_BR": "Esta ponte tem um vão de cerca de %1% mm, mais que Comprimento máximo de ponte (%2% mm). Pontes longas cedem.",
+        "ru": "Этот мост имеет пролёт около %1% мм — больше, чем «Максимальный интервал опор» (%2% мм). Длинные мосты провисают.",
+        "sv": "Den här bron spänner över cirka %1% mm, mer än Max bridge/brygg längd (%2% mm). Långa broar hänger ner.",
+        "th": "สะพานนี้มีช่วงยาวประมาณ %1% มม. มากกว่า ความยาวสะพานสูงสุด (%2% มม.) สะพานที่ยาวจะย้อย",
+        "tr": "Bu köprü yaklaşık %1% mm açıklığa sahip, Maksimum köprü uzunluğu değerinden (%2% mm) fazla. Uzun köprüler sarkar.",
+        "uk": "Цей міст має проліт близько %1% мм — більше, ніж «Максимальна довжина мосту» (%2% мм). Довгі мости провисають.",
+        "vi": "Cầu này dài khoảng %1% mm, hơn Độ dài cầu tối đa (%2% mm). Cầu dài sẽ bị võng.",
+        "zh_CN": "此桥接跨度约 %1% mm，超过了最大桥接长度（%2% mm）。长桥接会下垂。",
+        "zh_TW": "此橋接跨度約 %1% mm，超過了最大橋接長度（%2% mm）。長橋接會下垂。"
+      }
+    },
+    {
+      "msgid": "Turn on support, or try Thick external bridges and a lower bridge speed.",
+      "translations": {
+        "ca": "Activa el suport, o prova Ponts exteriors gruixuts i una velocitat de pont més baixa.",
+        "cs": "Zapněte podporu, nebo zkuste Silné vnější mosty a nižší rychlost mostů.",
+        "de": "Schalte Stützen ein oder versuche Dicke externe Brücken und eine niedrigere Brückengeschwindigkeit.",
+        "es": "Activa el soporte, o prueba Puentes externos gruesos y una velocidad de puente más baja.",
+        "eu": "Aktibatu euskarria, edo probatu Kanpoko zubi lodiak eta zubi-abiadura txikiagoa.",
+        "fr": "Activez le support, ou essayez Ponts extérieurs épais et une vitesse de pont plus faible.",
+        "hu": "Kapcsolja be a támaszt, vagy próbálja ki a Vastag külső hidak beállítást és kisebb áthidalási sebességet.",
+        "it": "Attiva il supporto, oppure prova Ponti esterni spessi e una velocità dei ponti più bassa.",
+        "ja": "サポートをオンにするか、厚い外部ブリッジとより低いブリッジ速度を試してください。",
+        "ko": "서포트를 켜거나, 두꺼운 외부 브릿지와 더 낮은 브릿지 속도를 시도해 보세요.",
+        "lt": "Įjunkite atramas arba išbandykite Stori išoriniai tilteliai ir mažesnį tiltų greitį.",
+        "nl": "Zet ondersteuning aan, of probeer Dikke externe bruggen en een lagere brugsnelheid.",
+        "pl": "Włącz podpory albo wypróbuj Grube zewnętrzne mosty i niższą prędkość mostów.",
+        "pt_BR": "Ative o suporte, ou experimente Pontes externas grossas e uma velocidade de ponte menor.",
+        "ru": "Включите поддержки или попробуйте «Круглые внешние мосты» и меньшую скорость мостов.",
+        "sv": "Slå på support, eller prova Tjocka yttre bridges och en lägre brohastighet.",
+        "th": "เปิดส่วนรองรับ หรือลอง สะพานภายนอกหนา และความเร็วสะพานที่ต่ำลง",
+        "tr": "Desteği açın veya Kalın dış köprüler ile daha düşük bir köprü hızını deneyin.",
+        "uk": "Увімкніть підтримки або спробуйте «Товсті зовнішні мости» і меншу швидкість мостів.",
+        "vi": "Bật support, hoặc thử Cầu bên ngoài dày và tốc độ cầu thấp hơn.",
+        "zh_CN": "开启支撑，或尝试外部桥接加厚并降低桥接速度。",
+        "zh_TW": "開啟支撐，或嘗試增厚外部橋接並降低橋接速度。"
+      }
+    },
+    {
+      "msgid": "This part starts in mid-air at %1% mm, with nothing printed under it.",
+      "translations": {
+        "ca": "Aquesta part comença a l'aire a %1% mm, sense res imprès a sota.",
+        "cs": "Tato část začíná ve vzduchu ve výšce %1% mm a pod ní není nic vytištěno.",
+        "de": "Dieser Teil beginnt bei %1% mm in der Luft, ohne dass darunter etwas gedruckt wird.",
+        "es": "Esta parte empieza en el aire a %1% mm, sin nada impreso debajo.",
+        "eu": "Zati hau airean hasten da %1% mm-tan, azpian ezer inprimatu gabe.",
+        "fr": "Cette partie commence dans le vide à %1% mm, sans rien d'imprimé dessous.",
+        "hu": "Ez a rész %1% mm-en, a levegőben kezdődik, és semmi sincs alatta kinyomtatva.",
+        "it": "Questa parte inizia a mezz'aria a %1% mm, senza nulla stampato sotto.",
+        "ja": "この部分は %1% mm の空中から始まり、その下には何も印刷されません。",
+        "ko": "이 부분은 %1% mm 높이의 공중에서 시작하며, 아래에 출력되는 것이 없습니다.",
+        "lt": "Ši dalis prasideda ore %1% mm aukštyje, o po ja nieko neatspausdinta.",
+        "nl": "Dit deel begint in de lucht op %1% mm, zonder dat er iets onder wordt geprint.",
+        "pl": "Ta część zaczyna się w powietrzu na wysokości %1% mm i nic nie jest pod nią drukowane.",
+        "pt_BR": "Esta parte começa no ar a %1% mm, sem nada impresso embaixo.",
+        "ru": "Эта часть начинается в воздухе на высоте %1% мм, и под ней ничего не печатается.",
+        "sv": "Den här delen börjar i luften på %1% mm, utan att något skrivs ut under den.",
+        "th": "ส่วนนี้เริ่มกลางอากาศที่ %1% มม. โดยไม่มีอะไรพิมพ์อยู่ด้านล่าง",
+        "tr": "Bu parça %1% mm'de havada başlıyor, altında hiçbir şey basılmıyor.",
+        "uk": "Ця частина починається в повітрі на висоті %1% мм, і під нею нічого не друкується.",
+        "vi": "Phần này bắt đầu lơ lửng ở %1% mm, bên dưới không có gì được in.",
+        "zh_CN": "此部分从 %1% mm 处的半空中开始，下方没有任何打印内容。",
+        "zh_TW": "此部分從 %1% mm 處的半空中開始，下方沒有任何列印內容。"
+      }
+    },
+    {
+      "msgid": "Without support it is printed onto air: turn on support, or change the orientation.",
+      "translations": {
+        "ca": "Sense suport s'imprimeix sobre l'aire: activa el suport o canvia l'orientació.",
+        "cs": "Bez podpory se tiskne do vzduchu: zapněte podporu, nebo změňte orientaci.",
+        "de": "Ohne Stützen wird er in die Luft gedruckt: Schalte Stützen ein oder ändere die Ausrichtung.",
+        "es": "Sin soporte se imprime sobre el aire: activa el soporte o cambia la orientación.",
+        "eu": "Euskarririk gabe airean inprimatzen da: aktibatu euskarria edo aldatu orientazioa.",
+        "fr": "Sans support, elle est imprimée dans le vide : activez le support ou changez l'orientation.",
+        "hu": "Támasz nélkül a levegőbe nyomtatódik: kapcsolja be a támaszt, vagy változtasson a tájoláson.",
+        "it": "Senza supporto viene stampata nel vuoto: attiva il supporto o cambia l'orientamento.",
+        "ja": "サポートがないと空中に印刷されます。サポートをオンにするか、向きを変えてください。",
+        "ko": "서포트가 없으면 공중에 출력됩니다. 서포트를 켜거나 방향을 바꾸세요.",
+        "lt": "Be atramų ji spausdinama į orą: įjunkite atramas arba pakeiskite orientaciją.",
+        "nl": "Zonder ondersteuning wordt het in de lucht geprint: zet ondersteuning aan of verander de oriëntatie.",
+        "pl": "Bez podpory jest drukowana w powietrzu: włącz podpory albo zmień orientację.",
+        "pt_BR": "Sem suporte, ela é impressa no ar: ative o suporte ou mude a orientação.",
+        "ru": "Без поддержки она печатается в воздух: включите поддержки или измените ориентацию.",
+        "sv": "Utan support skrivs den ut i luften: slå på support eller ändra orienteringen.",
+        "th": "หากไม่มีส่วนรองรับ ส่วนนี้จะถูกพิมพ์ลงบนอากาศ: เปิดส่วนรองรับ หรือเปลี่ยนการวางแนว",
+        "tr": "Destek olmadan havaya basılır: desteği açın veya yönlendirmeyi değiştirin.",
+        "uk": "Без підтримки вона друкується в повітря: увімкніть підтримки або змініть орієнтацію.",
+        "vi": "Không có support thì nó được in vào không khí: hãy bật support hoặc đổi hướng đặt.",
+        "zh_CN": "没有支撑时它会被打印在空中：请开启支撑或改变摆放方向。",
+        "zh_TW": "沒有支撐時它會被列印在空中：請開啟支撐或改變擺放方向。"
+      }
+    },
+    {
+      "msgid": "Support is printed under it.",
+      "translations": {
+        "ca": "S'imprimeix suport a sota.", "cs": "Pod ním se tiskne podpora.", "de": "Darunter werden Stützen gedruckt.",
+        "es": "Se imprime soporte debajo.", "eu": "Azpian euskarria inprimatzen da.", "fr": "Du support est imprimé dessous.",
+        "hu": "Alatta támasz nyomtatódik.", "it": "Sotto viene stampato il supporto.", "ja": "下にサポートが印刷されます。",
+        "ko": "아래에 서포트가 출력됩니다.", "lt": "Po ja spausdinamos atramos.", "nl": "Er wordt ondersteuning onder geprint.",
+        "pl": "Pod spodem drukowana jest podpora.", "pt_BR": "Há suporte impresso embaixo.", "ru": "Под ним печатается поддержка.",
+        "sv": "Support skrivs ut under den.", "th": "มีการพิมพ์ส่วนรองรับอยู่ด้านล่าง", "tr": "Altına destek basılıyor.",
+        "uk": "Під ним друкується підтримка.", "vi": "Có support được in bên dưới.", "zh_CN": "其下方会打印支撑。",
+        "zh_TW": "其下方會列印支撐。"
+      }
+    },
+    {
+      "msgid": "Support is on, but none is printed under it: check On build plate only, support blockers and the threshold angle.",
+      "translations": {
+        "ca": "El suport està activat, però no se n'imprimeix cap a sota: comprova Només a la placa d'impressió, els bloquejadors de suport i l'angle llindar.",
+        "cs": "Podpora je zapnutá, ale pod ním se žádná netiskne: zkontrolujte Pouze na tiskové podložce, blokátory podpory a prahový úhel.",
+        "de": "Stützen sind an, aber darunter wird keine gedruckt: Prüfe Nur auf Druckplatte, Stützblocker und den Schwellenwinkel.",
+        "es": "El soporte está activado, pero no se imprime ninguno debajo: revisa Sólo en la cama de impresión, los bloqueadores de soporte y el ángulo umbral.",
+        "eu": "Euskarria aktibatuta dago, baina azpian ez da batere inprimatzen: egiaztatu Inprimatze-plakan bakarrik, euskarri blokeatzaileak eta atalase-angelua.",
+        "fr": "Le support est activé, mais aucun n'est imprimé dessous : vérifiez Sur plateau uniquement, les bloqueurs de support et l'angle de seuil.",
+        "hu": "A támasz be van kapcsolva, de alatta egy sem nyomtatódik: ellenőrizze a Csak az asztalról beállítást, a támasz blokkolókat és a küszöbszöget.",
+        "it": "Il supporto è attivo, ma sotto non ne viene stampato: controlla Solo sul piatto, i blocchi supporto e l'angolo di soglia.",
+        "ja": "サポートはオンですが、その下には印刷されません。ベッド上のみ、サポート除去器、閾値角度を確認してください。",
+        "ko": "서포트가 켜져 있지만 아래에 출력되는 것이 없습니다. 빌드 플레이트에만 생성, 서포트 차단기, 임계값 각도를 확인하세요.",
+        "lt": "Atramos įjungtos, bet po ja jų nespausdinama: patikrinkite Tik ant pagrindo plokštės, atramų blokatorius ir ribinį kampą.",
+        "nl": "Ondersteuning staat aan, maar er wordt er geen onder geprint: controleer Alleen op het printbed, ondersteuningsblokkades en de drempelhoek.",
+        "pl": "Podpory są włączone, ale żadna nie jest drukowana pod spodem: sprawdź Tylko na stole, blokady podpór i kąt progowy.",
+        "pt_BR": "O suporte está ativado, mas nenhum é impresso embaixo: verifique Apenas na placa de impressão, os bloqueadores de suporte e o ângulo limiar.",
+        "ru": "Поддержки включены, но под ним они не печатаются: проверьте «Поддержка только от стола», блокировщики поддержки и пороговый угол.",
+        "sv": "Support är på, men ingen skrivs ut under den: kontrollera Endast på byggplattan, supportblockerare och gränsvinkeln.",
+        "th": "ส่วนรองรับเปิดอยู่ แต่ไม่มีการพิมพ์ส่วนรองรับด้านล่าง: ตรวจสอบ บนฐานพิมพ์เท่านั้น ตัวบล็อกส่วนรองรับ และมุมเกณฑ์",
+        "tr": "Destek açık ama altına hiç basılmıyor: Yalnızca baskı plakasında ayarını, destek engelleyicileri ve eşik açısını kontrol edin.",
+        "uk": "Підтримки ввімкнено, але під ним вони не друкуються: перевірте «Тільки на робочій пластині», блокувальники підтримки та пороговий кут.",
+        "vi": "Support đang bật nhưng không có support nào được in bên dưới: hãy kiểm tra Chỉ trên bàn in, các vùng chặn support và góc ngưỡng.",
+        "zh_CN": "支撑已开启，但其下方没有打印支撑：请检查“仅在热床上生成”、支撑屏蔽器和阈值角度。",
+        "zh_TW": "支撐已開啟，但其下方沒有列印支撐：請檢查「僅在列印板產生」、支撐遮蔽器和臨界值角度。"
+      }
+    },
+    {
+      "msgid": "Print Risks",
+      "translations": {
+        "ca": "Riscos d'impressió", "cs": "Rizika tisku", "de": "Druckrisiken", "es": "Riesgos de impresión", "eu": "Inprimatze-arriskuak",
+        "fr": "Risques d'impression", "hu": "Nyomtatási kockázatok", "it": "Rischi di stampa", "ja": "プリントリスク", "ko": "출력 위험",
+        "lt": "Spausdinimo rizikos", "nl": "Printrisico's", "pl": "Ryzyka wydruku", "pt_BR": "Riscos de impressão", "ru": "Риски печати",
+        "sv": "Utskriftsrisker", "th": "ความเสี่ยงในการพิมพ์", "tr": "Baskı Riskleri", "uk": "Ризики друку", "vi": "Rủi ro khi in",
+        "zh_CN": "打印风险", "zh_TW": "列印風險"
+      }
+    },
+    {
+      "msgid": "Show numbered markers on the Preview",
+      "translations": {
+        "ca": "Mostra marcadors numerats a la Previsualització", "cs": "Zobrazit číslované značky v Náhledu",
+        "de": "Nummerierte Markierungen in der Vorschau zeigen", "es": "Mostrar marcadores numerados en la Previsualización",
+        "eu": "Erakutsi zenbakidun markatzaileak Aurrebistan", "fr": "Afficher des repères numérotés dans l'Aperçu",
+        "hu": "Számozott jelölők megjelenítése az Előnézetben", "it": "Mostra indicatori numerati nell'Anteprima",
+        "ja": "プレビューに番号付きマーカーを表示", "ko": "미리 보기에 번호 표시기 보이기", "lt": "Rodyti sunumeruotus žymeklius Peržiūroje",
+        "nl": "Genummerde markeringen in de Voorvertoning tonen", "pl": "Pokaż numerowane znaczniki w Podglądzie",
+        "pt_BR": "Mostrar marcadores numerados na Pré-visualização", "ru": "Показывать нумерованные метки в просмотре нарезки",
+        "sv": "Visa numrerade markörer i Förhandsvisning", "th": "แสดงเครื่องหมายที่มีหมายเลขในพรีวิว", "tr": "Ön İzleme'de numaralı işaretleri göster",
+        "uk": "Показувати нумеровані позначки в Перегляді", "vi": "Hiện điểm đánh số trong Xem trước", "zh_CN": "在预览中显示编号标记",
+        "zh_TW": "在預覽中顯示編號標記"
+      }
+    },
+    {
+      "msgid": "Forca checks each layer against the one below it: an overhang reaches farther than the support threshold angle allows (30° when it is 0), a bridge is longer than Max bridge length, a floating island has nothing under it. The list follows each new slice of the plate.",
+      "translations": {
+        "ca": "Forca compara cada capa amb la de sota: un voladís sobresurt més del que permet l'angle llindar del suport (30° quan és 0), un pont és més llarg que Longitud màxima del pont, una illa flotant no té res a sota. La llista s'actualitza amb cada nou laminat de la placa.",
+        "cs": "Forca porovnává každou vrstvu s vrstvou pod ní: převis přesahuje víc, než dovoluje prahový úhel podpory (30°, když je 0), most je delší než Maximální délka mostů, plovoucí ostrov nemá nic pod sebou. Seznam se aktualizuje s každým novým slicováním podložky.",
+        "de": "Forca vergleicht jede Schicht mit der darunter: Ein Überhang reicht weiter, als der Schwellenwinkel der Stützen erlaubt (30°, wenn er 0 ist), eine Brücke ist länger als Max Brückenlänge, eine schwebende Insel hat nichts unter sich. Die Liste folgt jedem neuen Slicen der Platte.",
+        "es": "Forca compara cada capa con la de abajo: un voladizo sobresale más de lo que permite el ángulo umbral del soporte (30° cuando es 0), un puente es más largo que Distancia máxima de puentes sin soporte, una isla flotante no tiene nada debajo. La lista se actualiza con cada nuevo laminado de la placa.",
+        "eu": "Forcak geruza bakoitza azpikoarekin alderatzen du: hegalkin bat euskarriaren atalase-angeluak onartzen duena baino gehiago irteten da (30°, 0 denean), zubi bat Zubien geh. luzera baino luzeagoa da, airean dagoen uharte batek ez du ezer azpian. Zerrenda plakaren xerra berri bakoitzarekin eguneratzen da.",
+        "fr": "Forca compare chaque couche à celle du dessous : un surplomb dépasse plus que ne le permet l'angle de seuil du support (30° quand il vaut 0), un pont est plus long que Longueur max des ponts, un îlot flottant n'a rien dessous. La liste suit chaque nouveau tranchage du plateau.",
+        "hu": "A Forca minden réteget összevet az alatta lévővel: a túlnyúlás tovább nyúlik, mint amit a támasz küszöbszöge megenged (30°, ha 0), az áthidalás hosszabb a Maximum áthidalás hossza értéknél, a lebegő sziget alatt nincs semmi. A lista a tálca minden új szeletelését követi.",
+        "it": "Forca confronta ogni strato con quello sottostante: una sporgenza va oltre quanto consente l'angolo di soglia del supporto (30° quando è 0), un ponte è più lungo di Lunghezza massima ponti, un'isola fluttuante non ha nulla sotto. L'elenco segue ogni nuovo slicing del piatto.",
+        "ja": "Forca は各積層をその下の積層と比べます。オーバーハングはサポートの閾値角度（0 のときは 30°）が許す以上に張り出したもの、ブリッジは最大ブリッジ長さより長いもの、浮いた島は下に何もないものです。リストはプレートをスライスし直すたびに更新されます。",
+        "ko": "Forca는 각 레이어를 아래 레이어와 비교합니다. 오버행은 서포트 임계값 각도(0이면 30°)가 허용하는 것보다 더 나와 있고, 브릿지는 최대 브릿지 길이보다 길며, 떠 있는 섬은 아래에 아무것도 없습니다. 목록은 플레이트를 새로 슬라이스할 때마다 갱신됩니다.",
+        "lt": "Forca kiekvieną sluoksnį lygina su esančiu po juo: iškyša išsikiša daugiau, nei leidžia atramų ribinis kampas (30°, kai jis 0), tiltas ilgesnis nei Maksimalus tiltelio ilgis, kybanti sala neturi nieko po savimi. Sąrašas atnaujinamas po kiekvieno naujo plokštės pjaustymo.",
+        "nl": "Forca vergelijkt elke laag met de laag eronder: een overhang steekt verder uit dan de drempelhoek van de ondersteuning toestaat (30° als die 0 is), een brug is langer dan Maximale bruglengte, een zwevend eiland heeft niets eronder. De lijst volgt elke nieuwe slice van de plaat.",
+        "pl": "Forca porównuje każdą warstwę z warstwą pod nią: nawis wystaje dalej, niż pozwala kąt progowy podpory (30°, gdy wynosi 0), most jest dłuższy niż Maksymalna długość mostu, wisząca wyspa nie ma nic pod sobą. Lista podąża za każdym nowym cięciem płyty.",
+        "pt_BR": "O Forca compara cada camada com a de baixo: uma saliência avança mais do que o ângulo limiar do suporte permite (30° quando é 0), uma ponte é mais longa que Comprimento máximo de ponte, uma ilha flutuante não tem nada embaixo. A lista acompanha cada novo fatiamento da placa.",
+        "ru": "Forca сравнивает каждый слой с нижним: нависание выступает дальше, чем позволяет пороговый угол поддержки (30°, если он равен 0), мост длиннее, чем «Максимальный интервал опор», под висящим островом ничего нет. Список обновляется после каждой новой нарезки пластины.",
+        "sv": "Forca jämför varje lager med lagret under: ett överhäng sticker ut längre än supportens gränsvinkel tillåter (30° när den är 0), en bro är längre än Max bridge/brygg längd, en flytande ö har inget under sig. Listan följer varje ny slicing av plattan.",
+        "th": "Forca เปรียบเทียบแต่ละเลเยอร์กับเลเยอร์ด้านล่าง: ส่วนยื่นคือส่วนที่ยื่นเกินกว่าที่มุมเกณฑ์ของส่วนรองรับอนุญาต (30° เมื่อเป็น 0) สะพานคือส่วนที่ยาวกว่า ความยาวสะพานสูงสุด เกาะลอยคือส่วนที่ไม่มีอะไรอยู่ด้านล่าง รายการจะอัปเดตทุกครั้งที่สไลซ์แผ่นใหม่",
+        "tr": "Forca her katmanı altındakiyle karşılaştırır: çıkıntı, destek eşik açısının izin verdiğinden (0 olduğunda 30°) daha uzağa uzanır; köprü, Maksimum köprü uzunluğu değerinden uzundur; havada kalan adanın altında hiçbir şey yoktur. Liste, plakanın her yeni dilimlemesini izler.",
+        "uk": "Forca порівнює кожен шар із нижнім: нависання виступає далі, ніж дозволяє пороговий кут підтримки (30°, коли він 0), міст довший за «Максимальна довжина мосту», під висячим островом нічого немає. Список оновлюється після кожного нового нарізання пластини.",
+        "vi": "Forca so sánh từng lớp với lớp bên dưới: phần nhô vươn xa hơn mức góc ngưỡng support cho phép (30° khi giá trị là 0), cầu dài hơn Độ dài cầu tối đa, đảo lơ lửng không có gì bên dưới. Danh sách cập nhật theo mỗi lần cắt lát mới của bàn in.",
+        "zh_CN": "Forca 将每一层与其下方的层进行比较：悬垂伸出超过支撑阈值角度允许的范围（为 0 时按 30°），桥接长于最大桥接长度，悬空孤岛下方没有任何东西。列表会随打印板的每次重新切片而更新。",
+        "zh_TW": "Forca 將每一層與其下方的層進行比較：懸垂伸出超過支撐臨界值角度允許的範圍（為 0 時按 30°），橋接長於最大橋接長度，懸空孤島下方沒有任何東西。清單會隨列印板的每次重新切片而更新。"
+      }
+    },
+    {
+      "msgid": "Print risks are found for FFF prints only.",
+      "translations": {
+        "ca": "Els riscos d'impressió només es busquen en impressions FFF.", "cs": "Rizika tisku se hledají jen u tisků FFF.",
+        "de": "Druckrisiken werden nur für FFF-Drucke gesucht.", "es": "Los riesgos de impresión solo se buscan en impresiones FFF.",
+        "eu": "Inprimatze-arriskuak FFF inprimaketetan soilik bilatzen dira.", "fr": "Les risques d'impression ne sont recherchés que pour les impressions FFF.",
+        "hu": "Nyomtatási kockázatokat csak FFF nyomtatásoknál keres.", "it": "I rischi di stampa vengono cercati solo per le stampe FFF.",
+        "ja": "プリントリスクは FFF プリントでのみ検出されます。", "ko": "출력 위험은 FFF 출력에서만 찾습니다.",
+        "lt": "Spausdinimo rizikos ieškomos tik FFF spaudiniuose.", "nl": "Printrisico's worden alleen voor FFF-prints gezocht.",
+        "pl": "Ryzyka wydruku są wyszukiwane tylko dla wydruków FFF.", "pt_BR": "Os riscos de impressão só são procurados em impressões FFF.",
+        "ru": "Риски печати ищутся только для печати FFF.", "sv": "Utskriftsrisker söks bara för FFF-utskrifter.",
+        "th": "ความเสี่ยงในการพิมพ์จะตรวจหาเฉพาะงานพิมพ์ FFF เท่านั้น", "tr": "Baskı riskleri yalnızca FFF baskılar için aranır.",
+        "uk": "Ризики друку шукаються лише для друку FFF.", "vi": "Rủi ro khi in chỉ được tìm cho bản in FFF.",
+        "zh_CN": "仅针对 FFF 打印查找打印风险。", "zh_TW": "僅針對 FFF 列印尋找列印風險。"
+      }
+    },
+    {
+      "msgid": "The plate is still slicing. The list follows when it is done.",
+      "translations": {
+        "ca": "La placa encara s'està laminant. La llista arribarà quan acabi.", "cs": "Podložka se ještě sliceuje. Seznam se zobrazí po dokončení.",
+        "de": "Die Platte wird noch geslicet. Die Liste folgt, wenn es fertig ist.", "es": "La placa todavía se está laminando. La lista llegará cuando termine.",
+        "eu": "Plaka oraindik xerratzen ari da. Zerrenda amaitzean agertuko da.", "fr": "Le plateau est encore en cours de tranchage. La liste suivra une fois terminé.",
+        "hu": "A tálca szeletelése még tart. A lista a végén jelenik meg.", "it": "Il piatto è ancora in fase di slicing. L'elenco arriverà al termine.",
+        "ja": "プレートはまだスライス中です。完了するとリストが表示されます。", "ko": "플레이트를 아직 슬라이스하는 중입니다. 끝나면 목록이 표시됩니다.",
+        "lt": "Plokštė dar pjaustoma. Sąrašas pasirodys, kai bus baigta.", "nl": "De plaat wordt nog gesliced. De lijst volgt als het klaar is.",
+        "pl": "Płyta jest jeszcze cięta. Lista pojawi się po zakończeniu.", "pt_BR": "A placa ainda está sendo fatiada. A lista aparece quando terminar.",
+        "ru": "Пластина ещё нарезается. Список появится, когда нарезка завершится.", "sv": "Plattan slicas fortfarande. Listan kommer när den är klar.",
+        "th": "แผ่นยังสไลซ์อยู่ รายการจะแสดงเมื่อเสร็จ", "tr": "Plaka hâlâ dilimleniyor. Liste bittiğinde gelir.",
+        "uk": "Пластина ще нарізається. Список з'явиться, коли нарізання завершиться.", "vi": "Bàn in vẫn đang được cắt lát. Danh sách sẽ có khi xong.",
+        "zh_CN": "打印板仍在切片中。完成后会显示列表。", "zh_TW": "列印板仍在切片中。完成後會顯示清單。"
+      }
+    },
+    {
+      "msgid": "Slice the plate to see its risks.",
+      "translations": {
+        "ca": "Lamina la placa per veure'n els riscos.", "cs": "Sliceujte podložku, abyste viděli její rizika.",
+        "de": "Slice die Platte, um ihre Risiken zu sehen.", "es": "Lamina la placa para ver sus riesgos.",
+        "eu": "Xerratu plaka bere arriskuak ikusteko.", "fr": "Tranchez le plateau pour voir ses risques.",
+        "hu": "Szeletelje a tálcát a kockázatai megtekintéséhez.", "it": "Esegui lo slicing del piatto per vederne i rischi.",
+        "ja": "リスクを見るにはプレートをスライスしてください。", "ko": "위험을 보려면 플레이트를 슬라이스하세요.",
+        "lt": "Supjaustykite plokštę, kad pamatytumėte jos rizikas.", "nl": "Slice de plaat om de risico's te zien.",
+        "pl": "Potnij płytę, aby zobaczyć jej ryzyka.", "pt_BR": "Fatie a placa para ver os riscos.",
+        "ru": "Нарежьте пластину, чтобы увидеть её риски.", "sv": "Slica plattan för att se dess risker.",
+        "th": "สไลซ์แผ่นเพื่อดูความเสี่ยง", "tr": "Risklerini görmek için plakayı dilimleyin.",
+        "uk": "Наріжте пластину, щоб побачити її ризики.", "vi": "Hãy cắt lát bàn in để xem rủi ro.",
+        "zh_CN": "请切片打印板以查看其风险。", "zh_TW": "請切片列印板以查看其風險。"
+      }
+    },
+    {
+      "msgid": "No risks found on this plate.",
+      "translations": {
+        "ca": "No s'ha trobat cap risc en aquesta placa.", "cs": "Na této podložce nebyla nalezena žádná rizika.",
+        "de": "Auf dieser Platte wurden keine Risiken gefunden.", "es": "No se encontraron riesgos en esta placa.",
+        "eu": "Ez da arriskurik aurkitu plaka honetan.", "fr": "Aucun risque trouvé sur ce plateau.",
+        "hu": "Ezen a tálcán nem található kockázat.", "it": "Nessun rischio trovato su questo piatto.",
+        "ja": "このプレートにリスクは見つかりませんでした。", "ko": "이 플레이트에서 위험을 찾지 못했습니다.",
+        "lt": "Šioje plokštėje rizikų nerasta.", "nl": "Geen risico's gevonden op deze plaat.",
+        "pl": "Na tej płycie nie znaleziono ryzyk.", "pt_BR": "Nenhum risco encontrado nesta placa.",
+        "ru": "На этой пластине риски не найдены.", "sv": "Inga risker hittades på den här plattan.",
+        "th": "ไม่พบความเสี่ยงบนแผ่นนี้", "tr": "Bu plakada risk bulunamadı.",
+        "uk": "На цій пластині ризиків не знайдено.", "vi": "Không tìm thấy rủi ro nào trên bàn in này.",
+        "zh_CN": "此打印板上未发现风险。", "zh_TW": "此列印板上未發現風險。"
+      }
+    },
+    {
+      "msgid": "%1% risk found on this plate.",
+      "msgid_plural": "%1% risks found on this plate.",
+      "translations": {
+        "ca": ["S'ha trobat %1% risc en aquesta placa.", "S'han trobat %1% riscos en aquesta placa."],
+        "cs": ["Na této podložce bylo nalezeno %1% riziko.", "Na této podložce byla nalezena %1% rizika.", "Na této podložce bylo nalezeno %1% rizik."],
+        "de": ["%1% Risiko auf dieser Platte gefunden.", "%1% Risiken auf dieser Platte gefunden."],
+        "es": ["Se encontró %1% riesgo en esta placa.", "Se encontraron %1% riesgos en esta placa."],
+        "eu": ["Arrisku %1% aurkitu da plaka honetan.", "%1% arrisku aurkitu dira plaka honetan."],
+        "fr": ["%1% risque trouvé sur ce plateau.", "%1% risques trouvés sur ce plateau."],
+        "hu": ["%1% kockázat található ezen a tálcán.", "%1% kockázat található ezen a tálcán."],
+        "it": ["%1% rischio trovato su questo piatto.", "%1% rischi trovati su questo piatto."],
+        "ja": ["このプレートで %1% 件のリスクが見つかりました。"],
+        "ko": ["이 플레이트에서 위험 %1%개를 찾았습니다."],
+        "lt": ["Šioje plokštėje rasta %1% rizika.", "Šioje plokštėje rastos %1% rizikos.", "Šioje plokštėje rasta %1% rizikų."],
+        "nl": ["%1% risico gevonden op deze plaat.", "%1% risico's gevonden op deze plaat."],
+        "pl": ["Na tej płycie znaleziono %1% ryzyko.", "Na tej płycie znaleziono %1% ryzyka.", "Na tej płycie znaleziono %1% ryzyk."],
+        "pt_BR": ["%1% risco encontrado nesta placa.", "%1% riscos encontrados nesta placa."],
+        "ru": ["На этой пластине найден %1% риск.", "На этой пластине найдено %1% риска.", "На этой пластине найдено %1% рисков."],
+        "sv": ["%1% risk hittades på den här plattan.", "%1% risker hittades på den här plattan."],
+        "th": ["พบความเสี่ยง %1% รายการบนแผ่นนี้"],
+        "tr": ["Bu plakada %1% risk bulundu.", "Bu plakada %1% risk bulundu."],
+        "uk": ["На цій пластині знайдено %1% ризик.", "На цій пластині знайдено %1% ризики.", "На цій пластині знайдено %1% ризиків.", "На цій пластині знайдено %1% ризику."],
+        "vi": ["Tìm thấy %1% rủi ro trên bàn in này."],
+        "zh_CN": ["此打印板上发现 %1% 个风险。"],
+        "zh_TW": ["此列印板上發現 %1% 個風險。"]
+      }
+    },
+    {
+      "msgid": "Risk",
+      "translations": {
+        "ca": "Risc", "cs": "Riziko", "de": "Risiko", "es": "Riesgo", "eu": "Arriskua", "fr": "Risque", "hu": "Kockázat",
+        "it": "Rischio", "ja": "リスク", "ko": "위험", "lt": "Rizika", "nl": "Risico", "pl": "Ryzyko", "pt_BR": "Risco",
+        "ru": "Риск", "sv": "Risk", "th": "ความเสี่ยง", "tr": "Risk", "uk": "Ризик", "vi": "Rủi ro", "zh_CN": "风险", "zh_TW": "風險"
+      }
+    },
+    {
+      "msgid": "Select a risk, here or its marker on the Preview, to see what to try and to show its layer.",
+      "translations": {
+        "ca": "Selecciona un risc, aquí o el seu marcador a la Previsualització, per veure què provar i mostrar-ne la capa.",
+        "cs": "Vyberte riziko, zde nebo jeho značku v Náhledu, abyste viděli, co zkusit, a zobrazili jeho vrstvu.",
+        "de": "Wähle ein Risiko, hier oder seine Markierung in der Vorschau, um zu sehen, was du versuchen kannst, und seine Schicht anzuzeigen.",
+        "es": "Selecciona un riesgo, aquí o su marcador en la Previsualización, para ver qué probar y mostrar su capa.",
+        "eu": "Hautatu arrisku bat, hemen edo Aurrebistako bere markatzailea, zer probatu ikusteko eta bere geruza erakusteko.",
+        "fr": "Sélectionnez un risque, ici ou son repère dans l'Aperçu, pour voir quoi essayer et afficher sa couche.",
+        "hu": "Válasszon ki egy kockázatot, itt vagy a jelölőjét az Előnézetben, hogy lássa, mit érdemes kipróbálni, és megjelenjen a rétege.",
+        "it": "Seleziona un rischio, qui o il suo indicatore nell'Anteprima, per vedere cosa provare e mostrarne lo strato.",
+        "ja": "ここ、またはプレビュー上のマーカーでリスクを選ぶと、対策が表示され、その積層が表示されます。",
+        "ko": "여기 또는 미리 보기의 표시기에서 위험을 선택하면 시도할 방법과 해당 레이어가 표시됩니다.",
+        "lt": "Pasirinkite riziką čia arba jos žymeklį Peržiūroje, kad pamatytumėte, ką išbandyti, ir parodytumėte jos sluoksnį.",
+        "nl": "Kies een risico, hier of de markering in de Voorvertoning, om te zien wat je kunt proberen en de laag te tonen.",
+        "pl": "Wybierz ryzyko, tutaj lub jego znacznik w Podglądzie, aby zobaczyć, co wypróbować, i pokazać jego warstwę.",
+        "pt_BR": "Selecione um risco, aqui ou o marcador na Pré-visualização, para ver o que tentar e mostrar a camada dele.",
+        "ru": "Выберите риск здесь или его метку в просмотре нарезки, чтобы увидеть, что попробовать, и показать его слой.",
+        "sv": "Välj en risk, här eller dess markör i Förhandsvisning, för att se vad du kan prova och visa dess lager.",
+        "th": "เลือกความเสี่ยงที่นี่ หรือเครื่องหมายของความเสี่ยงในพรีวิว เพื่อดูสิ่งที่ควรลองและแสดงเลเยอร์ของความเสี่ยงนั้น",
+        "tr": "Neler denenebileceğini görmek ve katmanını göstermek için burada veya Ön İzleme'deki işaretinden bir risk seçin.",
+        "uk": "Виберіть ризик тут або його позначку в Перегляді, щоб побачити, що спробувати, і показати його шар.",
+        "vi": "Chọn một rủi ro ở đây hoặc điểm đánh dấu của nó trong Xem trước để xem cách thử và hiện lớp của nó.",
+        "zh_CN": "在此处或在预览中的标记上选择一个风险，即可查看可尝试的方法并显示其所在层。",
+        "zh_TW": "在此處或在預覽中的標記上選擇一個風險，即可查看可嘗試的方法並顯示其所在層。"
+      }
+    },
+    {
+      "msgid": "Your journal: %1% print with this printer and filament was tagged %2%.",
+      "msgid_plural": "Your journal: %1% prints with this printer and filament were tagged %2%.",
+      "translations": {
+        "ca": ["El teu diari: %1% impressió amb aquesta impressora i filament es va etiquetar com a %2%.", "El teu diari: %1% impressions amb aquesta impressora i filament es van etiquetar com a %2%."],
+        "cs": ["Váš deník: %1% tisk s touto tiskárnou a filamentem má štítek %2%.", "Váš deník: %1% tisky s touto tiskárnou a filamentem mají štítek %2%.", "Váš deník: %1% tisků s touto tiskárnou a filamentem má štítek %2%."],
+        "de": ["Dein Journal: %1% Druck mit diesem Drucker und Filament wurde mit %2% markiert.", "Dein Journal: %1% Drucke mit diesem Drucker und Filament wurden mit %2% markiert."],
+        "es": ["Tu diario: %1% impresión con esta impresora y filamento se etiquetó como %2%.", "Tu diario: %1% impresiones con esta impresora y filamento se etiquetaron como %2%."],
+        "eu": ["Zure egunkaria: inprimagailu eta filamentu honekin egindako inprimaketa %1% %2% gisa etiketatu zen.", "Zure egunkaria: inprimagailu eta filamentu honekin egindako %1% inprimaketa %2% gisa etiketatu ziren."],
+        "fr": ["Votre journal : %1% impression avec cette imprimante et ce filament a été étiquetée %2%.", "Votre journal : %1% impressions avec cette imprimante et ce filament ont été étiquetées %2%."],
+        "hu": ["Az Ön naplója: ezzel a nyomtatóval és filamenttel %1% nyomtatás kapta a(z) %2% címkét.", "Az Ön naplója: ezzel a nyomtatóval és filamenttel %1% nyomtatás kapta a(z) %2% címkét."],
+        "it": ["Il tuo diario: %1% stampa con questa stampante e questo filamento è stata etichettata %2%.", "Il tuo diario: %1% stampe con questa stampante e questo filamento sono state etichettate %2%."],
+        "ja": ["あなたのジャーナル: このプリンターとフィラメントでのプリント %1% 件に %2% のタグが付いています。"],
+        "ko": ["내 일지: 이 프린터와 필라멘트로 한 출력 %1%개에 %2% 태그가 붙었습니다."],
+        "lt": ["Jūsų žurnalas: %1% spaudinys su šiuo spausdintuvu ir gija pažymėtas %2%.", "Jūsų žurnalas: %1% spaudiniai su šiuo spausdintuvu ir gija pažymėti %2%.", "Jūsų žurnalas: %1% spaudinių su šiuo spausdintuvu ir gija pažymėta %2%."],
+        "nl": ["Je logboek: %1% print met deze printer en dit filament kreeg de tag %2%.", "Je logboek: %1% prints met deze printer en dit filament kregen de tag %2%."],
+        "pl": ["Twój dziennik: %1% wydruk z tą drukarką i filamentem oznaczono jako %2%.", "Twój dziennik: %1% wydruki z tą drukarką i filamentem oznaczono jako %2%.", "Twój dziennik: %1% wydruków z tą drukarką i filamentem oznaczono jako %2%."],
+        "pt_BR": ["Seu diário: %1% impressão com esta impressora e filamento foi marcada como %2%.", "Seu diário: %1% impressões com esta impressora e filamento foram marcadas como %2%."],
+        "ru": ["Ваш журнал: %1% печать с этим принтером и материалом отмечена как «%2%».", "Ваш журнал: %1% печати с этим принтером и материалом отмечены как «%2%».", "Ваш журнал: %1% печатей с этим принтером и материалом отмечены как «%2%»."],
+        "sv": ["Din journal: %1% utskrift med den här skrivaren och filamentet märktes %2%.", "Din journal: %1% utskrifter med den här skrivaren och filamentet märktes %2%."],
+        "th": ["บันทึกของคุณ: งานพิมพ์ %1% รายการด้วยเครื่องพิมพ์และเส้นพลาสติกนี้ถูกติดแท็ก %2%"],
+        "tr": ["Günlüğünüz: bu yazıcı ve filamentle yapılan %1% baskı %2% olarak etiketlendi.", "Günlüğünüz: bu yazıcı ve filamentle yapılan %1% baskı %2% olarak etiketlendi."],
+        "uk": ["Ваш журнал: %1% друк із цим принтером і філаментом позначено як «%2%».", "Ваш журнал: %1% друки з цим принтером і філаментом позначено як «%2%».", "Ваш журнал: %1% друків із цим принтером і філаментом позначено як «%2%».", "Ваш журнал: %1% друку з цим принтером і філаментом позначено як «%2%»."],
+        "vi": ["Nhật ký của bạn: %1% bản in với máy in và filament này được gắn thẻ %2%."],
+        "zh_CN": ["你的日志：使用此打印机和耗材丝的 %1% 次打印被标记为 %2%。"],
+        "zh_TW": ["你的日誌：使用此列印裝置和線材的 %1% 次列印被標記為 %2%。"]
+      }
+    },
+    {
+      "msgid": "Open the %1% playbook",
+      "translations": {
+        "ca": "Obre el manual de %1%", "cs": "Otevřít příručku %1%", "de": "Das Playbook %1% öffnen", "es": "Abrir la guía de %1%",
+        "eu": "Ireki %1% gida", "fr": "Ouvrir le guide %1%", "hu": "A(z) %1% útmutató megnyitása", "it": "Apri la guida %1%",
+        "ja": "%1% のプレイブックを開く", "ko": "%1% 플레이북 열기", "lt": "Atverti %1% vadovą", "nl": "Het draaiboek %1% openen",
+        "pl": "Otwórz poradnik %1%", "pt_BR": "Abrir o guia de %1%", "ru": "Открыть руководство «%1%»", "sv": "Öppna handboken %1%",
+        "th": "เปิดคู่มือ %1%", "tr": "%1% rehberini aç", "uk": "Відкрити посібник «%1%»", "vi": "Mở cẩm nang %1%",
+        "zh_CN": "打开 %1% 手册", "zh_TW": "開啟 %1% 手冊"
+      }
+    },
+    {
+      "msgid": "Prints tagged %1% with this printer and filament",
+      "translations": {
+        "ca": "Impressions etiquetades com a %1% amb aquesta impressora i filament", "cs": "Tisky se štítkem %1% s touto tiskárnou a filamentem",
+        "de": "Drucke mit der Markierung %1% mit diesem Drucker und Filament", "es": "Impresiones etiquetadas como %1% con esta impresora y filamento",
+        "eu": "Inprimagailu eta filamentu honekin %1% gisa etiketatutako inprimaketak", "fr": "Impressions étiquetées %1% avec cette imprimante et ce filament",
+        "hu": "%1% címkéjű nyomtatások ezzel a nyomtatóval és filamenttel", "it": "Stampe etichettate %1% con questa stampante e questo filamento",
+        "ja": "このプリンターとフィラメントで %1% のタグが付いたプリント", "ko": "이 프린터와 필라멘트로 %1% 태그가 붙은 출력",
+        "lt": "Spaudiniai, pažymėti %1%, su šiuo spausdintuvu ir gija", "nl": "Prints met de tag %1% met deze printer en dit filament",
+        "pl": "Wydruki oznaczone jako %1% z tą drukarką i filamentem", "pt_BR": "Impressões marcadas como %1% com esta impressora e filamento",
+        "ru": "Печати с отметкой «%1%» с этим принтером и материалом", "sv": "Utskrifter märkta %1% med den här skrivaren och filamentet",
+        "th": "งานพิมพ์ที่ติดแท็ก %1% ด้วยเครื่องพิมพ์และเส้นพลาสติกนี้", "tr": "Bu yazıcı ve filamentle %1% olarak etiketlenen baskılar",
+        "uk": "Друки з позначкою «%1%» із цим принтером і філаментом", "vi": "Bản in gắn thẻ %1% với máy in và filament này",
+        "zh_CN": "使用此打印机和耗材丝并标记为 %1% 的打印", "zh_TW": "使用此列印裝置和線材並標記為 %1% 的列印"
+      }
+    },
+    {
+      "msgid": "The Snapmaker U1's camera only takes still pictures on its stock firmware, and Forca keeps it taking them while this tab is open. To see them here, add the camera to Fluidd once: in Fluidd, open Settings > Cameras, add a camera, set its service to Adaptive MJPEG and its snapshot URL to %1%, and save it.\n\nForca AI and Forca Academy take pictures from the camera without this setting.",
+      "translations": {
+        "ca": "La càmera de la Snapmaker U1 només fa fotos fixes amb el firmware de fàbrica, i Forca fa que continuï fent-ne mentre aquesta pestanya està oberta. Per veure-les aquí, afegeix la càmera a Fluidd una sola vegada: a Fluidd, obre Settings > Cameras, afegeix una càmera, posa'n el servei a Adaptive MJPEG i l'URL de captura a %1%, i desa-la.\n\nForca AI i Forca Academy fan fotos amb la càmera sense aquest ajust.",
+        "cs": "Kamera Snapmaker U1 pořizuje s továrním firmwarem jen statické snímky a Forca ji nechává snímat, dokud je tato karta otevřená. Chcete-li je vidět zde, přidejte kameru jednou do Fluidd: ve Fluidd otevřete Settings > Cameras, přidejte kameru, nastavte službu na Adaptive MJPEG a adresu snímku na %1% a uložte ji.\n\nForca AI a Forca Academy pořizují snímky z kamery i bez tohoto nastavení.",
+        "de": "Die Kamera des Snapmaker U1 macht mit der Werksfirmware nur Standbilder, und Forca lässt sie weiter Bilder machen, solange dieser Tab offen ist. Um sie hier zu sehen, füge die Kamera einmal in Fluidd hinzu: Öffne in Fluidd Settings > Cameras, füge eine Kamera hinzu, setze ihren Dienst auf Adaptive MJPEG und ihre Snapshot-URL auf %1% und speichere sie.\n\nForca AI und Forca Academy nehmen auch ohne diese Einstellung Bilder von der Kamera auf.",
+        "es": "La cámara de la Snapmaker U1 solo toma fotos fijas con el firmware de fábrica, y Forca hace que siga tomándolas mientras esta pestaña está abierta. Para verlas aquí, añade la cámara a Fluidd una sola vez: en Fluidd, abre Settings > Cameras, añade una cámara, pon su servicio en Adaptive MJPEG y su URL de captura en %1%, y guárdala.\n\nForca AI y Forca Academy toman fotos de la cámara sin este ajuste.",
+        "eu": "Snapmaker U1-en kamerak argazki finkoak soilik ateratzen ditu jatorrizko firmwarearekin, eta Forcak argazkiak ateratzen jarraiarazten dio fitxa hau irekita dagoen bitartean. Hemen ikusteko, gehitu kamera Fluidd-en behin: Fluidd-en, ireki Settings > Cameras, gehitu kamera bat, ezarri bere zerbitzua Adaptive MJPEG gisa eta bere argazki-URLa %1% gisa, eta gorde.\n\nForca AI-k eta Forca Academy-k ezarpen hau gabe ateratzen dituzte argazkiak kameratik.",
+        "fr": "La caméra de la Snapmaker U1 ne prend que des images fixes avec le firmware d'origine, et Forca lui fait continuer d'en prendre tant que cet onglet est ouvert. Pour les voir ici, ajoutez la caméra à Fluidd une seule fois : dans Fluidd, ouvrez Settings > Cameras, ajoutez une caméra, réglez son service sur Adaptive MJPEG et son URL d'instantané sur %1%, puis enregistrez-la.\n\nForca AI et Forca Academy prennent des photos avec la caméra sans ce réglage.",
+        "hu": "A Snapmaker U1 kamerája a gyári firmware-rel csak állóképeket készít, és a Forca addig készítteti vele őket, amíg ez a lap nyitva van. Hogy itt lássa őket, adja hozzá egyszer a kamerát a Fluiddhoz: a Fluiddban nyissa meg a Settings > Cameras menüt, adjon hozzá egy kamerát, állítsa a szolgáltatását Adaptive MJPEG-re, a pillanatkép URL-jét pedig erre: %1%, majd mentse.\n\nA Forca AI és a Forca Academy e beállítás nélkül is készít képeket a kamerával.",
+        "it": "La telecamera della Snapmaker U1 scatta solo immagini fisse con il firmware originale, e Forca le fa continuare a scattarne finché questa scheda è aperta. Per vederle qui, aggiungi la telecamera a Fluidd una volta: in Fluidd apri Settings > Cameras, aggiungi una telecamera, imposta il servizio su Adaptive MJPEG e l'URL dell'istantanea su %1%, poi salvala.\n\nForca AI e Forca Academy scattano foto con la telecamera anche senza questa impostazione.",
+        "ja": "Snapmaker U1 のカメラは純正ファームウェアでは静止画しか撮らず、このタブが開いている間は Forca が撮影を続けさせます。ここで見るには、Fluidd にカメラを一度追加してください。Fluidd で Settings > Cameras を開き、カメラを追加して、サービスを Adaptive MJPEG、スナップショット URL を %1% に設定して保存します。\n\nForca AI と Forca Academy は、この設定がなくてもカメラから写真を撮れます。",
+        "ko": "Snapmaker U1의 카메라는 기본 펌웨어에서 정지 사진만 찍으며, 이 탭이 열려 있는 동안 Forca가 계속 찍게 합니다. 여기서 보려면 Fluidd에 카메라를 한 번 추가하세요. Fluidd에서 Settings > Cameras를 열고 카메라를 추가한 다음, 서비스를 Adaptive MJPEG로, 스냅샷 URL을 %1%(으)로 설정하고 저장합니다.\n\nForca AI와 Forca Academy는 이 설정 없이도 카메라에서 사진을 찍습니다.",
+        "lt": "Snapmaker U1 kamera su gamykline programine įranga daro tik nuotraukas, o Forca liepia jai jas daryti, kol atidarytas šis skirtukas. Kad jas matytumėte čia, vieną kartą pridėkite kamerą prie Fluidd: Fluidd atverkite Settings > Cameras, pridėkite kamerą, nustatykite jos paslaugą Adaptive MJPEG, o momentinės nuotraukos URL – %1%, ir išsaugokite.\n\nForca AI ir Forca Academy daro nuotraukas su kamera ir be šio nustatymo.",
+        "nl": "De camera van de Snapmaker U1 maakt met de standaardfirmware alleen foto's, en Forca laat hem foto's blijven maken zolang dit tabblad open is. Om ze hier te zien, voeg je de camera één keer toe in Fluidd: open in Fluidd Settings > Cameras, voeg een camera toe, zet de service op Adaptive MJPEG en de snapshot-URL op %1%, en sla hem op.\n\nForca AI en Forca Academy maken ook zonder deze instelling foto's met de camera.",
+        "pl": "Kamera Snapmaker U1 z fabrycznym firmware'em robi tylko zdjęcia, a Forca każe jej je robić, dopóki ta karta jest otwarta. Aby zobaczyć je tutaj, dodaj kamerę do Fluidd raz: w Fluidd otwórz Settings > Cameras, dodaj kamerę, ustaw jej usługę na Adaptive MJPEG, a adres URL zdjęcia na %1%, i zapisz ją.\n\nForca AI i Forca Academy robią zdjęcia kamerą bez tego ustawienia.",
+        "pt_BR": "A câmera da Snapmaker U1 só tira fotos estáticas com o firmware original, e o Forca a mantém tirando fotos enquanto esta aba está aberta. Para vê-las aqui, adicione a câmera ao Fluidd uma vez: no Fluidd, abra Settings > Cameras, adicione uma câmera, defina o serviço como Adaptive MJPEG e a URL de captura como %1%, e salve.\n\nO Forca AI e o Forca Academy tiram fotos com a câmera sem essa configuração.",
+        "ru": "Камера Snapmaker U1 на заводской прошивке делает только снимки, и Forca заставляет её снимать, пока открыта эта вкладка. Чтобы видеть их здесь, один раз добавьте камеру в Fluidd: в Fluidd откройте Settings > Cameras, добавьте камеру, выберите службу Adaptive MJPEG и укажите адрес снимка %1%, затем сохраните её.\n\nForca AI и Forca Academy получают снимки с камеры и без этой настройки.",
+        "sv": "Snapmaker U1:s kamera tar bara stillbilder med originalfirmwaren, och Forca låter den fortsätta ta dem medan den här fliken är öppen. För att se dem här lägger du till kameran i Fluidd en gång: öppna Settings > Cameras i Fluidd, lägg till en kamera, ställ in tjänsten på Adaptive MJPEG och ögonblicksbildens URL på %1%, och spara den.\n\nForca AI och Forca Academy tar bilder med kameran även utan den här inställningen.",
+        "th": "กล้องของ Snapmaker U1 ถ่ายได้เพียงภาพนิ่งเมื่อใช้เฟิร์มแวร์เดิม และ Forca จะให้กล้องถ่ายภาพต่อไปขณะที่แท็บนี้เปิดอยู่ หากต้องการดูภาพที่นี่ ให้เพิ่มกล้องใน Fluidd หนึ่งครั้ง: ใน Fluidd เปิด Settings > Cameras เพิ่มกล้อง ตั้งค่าบริการเป็น Adaptive MJPEG และ URL ภาพนิ่งเป็น %1% แล้วบันทึก\n\nForca AI และ Forca Academy ถ่ายภาพจากกล้องได้โดยไม่ต้องตั้งค่านี้",
+        "tr": "Snapmaker U1'in kamerası orijinal yazılımla yalnızca sabit fotoğraf çeker ve Forca bu sekme açıkken çekmeye devam etmesini sağlar. Bunları burada görmek için kamerayı Fluidd'e bir kez ekleyin: Fluidd'de Settings > Cameras'ı açın, bir kamera ekleyin, hizmetini Adaptive MJPEG, anlık görüntü URL'sini %1% olarak ayarlayın ve kaydedin.\n\nForca AI ve Forca Academy bu ayar olmadan da kameradan fotoğraf çeker.",
+        "uk": "Камера Snapmaker U1 на заводській прошивці робить лише знімки, і Forca змушує її знімати, поки відкрита ця вкладка. Щоб бачити їх тут, один раз додайте камеру у Fluidd: у Fluidd відкрийте Settings > Cameras, додайте камеру, виберіть службу Adaptive MJPEG і вкажіть адресу знімка %1%, а потім збережіть її.\n\nForca AI і Forca Academy отримують знімки з камери й без цього налаштування.",
+        "vi": "Camera của Snapmaker U1 chỉ chụp ảnh tĩnh khi dùng firmware gốc, và Forca giữ cho nó tiếp tục chụp khi thẻ này đang mở. Để xem ảnh ở đây, hãy thêm camera vào Fluidd một lần: trong Fluidd, mở Settings > Cameras, thêm một camera, đặt dịch vụ là Adaptive MJPEG và URL ảnh chụp là %1%, rồi lưu lại.\n\nForca AI và Forca Academy chụp ảnh từ camera mà không cần thiết lập này.",
+        "zh_CN": "Snapmaker U1 的相机在原厂固件下只拍静态照片，而本标签页打开期间 Forca 会让它持续拍照。要在这里看到画面，请在 Fluidd 中添加一次相机：在 Fluidd 中打开 Settings > Cameras，添加相机，将服务设为 Adaptive MJPEG，快照 URL 设为 %1%，然后保存。\n\n没有此设置，Forca AI 和 Forca Academy 也能从相机拍照。",
+        "zh_TW": "Snapmaker U1 的相機在原廠韌體下只拍靜態照片，而本分頁開啟期間 Forca 會讓它持續拍照。要在這裡看到畫面，請在 Fluidd 中新增一次相機：在 Fluidd 中開啟 Settings > Cameras，新增相機，將服務設為 Adaptive MJPEG，快照 URL 設為 %1%，然後儲存。\n\n沒有此設定，Forca AI 和 Forca Academy 也能從相機拍照。"
+      }
+    },
+    {
+      "msgid": "Show the U1's camera",
+      "translations": {
+        "ca": "Mostra la càmera de la U1", "cs": "Zobrazit kameru U1", "de": "Die Kamera des U1 zeigen", "es": "Mostrar la cámara de la U1",
+        "eu": "Erakutsi U1-en kamera", "fr": "Afficher la caméra de la U1", "hu": "Az U1 kamerájának megjelenítése", "it": "Mostra la telecamera della U1",
+        "ja": "U1 のカメラを表示", "ko": "U1 카메라 표시", "lt": "Rodyti U1 kamerą", "nl": "De camera van de U1 tonen",
+        "pl": "Pokaż kamerę U1", "pt_BR": "Mostrar a câmera da U1", "ru": "Показать камеру U1", "sv": "Visa U1:s kamera",
+        "th": "แสดงกล้องของ U1", "tr": "U1'in kamerasını göster", "uk": "Показати камеру U1", "vi": "Hiện camera của U1",
+        "zh_CN": "显示 U1 的相机", "zh_TW": "顯示 U1 的相機"
+      }
+    }
+  ]
+}

@@ -33,6 +33,9 @@ Right-click the name of a process setting you change often and choose **Add to f
 (or on its own page) and choose **Remove from favorites** to take it off. The page only shows while it has settings. A line with
 several settings (such as **Bridge**, with its External and Internal speeds) is added as the whole line.
 
+In the search results, process settings have a star at the right: click it to add the setting to the favourites, or
+click the filled star to remove it. The results stay open.
+
 Favourites belong to you, not to a preset: they stay the same whatever process preset is selected, and they aren't
 saved in presets or projects. They cover process settings for now.
 

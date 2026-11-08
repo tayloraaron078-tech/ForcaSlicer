@@ -1,0 +1,59 @@
+{
+  "_comment": "Troubleshoot Center link to Forca's own guides (TroubleshootDialog.cpp). tools/forca/apply_forca_translations.ps1 writes them into every catalog (marked '# AI Translated').",
+  "entries": [
+    {
+      "msgid": "Forca guides",
+      "translations": {
+        "ca": "Guies de Forca",
+        "cs": "Průvodci Forca",
+        "de": "Forca-Anleitungen",
+        "es": "Guías de Forca",
+        "eu": "Forca gidak",
+        "fr": "Guides Forca",
+        "hu": "Forca útmutatók",
+        "it": "Guide di Forca",
+        "ja": "Forca ガイド",
+        "ko": "Forca 가이드",
+        "lt": "Forca vadovai",
+        "nl": "Forca-handleidingen",
+        "pl": "Poradniki Forca",
+        "pt_BR": "Guias do Forca",
+        "ru": "Руководства Forca",
+        "sv": "Forca-guider",
+        "th": "คู่มือ Forca",
+        "tr": "Forca kılavuzları",
+        "uk": "Посібники Forca",
+        "vi": "Hướng dẫn Forca",
+        "zh_CN": "Forca 指南",
+        "zh_TW": "Forca 指南"
+      }
+    },
+    {
+      "msgid": "Guides to the features Forca adds",
+      "translations": {
+        "ca": "Guies de les funcions que afegeix Forca",
+        "cs": "Průvodci funkcemi, které přidává Forca",
+        "de": "Anleitungen zu den Funktionen, die Forca hinzufügt",
+        "es": "Guías de las funciones que añade Forca",
+        "eu": "Forcak gehitzen dituen funtzioen gidak",
+        "fr": "Guides des fonctions ajoutées par Forca",
+        "hu": "Útmutatók a Forca által hozzáadott funkciókhoz",
+        "it": "Guide alle funzioni aggiunte da Forca",
+        "ja": "Forca が追加した機能のガイド",
+        "ko": "Forca가 추가한 기능 가이드",
+        "lt": "Vadovai apie Forca pridėtas funkcijas",
+        "nl": "Handleidingen voor de functies die Forca toevoegt",
+        "pl": "Poradniki do funkcji dodanych przez Forca",
+        "pt_BR": "Guias dos recursos que o Forca adiciona",
+        "ru": "Руководства по функциям, которые добавляет Forca",
+        "sv": "Guider till funktionerna som Forca lägger till",
+        "th": "คู่มือฟีเจอร์ที่ Forca เพิ่มเข้ามา",
+        "tr": "Forca'nın eklediği özelliklerin kılavuzları",
+        "uk": "Посібники з функцій, які додає Forca",
+        "vi": "Hướng dẫn các tính năng Forca bổ sung",
+        "zh_CN": "Forca 新增功能的指南",
+        "zh_TW": "Forca 新增功能的指南"
+      }
+    }
+  ]
+}

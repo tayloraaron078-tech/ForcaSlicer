@@ -18,10 +18,13 @@
 #include <catch2/catch_all.hpp>
 
 #include "libslic3r/PrintConfig.hpp"
+#include "slic3r/GUI/ForcaAIHostPrinters.hpp"
 #include "slic3r/GUI/ForcaHostStatus.hpp"
 #include "slic3r/Utils/PrintHost.hpp"
 
 #include <nlohmann/json.hpp>
+
+#include <vector>
 
 using namespace Slic3r;
 using namespace Slic3r::GUI;
@@ -137,6 +140,125 @@ TEST_CASE("A camera's still-picture address comes from what Fluidd or Mainsail s
     CHECK(forca_camera_snapshot_url("") == "");
 }
 
+TEST_CASE("A Flashforge camera streams where the printer says, else on port 8080 of the printer", "[ForcaHostStatus]")
+{
+    const ForcaHostStatus reported = forca_parse_flashforge_detail({ { "cameraStreamUrl", " http://192.168.1.6:8080/?action=stream " } });
+    CHECK(reported.camera_url == "http://192.168.1.6:8080/?action=stream");
+    CHECK(forca_flashforge_camera_url("192.168.1.9", reported) == "http://192.168.1.6:8080/?action=stream");
+    // An Adventurer 5M whose firmware reports no camera: mjpg-streamer on the printer's port 8080.
+    const ForcaHostStatus none = forca_parse_flashforge_detail({ { "status", "ready" } });
+    CHECK(none.camera_url.empty());
+    CHECK(forca_flashforge_camera_url("http://192.168.1.6:8898/", none) == "http://192.168.1.6:8080/?action=stream");
+}
+
+TEST_CASE("The first picture of an mjpg stream is read once it has arrived whole", "[ForcaHostStatus]")
+{
+    // mjpg-streamer's parts: a boundary and headers, then the JPEG (SOI FF D8 FF ... EOI FF D9).
+    const std::string frame1("\xFF\xD8\xFF\xE0" "one" "\xFF\xD9", 9);
+    const std::string frame2("\xFF\xD8\xFF\xE0" "two" "\xFF\xD9", 9);
+    const std::string head = "--boundarydonotcross\r\nContent-Type: image/jpeg\r\nContent-Length: 9\r\n\r\n";
+    const std::string stream = head + frame1 + "\r\n" + head + frame2;
+
+    std::string jpeg;
+    CHECK(forca_first_mjpeg_frame(stream, jpeg));
+    CHECK(jpeg == frame1);
+    // Not yet: no picture, or the first one cut off.
+    CHECK_FALSE(forca_first_mjpeg_frame(head, jpeg));
+    CHECK_FALSE(forca_first_mjpeg_frame(head + frame1.substr(0, 6), jpeg));
+    // A single picture (a snapshot address) is its own first frame.
+    CHECK(forca_first_mjpeg_frame(frame2, jpeg));
+    CHECK(jpeg == frame2);
+}
+
+TEST_CASE("Forca's own camera view lets go of the stream while a picture is taken", "[ForcaHostStatus]")
+{
+    std::vector<bool> calls;
+    bool              showing = true;
+    forca_set_camera_viewer("192.168.1.6", [&](bool hold) {
+        calls.push_back(hold);
+        return showing;
+    });
+    {
+        ForcaCameraLease lease("192.168.1.6");
+        CHECK(lease.released());
+        CHECK(calls == std::vector<bool>{ true });
+    }
+    CHECK(calls == std::vector<bool>{ true, false });
+
+    // Another printer's camera, or a view that shows no stream: nothing to wait for.
+    {
+        ForcaCameraLease other("192.168.1.7");
+        CHECK_FALSE(other.released());
+    }
+    CHECK(calls.size() == 2);
+    showing = false;
+    {
+        ForcaCameraLease lease("192.168.1.6");
+        CHECK_FALSE(lease.released());
+    }
+    CHECK(calls.size() == 4);
+
+    // Once the view is gone it is not called any more.
+    forca_set_camera_viewer("192.168.1.6", nullptr);
+    {
+        ForcaCameraLease lease("192.168.1.6");
+        CHECK_FALSE(lease.released());
+    }
+    CHECK(calls.size() == 4);
+}
+
+TEST_CASE("A Snapmaker U1 is told by the camera file root its Moonraker lists", "[ForcaHostStatus]")
+{
+    // As the U1 (firmware 1.5.1.2) answers /server/files/roots.
+    const nlohmann::json u1 = nlohmann::json::parse(R"({"result": [
+        {"name": "config", "path": "/oem/printer_data/config", "permissions": "r"},
+        {"name": "gcodes", "path": "/userdata/gcodes", "permissions": "rw"},
+        {"name": "camera", "path": "/oem/printer_data/camera", "permissions": "r"}]})");
+    CHECK(forca_u1_camera_root_listed(u1));
+    const nlohmann::json klipper = nlohmann::json::parse(R"({"result": [{"name": "config"}, {"name": "gcodes"}]})");
+    CHECK_FALSE(forca_u1_camera_root_listed(klipper));
+    // An older Moonraker without the endpoint answers an error.
+    CHECK_FALSE(forca_u1_camera_root_listed(nlohmann::json::parse(R"({"error": {"code": 404}})")));
+}
+
+TEST_CASE("A Fluidd camera on the U1's picture is told from Moonraker's webcams", "[ForcaHostStatus]")
+{
+    // As the U1 answers /server/webcams/list once the camera is added in Fluidd.
+    const nlohmann::json added = nlohmann::json::parse(R"({"result": {"webcams": [{"name": "Main", "service": "mjpegstreamer-adaptive",
+        "stream_url": "/webcam/?action=stream", "snapshot_url": "/server/files/camera/monitor.jpg"}]}})");
+    CHECK(forca_u1_snapshot_camera_listed(added));
+    const nlohmann::json full = nlohmann::json::parse(R"({"result": {"webcams": [
+        {"snapshot_url": "http://192.168.57.12/server/files/camera/monitor.jpg"}]}})");
+    CHECK(forca_u1_snapshot_camera_listed(full));
+    const nlohmann::json other = nlohmann::json::parse(R"({"result": {"webcams": [{"snapshot_url": "/webcam/?action=snapshot"}]}})");
+    CHECK_FALSE(forca_u1_snapshot_camera_listed(other));
+    CHECK_FALSE(forca_u1_snapshot_camera_listed(nlohmann::json::parse(R"({"result": {"webcams": []}})")));
+    CHECK_FALSE(forca_u1_snapshot_camera_listed(nlohmann::json::parse(R"({"error": {"code": 404}})")));
+}
+
+TEST_CASE("The U1 camera picture's time comes from the camera file list", "[ForcaHostStatus]")
+{
+    const nlohmann::json list = nlohmann::json::parse(R"({"result": [
+        {"path": "monitor.jpg", "modified": 1792828778.27, "size": 97932},
+        {"path": "Round_Plug.mp4", "modified": 1791883052.37}]})");
+    CHECK_THAT(forca_u1_monitor_stamp(list), Catch::Matchers::WithinAbs(1792828778.27, 1e-3));
+    CHECK(forca_u1_monitor_stamp(nlohmann::json::parse(R"({"result": [{"path": "Round_Plug.mp4"}]})")) < 0);
+    CHECK(forca_u1_monitor_stamp(nlohmann::json::parse(R"({"error": {}})")) < 0);
+}
+
+TEST_CASE("The U1 camera is started, renewed before the firmware stops it, and stopped once nobody watches", "[ForcaHostStatus]")
+{
+    // Seconds: a viewer asked at 100.
+    CHECK(forca_u1_camera_step(100, 100, -1) == ForcaU1CameraStep::Start);
+    CHECK(forca_u1_camera_step(101, 100, 100) == ForcaU1CameraStep::Wait);
+    // Still watched: renewed 240 s after the last start, ahead of the firmware's 360 s.
+    CHECK(forca_u1_camera_step(339, 330, 100) == ForcaU1CameraStep::Wait);
+    CHECK(forca_u1_camera_step(340, 330, 100) == ForcaU1CameraStep::Start);
+    // Nobody asked for a minute.
+    CHECK(forca_u1_camera_step(159, 100, 100) == ForcaU1CameraStep::Wait);
+    CHECK(forca_u1_camera_step(160, 100, 100) == ForcaU1CameraStep::Stop);
+}
+
 TEST_CASE("Job files match without folders, case and gcode/3mf endings", "[ForcaHostStatus]")
 {
     CHECK(forca_same_job_file("whistle.gcode", "gcodes/whistle.gcode"));
@@ -184,4 +306,99 @@ TEST_CASE("Fluidd and Mainsail pages are told apart by their title", "[ForcaHost
     CHECK(forca_web_interface_name("<html><head><title>Mainsail</title>") == "Mainsail");
     CHECK(forca_web_interface_name("<html><head><title>OctoPrint</title>") == "");
     CHECK(forca_web_interface_name("") == "");
+}
+
+// Forca AI on print-host printers (HQ PLAN_forca_ai_print_hosts.md).
+
+TEST_CASE("Forca AI can follow, pause and grant-print Klipper and Flashforge printers only", "[ForcaHostStatus]")
+{
+    const auto caps = [](PrintHostType type, const char* serial, const char* code, bool use_3mf) {
+        DynamicPrintConfig c;
+        c.set_key_value("print_host", new ConfigOptionString("192.168.1.6"));
+        c.set_key_value("host_type", new ConfigOptionEnum<PrintHostType>(type));
+        c.set_key_value("flashforge_serial_number", new ConfigOptionString(serial));
+        c.set_key_value("printhost_apikey", new ConfigOptionString(code));
+        c.set_key_value("use_3mf", new ConfigOptionBool(use_3mf));
+        return forca_host_caps(c);
+    };
+    const ForcaHostCaps klipper = caps(htMoonraker, "", "", false);
+    CHECK((klipper.status && klipper.camera && klipper.pause && klipper.grant));
+    const ForcaHostCaps flashforge = caps(htFlashforge, "SNMOMC9900001", "1234abcd", false);
+    CHECK((flashforge.status && flashforge.pause && flashforge.grant));
+    // Without its serial number and access code only the old protocol answers, which Forca doesn't read.
+    const ForcaHostCaps flashforge_no_code = caps(htFlashforge, "SNMOMC9900001", "", false);
+    CHECK_FALSE((flashforge_no_code.status || flashforge_no_code.pause || flashforge_no_code.grant));
+    const ForcaHostCaps prusalink = caps(htPrusaLink, "", "", false);
+    CHECK_FALSE((prusalink.status || prusalink.camera || prusalink.pause || prusalink.grant));
+    // A printer that takes .gcode.3mf uploads (the Flashforge profiles) prints under a grant too.
+    const ForcaHostCaps bundle = caps(htFlashforge, "SNMOMC9900001", "1234abcd", true);
+    CHECK((bundle.status && bundle.pause && bundle.grant));
+}
+
+TEST_CASE("Only an idle printer takes a grant print, and only a busy one drops a clear bed", "[ForcaHostStatus]")
+{
+    using S = ForcaHostState;
+    for (S s : { S::Idle, S::Finished, S::Stopped }) {
+        CHECK(forca_host_idle(s));
+        CHECK_FALSE(forca_host_busy(s));
+    }
+    for (S s : { S::Printing, S::Paused, S::Preparing, S::Unknown }) {
+        CHECK_FALSE(forca_host_idle(s));
+        CHECK(forca_host_busy(s));
+    }
+    CHECK_FALSE(forca_host_idle(S::Failed)); // an error waits for the user...
+    CHECK_FALSE(forca_host_busy(S::Failed)); // ...but is no new print on the bed
+    CHECK(forca_host_state_name(S::Paused) == "paused");
+    CHECK(forca_host_state_name(S::Unknown) == "unknown");
+}
+
+TEST_CASE("A printer's job key survives a reset to standby and changes with the next print", "[ForcaHostStatus]")
+{
+    ForcaHostStatus done;
+    done.file = "gcodes/Benchy_PLA_0.2.gcode";
+    ForcaHostStatus standby; // Klipper after SDCARD_RESET_FILE: no current file, the history has the last job
+    standby.last_job_file = "Benchy_PLA_0.2.gcode";
+    CHECK(forca_host_job_key(done) == forca_host_job_key(standby));
+    ForcaHostStatus next;
+    next.file = "Whistle.gcode";
+    CHECK(forca_host_job_key(next) != forca_host_job_key(done));
+    ForcaHostStatus flashforge; // Flashforge renames the extension
+    flashforge.file = "BENCHY_PLA_0.2.3mf";
+    CHECK(forca_host_job_key(flashforge) == forca_host_job_key(done));
+}
+
+TEST_CASE("The AI may pause a print only while it is under way", "[ForcaHostStatus]")
+{
+    ForcaHostStatus s;
+    s.state = ForcaHostState::Printing;
+    CHECK(forca_host_pause_refusal(s).empty());
+    for (ForcaHostState other : { ForcaHostState::Paused, ForcaHostState::Preparing, ForcaHostState::Idle, ForcaHostState::Unknown }) {
+        s.state = other;
+        CHECK_FALSE(forca_host_pause_refusal(s).empty());
+    }
+    // A Flashforge printer in its start routine (layer 0) is preparing, so Forca doesn't send a pause it would ignore.
+    const json leveling = { { "status", "printing" }, { "printLayer", 0 } };
+    CHECK_FALSE(forca_host_pause_refusal(forca_parse_flashforge_detail(leveling)).empty());
+}
+
+TEST_CASE("Moonraker's pause and resume addresses come from the print host as typed", "[ForcaHostStatus]")
+{
+    CHECK(forca_moonraker_print_url("192.168.1.6:7125", "pause") == "http://192.168.1.6:7125/printer/print/pause");
+    CHECK(forca_moonraker_print_url("http://voron.local/fluidd/", "resume") == "http://voron.local/printer/print/resume");
+    CHECK(forca_same_print_host("192.168.1.6:7125", "http://192.168.1.6:7125/"));
+    CHECK(forca_same_print_host("Voron.Local", "http://voron.local"));
+    CHECK_FALSE(forca_same_print_host("192.168.1.6", "192.168.1.6:7125"));
+    CHECK_FALSE(forca_same_print_host("", "http://"));
+}
+
+TEST_CASE("A print-host printer's AI id is its physical printer's name", "[ForcaHostStatus]")
+{
+    const std::string id = forca_ai_host_id("Voron 2.4 * Voron 2.4 0.4 nozzle");
+    CHECK(forca_ai_is_host_id(id));
+    CHECK(forca_ai_host_printer_name(id) == "Voron 2.4 * Voron 2.4 0.4 nozzle");
+    CHECK_FALSE(forca_ai_is_host_id("01P00A451601106")); // a Bambu device id
+    CHECK_FALSE(forca_ai_is_host_id("host:"));
+    CHECK(forca_ai_host_printer_name("01P00A451601106").empty());
+    CHECK(forca_ai_host_type_label("moonraker") == "Klipper");
+    CHECK(forca_ai_host_type_label("something new") == "print host");
 }

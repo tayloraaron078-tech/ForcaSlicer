@@ -69,6 +69,14 @@ json labels()
         { "stop", _u8L("Stop") },
         { "clear_plate", _u8L("Plate is clear") },
         { "offline", _u8L("Offline") },
+        { "camera", _u8L("Camera") },
+        { "camera_pause", _u8L("Pause view") },
+        { "camera_play", _u8L("Show live view") },
+        { "camera_paused", _u8L("The live view is paused.") },
+        { "camera_retry", _u8L("Retry") },
+        { "camera_busy", _u8L("The camera does not answer. It shows one viewer at a time: close its view in Flashforge's "
+                              "app or another slicer, then select Retry. A camera set up in Flashforge's app streams on "
+                              "port 8080.") },
         { "need_code", _u8L("To show this printer's status, enter its access code (shown on the printer's screen) in the "
                             "printer's network settings, under API Key / Password.") },
     };
@@ -77,7 +85,10 @@ json labels()
 class FlashforgeHandler final : public PrinterWebViewHandler
 {
 public:
-    explicit FlashforgeHandler(PrinterWebView& owner) : PrinterWebViewHandler(owner), m_alive(std::make_shared<std::atomic<bool>>(true))
+    explicit FlashforgeHandler(PrinterWebView& owner)
+        : PrinterWebViewHandler(owner)
+        , m_alive(std::make_shared<std::atomic<bool>>(true))
+        , m_streaming(std::make_shared<std::atomic<bool>>(false))
     {
         m_timer.Bind(wxEVT_TIMER, [this](wxTimerEvent&) { poll(); });
     }
@@ -86,6 +97,8 @@ public:
     {
         *m_alive = false; // requests still in flight drop their answers
         m_timer.Stop();
+        if (!m_viewer_host.empty())
+            forca_set_camera_viewer(m_viewer_host, nullptr);
     }
 
     void on_loaded(wxWebViewEvent&) override
@@ -153,12 +166,21 @@ private:
 
     void poll()
     {
-        if (m_polling || !owner().IsShownOnScreen())
+        if (!owner().IsShownOnScreen()) {
+            if (m_live) { // a hidden page lets go of the camera stream (the next status starts it again)
+                m_live       = false;
+                *m_streaming = false;
+                run("forcaHidden()");
+            }
+            return;
+        }
+        if (m_polling)
             return;
         DynamicPrintConfig* config = active_config();
         if (!config)
             return;
         m_polling = true;
+        register_viewer(config->opt_string("print_host"));
         std::thread([config = *config, alive = std::weak_ptr<std::atomic<bool>>(m_alive), this]() {
             ForcaHostStatus st;
             std::string     err;
@@ -174,20 +196,47 @@ private:
                            { "nozzle_target", st.nozzle_target_c }, { "bed", st.bed_c },
                            { "bed_target", st.bed_target_c },    { "chamber", st.chamber_c },
                            { "filament", st.filament_type },     { "light", st.light_on },
-                           { "message", st.message } });
+                           { "message", st.message },
+                           { "camera", forca_flashforge_camera_url(config.opt_string("print_host"), st) } });
             const std::string script = "forcaStatus(" + j.dump() + ")";
-            wxGetApp().CallAfter([alive, script, this]() {
+            const bool        camera = ok && j.contains("camera") && !j["camera"].get<std::string>().empty();
+            wxGetApp().CallAfter([alive, script, camera, this]() {
                 if (auto a = alive.lock(); a && *a) {
-                    m_polling = false;
+                    m_polling    = false;
+                    m_live       = true;
+                    *m_streaming = camera;
                     run(script);
                 }
             });
         }).detach();
     }
 
+    // The camera serves one viewer at a time, so while Forca takes a picture from it (Forca AI, Forca Academy) this
+    // page lets go of its live view and takes it back afterwards.
+    void register_viewer(const std::string& host)
+    {
+        if (host == m_viewer_host)
+            return;
+        if (!m_viewer_host.empty())
+            forca_set_camera_viewer(m_viewer_host, nullptr);
+        m_viewer_host = host;
+        if (host.empty())
+            return;
+        forca_set_camera_viewer(host, [alive = std::weak_ptr<std::atomic<bool>>(m_alive), streaming = m_streaming, this](bool hold) {
+            wxGetApp().CallAfter([alive, hold, this]() {
+                if (auto a = alive.lock(); a && *a)
+                    run(hold ? "forcaCameraHold(true)" : "forcaCameraHold(false)");
+            });
+            return streaming->load();
+        });
+    }
+
     std::shared_ptr<std::atomic<bool>> m_alive;
+    std::shared_ptr<std::atomic<bool>> m_streaming;   // the page has a camera address to show (it may be paused)
+    std::string                        m_viewer_host; // print_host registered with forca_set_camera_viewer
     wxTimer                            m_timer;
     bool                               m_polling = false;
+    bool                               m_live    = false; // the page has had a status since it was last hidden
 };
 
 } // namespace

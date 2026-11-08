@@ -44,3 +44,16 @@ TEST_CASE("Web sites and empty pages may not send requests to the app", "[ForcaW
     CAPTURE(url.ToStdString());
     CHECK_FALSE(is_local_file_url(url));
 }
+
+#ifdef WIN32
+TEST_CASE("Only local pages inside Forca's web folder may send requests to the app", "[ForcaWebView]")
+{
+    const wxString web = "C:/Program Files/Forca Slicer/resources/web";
+    CHECK(is_local_page_in("file:///C:/Program%20Files/Forca%20Slicer/resources/web/homepage/index.html?lang=en", web));
+    CHECK(is_local_page_in("FILE:///c:/program%20files/forca%20slicer/RESOURCES/web/homepage/index.html#top", web));
+    CHECK_FALSE(is_local_page_in("file:///C:/Users/me/Downloads/page.html", web));
+    CHECK_FALSE(is_local_page_in("file:///C:/Program%20Files/Forca%20Slicer/resources/web/../../evil.html", web));
+    CHECK_FALSE(is_local_page_in("file:///C:/Program%20Files/Forca%20Slicer/resources/webevil/index.html", web));
+    CHECK_FALSE(is_local_page_in("https://example.com/resources/web/index.html", web));
+}
+#endif

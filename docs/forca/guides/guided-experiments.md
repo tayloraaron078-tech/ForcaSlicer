@@ -58,6 +58,8 @@ Then:
 - **Write a lesson**: Forca drafts one from the comparison; edit it and add it to `lessons.md`.
 - **Apply to preset**: sets the winning value in the preset you're editing. It isn't saved: you decide whether to
   save the preset.
+- **Make a recipe**: saves the print of this plate, with the winning value, as new presets and switches to them
+  (see [Recipes](forca-academy.md#recipes)).
 - **Plan the next experiment**, for example to narrow the value down further.
 
 Each experiment has its own page in the Academy's `experiments` folder (**Open page**): the plan, the prints, the

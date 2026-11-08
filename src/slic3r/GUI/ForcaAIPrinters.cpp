@@ -4,9 +4,15 @@
 // (app config "forca_ai_printers", a list of device ids). The only printer commands are pause and resume-own-pause,
 // and only on printers the user ALSO ticked "AI may pause" for ("forca_ai_pause_printers"). Secrets (access codes)
 // and addresses are never returned.
+// Printers Forca reaches through a print host (Klipper, stock Flashforge, ...) take part under ids "host:<physical
+// printer name>" (ForcaAIHostPrinters.hpp); their status, camera and pause/resume go over the network off the GUI thread.
 #define BAMBU_DYNAMIC // the camera tunnel is loaded from the network plugin at runtime (as wxMediaCtrl3 does)
 #include "ForcaAI.hpp"
+#include "ForcaAIHostPrinters.hpp"
 #include "ForcaAcademy.hpp"
+#include "ForcaHostStatus.hpp"
+#include "libslic3r/Config.hpp"
+#include "libslic3r/PrintConfig.hpp"
 
 #include "AVVideoDecoder.hpp"
 #include "GUI_App.hpp"
@@ -52,6 +58,7 @@
 
 #include "libslic3r_version.h"
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/image.h>
@@ -155,15 +162,18 @@ std::vector<std::string> forca_ai_known_printers()
     std::vector<std::string> ids;
     if (DeviceManager* dev = wxGetApp().getDeviceManager())
         for (const auto& [id, obj] : dev->get_my_machine_list())
-            if (obj)
+            if (obj && !forca_ai_is_agent_machine(obj))
                 ids.push_back(id);
+    for (const std::string& id : forca_ai_host_printers())
+        ids.push_back(id);
     return ids;
 }
 
 std::string forca_ai_printer_label(const std::string& dev_id)
 {
-    DeviceManager* dev = wxGetApp().getDeviceManager();
-    MachineObject* obj = dev ? dev->get_my_machine(dev_id) : nullptr;
+    if (forca_ai_is_host_id(dev_id))
+        return forca_ai_host_label(dev_id);
+    MachineObject* obj = forca_ai_bambu_machine(dev_id);
     if (!obj)
         return dev_id;
     return obj->get_dev_name() + " (" + std::string(obj->get_printer_type_display_str().ToUTF8().data()) + ")";
@@ -171,30 +181,114 @@ std::string forca_ai_printer_label(const std::string& dev_id)
 
 namespace {
 
-// The opted-in printer the AI named (device id or exact name), or nullptr + err.
-MachineObject* shared_printer(const std::string& which, std::string& err)
+// The opted-in printer the AI named (id or exact name; empty = the only shared one): a Bambu printer in `obj`, or a
+// print-host printer's id in `host`. False + err when there is none, or more than one.
+bool shared_target(const std::string& which, MachineObject*& obj, std::string& host, std::string& err)
 {
-    DeviceManager* dev = wxGetApp().getDeviceManager();
-    if (!dev) {
-        err = "Forca's printer connection is not available.";
-        return nullptr;
-    }
-    const std::set<std::string> ids = forca_ai_printer_optins();
-    MachineObject*              hit = nullptr;
+    obj = nullptr;
+    host.clear();
+    const std::set<std::string> ids  = forca_ai_printer_optins();
+    int                         hits = 0;
     for (const std::string& id : ids) {
-        MachineObject* obj = dev->get_my_machine(id);
-        if (obj && (which.empty() || which == id || which == obj->get_dev_name())) {
-            if (hit && which.empty()) {
-                err = "More than one printer is shared; say which (see forca_list_printers).";
-                return nullptr;
+        if (forca_ai_is_host_id(id)) {
+            DynamicPrintConfig config;
+            if (forca_ai_host_config(id, config) && (which.empty() || which == id || which == forca_ai_host_printer_name(id))) {
+                host = id;
+                ++hits;
             }
-            hit = obj;
+        } else if (MachineObject* o = forca_ai_bambu_machine(id)) {
+            if (which.empty() || which == id || which == o->get_dev_name()) {
+                obj = o;
+                ++hits;
+            }
         }
     }
-    if (!hit)
+    if (hits == 1)
+        return true;
+    obj = nullptr;
+    host.clear();
+    if (hits > 1)
+        err = which.empty() ? "More than one printer is shared; say which (see forca_list_printers)."
+                            : "More than one shared printer is called '" + which + "'; use its id (see forca_list_printers).";
+    else
         err = ids.empty() ? "The user has not shared any printer with the AI (Forca AI window -> printers)."
                           : "No shared printer called '" + which + "' (see forca_list_printers).";
-    return hit;
+    return false;
+}
+
+// The opted-in Bambu printer the AI named, or nullptr + err.
+MachineObject* shared_printer(const std::string& which, std::string& err)
+{
+    MachineObject* obj = nullptr;
+    std::string    host;
+    if (shared_target(which, obj, host, err) && !obj)
+        err = forca_ai_host_label(host) + " is reached through its print host, not Forca's Bambu connection.";
+    return obj;
+}
+
+// The user's "AI may pause" tick, for a print-host printer (Bambu: pause_error below). Empty = allowed.
+std::string host_pause_error(const std::string& id, const DynamicPrintConfig& config)
+{
+    if (!forca_ai_pause_optins().count(id))
+        return "The user has not allowed the AI to pause " + forca_ai_host_printer_name(id) + " (the \"AI may pause\" tick in the Forca AI window).";
+    if (!forca_host_caps(config).pause)
+        return "Forca can't pause " + forca_ai_host_label(id) + " (it pauses Klipper printers, and Flashforge printers whose serial "
+               "number and access code are set in the printer's connection settings).";
+    return {};
+}
+
+json host_summary(const std::string& id)
+{
+    DynamicPrintConfig config;
+    forca_ai_host_config(id, config);
+    const ForcaHostCaps caps = forca_host_caps(config);
+    const auto*         type = config.option<ConfigOptionEnum<PrintHostType>>("host_type");
+    json                j    = { { "printer", id },
+                                 { "name", forca_ai_host_printer_name(id) },
+                                 { "model", forca_ai_host_type_label(type ? type->serialize() : std::string()) + " printer" },
+                                 { "connection", "print host" },
+                                 { "selected_for_print", forca_ai_host_is_send_target(id) },
+                                 { "ai_may_pause", forca_ai_pause_optins().count(id) > 0 },
+                                 { "can", { { "status", caps.status }, { "camera", caps.camera }, { "pause", caps.pause }, { "print_grant", caps.grant } } } };
+    if (const ForcaAIHostSeen* seen = forca_ai_host_seen(id, 60))
+        j["online"] = seen->ok;
+    if (!caps.status)
+        j["note"] = "Forca can't read this printer's status (it reads Klipper printers, and Flashforge printers whose serial "
+                    "number and access code are set). You can still ask the user to print to it (forca_request_print).";
+    return j;
+}
+
+// The live status of a print-host printer, read just now (the caller's `summary` plus what the printer says).
+json host_status(json j, const ForcaHostStatus& st)
+{
+    j["live"]          = true;
+    j["state"]         = forca_host_state_name(st.state);
+    j["printer_state"] = st.raw_state; // the printer's own word
+    if (!st.file.empty())
+        j["job"] = st.file;
+    else if (!st.last_job_file.empty())
+        j["last_job"] = { { "file", st.last_job_file }, { "ended", st.last_job_end.empty() ? std::string("unknown") : st.last_job_end } };
+    if (st.progress >= 0)
+        j["progress_pct"] = int(std::round(st.progress * 100));
+    if (st.layer >= 0)
+        j["layer"] = { { "current", st.layer }, { "total", st.total_layers } };
+    if (st.elapsed_s >= 0)
+        j["elapsed_min"] = st.elapsed_s / 60;
+    if (st.remaining_s >= 0)
+        j["remaining_min"] = st.remaining_s / 60;
+    json temps = json::object();
+    if (st.nozzle_c >= 0)
+        temps["nozzles"] = json::array({ { { "current", std::round(st.nozzle_c) }, { "target", std::round(st.nozzle_target_c) } } });
+    if (st.bed_c >= 0)
+        temps["bed"] = { { "current", std::round(st.bed_c) }, { "target", std::round(st.bed_target_c) } };
+    if (st.chamber_c > 0)
+        temps["chamber"] = std::round(st.chamber_c);
+    j["temperatures_c"] = temps;
+    if (!st.filament_type.empty())
+        j["filament_loaded"] = st.filament_type;
+    if (!st.message.empty())
+        j["print_error"] = st.message;
+    return j;
 }
 
 json printer_summary(MachineObject* obj)
@@ -221,9 +315,6 @@ std::map<std::string, AIPause> s_ai_pauses; // dev_id -> the AI's own pause (GUI
 
 ForcaAIResult tool_list_printers(const json&)
 {
-    DeviceManager* dev = wxGetApp().getDeviceManager();
-    if (!dev)
-        return ForcaAIResult::error("Forca's printer connection is not available.");
     const std::set<std::string> ids = forca_ai_printer_optins();
     json                        list = json::array();
     int                         hidden = 0;
@@ -232,7 +323,9 @@ ForcaAIResult tool_list_printers(const json&)
             ++hidden;
             continue;
         }
-        if (MachineObject* obj = dev->get_my_machine(id))
+        if (forca_ai_is_host_id(id))
+            list.push_back(host_summary(id));
+        else if (MachineObject* obj = forca_ai_bambu_machine(id))
             list.push_back(printer_summary(obj));
     }
     json j = { { "printers", list } };
@@ -243,13 +336,8 @@ ForcaAIResult tool_list_printers(const json&)
     return ForcaAIResult::json(j);
 }
 
-ForcaAIResult tool_printer_status(const json& args)
+json bambu_status(MachineObject* obj)
 {
-    std::string    err;
-    MachineObject* obj = shared_printer(args.value("printer", std::string()), err);
-    if (!obj)
-        return ForcaAIResult::error(err);
-
     json j = printer_summary(obj);
     const auto age = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - obj->last_update_time).count();
     j["live"]       = obj->is_connected();
@@ -321,6 +409,54 @@ ForcaAIResult tool_printer_status(const json& args)
     if (auto it = s_ai_pauses.find(obj->get_dev_id()); it != s_ai_pauses.end())
         j["ai_pause"] = { { "reason", it->second.reason }, { "confirmed", it->second.confirmed },
                           { "note", "This pause is the AI's own; forca_resume_print may resume it while it stays paused." } };
+    return j;
+}
+
+ForcaAIResult tool_printer_status(const json& args) // server thread: a print-host printer is read over the network
+{
+    struct Lookup
+    {
+        std::string        error, host;
+        DynamicPrintConfig config;
+        json               bambu, summary, ai_pause;
+    };
+    auto              l     = std::make_shared<Lookup>(); // shared: on_gui may time out and run later
+    const std::string which = args.value("printer", std::string());
+    if (!ForcaAI::instance().on_gui([l, which]() {
+            MachineObject* obj = nullptr;
+            if (!shared_target(which, obj, l->host, l->error))
+                return;
+            if (obj) {
+                l->bambu = bambu_status(obj);
+                return;
+            }
+            forca_ai_host_config(l->host, l->config);
+            l->summary = host_summary(l->host);
+            if (auto it = s_ai_pauses.find(l->host); it != s_ai_pauses.end())
+                l->ai_pause = { { "reason", it->second.reason }, { "confirmed", it->second.confirmed },
+                                { "note", "This pause is the AI's own; forca_resume_print may resume it while it stays paused." } };
+        }))
+        return ForcaAIResult::error("Forca did not respond (it may be showing a dialog).");
+    if (!l->error.empty())
+        return ForcaAIResult::error(l->error);
+    if (!l->bambu.is_null())
+        return ForcaAIResult::json(l->bambu);
+
+    json j = l->summary;
+    if (!forca_host_caps(l->config).status) {
+        j["live"] = false;
+        return ForcaAIResult::json(j);
+    }
+    ForcaHostStatus st;
+    std::string     err;
+    if (!forca_fetch_host_status(l->config, st, err)) {
+        j["live"]  = false;
+        j["error"] = "Forca could not read the printer's status: " + err;
+        return ForcaAIResult::json(j);
+    }
+    j = host_status(j, st);
+    if (!l->ai_pause.is_null())
+        j["ai_pause"] = l->ai_pause;
     return ForcaAIResult::json(j);
 }
 
@@ -529,9 +665,52 @@ Frame capture_frame_of(std::function<MachineObject*(std::string& err)> find, int
     return f;
 }
 
+// One picture from a print-host printer's camera (Moonraker / Fluidd / Mainsail webcam, Flashforge built-in camera), from
+// a non-GUI thread; the HTTP request has its own time limits.
+Frame capture_host_frame(const DynamicPrintConfig& config, const std::string& name, int max_width)
+{
+    Frame       f;
+    std::string jpeg;
+    f.name = name;
+    if (!forca_fetch_host_snapshot(config, jpeg, f.error)) {
+        f.error = f.error == "no camera"
+                      ? name + " has no camera Forca can find (Klipper: a webcam set up in Moonraker, Fluidd or Mainsail; "
+                               "Flashforge: a built-in camera)."
+                      : "Could not get a picture from " + name + "'s camera: " + f.error + ".";
+        return f;
+    }
+    wxMemoryInputStream in(jpeg.data(), jpeg.size());
+    wxImage             image(in, wxBITMAP_TYPE_JPEG);
+    if (image.IsOk() && image.GetWidth() > max_width)
+        f.jpeg = encode_jpeg(image, max_width);
+    if (f.jpeg.empty())
+        f.jpeg = std::move(jpeg);
+    return f;
+}
+
 // A camera frame of a printer shared with the AI (the AI tools' gate).
 Frame capture_frame(const std::string& which, int max_width)
 {
+    struct HostTarget
+    {
+        std::string        id, name;
+        DynamicPrintConfig config;
+    };
+    auto t = std::make_shared<HostTarget>(); // shared: on_gui may time out and run later
+    if (!ForcaAI::instance().on_gui([t, which]() {
+            MachineObject* obj = nullptr;
+            std::string    err;
+            if (shared_target(which, obj, t->id, err) && !t->id.empty()) {
+                t->name = forca_ai_host_printer_name(t->id);
+                forca_ai_host_config(t->id, t->config);
+            }
+        })) {
+        Frame f;
+        f.error = "Forca did not respond (it may be showing a dialog).";
+        return f;
+    }
+    if (!t->id.empty())
+        return capture_host_frame(t->config, t->name, max_width);
     return capture_frame_of([which](std::string& err) { return shared_printer(which, err); }, max_width);
 }
 
@@ -584,9 +763,14 @@ class PauseWatcher : public wxTimer
 public:
     void Notify() override
     {
-        DeviceManager* dev = wxGetApp().getDeviceManager();
+        bool           bambu = false;
         for (auto it = s_ai_pauses.begin(); it != s_ai_pauses.end();) {
-            MachineObject*    obj   = dev ? dev->get_my_machine(it->first) : nullptr;
+            if (forca_ai_is_host_id(it->first)) { // followed by on_host_update
+                ++it;
+                continue;
+            }
+            bambu                   = true;
+            MachineObject*    obj   = forca_ai_bambu_machine(it->first);
             const std::string label = forca_ai_printer_label(it->first);
             std::string       end;
             if (!obj)
@@ -605,7 +789,7 @@ public:
             } else
                 ++it;
         }
-        if (s_ai_pauses.empty())
+        if (!bambu)
             Stop();
     }
 };
@@ -613,6 +797,75 @@ PauseWatcher& pause_watcher()
 {
     static PauseWatcher* w = new PauseWatcher(); // lives for the app's lifetime (a wxTimer must not outlive wx at exit)
     return *w;
+}
+
+void end_ai_pause(const std::string& id, const std::string& why)
+{
+    const bool had = s_ai_pauses.erase(id) > 0;
+    close_pause_card(id);
+    if (!had)
+        return;
+    if (!why.empty())
+        ForcaAI::instance().log("printer pause", "The AI's pause of " + forca_ai_printer_label(id) + " is closed: " + why + ".", true);
+    if (forca_ai_is_host_id(id))
+        forca_ai_host_watch("pause", id, false);
+}
+
+// The same rule as PauseWatcher for a print-host printer, on each status read: confirm the AI's pause, then drop the
+// claim once the printer is no longer paused on that job.
+void on_host_update(const std::string& id)
+{
+    const auto it = s_ai_pauses.find(id);
+    if (it == s_ai_pauses.end())
+        return;
+    DynamicPrintConfig config;
+    if (!forca_ai_host_config(id, config)) {
+        end_ai_pause(id, "the printer is no longer in Forca's printer settings");
+        return;
+    }
+    const ForcaAIHostSeen* seen = forca_ai_host_seen(id, 30);
+    const bool             late = std::chrono::steady_clock::now() - it->second.at > std::chrono::seconds(90);
+    if (!seen || !seen->ok) { // a missed read: keep the claim, but an unconfirmed one only for 90 s
+        if (!it->second.confirmed && late)
+            end_ai_pause(id, "Forca could not read the printer to see the pause");
+        return;
+    }
+    const ForcaHostStatus& st     = seen->status;
+    const bool             paused = st.state == ForcaHostState::Paused && forca_same_job_file(st.file, it->second.job);
+    if (!it->second.confirmed) {
+        if (paused)
+            it->second.confirmed = true;
+        else if (late)
+            end_ai_pause(id, "the printer never reported the pause (state " + st.raw_state + ")");
+    } else if (!paused)
+        end_ai_pause(id, "the print is no longer paused (state " + st.raw_state + ")");
+}
+
+void listen_to_hosts()
+{
+    static bool listening = false;
+    if (!listening) {
+        listening = true;
+        forca_ai_host_on_update(on_host_update);
+    }
+}
+
+// The user's "Resume print" on the card of a print-host printer (worker thread: it is an HTTP request).
+void resume_host_for_user(const std::string& id)
+{
+    DynamicPrintConfig config;
+    if (!forca_ai_host_config(id, config))
+        return;
+    std::thread([id, config]() {
+        std::string err;
+        const bool  ok = forca_host_pause_print(config, false, err);
+        if (wxTheApp)
+            wxTheApp->CallAfter([id, ok, err]() {
+                ForcaAI::instance().log("printer pause", ok ? "The user resumed " + forca_ai_printer_label(id) + " from the AI pause card."
+                                                            : "Forca could not resume " + forca_ai_printer_label(id) + ": " + err,
+                                        true);
+            });
+    }).detach();
 }
 
 std::string pause_error(MachineObject* obj)
@@ -672,14 +925,16 @@ void show_pause_card(const std::string& dev_id, const std::string& jpeg)
     keep->Bind(wxEVT_BUTTON, [dev_id](wxCommandEvent&) { close_pause_card(dev_id); });
     dlg->Bind(wxEVT_CLOSE_WINDOW, [dev_id](wxCloseEvent&) { close_pause_card(dev_id); });
     resume->Bind(wxEVT_BUTTON, [dev_id](wxCommandEvent&) {
-        DeviceManager* dev = wxGetApp().getDeviceManager();
-        MachineObject* obj = dev ? dev->get_my_machine(dev_id) : nullptr;
-        if (obj && obj->can_resume()) {
-            obj->command_task_resume(); // the user's own click
-            ForcaAI::instance().log("printer pause", "The user resumed " + forca_ai_printer_label(dev_id) + " from the AI pause card.", true);
+        if (forca_ai_is_host_id(dev_id))
+            resume_host_for_user(dev_id); // the user's own click
+        else {
+            MachineObject* obj = forca_ai_bambu_machine(dev_id);
+            if (obj && obj->can_resume()) {
+                obj->command_task_resume(); // the user's own click
+                ForcaAI::instance().log("printer pause", "The user resumed " + forca_ai_printer_label(dev_id) + " from the AI pause card.", true);
+            }
         }
-        s_ai_pauses.erase(dev_id);
-        close_pause_card(dev_id);
+        end_ai_pause(dev_id, {});
     });
     dlg->SetSizerAndFit(root);
     dlg->CenterOnParent();
@@ -694,12 +949,22 @@ ForcaAIResult tool_pause_print(const json& args) // runs on the server thread
     if (reason.size() < 10)
         return ForcaAIResult::error("Give the reason for pausing (what you saw), for the user and the log.");
 
-    struct Outcome { std::string error, dev_id, name; };
+    struct Outcome
+    {
+        std::string        error, dev_id, name, host;
+        DynamicPrintConfig config;
+    };
     auto out = std::make_shared<Outcome>();
     if (!ForcaAI::instance().on_gui([out, which, reason]() {
-            MachineObject* obj = shared_printer(which, out->error);
-            if (!obj)
+            MachineObject* obj = nullptr;
+            if (!shared_target(which, obj, out->host, out->error))
                 return;
+            if (!obj) { // a print-host printer: checked here, paused below over the network
+                forca_ai_host_config(out->host, out->config);
+                out->error = host_pause_error(out->host, out->config);
+                out->name  = forca_ai_host_printer_name(out->host);
+                return;
+            }
             if (std::string e = pause_error(obj); !e.empty()) {
                 out->error = e;
                 return;
@@ -719,6 +984,24 @@ ForcaAIResult tool_pause_print(const json& args) // runs on the server thread
             ForcaAI::instance().log("printer pause", "The AI paused " + forca_ai_printer_label(out->dev_id) + ": " + reason, true);
         }))
         return ForcaAIResult::error("Forca did not respond (it may be showing a dialog).");
+    if (!out->host.empty() && out->error.empty()) {
+        ForcaHostStatus st;
+        std::string     err;
+        if (!forca_fetch_host_status(out->config, st, err))
+            return ForcaAIResult::error("Not paused: Forca could not read " + out->name + "'s status (" + err + ").");
+        if (std::string why = forca_host_pause_refusal(st); !why.empty())
+            return ForcaAIResult::error("Not paused: " + why + ".");
+        if (!forca_host_pause_print(out->config, true, err))
+            return ForcaAIResult::error("Forca could not send the pause to " + out->name + ": " + err + ".");
+        if (!ForcaAI::instance().on_gui([out, job = st.file, reason]() {
+                s_ai_pauses[out->host] = AIPause{ job, reason, {}, std::chrono::steady_clock::now(), false };
+                listen_to_hosts();
+                forca_ai_host_watch("pause", out->host, true);
+                ForcaAI::instance().log("printer pause", "The AI paused " + forca_ai_printer_label(out->host) + ": " + reason, true);
+            }))
+            return ForcaAIResult::error("The pause was sent to " + out->name + ", but Forca did not respond to record it.");
+        out->dev_id = out->host;
+    }
     if (out->dev_id.empty())
         return ForcaAIResult::error(out->error);
 
@@ -733,7 +1016,11 @@ ForcaAIResult tool_pause_print(const json& args) // runs on the server thread
             const boost::filesystem::path dir = into_path(from_u8(data_dir())) / "forca" / "ai" / "pauses";
             boost::system::error_code     ec;
             boost::filesystem::create_directories(dir, ec);
-            const boost::filesystem::path p = dir / (std::string(stamp) + "_" + dev_id + ".jpg");
+            std::string name = dev_id; // "host:<name>" holds characters a file name can't
+            for (char& c : name)
+                if (std::string("<>:\"/\\|?*").find(c) != std::string::npos)
+                    c = '_';
+            const boost::filesystem::path p = dir / (std::string(stamp) + "_" + name + ".jpg");
             boost::filesystem::ofstream   o(p, std::ios::binary);
             o.write(jpeg.data(), std::streamsize(jpeg.size()));
             if (o) {
@@ -754,15 +1041,8 @@ ForcaAIResult tool_pause_print(const json& args) // runs on the server thread
     return r;
 }
 
-ForcaAIResult tool_resume_print(const json& args)
+ForcaAIResult resume_bambu(MachineObject* obj, const std::string& reason)
 {
-    std::string    err;
-    MachineObject* obj = shared_printer(args.value("printer", std::string()), err);
-    if (!obj)
-        return ForcaAIResult::error(err);
-    const std::string reason = args.value("reason", std::string());
-    if (reason.size() < 10)
-        return ForcaAIResult::error("Give the reason why the pause was not needed after all.");
     if (std::string e = pause_error(obj); !e.empty())
         return ForcaAIResult::error(e);
     const auto it = s_ai_pauses.find(obj->get_dev_id());
@@ -781,27 +1061,91 @@ ForcaAIResult tool_resume_print(const json& args)
     return ForcaAIResult::text("Resumed " + obj->get_dev_name() + " (the AI's own pause).");
 }
 
+ForcaAIResult tool_resume_print(const json& args) // server thread: a print-host printer is resumed over the network
+{
+    const std::string which  = args.value("printer", std::string());
+    const std::string reason = args.value("reason", std::string());
+    if (reason.size() < 10)
+        return ForcaAIResult::error("Give the reason why the pause was not needed after all.");
+    struct Lookup
+    {
+        std::string                    error, host, name, job;
+        DynamicPrintConfig             config;
+        std::shared_ptr<ForcaAIResult> bambu;
+    };
+    auto l = std::make_shared<Lookup>(); // shared: on_gui may time out and run later
+    if (!ForcaAI::instance().on_gui([l, which, reason]() {
+            MachineObject* obj = nullptr;
+            if (!shared_target(which, obj, l->host, l->error))
+                return;
+            if (obj) {
+                l->bambu = std::make_shared<ForcaAIResult>(resume_bambu(obj, reason));
+                return;
+            }
+            forca_ai_host_config(l->host, l->config);
+            l->name = forca_ai_host_printer_name(l->host);
+            if ((l->error = host_pause_error(l->host, l->config)).empty()) {
+                const auto it = s_ai_pauses.find(l->host);
+                if (it == s_ai_pauses.end())
+                    l->error = "The AI has no pause of its own on " + l->name + " to resume. A pause by the user, the printer or "
+                               "anyone else is never resumed by the AI.";
+                else
+                    l->job = it->second.job;
+            }
+        }))
+        return ForcaAIResult::error("Forca did not respond (it may be showing a dialog).");
+    if (l->bambu)
+        return *l->bambu;
+    if (!l->error.empty())
+        return ForcaAIResult::error(l->error);
+
+    // Read the printer now: resume only while it is still in the AI's pause, on the same job.
+    ForcaHostStatus st;
+    std::string     err;
+    if (!forca_fetch_host_status(l->config, st, err))
+        return ForcaAIResult::error("Not resumed: Forca could not read " + l->name + "'s status (" + err + ").");
+    if (st.state != ForcaHostState::Paused || !forca_same_job_file(st.file, l->job))
+        return ForcaAIResult::error("The printer is not in the AI's pause (state " + st.raw_state + "). Check again in a few seconds.");
+    auto still_ours = std::make_shared<bool>(false);
+    if (!ForcaAI::instance().on_gui([l, still_ours]() { *still_ours = s_ai_pauses.count(l->host) > 0; }) || !*still_ours)
+        return ForcaAIResult::error("The AI's pause of " + l->name + " has ended meanwhile; it is not the AI's to resume any more.");
+    if (!forca_host_pause_print(l->config, false, err))
+        return ForcaAIResult::error("Forca could not confirm the resume of " + l->name + " (" + err + "). It may still be "
+                                    "resuming: check forca_printer_status before you try again.");
+    ForcaAI::instance().on_gui([l, reason]() {
+        ForcaAI::instance().log("printer pause", "The AI resumed its own pause of " + forca_ai_printer_label(l->host) + ": " + reason, true);
+        end_ai_pause(l->host, {});
+    });
+    return ForcaAIResult::text("Resumed " + l->name + " (the AI's own pause).");
+}
+
 } // namespace
 
 void register_forca_ai_printer_tools(ForcaAI& ai)
 {
     ai.register_tool({ "forca_list_printers", "Shared printers",
-        "The printers the user has shared with the AI (ticked in the Forca AI window): id, name, model, LAN/cloud, "
-        "online, and whether it is the printer selected in Forca's Device tab. Other printers are not shown.",
+        "The printers the user has shared with the AI (ticked in the Forca AI window): id, name, model, connection, "
+        "online, and whether it is the printer selected in Forca's Device tab. Printers Forca reaches through a print "
+        "host (Klipper, Flashforge, OctoPrint...) have ids \"host:<name>\", say what Forca can do with them ('can') and "
+        "whether Forca's Print button sends to them now (selected_for_print). Other printers are not shown.",
         { { "type", "object" }, { "properties", json::object() } }, tool_list_printers });
 
-    ai.register_tool({ "forca_printer_status", "Printer status",
+    ForcaAITool status{ "forca_printer_status", "Printer status",
         "Live status of a shared printer: state, job, progress, remaining time, layer, nozzle/bed/chamber temperatures, "
         "print errors and health (HMS) messages, the filament in each slot (filament_sources: AMS slots and the "
         "external spool), and whether it has a camera. Read-only -- this never sends anything "
-        "to the printer. 'live' is false when Forca has no current data (Forca receives live data from the printer "
-        "selected in its Device tab).",
+        "to the printer. 'live' is false when Forca has no current data (Forca receives live data from the Bambu printer "
+        "selected in its Device tab). A print-host printer is asked right now over the network; it reports one nozzle "
+        "and, on Flashforge printers, the loaded filament type.",
         { { "type", "object" },
           { "properties", { { "printer", { { "type", "string" }, { "description", "Printer id or exact name (default: the only shared printer)." } } } } } },
-        tool_printer_status });
+        tool_printer_status };
+    status.off_gui = true;
+    ai.register_tool(std::move(status));
 
     ForcaAITool camera{ "forca_camera_snapshot", "Printer camera",
-        "One picture from a shared printer's camera over the local network (Bambu printers), to check a print. "
+        "One picture from a shared printer's camera over the local network (Bambu printers; Klipper webcams; "
+        "Flashforge built-in cameras), to check a print. "
         "Opens a short camera connection, so it can take a few seconds; the printer may refuse while another viewer "
         "holds its camera. Read-only, except that save_to_print keeps the picture with a recorded print in Forca "
         "Academy (its camera/ folder).",
@@ -825,23 +1169,40 @@ void register_forca_ai_printer_tools(ForcaAI& ai)
     pause.off_gui = true;
     ai.register_tool(std::move(pause));
 
-    ai.register_tool({ "forca_resume_print", "Resume the AI's own pause",
+    ForcaAITool resume{ "forca_resume_print", "Resume the AI's own pause",
         "Resume a print ONLY if the AI paused it itself and it is still in that pause (e.g. the pause turned out to "
         "be unnecessary). Pauses by the user, the printer or anyone else are never resumed by the AI. Give the reason.",
         { { "type", "object" },
           { "properties", { { "printer", { { "type", "string" } } },
                             { "reason", { { "type", "string" } } } } },
           { "required", { "reason" } } },
-        tool_resume_print });
+        tool_resume_print };
+    resume.off_gui = true;
+    ai.register_tool(std::move(resume));
 }
 
 // Forca Academy's pictures of its own recorded prints (not gated by AI sharing: the user turned the journal on).
 bool forca_printer_camera_jpeg(const std::string& dev_id, int max_width, std::string& jpeg, std::string& err)
 {
+    if (forca_ai_is_host_id(dev_id)) {
+        auto config = std::make_shared<DynamicPrintConfig>();
+        auto found  = std::make_shared<bool>(false);
+        if (!ForcaAI::instance().on_gui([dev_id, config, found]() { *found = forca_ai_host_config(dev_id, *config); })) {
+            err = "Forca did not respond (it may be showing a dialog).";
+            return false;
+        }
+        if (!*found) {
+            err = "Forca no longer has this printer in its printer settings.";
+            return false;
+        }
+        const Frame f = capture_host_frame(*config, forca_ai_host_printer_name(dev_id), max_width);
+        jpeg          = f.jpeg;
+        err           = f.error;
+        return !jpeg.empty();
+    }
     const Frame f = capture_frame_of(
         [dev_id](std::string& e) -> MachineObject* {
-            DeviceManager* dev = wxGetApp().getDeviceManager();
-            MachineObject* obj = dev ? dev->get_my_machine(dev_id) : nullptr;
+            MachineObject* obj = forca_ai_bambu_machine(dev_id);
             if (!obj)
                 e = "Forca does not know this printer right now.";
             return obj;

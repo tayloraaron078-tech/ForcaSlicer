@@ -8,11 +8,12 @@ differently).
   wants to try.
 - **Code-signed since 0.1.0-alpha.4**, but SmartScreen may still warn for a while until the certificate builds a
   reputation (More info → Run anyway). The publisher shown should be Aaron Taylor.
-- **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper) and a stock
-  Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
+- **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper), a Snapmaker U1
+  (stock firmware) and a stock Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.5.0 development line** (merged up to 30 October 2026, past OrcaSlicer's
-  2.5.0-beta), not a stable Orca release.
+- **Built on OrcaSlicer's 2.6.0 development line** (its main branch, merged up to 7 November 2026, just after
+  OrcaSlicer 2.5.0 was released), not a stable release. OrcaSlicer 2.5.0 calls projects saved in Forca newer and
+  suggests an update; they still open.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
   forward them if they're Orca's.
 - **OrcaSlicer's Design (CAD) tab is experimental in OrcaSlicer itself** and comes with Forca as it is (off until you
@@ -44,7 +45,14 @@ differently).
   untested on Happy Hare MMU hardware.
 - **Flashforge status page:** tested on an Adventurer 5M (firmware 5.1.8). It needs the printer's access code in the
   printer's network settings (API Key / Password). Other Flashforge models with the same local API should work but
-  are untested. Forca Academy pictures from a Flashforge printer's built-in camera are untested (no camera here).
+  are untested.
+- **Flashforge camera:** tested on an Adventurer 5M with its camera (MJPG stream on port 8080). The camera shows one
+  viewer at a time, so Forca's live view and Flashforge's app (or another slicer) can't watch it together; when Forca
+  AI or Forca Academy takes a picture, Forca's live view blinks off for a moment. The Adventurer 5M Pro's built-in
+  camera is untested.
+- **Snapmaker U1 camera (stock firmware):** to see it live in the Device tab, add a camera in Fluidd once (Adaptive
+  MJPEG, snapshot URL `/server/files/camera/monitor.jpg`; Forca explains this the first time). The camera stays on for
+  up to 6 minutes after Forca stops using it: the firmware turns it off on its own timer.
 - **Klipper web interface search** looks in the usual places (the printer's address, ports 81 / 4408 / 4409, /fluidd,
   /mainsail); type the address in Device UI if yours is elsewhere.
 
@@ -65,7 +73,8 @@ differently).
 - A plate picture from the AI shows the objects only (not the bed or modifier boxes).
 - AI clients (for example Claude Code) load Forca's tool list when they connect; after updating Forca, reconnect them.
 - No macOS entry point for the Forca AI window yet (Windows builds only anyway).
-- **Print grants are Bambu Lab only** for now (other printers: the AI can still ask, and you send).
+- **Print grants** work on Bambu Lab printers and on Klipper and stock Flashforge printers Forca can read. Other print
+  hosts: the AI can still ask, and you send.
 - **The camera bed check can't see the whole plate:** a Bambu H2S camera, for one, doesn't show the strip nearest the
   door. Turn on camera bed checks only if you are fine with that; your own "Bed is clear" click has no blind spot.
 

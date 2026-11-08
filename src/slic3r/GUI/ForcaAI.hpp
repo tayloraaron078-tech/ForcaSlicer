@@ -3,7 +3,9 @@
 
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
 #include <atomic>
+#include <cstddef>
 #include <ctime>
 #include <deque>
 #include <functional>
@@ -166,6 +168,8 @@ void register_forca_ai_tools(ForcaAI& ai);
 void register_forca_ai_hand_tools(ForcaAI& ai);
 // The slice report of a sliced plate (0-based): time, filament, layers, warnings. Empty + `err` if not sliced.
 nlohmann::json forca_ai_plate_report(int plate, std::string& err);
+// Puts the filament preset `name` in filament slot `idx` (0-based), as the sidebar does. False + `err` if it can't.
+bool forca_set_filament_slot(size_t idx, const std::string& name, std::string& err);
 // ForcaAIPrint.cpp: R2 -- the AI may only REQUEST a print; the user approves it in Forca.
 void register_forca_ai_print_tools(ForcaAI& ai);
 // ForcaAIAcademy.cpp: Forca Academy (print journal / knowledge base) tools.
@@ -187,13 +191,18 @@ void                     register_forca_ai_printer_tools(ForcaAI& ai);
 // ForcaAIAutonomy.cpp: pre-approved autonomy (HQ PLAN_forca_ai.md §10a) -- a print grant the user gives in the Forca
 // AI window, at the Advanced level only. Kept in memory: a restart, the Guarded level, expiry or Revoke end it.
 // One file a grant asks to print: the AI imports it, arranges and slices copies, and Forca sends only plates made
-// of grant files, up to the copies still owed.
+// of grant files, up to the parts still owed. One copy of a file is every part it holds, even spread over several
+// plates (each plate is its own print, with its own clear bed).
 struct ForcaAIGrantFile
 {
     std::string path;       // absolute, UTF-8
     int         copies = 1;
-    int         done   = 0; // copies Forca has sent
+    int         sent   = 0; // parts Forca has sent
     std::string note;       // the user's instructions for the AI (orientation, material, settings...)
+    int         parts  = 1; // the printable instances the file holds (a .3mf may hold several, on several plates)
+
+    int parts_owed() const { return std::max(0, copies * std::max(1, parts) - sent); }
+    int copies_sent() const { return sent / std::max(1, parts); }
 };
 struct ForcaAIGrant
 {
@@ -228,8 +237,9 @@ struct ForcaAIGrantPrint
 };
 std::string forca_ai_grant_check(const ForcaAIGrantPrint& job, const std::string& printer, std::string& dev_id);
 // A grant with files: every object on the plate must come from one of them (`objects`: each object's source file and
-// its instances on the plate), and no file may get more copies than it still owes. Empty = allowed, with `count[i]`
-// the copies of files[i] on the plate; else why not.
+// its instances on the plate), and no file may get more parts than it still owes (a .3mf of 3 parts, 1 copy, may go
+// out as 2 parts on one plate and 1 on the next). Empty = allowed, with `count[i]` the parts of files[i] on the
+// plate; else why not.
 std::string forca_ai_grant_files_reason(const std::vector<ForcaAIGrantFile>& files,
                                         const std::vector<std::pair<std::string, int>>& objects, std::vector<int>& count);
 // A printer slot name as Forca shows it ("A4", "B1", "HT-A", "Ext", "Ext 2", any case) -> the printer's ams_id / slot_id.

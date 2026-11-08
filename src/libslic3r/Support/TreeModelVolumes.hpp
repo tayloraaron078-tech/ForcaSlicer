@@ -435,6 +435,12 @@ private:
      * move in consecutive layers if it does not have to avoid the model
      */
     coord_t m_max_move_slow;
+    // Forca: variable layer height only, empty otherwise. m_max_move, m_max_move_slow and the top / bottom Z gaps
+    // in layers, for each layer.
+    std::vector<coord_t> m_max_move_per_layer;
+    std::vector<coord_t> m_max_move_slow_per_layer;
+    std::vector<size_t>  m_z_distance_top_layers_per_layer;
+    std::vector<size_t>  m_z_distance_bottom_layers_per_layer;
     /*!
      * \brief The smallest maximum resolution for simplify
      */

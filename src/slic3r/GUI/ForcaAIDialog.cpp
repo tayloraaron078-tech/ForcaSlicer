@@ -68,9 +68,10 @@ bool ask_for_grant(wxWindow* parent, ForcaAIGrant& grant, std::vector<std::strin
     const int pad  = dlg.FromDIP(12);
     auto*     root = new wxBoxSizer(wxVERTICAL);
     auto*     intro = new wxStaticText(&dlg, wxID_ANY,
-        _L("Within this grant the AI may start prints itself, with no click from you: Forca opens its print dialog, counts "
-           "down 10 seconds (you can cancel) and presses Send. It only sends to an idle printer whose bed is clear, and only "
-           "when the print dialog has nothing to ask you. A wrong print can still damage your printer or waste filament, "
+        _L("Within this grant the AI may start prints itself, with no click from you: Forca counts down 10 seconds (you "
+           "can cancel) and sends the print - through its print dialog for a Bambu printer, by uploading and starting it for "
+           "a Klipper or Flashforge printer. It only sends to an idle printer whose bed is clear, and only when there is "
+           "nothing to ask you. A wrong print can still damage your printer or waste filament, "
            "and a printer running unattended is a fire risk: give only what you are comfortable with. The grant ends when "
            "it is used up, when time runs out, when you revoke it, choose Guarded, or restart Forca."));
     intro->Wrap(dlg.FromDIP(520));
@@ -469,7 +470,7 @@ void ForcaAIDialog::refresh()
                           (forca_ai_bed_is_clear(id) ? _L("bed marked clear") : _L("bed not marked clear"));
         for (const ForcaAIGrantFile& f : grant.files)
             grant_text += wxString("\n") + wxString(into_path(from_u8(f.path)).filename().wstring()) + ": " +
-                          wxString::Format(_L("%d of %d sent"), f.done, f.copies);
+                          wxString::Format(_L("%d of %d sent"), f.copies_sent(), f.copies);
     }
     m_grant_text->SetLabel(grant_text);
     m_grant_text->Wrap(-1); // Wrap() skips a width it already used, even for a new label

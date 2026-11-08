@@ -7,6 +7,8 @@
 #   - an existing entry with the same msgid gets the translation (and loses a "fuzzy" flag);
 #   - otherwise the entry is added right after the Orca entry named by "after" (the wording it replaced), or before the
 #     obsolete (#~) entries when there is no "after" or that anchor is gone.
+# A plural message has "msgid_plural" and, per language, a list with one translation per plural form of that catalog
+# (its Plural-Forms nplurals: 1 for ja/ko/th/vi/zh, 3 for cs/lt/pl/ru, 4 for uk); a wrong count stops the script.
 # Then msgfmt --check-format validates every catalog it changed. Rerun it after an upstream merge (take upstream's
 # .po files, then run this). -Check only reports (exit 1 if any catalog lacks a translation); check_identity.ps1 uses it.
 #
@@ -31,13 +33,23 @@ foreach ($lang in ($entries | ForEach-Object { $_.translations.PSObject.Properti
     if (-not (Test-Path -LiteralPath $po)) { Write-Host "[translations] no catalog for '$lang'"; $missing++; continue }
     $lines = [Collections.Generic.List[string]]::new([IO.File]::ReadAllText($po, $utf8) -split "`r?`n")
     $changed = $false
+    $nplurals = if (($lines -join "`n") -match 'nplurals=(\d+)') { [int]$Matches[1] } else { 2 }
 
     $tail = [Collections.Generic.List[string]]::new() # new entries without an anchor, added in one block
     foreach ($e in $entries) {
         $tr = $e.translations.$lang
         if (-not $tr) { continue }
         $idLine  = 'msgid "' + (PoEscape $e.msgid) + '"'
-        $strLine = 'msgstr "' + (PoEscape $tr) + '"'
+        # The entry's lines after its msgid: msgstr, or for a plural message msgid_plural and one msgstr[n] per plural
+        # form of the language (its translation is then a list of that many forms).
+        if ($e.msgid_plural) {
+            $forms = @($tr)
+            if ($forms.Count -ne $nplurals) { throw "[translations] $lang needs $nplurals plural form(s) for '$(Short $e.msgid)', got $($forms.Count)" }
+            $body = @('msgid_plural "' + (PoEscape $e.msgid_plural) + '"')
+            for ($n = 0; $n -lt $forms.Count; $n++) { $body += 'msgstr[' + $n + '] "' + (PoEscape $forms[$n]) + '"' }
+        } else {
+            $body = @('msgstr "' + (PoEscape $tr) + '"')
+        }
         # An obsolete (#~) entry with the same msgid would duplicate ours (msgfmt fails): drop it, comments included.
         $o = $lines.IndexOf('#~ ' + $idLine)
         if ($o -gt 0 -and -not $lines[$o - 1].StartsWith('#~ msgctxt') -and -not $Check) {
@@ -49,11 +61,11 @@ foreach ($lang in ($entries | ForEach-Object { $_.translations.PSObject.Properti
         $i = $lines.IndexOf($idLine)
         while ($i -gt 0 -and $lines[$i - 1].StartsWith('msgctxt')) { $i = $lines.IndexOf($idLine, $i + 1) } # not a homonym
         if ($i -ge 0) {
-            # Existing entry: its msgstr (plus continuation lines) must be ours, with no fuzzy flag.
-            $j = $i + 1
-            $k = $j + 1
-            while ($k -lt $lines.Count -and $lines[$k].StartsWith('"')) { $k++ }
-            $ok = ($lines[$j] -eq $strLine) -and ($k -eq $j + 1)
+            # Existing entry: its lines after the msgid (up to the blank line that ends it) must be ours, with no fuzzy flag.
+            $k = $i + 1
+            while ($k -lt $lines.Count -and $lines[$k] -ne '') { $k++ }
+            $ok = ($k - $i - 1) -eq $body.Count
+            for ($b = 0; $ok -and $b -lt $body.Count; $b++) { $ok = $lines[$i + 1 + $b] -eq $body[$b] }
             $start = $i; while ($start -gt 0 -and $lines[$start - 1].StartsWith('#')) { $start-- }
             $comments = @(); for ($c = $start; $c -lt $i; $c++) { $comments += $lines[$c] }
             $fuzzy = @($comments | Where-Object { $_ -match '^#,.*\bfuzzy\b' }).Count -gt 0
@@ -62,7 +74,7 @@ foreach ($lang in ($entries | ForEach-Object { $_.translations.PSObject.Properti
             if ($Check) { Write-Host "[translations] $lang : outdated '$(Short $e.msgid)'"; $missing++; continue }
             $keep = @($comments | Where-Object { $_ -notmatch '^#,.*\bfuzzy\b' -and $_ -ne '# AI Translated' })
             $lines.RemoveRange($start, $k - $start)
-            $lines.InsertRange($start, [string[]](@('# AI Translated') + $keep + @($idLine, $strLine)))
+            $lines.InsertRange($start, [string[]](@('# AI Translated') + $keep + @($idLine) + $body))
             $changed = $true
             continue
         }
@@ -81,9 +93,9 @@ foreach ($lang in ($entries | ForEach-Object { $_.translations.PSObject.Properti
             }
         }
         if ($at -ge 0) {
-            $lines.InsertRange($at, [string[]]@('', '# AI Translated', $idLine, $strLine))
+            $lines.InsertRange($at, [string[]](@('', '# AI Translated', $idLine) + $body))
         } else {
-            $tail.AddRange([string[]]@('# AI Translated', $idLine, $strLine, ''))
+            $tail.AddRange([string[]](@('# AI Translated', $idLine) + $body + @('')))
         }
         $changed = $true
     }

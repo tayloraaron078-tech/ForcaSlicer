@@ -255,7 +255,7 @@ std::vector<coordf_t> layer_height_profile_from_ranges(
     // The height ranges are sorted lexicographically by low / high layer boundaries.
     for (t_layer_config_ranges::const_iterator it_range = layer_config_ranges.begin(); it_range != layer_config_ranges.end(); ++ it_range) {
         coordf_t lo = it_range->first.first;
-        coordf_t hi = std::min(it_range->first.second, slicing_params.object_print_z_height());
+        coordf_t hi = std::min(it_range->first.second, slicing_params.object_print_z_uncompensated_height());
         // Forca: a range from a 3MF need not carry a layer height (the GUI always writes one); it then keeps the object's.
         const ConfigOption *range_height = it_range->second.option("layer_height");
         coordf_t height = range_height != nullptr ? range_height->getFloat() : slicing_params.layer_height;

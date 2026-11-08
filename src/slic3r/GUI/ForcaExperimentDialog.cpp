@@ -4,6 +4,7 @@
 #include "ForcaBeforeYouPrint.hpp" // forca_option_label / forca_option_value
 #include "ForcaExperiment.hpp"
 #include "ForcaPrintJournal.hpp" // forca_journal_tag_label
+#include "ForcaRecipeDialog.hpp"
 #include "GUI.hpp" // from_u8 / into_u8 / from_path / show_error / show_info
 #include "GUI_App.hpp"
 #include "GUI_ObjectList.hpp"
@@ -679,9 +680,11 @@ public:
         m_lesson      = new wxButton(this, wxID_ANY, _L("Write a lesson") + dots);
         m_apply       = new wxButton(this, wxID_ANY, _L("Apply to preset"));
         m_apply->SetToolTip(_L("Set the winning value in the preset you are editing. It isn't saved: you decide whether to save the preset."));
+        m_recipe      = new wxButton(this, wxID_ANY, _L("Make a recipe") + dots);
+        m_recipe->SetToolTip(_L("Save the winning copy's settings as new presets to print with again."));
         auto* next  = new wxButton(this, wxID_ANY, _L("Plan the next experiment") + dots);
         auto* close = new wxButton(this, wxID_CANCEL, _L("Close"));
-        for (wxButton* b : { save, m_lesson, m_apply, next })
+        for (wxButton* b : { save, m_lesson, m_apply, m_recipe, next })
             buttons->Add(b, 0, wxRIGHT, FromDIP(6));
         buttons->AddStretchSpacer(1);
         buttons->Add(close, 0);
@@ -691,6 +694,10 @@ public:
         photos->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { add_photos(); });
         m_lesson->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { write_lesson(); });
         m_apply->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { apply_to_preset(); });
+        m_recipe->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            if (save_comparison())
+                forca_make_recipe_from_experiment(this, m_folder, m_plan, m_winner->GetSelection());
+        });
         next->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
             if (!save_comparison())
                 return;
@@ -815,6 +822,7 @@ private:
     wxChoice*                  m_winner        = nullptr;
     wxButton*                  m_lesson        = nullptr;
     wxButton*                  m_apply         = nullptr;
+    wxButton*                  m_recipe        = nullptr;
     bool                       m_winner_picked = false;
     bool                       m_saved         = false;
 };

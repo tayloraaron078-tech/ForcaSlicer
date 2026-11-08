@@ -1,6 +1,7 @@
 #include "WebViewDialog.hpp"
 
 #include "CloudProvider.hpp"
+#include "ForcaHomePrinters.hpp"
 #include "I18N.hpp"
 #include "slic3r/GUI/GUI_App.hpp"
 #include "slic3r/GUI/MainFrame.hpp"
@@ -24,6 +25,7 @@
 #include "Plater.hpp"
 #include <wx/filefn.h>
 #include <wx/filename.h>
+#include <wx/filesys.h>
 #include <sstream>
 #include <string>
 #include <nlohmann/json.hpp>
@@ -89,6 +91,30 @@ static json home_page_strings()
         {"clear_all", _u8L("Clear all")},
         {"remove", _u8L("Remove")},
         {"show_in_folder", _u8L("Show in folder")},
+        // TRN Home tab: the card that opens the last project.
+        {"continue_project", _u8L("Continue where you left off")},
+        {"printers", _u8L("Printers")},
+        // TRN Home tab, a printer card's state.
+        {"printer_printing", _u8L("Printing")},
+        {"printer_paused", _u8L("Paused")},
+        {"printer_preparing", _u8L("Preparing")},
+        {"printer_idle", _u8L("Idle")},
+        {"printer_finished", _u8L("Finished")},
+        {"printer_stopped", _u8L("Stopped")},
+        {"printer_failed", _u8L("Failed")},
+        {"printer_offline", _u8L("Offline")},
+        {"printer_connecting", _u8L("Connecting...")},
+        // TRN Home tab: a printer that is reachable, while Forca has no live data from it.
+        {"printer_online", _u8L("Online")},
+        // TRN Home tab: Forca can't read the state of this kind of printer.
+        {"printer_no_status", _u8L("No status")},
+        {"printer_unknown", _u8L("Unknown")},
+        // TRN Home tab, time left of a print. %s: hours, then minutes.
+        {"time_left_hours", _u8L("%s h %s min left")},
+        // TRN Home tab, time left of a print. %s: minutes.
+        {"time_left_minutes", _u8L("%s min left")},
+        {"open_printer_web", _u8L("Open the printer's web page")},
+        {"open_printer_device", _u8L("Open in the Device tab")},
     };
 }
 
@@ -99,6 +125,24 @@ static json home_page_strings()
 bool is_local_file_url(const wxString& url)
 {
     return url.Strip(wxString::both).Lower().StartsWith("file:");
+}
+
+bool is_local_page_in(const wxString& url, const wxString& dir)
+{
+    if (!is_local_file_url(url) || dir.empty())
+        return false;
+    constexpr int norm = wxPATH_NORM_DOTS | wxPATH_NORM_ABSOLUTE;
+    const wxString file = url.Strip(wxString::both).BeforeFirst('?').BeforeFirst('#');
+    wxFileName page = wxFileSystem::URLToFileName("file:" + file.Mid(5)); // URLToFileName wants the scheme in lower case
+    wxFileName root = wxFileName::DirName(dir);
+    page.Normalize(norm);
+    root.Normalize(norm);
+    wxString path = page.GetFullPath(), prefix = root.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR);
+    if (!wxFileName::IsCaseSensitive()) {
+        path.MakeLower();
+        prefix.MakeLower();
+    }
+    return path.StartsWith(prefix);
 }
 
 
@@ -817,6 +861,11 @@ void WebViewPanel::SendRecentList(int images)
     RunScript(wxString::Format("window.postMessage(%s)", oss.str()));
 }
 
+void WebViewPanel::SendPrinterCards()
+{
+    RunScript(wxString::Format("window.postMessage(%s)", wxString::FromUTF8(forca_home_printer_cards(IsShownOnScreen()).dump())));
+}
+
 void WebViewPanel::SendDesignStaffpick(bool on)
 {
     // if (on) {
@@ -1058,7 +1107,7 @@ void WebViewPanel::OnScriptMessage(wxWebViewEvent& evt)
     // Forca: only Forca's own pages (local files under resources/web) may send requests to the app. Links and new
     // windows can load a web site into this panel, and such a page must not open files or change settings through
     // handle_web_request.
-    if (!is_local_file_url(m_browser->GetCurrentURL())) {
+    if (!is_local_page_in(m_browser->GetCurrentURL(), from_u8((boost::filesystem::path(resources_dir()) / "web").string()))) {
         BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": ignored a script message from " << m_browser->GetCurrentURL().ToUTF8().data();
         return;
     }

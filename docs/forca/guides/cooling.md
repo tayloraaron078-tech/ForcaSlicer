@@ -7,8 +7,8 @@ don't change until you set them.
 
 ## Keep the outer wall at speed: Consistent surface
 
-**Cooling slowdown logic** decides what gets slower. Like Bambu Studio, Forca shows it in **Develop** mode only (the
-mode switch at the top of the settings):
+**Cooling slowdown logic** decides what gets slower. Forca shows it in **Advanced** mode (the mode switch at the top
+of the settings); Bambu Studio keeps it in Develop mode:
 
 - **Uniform cooling** (default, as in OrcaSlicer): everything on the layer slows down together, the outer wall too.
 - **Consistent surface** (from Bambu Studio): the inner walls, infill and other features slow down first, and the

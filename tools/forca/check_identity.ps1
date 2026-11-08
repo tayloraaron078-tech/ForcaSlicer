@@ -104,6 +104,7 @@ $must = @(
     # B4: Forca links, never OrcaSlicer's tracker/releases
     @('src/slic3r/Utils/ForcaFeatures.hpp',         'constexpr const char* FORCA_REPO_URL = "https://github.com/'),
     @('src/slic3r/GUI/TroubleshootDialog.cpp',      'wxString(FORCA_REPO_URL) + "/issues/new?template=bug_report.yml"'),
+    @('src/slic3r/GUI/TroubleshootDialog.cpp',      'wxString(FORCA_REPO_URL) + "/blob/main/docs/forca/guides/README.md"'),
     @('src/slic3r/GUI/MainFrame.cpp',               'std::string(FORCA_REPO_URL) + "/issues/new/choose"'),
     @('src/slic3r/GUI/MsgDialog.cpp',               'std::string(FORCA_REPO_URL) + "/releases"'),
     @('src/slic3r/Utils/MoonrakerPrinterAgent.cpp', 'identify["params"]["client_name"] = "ForcaSlicer";'),

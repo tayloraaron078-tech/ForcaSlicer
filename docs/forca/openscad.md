@@ -24,7 +24,7 @@ file. This keeps your OpenSCAD up to date and separate from Forca.
    scroll to **Development Snapshots** and take the Windows installer. The last regular release (2021.01) is too old:
    it has neither the fast Manifold renderer nor the parameter export Forca needs.
 2. Forca finds it in the usual install folders by itself. To check, or to choose another one, open
-   **Preferences → General → OpenSCAD**:
+   **Preferences → Files → OpenSCAD**:
    - the line under the buttons shows which `openscad.exe` Forca uses and its version, or that it's too old;
    - **Browse...** picks an `openscad.exe` yourself;
    - **Find automatically** goes back to the newest one installed;

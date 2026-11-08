@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Forca - Flashforge printer</title>
-<!-- Forca: the Device tab for stock-firmware Flashforge printers. ForcaFlashforgePanel.cpp calls forcaInit() once
-     and forcaStatus() every few seconds; the buttons post {command: "forca_flashforge", action} back to it. -->
+<!-- Forca: the Device tab for stock-firmware Flashforge printers. ForcaFlashforgePanel.cpp calls forcaInit() once,
+     forcaStatus() every few seconds (with the camera's mjpg stream address) and forcaHidden() when the tab is hidden;
+     the buttons post {command: "forca_flashforge", action} back to it. -->
 <style>
   :root { --bg: #f4f6f9; --card: #ffffff; --text: #1d2430; --muted: #6b7686; --line: #dde3ea; --accent: #2b6cb0;
           --ok: #2f855a; --warn: #b7791f; --bad: #c53030; --track: #e6ebf1; }
@@ -41,6 +42,7 @@
   .notice { color: var(--muted); }
   .error { color: var(--bad); margin-top: 8px; }
   .hidden { display: none; }
+  .cam { width: 100%; margin-top: 12px; border-radius: 6px; background: #000; display: block; }
 </style>
 </head>
 <body>
@@ -67,6 +69,15 @@
     <div class="error hidden" id="message"></div>
   </div>
 
+  <div class="card hidden" id="camera">
+    <div class="head">
+      <div class="state" id="cameraLabel"></div>
+      <div class="buttons"><button id="camToggle"></button></div>
+    </div>
+    <img class="cam hidden" id="cam" alt="">
+    <div class="notice hidden" id="camNote"></div>
+  </div>
+
   <div class="card hidden" id="printer">
     <div class="temps">
       <div class="temp"><div class="label" id="nozzleLabel"></div><div class="value" id="nozzle"></div><div class="target" id="nozzleTarget"></div></div>
@@ -79,6 +90,15 @@
 </div>
 <script>
   var L = {}, last = null;
+  // The camera: camUrl is the stream the page shows; camWanted is the user's choice (Pause view / Show live view);
+  // camFailed is set when the stream did not load (an error, or no picture within CAM_WAIT_MS: the camera takes one
+  // viewer at a time and keeps others waiting), until Retry or another address. camHeld counts the pictures Forca is
+  // taking from the camera right now (Forca AI, Forca Academy): the page lets go of the stream meanwhile. After such a
+  // picture the camera takes a few seconds to free Forca's connection, so camRetries quiet tries come before camFailed.
+  var camUrl = "", camWanted = true, camFailed = false, camWait = null, camHeld = 0, camRetries = 0, camRetry = null;
+  var CAM_RETRIES = 4, CAM_RETRY_MS = 2000;
+  var BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+  var CAM_WAIT_MS = 8000;
   function $(id) { return document.getElementById(id); }
   function send(action, extra) {
     var msg = { command: "forca_flashforge", action: action };
@@ -100,6 +120,43 @@
     $("remainingLabel").textContent = L.remaining; $("nozzleLabel").textContent = L.nozzle;
     $("bedLabel").textContent = L.bed; $("chamberLabel").textContent = L.chamber;
     $("filamentLabel").textContent = L.filament;
+    $("cameraLabel").textContent = L.camera;
+  }
+  // Starts or stops the stream to match camUrl / camWanted / camFailed (an <img> keeps one stream open while it shows).
+  function updateCamera() {
+    var live = !!camUrl && camWanted && !camFailed && !camHeld;
+    if (live && $("cam").getAttribute("src") !== camUrl) {
+      $("cam").src = camUrl;
+      clearTimeout(camWait);
+      camWait = setTimeout(function () { // still no picture: another viewer has the camera, or there is none
+        if ($("cam").getAttribute("src") && !$("cam").naturalWidth) camLost();
+      }, CAM_WAIT_MS);
+    }
+    if (!live && $("cam").getAttribute("src")) { // a blank picture first, so the stream's download is dropped at once
+      $("cam").src = BLANK; $("cam").removeAttribute("src"); clearTimeout(camWait);
+    }
+    $("cam").classList.toggle("hidden", !live);
+    $("camToggle").textContent = camFailed ? L.camera_retry : (camWanted ? L.camera_pause : L.camera_play);
+    $("camNote").textContent = camFailed ? L.camera_busy : (camWanted ? "" : L.camera_paused);
+    $("camNote").classList.toggle("hidden", !$("camNote").textContent);
+  }
+  function forcaHidden() { camUrl = ""; updateCamera(); }
+  // The stream did not load: try again a little later while retries are left (after Forca's own picture), else wait
+  // for Retry.
+  function camLost() {
+    clearTimeout(camRetry);
+    if (camRetries > 0) {
+      camRetries--;
+      $("cam").src = BLANK; $("cam").removeAttribute("src"); clearTimeout(camWait);
+      camRetry = setTimeout(updateCamera, CAM_RETRY_MS);
+      return;
+    }
+    camFailed = true; updateCamera();
+  }
+  function forcaCameraHold(on) {
+    camHeld = Math.max(0, camHeld + (on ? 1 : -1));
+    if (!camHeld) { camRetries = CAM_RETRIES; clearTimeout(camRetry); camRetry = setTimeout(updateCamera, CAM_RETRY_MS); }
+    else updateCamera();
   }
   function forcaCommandFailed() { $("message").textContent = L.offline; $("message").classList.remove("hidden"); }
   function forcaStatus(s) {
@@ -107,9 +164,14 @@
     if (!s.ok) {
       $("noticeText").textContent = L[s.problem] || L.offline;
       $("notice").classList.remove("hidden"); $("job").classList.add("hidden"); $("printer").classList.add("hidden");
+      $("camera").classList.add("hidden"); camUrl = ""; updateCamera();
       return;
     }
     $("notice").classList.add("hidden"); $("job").classList.remove("hidden"); $("printer").classList.remove("hidden");
+    $("camera").classList.toggle("hidden", !s.camera);
+    if ((s.camera || "") !== camUrl) camFailed = false; // another address, or back from hidden: try again
+    camUrl = s.camera || "";
+    updateCamera();
     var active = s.state === "printing" || s.state === "paused" || s.state === "preparing";
     $("dot").className = "dot " + s.state;
     $("state").textContent = L[s.state] || s.state;
@@ -139,6 +201,12 @@
   $("stop").onclick = function () { send("stop"); };
   $("clear").onclick = function () { send("clear_plate"); };
   $("light").onclick = function () { if (last) send("light", { on: !last.light }); };
+  $("camToggle").onclick = function () {
+    if (camFailed) { camFailed = false; camWanted = true; } else camWanted = !camWanted;
+    updateCamera();
+  };
+  $("cam").onload = function () { if (camUrl && $("cam").getAttribute("src") === camUrl) camRetries = 0; }; // the stream shows
+  $("cam").onerror = function () { if ($("cam").getAttribute("src")) camLost(); };
 </script>
 </body>
 </html>

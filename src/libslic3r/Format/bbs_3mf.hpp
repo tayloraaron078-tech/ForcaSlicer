@@ -242,6 +242,11 @@ struct StoreParams
 extern bool load_bbs_3mf(const char* path, DynamicPrintConfig* config, ConfigSubstitutionContext* config_substitutions, Model* model, PlateDataPtrs* plate_data_list, std::vector<Preset*>* project_presets,
         bool* is_bbl_3mf, bool* is_orca_3mf, Semver* file_version, Import3mfProgressFn proFn = nullptr, LoadStrategy strategy = LoadStrategy::Default, BBLProject *project = nullptr, int plate_id = 0);
 
+// Forca: whether the command line refuses a 3MF as too new: one from a newer OrcaSlicer (major.minor above
+// `app_version`). A Bambu Studio project carries Bambu Studio's version, which can't be compared with Orca's, so it is
+// loaded the way the GUI loads it (Plater: is_bambu_studio_project), its unknown settings dropped.
+bool bbs_3mf_too_new_for_cli(bool is_orca_3mf, const Semver& file_version, const Semver& app_version);
+
 extern std::string bbs_3mf_get_thumbnail(const char * path);
 
 // Lightweight check: does this 3mf carry the "published" (orca_published == "1") marker? Only reads the 3D/3dmodel.model metadata node

@@ -34,8 +34,11 @@ lessons. Forca only ever proposes a judgment.
   clears them; when they don't all fit on one plate they are spread evenly over more. The experiment's folder is
   written at the same time. When a plate is sent, the print's record and the experiment are linked. "Compare the copies" (Insights, on a planned experiment) rates each copy
   better / same / worse than A with a note, takes the winner (Forca proposes the first copy rated better) and photos,
-  and offers "Write a lesson", "Apply to preset" (the winning value into the preset being edited, unsaved) and "Plan the
-  next experiment".
+  and offers "Write a lesson", "Apply to preset" (the winning value into the preset being edited, unsaved), "Make a
+  recipe" and "Plan the next experiment".
+- "Make a recipe" (the journal, on a print marked Success; and "Compare the copies") lists the settings in which the
+  print differs from its process and filament presets, each with a checkbox, and saves the ticked ones as new user
+  presets on top of those presets, then selects them. The recipe's page goes in `recipes/`.
 - The send dialogs (Bambu's print dialog and the print-host upload dialogs) show "Before you print": how earlier prints
   with the same printer and filament preset went, the settings changed and not saved, and collapsed Details (layer
   height, sparse infill pattern and density, supports, brim, nozzle, and per filament its temperatures, bed
@@ -45,12 +48,13 @@ lessons. Forca only ever proposes a judgment.
 
 ```
 AGENTS.md, INDEX.md, lessons.md        starter files, written once; never overwritten (the user owns them)
-printers/ materials/ experiments/
+printers/ materials/ experiments/ recipes/
 playbooks/<tag>.md                     a starter per journal tag, written once; never overwritten or recreated
                                        (forca/insights.json "playbooks_written" lists them, so a tag added later
                                        gets its starter in existing folders)
 prints/YYYY/YYYY-MM-DD_HHMM_<slug>/    record.json, settings.json, notes.md, thumbnail.png, photos/, camera/
 experiments/<date>_<slug>/             a planned experiment: experiment.md (the user's page) and plan.json (Forca's)
+recipes/<date>_<slug>.md               a recipe: its presets, their parents, what each changes, the print it came from
 forca/insights.json                    Forca's own state: dismissed patterns, which starters it already wrote
 ```
 
@@ -128,6 +132,16 @@ Forca AI tools.
   "Apply to preset" writes a process setting to the process preset and a Forca filament override to the filament
   setting it stands in for (retraction and z-hop as the filament's own `filament_*` override), in every slot of a list
   setting, through the tab, so it shows as an unsaved change.
+- **Recipes.** `ForcaRecipe.{hpp,cpp}` (no GUI, tested in `tests/slic3rutils/test_forca_recipe.cpp`) picks the rows
+  and writes the page; `ForcaRecipeDialog.cpp` shows them and saves the presets. The values come from the print's
+  `settings.json`, or from "unsaved_changes" for a print recorded before it; with both, the user chooses between every
+  difference from the parent as it is now and only the keys changed at send time. A filament preset takes its slot's
+  entry from the print's per-filament lists, one preset per filament the print used. Printer settings, preset
+  bookkeeping keys and private settings never go in. A value `settings.json` kept only the start of is shown and left
+  out, as is one that no longer parses. The presets are saved like Forca AI's (`save_current_preset` from a copy of
+  the parent, so a system parent becomes the `inherits`), never over an existing name, and only while the process and
+  filament presets have no unsaved changes. From an experiment the winning value replaces the print's value of that
+  setting (`forca_experiment_preset_target`). `INDEX.md`'s facts block lists the recipes.
 - **Forca AI.** With the Academy on, the AI can read the folder, list and search prints, see the Insights
   (`forca_academy_insights`: groups, open patterns, experiments) and compare two prints (`forca_academy_compare`),
   record an outcome, and write Markdown it created (lessons, playbooks, printer and material notes) or a starter file

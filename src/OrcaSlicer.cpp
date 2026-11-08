@@ -1738,6 +1738,7 @@ int CLI::run(int argc, char **argv)
 
                 //FIXME should we check the version here? // | LoadStrategy::CheckVersion ?
                 is_bbl_3mf = false;
+                bool is_orca_3mf = false; // Forca: the version check below applies to Orca-made files only
                 LoadStrategy strategy;
                 if (boost::algorithm::iends_with(file, ".3mf") && first_file) {
                     if ((clone_objects.size() > 0) || (loaded_filament_ids.size() > 0))
@@ -1755,7 +1756,7 @@ int CLI::run(int argc, char **argv)
                 // BBS: adjust whebackup
                 //LoadStrategy strategy = LoadStrategy::LoadModel | LoadStrategy::LoadConfig|LoadStrategy::AddDefaultInstances;
                 //if (load_aux) strategy = strategy | LoadStrategy::LoadAuxiliary;
-                model = Model::read_from_file(file, &config, &config_substitutions, strategy, &plate_data_src, &project_presets, &is_bbl_3mf, &file_version, nullptr, nullptr, nullptr, plate_to_slice);
+                model = Model::read_from_file(file, &config, &config_substitutions, strategy, &plate_data_src, &project_presets, &is_bbl_3mf, &file_version, nullptr, nullptr, nullptr, plate_to_slice, &is_orca_3mf);
                 if (is_bbl_3mf)
                 {
                     if (!first_file)
@@ -1773,7 +1774,8 @@ int CLI::run(int argc, char **argv)
                     }*/
 
                     Semver cli_ver = *Semver::parse(SoftFever_VERSION);
-                    if (!allow_newer_file && ((cli_ver.maj() < file_version.maj()) || ((cli_ver.maj() == file_version.maj()) && (cli_ver.min() < file_version.min())))){
+                    // Forca: like the GUI, a Bambu Studio project (Bambu Studio's version, not comparable with Orca's) is never refused.
+                    if (!allow_newer_file && bbs_3mf_too_new_for_cli(is_orca_3mf, file_version, cli_ver)) {
                         BOOST_LOG_TRIVIAL(error) << boost::format("Version Check: File Version %1% not supported by current cli version %2%")%file_version.to_string() %SoftFever_VERSION;
                         record_exit_reson(outfile_dir, CLI_FILE_VERSION_NOT_SUPPORTED, 0, cli_errors[CLI_FILE_VERSION_NOT_SUPPORTED], sliced_info);
                         flush_and_exit(CLI_FILE_VERSION_NOT_SUPPORTED);

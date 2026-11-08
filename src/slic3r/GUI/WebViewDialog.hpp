@@ -44,6 +44,8 @@ namespace GUI {
 // Forca: true for a local file:// page (Forca's own pages under resources/web), false for web sites and empty URLs.
 // WebViewPanel answers script messages only from such pages.
 bool is_local_file_url(const wxString& url);
+// Forca: true for a local file:// page inside `dir` (query and fragment aside, ".." resolved).
+bool is_local_page_in(const wxString& url, const wxString& dir);
 
 class WebViewPanel : public wxPanel, public LazyInstance<WebViewPanel>
 {
@@ -106,6 +108,8 @@ public:
 
 public:
     void SendRecentList(int images);
+    // Forca: the Home tab's printer cards (ForcaHomePrinters.hpp).
+    void SendPrinterCards();
     void SetLoginPanelVisibility(bool bshow);
     void SendDesignStaffpick(bool on);
     void OpenModelDetail(std::string id, NetworkAgent *agent);

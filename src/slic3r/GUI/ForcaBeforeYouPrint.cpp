@@ -2,6 +2,7 @@
 
 #include "ForcaAcademy.hpp"
 #include "ForcaPrintJournal.hpp"
+#include "ForcaPrintRiskDialog.hpp" // forca_plate_risks
 #include "GUI.hpp"
 #include "GUI_App.hpp"
 #include "I18N.hpp"
@@ -194,7 +195,22 @@ bool ForcaBeforeYouPrintPanel::refresh(int plate_idx, const std::string& printer
         add_text(this, m_sizer, _L("Changed and not saved:") + " " + list, wrap);
     }
 
-    // 3. Details: always offered (the values are always there), collapsed by default.
+    // 3. Print Risks with no support under them (the plate as sliced; nothing when it isn't).
+    std::vector<ForcaPlateRisk> risks;
+    if (forca_plate_risks(plate_idx, risks)) {
+        const size_t bare = size_t(std::count_if(risks.begin(), risks.end(), [](const ForcaPlateRisk& r) { return !r.risk.supported; }));
+        if (bare > 0)
+            add_text(this, m_sizer,
+                     format_wxstr(_L_PLURAL("Print Risks found %1% place on this plate that may fail, with no support under it. "
+                                            "View > Print Risks shows where and what to try.",
+                                            "Print Risks found %1% places on this plate that may fail, with no support under "
+                                            "them. View > Print Risks shows where and what to try.",
+                                            bare),
+                                  bare),
+                     wrap);
+    }
+
+    // 4. Details: always offered (the values are always there), collapsed by default.
     const bool open   = wxGetApp().app_config->get("forca_before_you_print_details") == "1";
     auto*      toggle = new HyperLink(this, (open ? wxString::FromUTF8("\xE2\x96\xBE ") : wxString::FromUTF8("\xE2\x96\xB8 ")) + _L("Details"));
     toggle->Bind(wxEVT_LEFT_DOWN, [this, open](wxMouseEvent&) {

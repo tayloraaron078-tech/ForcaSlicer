@@ -10,6 +10,7 @@
 #include "libslic3r/ForcaOpenScad.hpp"
 #include "libslic3r/Format/3mf.hpp"
 #include "libslic3r/Format/bbs_3mf.hpp"
+#include "libslic3r/Format/ProjectStrategy.hpp"
 #include "libslic3r/GCode/ThumbnailData.hpp"
 #include "libslic3r/Format/STL.hpp"
 #include "libslic3r/Utils.hpp"
@@ -17,6 +18,7 @@
 #include "libslic3r/Zipper.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Semver.hpp"
+#include "libslic3r_version.h"
 #include "libslic3r/Preset.hpp"
 #include "libslic3r/MultiNozzleUtils.hpp"
 #include "libslic3r/ProjectTask.hpp"
@@ -111,6 +113,128 @@ namespace Catch {
 #include <catch2/catch_all.hpp>
 
 using namespace Slic3r;
+
+namespace {
+
+// A plain CAD archive exercises core object names without exporter-generated part metadata.
+void write_named_cad_3mf(const std::string &path, bool project_part_names, bool leaf_names = true)
+{
+    std::string model = R"xml(<?xml version="1.0" encoding="UTF-8"?>
+<model unit="millimeter" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">
+<resources>
+<object id="1" name="Leaf2" type="model"><mesh><vertices>
+<vertex x="0" y="0" z="0"/><vertex x="1" y="0" z="0"/>
+<vertex x="0" y="1" z="0"/><vertex x="0" y="0" z="1"/>
+</vertices><triangles><triangle v1="0" v2="2" v3="1"/><triangle v1="0" v2="1" v3="3"/>
+<triangle v1="0" v2="3" v3="2"/><triangle v1="1" v2="2" v3="3"/></triangles></mesh></object>
+<object id="2" name="Leaf10" type="model"><mesh><vertices>
+<vertex x="0" y="0" z="0"/><vertex x="2" y="0" z="0"/>
+<vertex x="0" y="2" z="0"/><vertex x="0" y="0" z="2"/>
+</vertices><triangles><triangle v1="0" v2="2" v3="1"/><triangle v1="0" v2="1" v3="3"/>
+<triangle v1="0" v2="3" v3="2"/><triangle v1="1" v2="2" v3="3"/></triangles></mesh></object>
+<object id="3" name="Assembly" type="model"><components>
+<component objectid="1"/><component objectid="2" transform="1 0 0 0 1 0 0 0 1 10 0 5"/>
+</components></object>
+</resources><build><item objectid="3"/></build></model>)xml";
+    if (!leaf_names)
+        for (const std::string label : {" name=\"Leaf2\"", " name=\"Leaf10\""})
+            model.erase(model.find(label), label.size());
+    Zipper archive(path);
+    archive.add_entry("[Content_Types].xml");
+    archive << R"xml(<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>)xml";
+    archive.add_entry("_rels/.rels");
+    archive << R"xml(<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>)xml";
+    archive.add_entry("3D/3dmodel.model", model.data(), model.size());
+    if (project_part_names) {
+        // Conflicting names prove that project metadata takes priority over core mesh labels.
+        archive.add_entry("Metadata/model_settings.config");
+        archive << R"xml(<?xml version="1.0"?><config><object id="3">
+<metadata key="name" value="ProjectAssembly"/>
+<part id="1" subtype="normal_part"><metadata key="name" value="UserPartA"/></part>
+<part id="2" subtype="normal_part"><metadata key="name" value="UserPartB"/></part>
+</object></config>)xml";
+    }
+    archive.finalize();
+}
+
+bool load_named_cad_3mf(const std::string &path, Model &model, LoadStrategy options)
+{
+    DynamicPrintConfig config;
+    ConfigSubstitutionContext substitutions(ForwardCompatibilitySubstitutionRule::Enable);
+    PlateDataPtrs plates;
+    std::vector<Preset *> presets;
+    bool is_bambu = false;
+    bool is_orca = false;
+    Semver version;
+    const bool loaded = load_bbs_3mf(path.c_str(), &config, &substitutions, &model, &plates,
+        &presets, &is_bambu, &is_orca, &version, nullptr, options);
+    release_PlateData_list(plates);
+    for (Preset *preset : presets)
+        delete preset;
+    return loaded;
+}
+
+} // namespace
+
+TEST_CASE("CAD 3MF imports leaf names only when original names are enabled", "[3mf][OriginalNames]")
+{
+    const bool keep_names = GENERATE(false, true);
+    ScopedSlic3rTemporaryDir temporary_dir("orca_cad_names");
+    ScopedTemporaryFile file(".3mf");
+    write_named_cad_3mf(file.string(), false);
+    LoadStrategy options = LoadStrategy::LoadModel | LoadStrategy::AssembleParts;
+    if (keep_names)
+        options = options | LoadStrategy::KeepOriginalNames;
+    Model model;
+    REQUIRE(load_named_cad_3mf(file.string(), model, options));
+    REQUIRE(model.objects.size() == 1);
+    CHECK(model.objects.front()->name == "Assembly");
+    const auto &parts = model.objects.front()->volumes;
+    REQUIRE(parts.size() == 2);
+    CHECK(parts[0]->name == (keep_names ? "Leaf2" : "Assembly"));
+    CHECK(parts[1]->name == (keep_names ? "Leaf10" : "Assembly_2"));
+    // Different shapes and offsets prove name-to-geometry correspondence, not just a name set.
+    TriangleMesh first(parts[0]->mesh());
+    TriangleMesh second(parts[1]->mesh());
+    first.transform(parts[0]->get_matrix());
+    second.transform(parts[1]->get_matrix());
+    CHECK_THAT(first.bounding_box().size().x(), Catch::Matchers::WithinAbs(1.0, 1e-6));
+    CHECK_THAT(second.bounding_box().size().x(), Catch::Matchers::WithinAbs(2.0, 1e-6));
+    CHECK_THAT(second.bounding_box().min.x() - first.bounding_box().min.x(), Catch::Matchers::WithinAbs(10.0, 1e-6));
+    CHECK_THAT(second.bounding_box().min.z() - first.bounding_box().min.z(), Catch::Matchers::WithinAbs(5.0, 1e-6));
+}
+
+TEST_CASE("A CAD 3MF without part labels keeps Orca's part names", "[3mf][OriginalNames]")
+{
+    ScopedSlic3rTemporaryDir temporary_dir("orca_cad_unnamed");
+    ScopedTemporaryFile file(".3mf");
+    write_named_cad_3mf(file.string(), false, false);
+    Model model;
+    REQUIRE(load_named_cad_3mf(file.string(), model,
+        LoadStrategy::LoadModel | LoadStrategy::AssembleParts | LoadStrategy::KeepOriginalNames));
+    REQUIRE(model.objects.size() == 1);
+    REQUIRE(model.objects.front()->volumes.size() == 2);
+    CHECK(model.objects.front()->volumes[0]->name == "Assembly");
+    CHECK(model.objects.front()->volumes[1]->name == "Assembly_2");
+}
+
+TEST_CASE("3MF project part names take priority over CAD mesh names", "[3mf][OriginalNames]")
+{
+    const bool keep_names = GENERATE(false, true);
+    ScopedSlic3rTemporaryDir temporary_dir("orca_project_names");
+    ScopedTemporaryFile file(".3mf");
+    write_named_cad_3mf(file.string(), true);
+    LoadStrategy options = LoadStrategy::LoadModel;
+    if (keep_names)
+        options = options | LoadStrategy::KeepOriginalNames;
+    Model model;
+    REQUIRE(load_named_cad_3mf(file.string(), model, options));
+    REQUIRE(model.objects.size() == 1);
+    CHECK(model.objects.front()->name == "ProjectAssembly");
+    REQUIRE(model.objects.front()->volumes.size() == 2);
+    CHECK(model.objects.front()->volumes[0]->name == "UserPartA");
+    CHECK(model.objects.front()->volumes[1]->name == "UserPartB");
+}
 
 
 SCENARIO("Reading 3mf file", "[3mf]") {
@@ -484,6 +608,46 @@ static bool load_project(const std::string& path, Model& model, const ScopedTemp
                                      &is_orca_3mf, &file_version, nullptr, LoadStrategy::LoadModel | LoadStrategy::LoadConfig);
     release_PlateData_list(plates);
     return loaded;
+}
+
+TEST_CASE("A single imported object retains hidden named bodies through cloning and project reload", "[3mf][OriginalNames]")
+{
+    const bool hidden = GENERATE(false, true);
+    ScopedSlic3rTemporaryDir temporary_dir("orca_hidden_parts");
+    ScopedTemporaryDir backup_dir("orca_hidden_parts_reload");
+    ScopedTemporaryFile file(".3mf");
+    Model source;
+    ModelObject *object = source.add_object();
+    object->name = "Assembly";
+    object->add_volume(make_cube(1., 1., 1.))->name = "FirstBody";
+    object->add_volume(make_cube(2., 2., 2.))->name = "SecondBody";
+    object->add_instance();
+    object->imported_parts_hidden = hidden;
+
+    // Cloning must preserve the wrapper without collapsing its underlying independent bodies.
+    Model cloned(source);
+    REQUIRE(cloned.objects.size() == 1);
+    CHECK(cloned.objects.front()->imported_parts_hidden == hidden);
+    REQUIRE(cloned.objects.front()->volumes.size() == 2);
+    CHECK(cloned.objects.front()->volumes[0]->name == "FirstBody");
+    CHECK(cloned.objects.front()->volumes[1]->name == "SecondBody");
+    store_project(cloned, file.string(), SaveStrategy::Zip64 | SaveStrategy::Silence);
+    bool metadata_present = false;
+    rewrite_3mf_entries(file.string(), [&](std::string &name, std::string &data) {
+        if (boost::algorithm::ends_with(name, "model_settings.config"))
+            metadata_present = data.find("orca:imported_parts_hidden") != std::string::npos;
+        return false;
+    });
+    CHECK(metadata_present == hidden);
+
+    Model restored;
+    REQUIRE(load_project(file.string(), restored, backup_dir));
+    REQUIRE(restored.objects.size() == 1);
+    CHECK(restored.objects.front()->imported_parts_hidden == hidden);
+    CHECK_FALSE(restored.objects.front()->config.has("orca:imported_parts_hidden"));
+    REQUIRE(restored.objects.front()->volumes.size() == 2);
+    CHECK(restored.objects.front()->volumes[0]->name == "FirstBody");
+    CHECK(restored.objects.front()->volumes[1]->name == "SecondBody");
 }
 
 TEST_CASE("A plate's G-code statistics are stored next to its G-code", "[3mf]")
@@ -2748,4 +2912,49 @@ TEST_CASE("An object's OpenSCAD link survives a 3MF round-trip on the same objec
     CHECK(back.file == link.file);
     CHECK(back.scad == link.scad);
     CHECK(back.values == link.values);
+}
+
+// The command line used to compare every project's version with Orca's own, so a Bambu Studio 2.6+ project (which
+// carries Bambu Studio's version) was refused as "too new". Like the GUI, only an Orca-made file is checked.
+TEST_CASE("The command line refuses a 3MF from a newer OrcaSlicer but not a Bambu Studio project", "[3mf]")
+{
+    const std::string orca_tag = "<metadata name=\"OrcaSlicer\">" SoftFever_VERSION "</metadata>";
+    const Semver      app      = *Semver::parse(SoftFever_VERSION);
+    ScopedTemporaryFile temp(".3mf");
+    store_painted_cube(temp.string());
+
+    auto read = [&](bool& is_orca_3mf, Semver& file_version) {
+        DynamicPrintConfig        config;
+        ConfigSubstitutionContext ctxt{ ForwardCompatibilitySubstitutionRule::Enable };
+        PlateDataPtrs             plates;
+        std::vector<Preset*>      project_presets;
+        bool                      is_bbl_3mf = false;
+        Model model = Model::read_from_file(temp.string(), &config, &ctxt, LoadStrategy::LoadModel | LoadStrategy::LoadConfig, &plates,
+                                            &project_presets, &is_bbl_3mf, &file_version, nullptr, nullptr, nullptr, 0, &is_orca_3mf);
+        release_PlateData_list(plates);
+        REQUIRE(is_bbl_3mf);
+        REQUIRE(model.objects.size() == 1);
+    };
+    bool   is_orca_3mf = false;
+    Semver file_version;
+
+    SECTION("a file from this version") {
+        read(is_orca_3mf, file_version);
+        CHECK(is_orca_3mf);
+        CHECK_FALSE(bbs_3mf_too_new_for_cli(is_orca_3mf, file_version, app));
+    }
+    SECTION("a file from a newer OrcaSlicer") {
+        REQUIRE(replace_in_3mf_entry(temp.string(), "3dmodel.model", orca_tag, "<metadata name=\"OrcaSlicer\">99.0.0</metadata>"));
+        read(is_orca_3mf, file_version);
+        CHECK(is_orca_3mf);
+        CHECK(bbs_3mf_too_new_for_cli(is_orca_3mf, file_version, app));
+    }
+    SECTION("a project from a newer Bambu Studio") {
+        REQUIRE(replace_in_3mf_entry(temp.string(), "3dmodel.model", orca_tag, ""));
+        REQUIRE(replace_in_3mf_entry(temp.string(), "3dmodel.model", "BambuStudio-" SLIC3R_VERSION, "BambuStudio-99.09.00.10"));
+        read(is_orca_3mf, file_version);
+        CHECK_FALSE(is_orca_3mf);
+        CHECK(file_version.maj() == 99); // newer than Orca's own version, and still loaded
+        CHECK_FALSE(bbs_3mf_too_new_for_cli(is_orca_3mf, file_version, app));
+    }
 }

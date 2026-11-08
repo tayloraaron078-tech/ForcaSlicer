@@ -20,7 +20,8 @@ Click **Forca AI** in the top bar.
 
 1. Tick **Let an AI connect to Forca**. It connects only from this computer, with the key shown in the window.
 2. Connect your AI app: pick it under **Connect from** and follow the steps below.
-3. Choose **Printers the AI may use**; it can't see the others.
+3. Choose **Printers the AI may use**; it can't see the others. The list has your Bambu Lab printers and every
+   printer in Forca's printer settings that has a print host (Klipper, Flashforge, OctoPrint...).
 
 **Make a new key** disconnects every AI using the old key; connect them again with the new command or settings.
 One key serves every Forca on this computer, so the installed Forca and a second copy share it.
@@ -129,7 +130,15 @@ external spool for every filament, and Forca checks the material. Then it opens 
 seconds (you can cancel) and presses Send. If the dialog would ask you to confirm a warning, the send stops instead.
 
 A grant ends when it's used up, at its time limit, on **Revoke**, when you choose Guarded, or when Forca restarts. The
-top bar shows how many prints are left. Grants work with Bambu Lab printers only for now.
+top bar shows how many prints are left.
+
+**Klipper and Flashforge printers.** The AI reads their status and camera, may pause them (where you ticked it) and
+can print on them under a grant. A Flashforge printer needs its serial number and access code in its connection
+settings. Under a grant, such a printer must be the one Forca sends to (selected in the Prepare tab), idle, with its bed
+clear, and the plate must use one filament (on a Flashforge printer, of the type that is loaded). There is no print
+dialog to wait for: after the 10-second countdown Forca uploads the file and starts the print, with the send dialog's
+usual choices (Flashforge: leveling as you last chose it, no time-lapse). Printers with other print hosts can be
+shared too, but the AI can only ask you to print on them.
 
 > The camera can't see the whole bed on every printer (an H2S camera, for one, misses the strip nearest the door).
 > Turn on the camera bed check only if you're fine with that; your own **Bed is clear** click has no blind spot.

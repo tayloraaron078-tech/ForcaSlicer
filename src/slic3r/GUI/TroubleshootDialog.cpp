@@ -259,6 +259,15 @@ TroubleshootDialog::TroubleshootDialog()
     video_btn->SetCanFocus(false);
     video_btn->Bind(wxEVT_LEFT_DOWN, ([video_url](auto& e) {wxLaunchDefaultBrowser(video_url);}));
 
+    // Forca: the wiki and video above are OrcaSlicer's and cover what Forca shares with it; Forca's own guides cover
+    // what it adds.
+    auto forca_guides_btn = new Button(this, _L("Forca guides"));
+    auto forca_guides_url = wxString(FORCA_REPO_URL) + "/blob/main/docs/forca/guides/README.md";
+    forca_guides_btn->SetToolTip(_L("Guides to the features Forca adds") + "\n" + forca_guides_url);
+    forca_guides_btn->SetStyle(ButtonStyle::Regular, ButtonType::Window);
+    forca_guides_btn->SetCanFocus(false);
+    forca_guides_btn->Bind(wxEVT_BUTTON, [forca_guides_url](wxCommandEvent &) { wxLaunchDefaultBrowser(forca_guides_url); });
+
     // RIGHT SIZER //////////////////////
 
     auto create_title = [this](wxString title) {
@@ -389,6 +398,7 @@ TroubleshootDialog::TroubleshootDialog()
     wxBoxSizer *link_btn_sizer = new wxBoxSizer(wxHORIZONTAL);
     link_btn_sizer->Add(wiki_btn);
     link_btn_sizer->Add(video_btn, 0, wxLEFT, FromDIP(10));
+    link_btn_sizer->Add(forca_guides_btn, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, FromDIP(10));
 
     left_sizer->Add(m_header_logo     , 0, wxEXPAND | wxALIGN_CENTER);
     left_sizer->Add(logo_line         , 0, wxEXPAND       | wxTOP, FromDIP(12));
