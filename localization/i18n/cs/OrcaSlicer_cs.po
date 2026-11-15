@@ -17911,6 +17911,10 @@ msgstr "Čas výměny nástroje"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Doba potřebná k výměně nástrojů. Obvykle platí pro měniče nástrojů nebo zařízení s více nástroji. U jedné trysky s více materiály je to obvykle 0. Pouze pro statistiku."
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Doba potřebná k výměně nástroje. Obvykle platí pro měniče nástrojů nebo stroje s více nástroji. U strojů s jedním extruderem a více materiály bývá 0. Používá se pro odhad doby tisku a u měničů nástrojů se započítává do minimální doby vrstvy."
+
 msgid "Bed temperature type"
 msgstr "Typ teploty podložky"
 
@@ -42959,6 +42963,405 @@ msgstr "Kamera Snapmaker U1 pořizuje s továrním firmwarem jen statické sním
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Zobrazit kameru U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Neplanární vyhlazování nebylo použito. Potřebuje obrys tiskové hlavy v nastavení tiskárny a jediný objekt na desce, bez podpěr, základní věže, ochranného štítu a okraje vyššího než jedna vrstva."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Část modelu je strmější, než může tisková hlava sledovat, což je asi %1%°. Neplanární vyhlazování tam nebylo použito."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Neplanární horní povrch nebyl použit. Potřebuje obrys tiskové hlavy v nastavení tiskárny a jediný objekt na desce, bez podpěr, základní věže, ochranného štítu a okraje vyššího než jedna vrstva."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Část modelu je strmější, než může tisková hlava sledovat, což je asi %1%°. Neplanární horní povrch tam nebyl použit."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Průměr špičky trysky"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Průměr ploché části na samé špičce trysky. Slouží k udržení tiskové hlavy mimo výtisk při neplanárním tisku."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Průměr kužele trysky"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Průměr trysky tam, kde končí její kužel: horní okraj kužele nebo spodní okraj silikonové ponožky. 0 znamená, že obrys tiskové hlavy není znám a neplanární tisk není k dispozici."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Výška kužele trysky"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Výška nad špičkou trysky, ve které se měří průměr kužele trysky."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Vzdálenost k tělu tiskové hlavy"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Vzdálenost od středu trysky k nejbližší části tiskové hlavy, která visí nízko vedle ní: vzduchovod ventilátoru, kryt nebo topný blok. 0 znamená, že nic nevisí níž než horní okraj kužele trysky."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Výška těla tiskové hlavy"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Výška nejnižší části tiskové hlavy vedle trysky nad špičkou trysky."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Rezerva vůle tiskové hlavy"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Vzdálenost udržovaná mezi tiskovou hlavou a výtiskem při neplanárním tisku, navíc k obrysu výše. Pokrývá to, co obrys nezahrnuje: chybu měření a rohy vrstev."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Neplanární vyhlazování"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Vyhladí mírný svah jedním průchodem, který sleduje povrch modelu napříč vrstvami, místo aby vyhladil schod každé vrstvy naplocho. Tryska klesá vedle již vytištěného materiálu, proto to potřebuje obrys tiskové hlavy v nastavení tiskárny a používá se jen tam, kde obrys ukazuje, že hlava zůstane volná. Potřebuje jediný objekt na desce, bez podpěr a základní věže."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Neplanární horní povrch"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Vytiskne horní povrch mírného svahu jako jednu slupku, která sleduje povrch modelu, místo schodů jeho vrstev. Vrstvy pod ní končí o vrstvu níž a slupka se vytiskne přes ně, když je hotová poslední vrstva svahu. Tryska klesá vedle již vytištěného materiálu, proto to potřebuje obrys tiskové hlavy v nastavení tiskárny a používá se jen tam, kde obrys ukazuje, že hlava zůstane volná. Potřebuje jediný objekt na desce, bez podpěr a základní věže. Experimentální."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Jiná aplikace (MCP, místní program)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Modely, které AI může náhodně vybrat:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Vestavěné testovací modely Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Vybrat složku..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Použít vestavěné"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Vyberte složku s modely, ze kterých může AI vybírat"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Nainstalovat NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Stáhne NumPy z internetu (pypi.org) do Pythonu Forca, pro skripty, které AI spouští na úrovni Pokročilé, a pro pluginy."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca stáhne NumPy z internetu (pypi.org) a přidá ho do Pythonu Forca, kde ho mohou používat skripty AI i vaše pluginy. Pokračovat?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy se nepodařilo nainstalovat:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy pro skripty AI v Pythonu: instaluje se..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy pro skripty AI v Pythonu: nainstalováno"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy pro skripty AI v Pythonu: nenainstalováno"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Pro aplikaci, která spouští jen místní servery MCP (\"command\", ne adresa): program forca-mcp od Forca předává její zprávy Forca AI, bez potřeby Node.js. Přidejte níže uvedený záznam \"forca\" do nastavení \"mcpServers\" aplikace. Klíč si najde sám, takže nový klíč zde nevyžaduje žádnou změnu."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Rizika tisku našla na této podložce %1% místo, které může selhat. Zobrazit > Rizika tisku ukáže kde a co zkusit."
+msgstr[1] "Rizika tisku našla na této podložce %1% místa, která mohou selhat. Zobrazit > Rizika tisku ukáže kde a co zkusit."
+msgstr[2] "Rizika tisku našla na této podložce %1% míst, která mohou selhat. Zobrazit > Rizika tisku ukáže kde a co zkusit."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Zpráva o desce: žádná varování."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Zpráva o desce: %1% varování."
+msgstr[1] "Zpráva o desce: %1% varování."
+msgstr[2] "Zpráva o desce: %1% varování."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Otevřít zprávu o desce"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Část desky je mimo tisknutelnou oblast. Přesuňte objekty na podložku."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Objekty jsou vysoké %1% mm, víc než tisknutelná výška (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Objekty jsou vysoké %1% mm, blízko tisknutelné výšky (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Objekt je %1% mm od okraje podložky, kde první vrstva u mnoha tiskáren drží nejméně."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "Výška vrstvy %1% mm je nad %2% mm, nejvíc, co tryska %3% mm dobře vytiskne: vrstvy nemusí držet k sobě."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "Výška první vrstvy %1% mm je nad %2% mm, nejvíc, co tryska %3% mm dobře vytiskne: nemusí držet na podložce."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: teplota trysky %2% °C je mimo doporučený rozsah filamentu %3% až %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Teploty trysky filamentů se liší o %1% °C. Ověřte, že se dají tisknout spolu."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Teploty podložky filamentů na této desce se liší o %1% °C; podložka může mít jen jednu z nich."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "Nalezeno %1% riziko"
+msgstr[1] "Nalezena %1% rizika"
+msgstr[2] "Nalezeno %1% rizik"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Tenké a vysoké"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Malá dosedací plocha"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Krátké vrstvy"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% neřešeno."
+msgstr[1] "%1% neřešena."
+msgstr[2] "%1% neřešeno."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Zpráva o desce"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Kopírovat jako text"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Zpráva o desce je jen pro tisk FFF."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Deska %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Tato deska je prázdná."
+
+# AI Translated
+msgid "Checks"
+msgstr "Kontroly"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Nic k upozornění."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Nic k upozornění. Slicujte desku, aby se přidaly i vlastní kontroly sliceru."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Slicujte desku, aby se zkontrolovala rizika."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Tlačítko Rizika tisku ukáže kde a co zkusit."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Slicujte desku, abyste viděli dobu tisku a hmotnost."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Doba tisku:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Náklady:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Vrstvy:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Výměny filamentu:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Pozice:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "střed na X %1%, Y %2% (střed podložky X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Podložka:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objekty:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Projekt má %1% desku; tato zpráva pokrývá jednu."
+msgstr[1] "Projekt má %1% desky; tato zpráva pokrývá jednu."
+msgstr[2] "Projekt má %1% desek; tato zpráva pokrývá jednu."
+
+# AI Translated
+msgid "Process:"
+msgstr "Proces:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Změněno a neuloženo"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Žádné. Předvolby jsou tak, jak byly uloženy."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm široké"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² na desce"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s na vrstvu"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Límec nebo raft"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Tento díl je asi %1% mm široký a %2% mm vysoký. Tryska ho může rozkývat nebo shodit. Tiskněte pomaleji, tiskněte několik kopií spolu, přidejte límec nebo vedle něj přidejte podpůrnou stěnu."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Jen %1% mm² tohoto %2% mm vysokého objektu se dotýká desky. Může se uvolnit nebo převrhnout."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Límec nebo raft ho udrží."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Přidejte límec (Ostatní > Typ límce), nebo otočte model tak, aby k podložce směřovala větší strana."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Tyto vrstvy se tisknou už za %1% s, méně než je čas vrstvy filamentu (%2% s), takže nemusí vychladnout a mohou se prohnout nebo zkroutit. Vytiskněte vedle druhou kopii, nebo snižte minimální rychlost pro chlazení."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Celá deska na první pohled: kontroly, doba tisku a hmotnost, velikost a pozice, klíčová nastavení a neuložené změny."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Celá deska"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Vypíše, kde může slicovaná deska selhat: převisy, dlouhé můstky, díly začínající ve vzduchu, tenké vysoké díly, malé dosedací plochy a vrstvy příliš krátké na vychladnutí."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Zpráva o desce"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Aktuální deska na první pohled: kontroly, doba tisku a hmotnost, velikost a pozice, klíčová nastavení a neuložené změny."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Zaškrtněte, aby tlačítka \"Open in OrcaSlicer\" na webech s modely otevíraly model ve Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Obrys tiskové hlavy"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Zobrazit možnosti při importu souboru STEP"

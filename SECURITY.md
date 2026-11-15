@@ -40,6 +40,16 @@ misuse it) can't cost you files or start a print.
   time limit, on Revoke, on choosing Guarded, or when Forca restarts. The top bar shows how many prints are left.
   A grant can also name the files to print: then Forca sends only plates whose every object was imported from those
   files (by each object's source file), never more copies than the grant still owes.
+- **Python scripts (Advanced only).** At Advanced the AI can run a Python script inside Forca (`forca_run_python`),
+  with the plugin API Forca's plugins use. The script runs under the plugin audit hook with limits no permission or
+  answer of yours can lift: it writes, creates and deletes files only in its own new folder
+  (`Documents\Forca AI\Scripts\<date time>`, where the script itself is kept too), and never uses the network,
+  starts a program or starts a thread. Reading a file outside Forca's own folders asks you first, as for a plugin. The
+  plugin API has nothing that prints, so the print rules above hold. A script is stopped after its time limit (up to
+  5 minutes; a long call into compiled code finishes first). It is an audit-hook policy, not an operating-system
+  sandbox: like a plugin, the script runs inside Forca with your user account's rights. NumPy is not part of Forca's
+  Python and no script can install it: only your click on **Install NumPy** in the Forca AI window downloads it, from
+  pypi.org, into the package folder Forca's plugins share.
 - **Printers are opt-in.** The AI sees only printers you tick. For those it can read status and take a camera
   snapshot. Pausing a failing print needs a second, separate tick; it may resume only its own pause.
 - **No secrets to the AI.** Printer access codes, passwords, API keys and printer network addresses are never

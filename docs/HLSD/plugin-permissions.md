@@ -100,6 +100,12 @@ order:
    denied filename, or whose path contains a denied keyword, is denied. This check runs
    before allowed roots, before a granted operation and before full access, so no grant
    can make a denied path reachable.
+   **Forca AI scripts.** In the scope of `kForcaAIScriptKey` (the scripts Forca AI runs with
+   `forca_run_python`), a network, process or threading event is then denied, and so is a
+   write, create or delete whose target is not inside a writable root of the current scope
+   (the script's own folder; global roots such as `data_dir()` do not count). Nothing later
+   in this order (a running operation, a grant, a prompt) can allow these. Reads continue
+   below as for any plugin.
 2. **Covered by a granted operation.** When a granted root operation is still running,
    nested events raised through its standard-library frames are allowed without another
    prompt. The coverage is bounded to the operation frame and does not extend to plugin
@@ -222,7 +228,10 @@ grants while updating install metadata, the enabled flag, and capability flags.
 The Plugins dialog edits the same sidecar, including while the plugin is loaded or loading.
 Each committed edit is applied immediately to the latest stored state, preserving unrelated
 permissions, install metadata, the enabled flag, and capability flags. Concurrent changes to
-the same permission take effect in write order. The dialog validates added or changed
+the same permission take effect in write order. An open Permissions tab merges a grant made
+outside the dialog into its displayed rows. Unsaved edits identify their original value, including
+when the edited text matches another grant. If the original grant disappears, the edit stays visible
+as no longer granted and can be added as a new grant or discarded. The dialog validates added or changed
 targets; unchanged entries, including grants written by an older release, are carried across
 byte-for-byte. New filesystem targets must be absolute on the current
 platform: a POSIX path starts at `/`, and a Windows path names a drive plus root or a UNC

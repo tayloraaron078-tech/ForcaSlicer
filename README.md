@@ -28,21 +28,28 @@ Orca a great slicer and adds:
    exactly where you choose, instead of everywhere.
 2. **A guided Calibration Wizard** — take a filament, or your printer, from untuned to calibrated, step by step,
    inside the slicer.
-3. **Forca Academy (optional)** — a print journal that records every print you send, how it went, and pictures
+3. **Print Risks and the plate report** — before you print, see where the sliced plate may fail (overhangs, long
+   bridges, parts in mid-air, thin tall parts, small footprints, layers too short to cool) and what to try, and the
+   whole plate on one page: checks, time, weight, settings and unsaved changes.
+4. **Nonplanar ironing and top surface (experimental)** — iron a gentle slope in one pass that follows the model,
+   or print its top as one smooth skin, wherever the printhead stays clear of the print.
+5. **Forca Academy (optional)** — a print journal that records every print you send, how it went, and pictures
    from the printer's camera, as plain files on your computer.
-4. **Bambu Studio's extra settings** — Bambu Lab profiles and Bambu Studio projects keep settings that OrcaSlicer
-   drops, such as Bambu's smarter infill retraction.
-5. **Open Bamboo Networking (optional)** — a one-click switch to an open-source replacement for Bambu Lab's network
+6. **Bambu Studio's extra settings** — Bambu Lab profiles and Bambu Studio projects keep settings that OrcaSlicer
+   drops, such as Bambu's smarter infill retraction, and projects saved in Forca open in Bambu Studio.
+7. **Open Bamboo Networking (optional)** — a one-click switch to an open-source replacement for Bambu Lab's network
    plug-in.
-6. **Faster toolpaths** — less travel between parts of a layer, and more accurate cooling on small layers.
-7. **More for non-Bambu printers** — a status page for stock Flashforge printers, and Fluidd / Mainsail found for you
-   on Klipper printers.
-8. **Forca AI (experimental, optional)** — let *your own* AI assistant, such as Claude, work in the slicer with you,
-   under safety rules built into Forca. **Forca has no AI built in:** no AI model, no AI account, nothing sent to an
-   AI service. If you don't bring one, there is no AI.
-9. **OpenSCAD files** — open a `.scad` model directly, change its Customizer parameters and render it again in place,
-   edit it in OpenSCAD or a small built-in editor, and get its colours as filaments. Forca uses your own OpenSCAD.
-10. **Filament profile import with a review** — bring filament profiles from OrcaSlicer, Bambu Studio and Forca in,
+8. **Faster toolpaths** — less travel between parts of a layer, and cooling that times each layer as the Preview
+   does.
+9. **More for non-Bambu printers** — a status page and camera for stock Flashforge printers, the Snapmaker U1's
+   camera on its stock firmware, Fluidd / Mainsail found for you on Klipper printers, and toolchanger fixes.
+10. **Forca AI (experimental, optional)** — let *your own* AI assistant, such as Claude, work in the slicer with you,
+    under safety rules built into Forca. **Forca has no AI built in:** no AI model, no AI account, nothing sent to an
+    AI service. If you don't bring one, there is no AI.
+11. **OpenSCAD files** — open a `.scad` model directly, change its Customizer parameters and render it again in
+    place, edit it in OpenSCAD or a small built-in editor, and get its colours as filaments. Forca uses your own
+    OpenSCAD.
+12. **Filament profile import with a review** — bring filament profiles from OrcaSlicer, Bambu Studio and Forca in,
     see what each one changes first, and repair presets whose base is gone.
 
 Plus a set of smaller changes, listed [at the end of this section](#smaller-changes). Projects (`.3mf`) and
@@ -82,9 +89,18 @@ A per-filament guided flow in its own tab: **Temperature → Max Volumetric Spee
   
 ## Print Risks
 **View → Print Risks** lists where the sliced plate may fail: overhangs that reach farther than the support threshold
-angle allows, bridges longer than Max bridge length, and parts that start in mid-air, each with whether support is
-printed under it. Select one to see what to try and jump to its layer; numbered markers show them on the Preview.
-"Before you print" says how many have no support under them. **[The Print Risks guide](docs/forca/guides/print-risks.md)**
+angle allows, bridges longer than Max bridge length, parts that start in mid-air, thin tall parts, small footprints
+and layers too short to cool, each with whether support (or a brim) takes care of it. Select one to see what to try
+and jump to its layer; numbered markers show them on the Preview. The **Plate report** (View → Plate Report) puts the
+whole plate on one page: fixed-rule checks, print time and weight, size and position, key settings and unsaved
+changes. "Before you print" counts both. **[The Print Risks guide](docs/forca/guides/print-risks.md)**
+
+## Nonplanar ironing and top surface (experimental)
+On a gentle slope, **Nonplanar ironing** irons all the layer steps in one pass that follows the model, and
+**Nonplanar top surface** prints the top of the slope as one skin over them (Quality > Ironing). Both need the
+printhead's outline in the printer settings, so Forca knows how steep a slope the nozzle can follow without the
+printhead touching the print (filled in for the Flashforge Adventurer 5M), and they warn where a slope is too steep.
+One object per plate, no supports. **[The nonplanar guide](docs/forca/guides/nonplanar.md)**
 
 ## Forca Academy (print journal, off by default)
 Turn it on in **Preferences → Forca Academy** and every print Forca sends gets its own folder in
@@ -153,9 +169,10 @@ Lab's plug-in stays the default, and if it ever crashes Forca, the Device tab of
 ## Faster toolpaths
 - **Shorter travel moves:** Forca orders islands, infill and support so the nozzle travels less between them (up to
   2.5% less travel on test models; print time is never longer).
-- **More accurate minimum layer time:** the cooling slowdown counts the time spent accelerating and braking, so small
-  layers get the cooling time they're set to without being slowed more than needed. A `G4` dwell in your custom
-  G-code counts toward that layer time too.
+- **More accurate minimum layer time:** the cooling slowdown times each layer as the Preview does, acceleration and
+  braking included, so small layers get the cooling time they're set to without being slowed more than needed. A
+  `G4` dwell in your custom G-code counts toward that layer time too, and so does the tool change time on a
+  toolchanger.
 
 ## Non-Bambu printers
 - **Stock Flashforge printers** (Adventurer 5M / 5X ...) have no web interface, so their Device tab used to show
@@ -168,6 +185,9 @@ Lab's plug-in stays the default, and if it ever crashes Forca, the Device tab of
   until now only Snapmaker's own apps did. Forca does it while the U1's Device tab is open, so Fluidd shows the camera
   live, and Forca AI and Forca Academy get fresh pictures from it. The first time, Forca shows the one Fluidd setting
   it needs.
+- **Toolchangers:** the part fan is set again after every tool change, so the new tool gets it (firmware that
+  doesn't carry the fan over left it at the old tool's speed), and a tool parked at its idle temperature heats up
+  again when it is picked. The tool change time counts toward the minimum layer time.
 - **Filament sync from Happy Hare and Moonraker lane data** (*experimental*) includes an OrcaSlicer fix that isn't
   merged upstream yet, for Happy Hare printers whose lane data is still empty; a lane's own filament id picks the preset. On some setups (KX-Bridge) filaments can still land in the wrong slots or come in as generic
   presets; a fix is in testing.
@@ -179,8 +199,10 @@ and Forca works exactly like a slicer with no AI. You choose which AI to use (Cl
 other app on your computer that supports MCP, with a cloud or local model), and your account and data stay with that app.
 
 When you do turn it on, it lets an AI assistant (Claude Code, or any app that speaks MCP) see and operate Forca — load and arrange models,
-choose presets, add support regions, slice and read the results (including the Print Risks list), save a copy. For printers you choose, it can read
-status and take a camera snapshot over your local network: Bambu, Klipper (Moonraker) and stock Flashforge printers.
+choose presets, add support regions, paint filament colours, support and seam areas, slice and read the results
+(including the Print Risks list and the plate report's checks), save a copy, and pick a model at random from a folder
+you choose. For printers you choose, it can read status and take a camera snapshot over your local network: Bambu,
+Klipper (Moonraker) and stock Flashforge printers.
 
 Built-in rules the AI cannot switch off:
 - It **never saves over your files or presets** — its saves get new "(Claude <date>)" names.
@@ -190,14 +212,17 @@ Built-in rules the AI cannot switch off:
 Only you can relax the first two, by choosing the **Advanced** level in the Forca AI window: then the AI may save over
 your files and presets (Forca keeps a backup copy of each in `Documents\Forca AI\Backups`), and a print request opens
 the print dialog without a card. You still press Send yourself — unless you also give the AI a **print grant**: up to
-a number of prints, on printers you tick, for a few hours. Within it Forca sends the AI's print itself, only to an idle
+a number of prints, on printers you tick (Bambu, Klipper or Flashforge), for a few hours. Within it Forca sends the AI's print itself, only to an idle
 printer whose bed you marked clear, after a 10-second countdown you can cancel. A grant can name the files to print
-(with copies and a note), so the AI does the whole job and prints nothing else.
+(with copies and a note), so the AI does the whole job and prints nothing else. At Advanced the AI can also run
+Python scripts inside Forca, which may write only in their own folder (**Install NumPy** in the Forca AI window adds
+NumPy for them).
 
 With the print journal on, the AI can also read it, including the Insights and a comparison of two prints, so it sees
 the same patterns you do. One key works for every Forca you run on your computer, and the Forca AI window is
 translated into all 22 languages. The window gives the Claude Code command and the settings for Claude Desktop,
-Codex (ChatGPT) and any other MCP app (for example LM Studio with a local model);
+Codex (ChatGPT) and any other MCP app (for example LM Studio with a local model), and apps that can only start a
+local program use `forca-mcp.exe`, which comes with Forca;
 [the Forca AI guide](docs/forca/guides/forca-ai.md) has the steps.
 
 See [SECURITY.md](SECURITY.md) for how it's protected.
@@ -242,6 +267,7 @@ lets you pick a new one.
 - **Slowdown recovery layers** (filament, Cooling): after a layer slowed down for cooling, the speed comes back over
   this many layers instead of at once, so a wide part above a thin neck doesn't show a band. Off by default.
   [Cooling slowdown](docs/forca/guides/cooling.md) also explains Consistent surface, which keeps the outer wall at speed.
+- **Projects saved in Forca open in Bambu Studio**, per-filament scarf seams included.
 - **Favourite settings:** right-click a process setting's name and choose **Add to favorites** (or click its star in the
   search results) to put it on a **Favorites** page, first in the process settings. A preference of yours, not part of any preset.
 - **Its own settings folder** (`%APPDATA%\ForcaSlicer`). On first start Forca offers to copy your OrcaSlicer

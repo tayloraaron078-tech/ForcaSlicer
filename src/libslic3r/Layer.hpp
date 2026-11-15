@@ -168,6 +168,24 @@ public:
     // These lslices are also used to detect overhangs and overlaps between successive layers, therefore it is important
     // that the 1st lslice is not compensated by the Elephant foot compensation algorithm.
     ExPolygons 				 lslices;
+
+    // Forca: nonplanar ironing (PrintObject::plan_nonplanar_ironing). A layer that ends a slope irons the top
+    // surfaces of the layers below it in one pass along the model's surface.
+    struct NonplanarIroningSource
+    {
+        const Layer *layer;
+        size_t       region_id;
+        ExPolygon    area;
+    };
+    // Top surfaces of lower layers that this layer irons.
+    std::vector<NonplanarIroningSource> nonplanar_ironing_sources;
+    // Top surfaces of this layer that a higher layer irons.
+    ExPolygons                          nonplanar_ironing_deferred;
+    // Forca: nonplanar top surface (PrintObject::plan_nonplanar_shell). Top surfaces of lower layers, cut from those
+    // layers, that this layer prints as one skin along the model's surface.
+    std::vector<NonplanarIroningSource> nonplanar_shell_sources;
+    // What a higher layer prints such a skin on: the parts of this layer right under it.
+    ExPolygons                          nonplanar_shell_above;
     ExPolygons 				 lslices_extrudable;  // BBS: the extrudable part of lslices used for tree support
     std::vector<BoundingBox> lslices_bboxes;
     // Orca: for separated infills / per-model centering / octree infills. Aligned with lslices: for each
@@ -209,6 +227,8 @@ public:
 
     // Whether two regions can be printed in a continues perimeter
     static bool             is_perimeter_compatible(const Print& print, const PrintRegion& a, const PrintRegion& b);
+    // Moves a strip of the regions supported next to a bridge of another region to the bridge to anchor on.
+    void                    anchor_bridges_in_neighbours();
     void                    make_perimeters();
     // Phony version of make_fills() without parameters for Perl integration only.
     void                    make_fills() { this->make_fills(nullptr); }
@@ -222,6 +242,8 @@ public:
                                                     bool spiral_mode,
                                                     bool is_topmost_layer);
     void                    make_contour_z(const sla::IndexedMesh &mesh);
+    // Forca: the paths of the nonplanar top surface that this layer prints, in 2D.
+    void                    make_nonplanar_shell();
 
     void                    export_region_slices_to_svg(const char *path) const;
     void                    export_region_fill_surfaces_to_svg(const char *path) const;

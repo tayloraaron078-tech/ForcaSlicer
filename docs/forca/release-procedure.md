@@ -35,7 +35,7 @@ is its own command. Every push and every public action needs the maintainer's ex
       `docs/HLSD/` design doc when the design changed; `KNOWN_ISSUES.md`. Then search README and the guides for text a
       change made untrue (for example "not merged upstream yet" after a merge took the pull request in).
 - [ ] `docs/forca/release/KNOWN_ISSUES.md` is current.
-- [ ] **Code signing:** `-Build` signs `forca-slicer.exe` and `ForcaSlicer.dll` before packaging and the installer
+- [ ] **Code signing:** `-Build` signs `forca-slicer.exe`, `ForcaSlicer.dll` and `forca-mcp.exe` before packaging and the installer
       after it, with Azure Artifact Signing (account `Forca`, certificate profile `ForcaRelease`, East US), and refuses
       to continue unless each file is validly signed and timestamped. Needs signtool (Windows SDK), the Artifact
       Signing Client Tools (`winget install Microsoft.Azure.ArtifactSigningClientTools`), and `az login` with the

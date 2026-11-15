@@ -17,8 +17,10 @@ your OrcaSlicer settings over, and starting again if you need to.
   editor.
 - [Cooling slowdown](cooling.md): keep the outer wall at speed while a short layer cools (Consistent surface), and
   bring the speed back gradually after a thin section (Slowdown recovery layers).
-- [Print Risks](print-risks.md): where the sliced plate may fail (overhangs, long bridges, floating islands), with
-  what to try and markers on the Preview.
+- [Print Risks](print-risks.md): where the sliced plate may fail (overhangs, long bridges, floating islands, thin
+  tall parts, small footprints, short layers), with what to try and markers on the Preview, and the plate report.
+- [Nonplanar ironing and top surface](nonplanar.md) (experimental): iron a gentle slope in one pass along the
+  surface, or print its top as one skin, within what the printhead outline allows.
 
 ## Tuning
 

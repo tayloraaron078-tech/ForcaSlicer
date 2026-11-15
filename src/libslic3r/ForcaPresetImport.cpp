@@ -470,4 +470,68 @@ PresetImportItem forca_analyse_preset_file(PresetBundle &bundle, const std::stri
     return item;
 }
 
+namespace {
+
+const char *const scarf_unset_key = "forca_filament_scarf_unset";
+
+// Bambu Studio's defaults for its filament scarf settings, written into the slots Forca leaves unset.
+const std::vector<std::pair<std::string, std::string>> bambu_scarf_defaults = {
+    {"filament_scarf_seam_type", "none"}, {"filament_scarf_height", "10%"},
+    {"filament_scarf_gap", "0"},          {"filament_scarf_length", "10"}};
+
+} // namespace
+
+bool forca_scarf_to_3mf(json &settings)
+{
+    json unset = json::array();
+    for (const auto &[key, bambu_default] : bambu_scarf_defaults) {
+        const auto values = settings.find(key);
+        if (values == settings.end() || !values->is_array())
+            continue;
+        std::string slots;
+        for (size_t i = 0; i < values->size(); ++i)
+            if ((*values)[i] == "nil") {
+                (*values)[i] = bambu_default;
+                slots += (slots.empty() ? "" : ",") + std::to_string(i);
+            }
+        if (!slots.empty())
+            unset.push_back(key + "=" + slots);
+    }
+    if (unset.empty())
+        return false;
+    settings[scarf_unset_key] = std::move(unset);
+    return true;
+}
+
+bool forca_scarf_from_3mf(json &settings)
+{
+    const auto unset = settings.find(scarf_unset_key);
+    if (unset == settings.end())
+        return false;
+    if (unset->is_array())
+        for (const json &entry : *unset) {
+            if (!entry.is_string())
+                continue;
+            const std::string text = entry.get<std::string>();
+            const size_t      eq   = text.find('=');
+            const std::string key  = text.substr(0, eq);
+            const auto        values = settings.find(key);
+            if (eq == std::string::npos || !is_filament_scarf_override_key(key) || values == settings.end() ||
+                !values->is_array())
+                continue;
+            for (size_t pos = eq + 1; pos < text.size();) {
+                const size_t comma = std::min(text.find(',', pos), text.size());
+                const std::string slot = text.substr(pos, comma - pos);
+                if (!slot.empty() && slot.size() < 10 && std::all_of(slot.begin(), slot.end(), [](unsigned char c) { return std::isdigit(c); })) {
+                    const size_t i = std::stoul(slot);
+                    if (i < values->size())
+                        (*values)[i] = "nil";
+                }
+                pos = comma + 1;
+            }
+        }
+    settings.erase(unset);
+    return true;
+}
+
 } // namespace Slic3r

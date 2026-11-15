@@ -4,7 +4,9 @@
 #include "ClipperUtils.hpp"
 #include "ExPolygon.hpp"
 #include "ExtrusionEntityCollection.hpp"
+#include "Geometry/ConvexHull.hpp"
 #include "Layer.hpp"
+#include "MinAreaBoundingBox.hpp"
 #include "Point.hpp"
 #include "Polygon.hpp"
 #include "Print.hpp"
@@ -27,6 +29,13 @@ constexpr double DEFAULT_THRESHOLD_ANGLE = 30.;
 constexpr double CONTINUE_GAP = 1.;
 
 double area_mm2(const ExPolygon& e) { return e.area() * SCALING_FACTOR * SCALING_FACTOR; }
+
+// The narrowest width of a part: the short side of its smallest rotated bounding box, mm.
+double width_mm(const ExPolygon& e)
+{
+    const MinAreaBoundigBox b(e);
+    return unscaled(double(std::min(b.width(), b.height())));
+}
 
 BoundingBoxf box_mm(const ExPolygon& e)
 {
@@ -86,6 +95,9 @@ std::vector<Found> layer_risks(const PrintObject& object, const Layer& layer, do
 
     ExPolygons held; // the parts of the slice that stand on something
     for (const ExPolygon& e : layer.lslices) {
+        // A narrow part: a thin tall one if it goes on long enough (forca_print_risks decides).
+        if (const double w = width_mm(e); w < FORCA_THIN_WIDTH)
+            out.push_back({ PrintRiskType::ThinTall, box_mm(e), w, area_mm2(e), false });
         if (intersection_ex(e, lower).empty())
             out.push_back({ PrintRiskType::FloatingIsland, box_mm(e), 0., area_mm2(e), supported(e) });
         else
@@ -169,8 +181,81 @@ std::vector<PrintRisk> forca_print_risks(const PrintObject& object)
         open = std::move(next);
     }
     append(done, std::move(open));
+
+    // A narrow part is a risk only where it stands taller than FORCA_TALL_RATIO times its widest.
+    done.erase(std::remove_if(done.begin(), done.end(),
+                              [&](const PrintRisk& r) {
+                                  if (r.type != PrintRiskType::ThinTall)
+                                      return false;
+                                  const Layer& first  = *object.get_layer(int(r.first_layer));
+                                  const double height = r.z_max - (first.print_z - first.height);
+                                  return height < FORCA_TALL_RATIO * r.distance;
+                              }),
+               done.end());
+
+    // The first layer: much smaller than the object's largest layer, or narrow under a tall object.
+    if (object.layer_count() > 0) {
+        const Layer& base   = *object.get_layer(0);
+        const double height = object.get_layer(int(object.layer_count()) - 1)->print_z;
+        double       base_area = 0, largest = 0;
+        for (const ExPolygon& e : base.lslices)
+            base_area += area_mm2(e);
+        for (const Layer* l : object.layers()) {
+            double a = 0;
+            for (const ExPolygon& e : l->lslices)
+                a += area_mm2(e);
+            largest = std::max(largest, a);
+        }
+        double base_wide = 0;
+        if (!base.lslices.empty()) {
+            const MinAreaBoundigBox b(Geometry::convex_hull(to_polygons(base.lslices)), MinAreaBoundigBox::pcConvex);
+            base_wide = unscaled(double(std::min(b.width(), b.height())));
+        }
+        if (height >= FORCA_FOOTPRINT_MIN_H && base_area > 0 &&
+            (base_area < FORCA_FOOTPRINT_RATIO * largest || height > FORCA_TIP_RATIO * base_wide)) {
+            PrintRisk r;
+            r.type        = PrintRiskType::SmallFootprint;
+            r.first_layer = r.last_layer = 0;
+            r.z_min = r.z_max = base.print_z;
+            for (const ExPolygon& e : base.lslices)
+                r.bbox.merge(box_mm(e));
+            r.distance  = height;
+            r.area      = base_area;
+            r.limit     = largest;
+            r.supported = config.raft_layers.value > 0 ||
+                          (config.brim_type.value != btNoBrim && config.brim_type.value != btPainted);
+            done.push_back(r);
+        }
+    }
     std::stable_sort(done.begin(), done.end(), [](const PrintRisk& a, const PrintRisk& b) { return a.first_layer < b.first_layer; });
     return done;
+}
+
+std::vector<PrintRisk> forca_short_layer_risks(const std::vector<ForcaLayerTime>& layers, double layer_time)
+{
+    std::vector<PrintRisk> out;
+    if (layer_time <= 0)
+        return out;
+    const double shortest = FORCA_SHORT_LAYER_KEEP * layer_time;
+    for (size_t i = 0; i < layers.size(); ++i) {
+        if (layers[i].seconds >= shortest)
+            continue;
+        if (!out.empty() && out.back().last_layer + 1 == i) {
+            PrintRisk& r = out.back();
+            r.last_layer = i;
+            r.z_max      = layers[i].z;
+            r.distance   = std::min(r.distance, layers[i].seconds);
+            continue;
+        }
+        PrintRisk r;
+        r.type        = PrintRiskType::ShortLayers;
+        r.first_layer = r.last_layer = i;
+        r.z_min = r.z_max = layers[i].z;
+        r.distance        = layers[i].seconds;
+        r.limit           = layer_time;
+        out.push_back(r);
+    }
+    return out;
 }
 
 } // namespace Slic3r

@@ -1,6 +1,7 @@
 #include "ForcaPrintRiskDialog.hpp"
 
 #include "Camera.hpp"
+#include "ForcaPlateReportDialog.hpp" // forca_show_plate_report
 #include "Event.hpp"
 #include "ForcaAcademy.hpp"
 #include "ForcaPrintJournal.hpp" // ForcaPrintJournalDialog, forca_journal_tag_label
@@ -22,6 +23,7 @@
 #include "Widgets/Label.hpp"
 #include "Widgets/StateColor.hpp"
 #include "libslic3r/Config.hpp"
+#include "libslic3r/GCode/GCodeProcessor.hpp"
 #include "libslic3r/ForcaPrintRisk.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/Point.hpp"
@@ -71,7 +73,33 @@ int forca_risk_slider_index(const std::vector<double>& zs, double z)
     return it == zs.end() ? int(zs.size()) - 1 : int(std::distance(zs.begin(), it));
 }
 
-std::string forca_risk_academy_tag(PrintRiskType type) { return type == PrintRiskType::LongBridge ? "bridging" : "supports"; }
+std::string forca_risk_academy_tag(PrintRiskType type)
+{
+    switch (type) {
+    case PrintRiskType::LongBridge: return "bridging";
+    case PrintRiskType::SmallFootprint: return "bed_adhesion";
+    case PrintRiskType::ThinTall: return "spaghetti"; // a thin part knocked loose ends as spaghetti
+    case PrintRiskType::ShortLayers: return {};
+    default: return "supports";
+    }
+}
+
+std::vector<ForcaLayerTime> forca_gcode_layer_times(const GCodeProcessorResult& result)
+{
+    // Each move carries its layer (0-based) and its own duration (time[], normal mode).
+    std::vector<ForcaLayerTime> out;
+    for (const GCodeProcessorResult::MoveVertex& m : result.moves) {
+        const size_t i = size_t(m.layer_id);
+        if (out.size() <= i)
+            out.resize(i + 1);
+        out[i].seconds += double(m.time[0]);
+        if (m.type == EMoveType::Extrude)
+            out[i].z = std::max(out[i].z, double(m.position.z()));
+    }
+    // Layers with no extrusion are not printed layers.
+    out.erase(std::remove_if(out.begin(), out.end(), [](const ForcaLayerTime& l) { return l.z <= 0; }), out.end());
+    return out;
+}
 
 std::vector<fs::path> forca_risk_tagged_prints(const std::vector<ForcaAcademyPrint>& prints, const std::string& printer,
                                                const std::vector<std::string>& filaments, const std::string& tag)
@@ -98,7 +126,8 @@ struct Stamp
 {
     int                                                plate = -1;
     std::vector<std::pair<const PrintObject*, size_t>> objects;
-    bool operator==(const Stamp& o) const { return plate == o.plate && objects == o.objects; }
+    size_t                                             gcode = 0; // when the plate's G-code was made (0 = not yet)
+    bool operator==(const Stamp& o) const { return plate == o.plate && objects == o.objects && gcode == o.gcode; }
     bool operator!=(const Stamp& o) const { return !(*this == o); }
 };
 
@@ -130,6 +159,8 @@ Stamp stamp_of(int plate_idx)
         const PrintStateBase::StateWithTimeStamp st = o->step_state_with_timestamp(posSupportMaterial);
         s.objects.emplace_back(o, st.state == PrintStateBase::DONE ? size_t(st.timestamp) : size_t(0));
     }
+    const PrintStateBase::StateWithTimeStamp g = print->step_state_with_timestamp(psGCodeExport);
+    s.gcode = g.state == PrintStateBase::DONE ? size_t(g.timestamp) : size_t(0);
     return s;
 }
 
@@ -153,6 +184,12 @@ wxString type_label(PrintRiskType t)
     case PrintRiskType::Overhang: return _L("Overhang");
     case PrintRiskType::LongBridge: return _L("Long bridge");
     case PrintRiskType::FloatingIsland: return _L("Floating island");
+    // TRN Print Risks list: a narrow part that stands tall and may wobble or break off.
+    case PrintRiskType::ThinTall: return _L("Thin and tall");
+    // TRN Print Risks list: a first layer that is small for the object standing on it.
+    case PrintRiskType::SmallFootprint: return _L("Small footprint");
+    // TRN Print Risks list: layers printed too fast to cool.
+    case PrintRiskType::ShortLayers: return _L("Short layers");
     }
     return {};
 }
@@ -164,6 +201,9 @@ ImU32 marker_colour(PrintRiskType t)
     case PrintRiskType::Overhang: return IM_COL32(232, 163, 61, 255);      // orange
     case PrintRiskType::LongBridge: return IM_COL32(61, 127, 232, 255);    // blue
     case PrintRiskType::FloatingIsland: return IM_COL32(217, 71, 63, 255); // red
+    case PrintRiskType::ThinTall: return IM_COL32(150, 90, 210, 255);      // purple
+    case PrintRiskType::SmallFootprint: return IM_COL32(0, 150, 136, 255); // teal
+    case PrintRiskType::ShortLayers: return IM_COL32(120, 120, 120, 255);  // grey (no marker: the whole plate)
     }
     return IM_COL32(128, 128, 128, 255);
 }
@@ -185,8 +225,27 @@ wxString size_label(const PrintRisk& r)
     case PrintRiskType::LongBridge: return format_wxstr(_L("%1% mm span"), mm(r.distance));
     // TRN Print Risks list: the area of a part that starts in mid-air, in square millimetres.
     case PrintRiskType::FloatingIsland: return format_wxstr(_L("%1% mm² area"), mm(r.area));
+    // TRN Print Risks list: the width of a thin part, in mm.
+    case PrintRiskType::ThinTall: return format_wxstr(_L("%1% mm wide"), mm(r.distance));
+    // TRN Print Risks list: the area of the first layer, in square millimetres.
+    case PrintRiskType::SmallFootprint: return format_wxstr(_L("%1% mm² on the plate"), mm(r.area));
+    // TRN Print Risks list: the shortest layer time, in seconds.
+    case PrintRiskType::ShortLayers: return format_wxstr(_L("%1% s per layer"), mm(r.distance));
     }
     return {};
+}
+
+// The Support column: whether support (or, for a small footprint, a brim or raft) holds it; a dash where support
+// does not apply.
+wxString support_label(const PrintRisk& r)
+{
+    switch (r.type) {
+    case PrintRiskType::ThinTall:
+    case PrintRiskType::ShortLayers: return wxString::FromUTF8("\xE2\x80\x93");
+    // TRN Print Risks list, Support column: a brim or raft holds the object down.
+    case PrintRiskType::SmallFootprint: return r.supported ? _L("Brim or raft") : _L("No");
+    default: return r.supported ? _L("Yes") : _L("No");
+    }
 }
 
 // What the risk is and what to try.
@@ -217,6 +276,24 @@ wxString advice(const Row& row)
         if (!r.supported && !row.support_on)
             out += " " + _L("Without support it is printed onto air: turn on support, or change the orientation.");
         break;
+    case PrintRiskType::ThinTall:
+        // TRN %1%: a width in mm; %2%: a height in mm.
+        return format_wxstr(_L("This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or "
+                               "knock it off. Print it slower, print several copies together, add a brim, or add a "
+                               "support wall beside it."),
+                            mm(r.distance), mm(r.z_max - r.z_min));
+    case PrintRiskType::SmallFootprint:
+        // TRN %1%: an area in mm²; %2%: a height in mm.
+        out = format_wxstr(_L("Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."),
+                           mm(r.area), mm(r.distance));
+        return out + " " + (r.supported ? _L("A brim or raft holds it down.")
+                                        : _L("Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."));
+    case PrintRiskType::ShortLayers:
+        // TRN %1%: the shortest layer time; %2%: the filament's layer time; both in seconds.
+        return format_wxstr(_L("These layers print in as little as %1% s, less than the filament's layer time (%2% s), "
+                               "so they may not cool and can sag or curl. Print a second copy beside it, or lower the "
+                               "minimum speed for cooling."),
+                            mm(r.distance), mm(r.limit));
     }
     if (r.supported)
         out += " " + _L("Support is printed under it.");
@@ -310,22 +387,31 @@ public:
         m_rules = new wxStaticText(this, wxID_ANY,
                                    _L("Forca checks each layer against the one below it: an overhang reaches farther than "
                                       "the support threshold angle allows (30° when it is 0), a bridge is longer than Max "
-                                      "bridge length, a floating island has nothing under it. The list follows each new "
-                                      "slice of the plate."));
+                                      "bridge length, a floating island has nothing under it. A part under 8 mm wide "
+                                      "standing over 8 times its width is thin and tall; a first layer under a fifth of the "
+                                      "largest layer, or a base three times narrower than the object is tall, is a small "
+                                      "footprint; layers shorter than the filament's layer time are short layers (once the "
+                                      "G-code is ready). The list follows each new slice of the plate."));
         m_rules->Wrap(FromDIP(660));
         root->Add(m_rules, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, pad);
 
         auto* buttons = new wxBoxSizer(wxHORIZONTAL);
         m_refresh     = new Button(this, _L("Refresh"));
         m_refresh->SetStyle(ButtonStyle::Regular, ButtonType::Choice);
+        m_report = new Button(this, _L("Plate report"));
+        m_report->SetStyle(ButtonStyle::Regular, ButtonType::Choice);
+        m_report->SetToolTip(_L("The whole plate at a glance: checks, print time and weight, size and position, key "
+                                "settings and unsaved changes."));
         m_close = new Button(this, _L("Close"));
         m_close->SetStyle(ButtonStyle::Regular, ButtonType::Choice);
-        buttons->Add(m_refresh, 0);
+        buttons->Add(m_refresh, 0, wxRIGHT, FromDIP(8));
+        buttons->Add(m_report, 0);
         buttons->AddStretchSpacer(1);
         buttons->Add(m_close, 0);
         root->Add(buttons, 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, pad);
 
         m_refresh->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { refresh(); });
+        m_report->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { forca_show_plate_report(this, -1); });
         m_close->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { Close(); });
         m_list->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent& e) { select(e.GetIndex()); });
         m_show_markers->Bind(wxEVT_TOGGLEBUTTON, [](wxCommandEvent& e) {
@@ -388,10 +474,10 @@ public:
             const Row& row = m_rows[n];
             const long i   = m_list->InsertItem(m_list->GetItemCount(), wxString::Format("%d", int(n + 1)));
             m_list->SetItem(i, 1, type_label(row.risk.type));
-            m_list->SetItem(i, 2, from_u8(row.object));
+            m_list->SetItem(i, 2, row.object.empty() ? _L("Whole plate") : from_u8(row.object));
             m_list->SetItem(i, 3, height_label(row.risk));
             m_list->SetItem(i, 4, size_label(row.risk));
-            m_list->SetItem(i, 5, row.risk.supported ? _L("Yes") : _L("No"));
+            m_list->SetItem(i, 5, support_label(row.risk));
         }
         load_journal();
         redraw_preview();
@@ -466,6 +552,7 @@ protected:
     void on_dpi_changed(const wxRect&) override
     {
         m_refresh->Rescale();
+        m_report->Rescale();
         m_close->Rescale();
         m_show_markers->Rescale();
         m_list->ClearAll();
@@ -560,6 +647,8 @@ private:
         if (!forca_academy_enabled())
             return;
         const std::string tag   = forca_risk_academy_tag(row.risk.type);
+        if (tag.empty())
+            return;
         const wxString    label = forca_journal_tag_label(tag);
         m_tagged                = forca_risk_tagged_prints(m_prints, m_printer, m_filaments, tag);
         if (!m_tagged.empty()) {
@@ -599,6 +688,7 @@ private:
     HyperLink*                     m_playbook     = nullptr;
     wxStaticText*                  m_rules        = nullptr;
     Button*                        m_refresh      = nullptr;
+    Button*                        m_report       = nullptr;
     Button*                        m_close        = nullptr;
     wxTimer                        m_timer;
     std::vector<Row>               m_rows;
@@ -638,6 +728,18 @@ bool forca_plate_risks(int plate_idx, std::vector<ForcaPlateRisk>& risks)
                     row.points.emplace_back(centre.x() + unscaled(inst.shift.x()), centre.y() + unscaled(inst.shift.y()), row.risk.z_min);
                 s_checked_risks.push_back(std::move(row));
             }
+        }
+        // Layers too short to cool, from the plate's G-code once it is made.
+        int          idx   = stamp.plate;
+        const Print* print = plate_print(idx);
+        PartPlate*   plate = p->get_partplate_list().get_plate(stamp.plate);
+        if (print && plate && stamp.gcode != 0 && plate->get_slice_result()) {
+            double layer_time = 0;
+            for (int e : plate->get_extruders(false))
+                if (e >= 1 && size_t(e) <= print->config().slow_down_layer_time.size())
+                    layer_time = std::max(layer_time, double(print->config().slow_down_layer_time.get_at(size_t(e - 1))));
+            for (PrintRisk& r : forca_short_layer_risks(forca_gcode_layer_times(*plate->get_slice_result()), layer_time))
+                s_checked_risks.push_back(Row{ std::move(r), {}, 0., 0., false, {} });
         }
         std::stable_sort(s_checked_risks.begin(), s_checked_risks.end(),
                          [](const Row& a, const Row& b) { return a.risk.z_min < b.risk.z_min; });

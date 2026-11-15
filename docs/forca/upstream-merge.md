@@ -5,7 +5,7 @@ This is the step-by-step procedure for merging newer OrcaSlicer into Forca. Do i
 ## Ground rules
 
 - **`upstream` (OrcaSlicer) is pull-only** — never push to it. `origin` is Forca's own repo. Every `push` needs the maintainer's explicit approval.
-- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14, upstream `main` `a26501c0ed` on 2026-10-24, `baff031626` on 2026-10-25, `7ac46c9a61` on 2026-10-31, `c01ac8ff44` and then `d8807e03db` (the 2.6.0-dev line) on 2026-11-07. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
+- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14, upstream `main` `a26501c0ed` on 2026-10-24, `baff031626` on 2026-10-25, `7ac46c9a61` on 2026-10-31, `c01ac8ff44` and then `d8807e03db` (the 2.6.0-dev line) on 2026-11-07, `b4a9565dee` on 2026-11-15. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
 - Never merge directly on `Multi_Interface`. Always use a throwaway merge branch so you can abort cleanly.
 - Builds are run locally by the maintainer; the exact build/run/log commands are in [§7](#7-rebuild-full) and [§8](#8-validate).
 
@@ -234,6 +234,33 @@ Forca's divergence falls into a few buckets. Resolve each the same way every tim
   `EXPAT 2.10.0`. wxWidgets builds against it with `XML_STATIC`. A dev deps folder needs
   `cmake --build deps/build --config Release --target dep_EXPAT dep_wxWidgets` (the release uses `-RebuildDeps`).
 - Outline options (#17319): new colour settings in Preferences > Graphics, defaults white; nothing to retint.
+
+### Notes from the 2026-11-15 merge (`main` `b4a9565dee`)
+
+- Layer cooling (#17540): `CoolingBuffer` times a layer with its own `GCodeProcessor`, as the Preview does
+  (`docs/HLSD/layer-cooling-time.md`). Forca's own acceleration overhead (trapezoid / junction speeds,
+  `time_overhead_*`, `Accelerations`) is gone: kept beside the estimate it would count acceleration twice. Forca's
+  slowdown recovery now runs once per layer around `slow_down_layer()` (`start_slowdown_recovery` /
+  `finish_slowdown_recovery`), since the estimate calls `calculate_layer_slowdown` several times; its raised
+  targets also count in the "no estimate needed" threshold. On toolchangers the layer timer keeps
+  `machine_tool_change_time` (Forca, DECISIONS 2026-11-15). Consistent surface, the transition distance, the
+  object fan overrides and the G4 dwells merged without conflict. Tests: Forca's "Acceleration time reduces the
+  cooling slowdown" is gone (upstream's "...reaches the minimum layer time with acceleration" covers it); the
+  two-cube toolchanger tests give the printer limits far past their moves, so the estimate equals length / feedrate,
+  which they measure.
+- Painted modifiers (#16213): upstream's `PAINTED_MODIFIER` volume type, `painted_modifier_facets` channel,
+  `PainterGizmoType::PAINTED_MODIFIER` and `EType::PaintedModifier` gizmo sit before Forca's support-interface
+  entries everywhere, so Forca's stay last: `SUPPORT_INTERFACE_MODIFIER` is now 12 and `ADD_VOLUME_MENU_ITEMS` has
+  13 entries. Both channels are copied, serialised, remapped and compared side by side (Model, PrintApply,
+  bbs_3mf: attributes `paint_modifier` and `paint_support_interface_region`). `volume_shows_extruder()`
+  (ObjectDataViewModel) also lists the support-interface modifier.
+- `SupportMaterial::trim_support_layers_by_object`: upstream's `trim_source` (relaxed trimming toward the top
+  contact's own overhang) also feeds Forca's region trimming set.
+- `MixedFilamentDialog.cpp`, `UnsavedChangesDialog.cpp`: Forca's only change was the tint, so upstream's file and
+  the retint script.
+- Dependencies: OpenSSL 3.5.9, libcurl 8.23.0 (#17293), OCCT built with precompiled headers and fewer toolkits
+  (#17415), optional OpenVDB (#17401); the deps are rebuilt.
+- New upstream workflows under `.github/workflows` were removed with the rest.
 
 ## 6. Regenerate the cosmetic layers
 

@@ -17,7 +17,7 @@
 #
 # Common options: -Version (default: FORCA_VERSION in version.inc), -Source (default: Multi_Interface).
 #
-# Code signing (-Build): forca-slicer.exe and ForcaSlicer.dll are signed before packaging, the installer after, with
+# Code signing (-Build): forca-slicer.exe, ForcaSlicer.dll and forca-mcp.exe are signed before packaging, the installer after, with
 # Azure Artifact Signing (account Forca, profile ForcaRelease, East US). Needs signtool (Windows SDK), the Artifact
 # Signing Client Tools (winget Microsoft.Azure.ArtifactSigningClientTools) and an `az login` with the Certificate
 # Profile Signer role. -NoSign skips it (test builds only).
@@ -194,9 +194,9 @@ if ($Build) {
     Say "building the slicer with the kept dependencies ..."
     & cmd /c "$bat" -s --config release --deps-dir "$DepsDir"
     if ($LASTEXITCODE -ne 0) { Fail "build failed (exit $LASTEXITCODE)" }
-    # Sign the app before packaging: the zip and the installer copy these two files out of build\src\Release.
+    # Sign the app before packaging: the zip and the installer copy these files out of build\src\Release.
     $releaseDir = Join-Path $WorkDir 'build\src\Release'   # not $release: that is the -Release switch (names ignore case)
-    if (-not $NoSign) { Sign-Files @((Join-Path $releaseDir 'forca-slicer.exe'), (Join-Path $releaseDir 'ForcaSlicer.dll')) }
+    if (-not $NoSign) { Sign-Files @((Join-Path $releaseDir 'forca-slicer.exe'), (Join-Path $releaseDir 'ForcaSlicer.dll'), (Join-Path $releaseDir 'forca-mcp.exe')) }
     & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $WorkDir 'build_forca_release.ps1') -Config Release -Installer
     if ($LASTEXITCODE -ne 0) { Fail "packaging failed (exit $LASTEXITCODE)" }
     if (-not $NoSign) { Sign-Files @(Join-Path $WorkDir "build\ForcaSlicer_Windows_Installer_V${Version}_x64.exe") }

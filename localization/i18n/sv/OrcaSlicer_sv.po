@@ -19157,6 +19157,10 @@ msgid "Time taken to switch tools. It's usually applicable for tool changers or 
 msgstr "Tid det tar att byta verktyg. Detta gäller oftast verktygsväxlare eller maskiner med flera verktyg. För multimaterialmaskiner med en extruder är den vanligtvis 0. Endast för statistik."
 
 # AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Tid det tar att byta verktyg. Gäller oftast verktygsväxlare eller maskiner med flera verktyg. För flermaterialsmaskiner med en extruder är den oftast 0. Den används för uppskattningen av utskriftstiden och räknas på verktygsväxlare in i den minsta lagertiden."
+
+# AI Translated
 msgid "Bed temperature type"
 msgstr "Typ av byggplattstemperatur"
 
@@ -44923,6 +44927,400 @@ msgstr "Snapmaker U1:s kamera tar bara stillbilder med originalfirmwaren, och Fo
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Visa U1:s kamera"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Icke-plan strykning användes inte. Den behöver skrivhuvudets kontur i skrivarens inställningar och ett enda objekt på plattan, utan stöd, prime torn, dragskydd eller en skirt högre än ett lager."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "En del av modellen är brantare än skrivhuvudet kan följa, ungefär %1%°. Där användes inte icke-plan strykning."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Icke-plan toppyta användes inte. Den behöver skrivhuvudets kontur i skrivarens inställningar och ett enda objekt på plattan, utan stöd, prime torn, dragskydd eller en skirt högre än ett lager."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "En del av modellen är brantare än skrivhuvudet kan följa, ungefär %1%°. Där användes inte icke-plan toppyta."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Nozzelspetsens diameter"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Diametern på den plana ytan längst ut på nozzeln. Används för att hålla skrivhuvudet fritt från utskriften vid icke-plan utskrift."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Nozzelkonens diameter"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Nozzelns diameter där dess kon slutar: konens överkant eller silikonstrumpans nederkant. 0 betyder att skrivhuvudets kontur inte är känd och att icke-plan utskrift inte är tillgänglig."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Nozzelkonens höjd"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Höjd över nozzelspetsen där nozzelkonens diameter mäts."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Avstånd till skrivhuvudets kropp"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Avstånd från nozzelns mitt till den närmaste del av skrivhuvudet som hänger lågt bredvid den: en fläktkanal, kåpan eller värmeblocket. 0 betyder att inget hänger lägre än nozzelkonens överkant."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Skrivhuvudkroppens höjd"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Höjd över nozzelspetsen för den lägsta delen av skrivhuvudet bredvid nozzeln."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Skrivhuvudets frigångsmarginal"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Avstånd som hålls mellan skrivhuvudet och utskriften vid icke-plan utskrift, utöver konturen ovan. Täcker det konturen inte täcker: mätfel och lagrens hörn."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Icke-plan strykning"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Stryker en svag sluttning i ett enda pass som följer modellens yta över dess lager, i stället för att stryka varje lagers trappsteg plant. Nozzeln går ner bredvid material som redan är utskrivet, så detta behöver skrivhuvudets kontur i skrivarens inställningar, och det används bara där konturen visar att skrivhuvudet går fritt. Behöver ett enda objekt på plattan, utan stöd eller prime torn."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Icke-plan toppyta"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Skriver ut toppytan på en svag sluttning som ett enda skal som följer modellens yta, i stället för dess lagers trappsteg. Lagren under slutar ett lager lägre, och skalet skrivs ut över dem när sluttningens sista lager är klart. Nozzeln går ner bredvid material som redan är utskrivet, så detta behöver skrivhuvudets kontur i skrivarens inställningar, och det används bara där konturen visar att skrivhuvudet går fritt. Behöver ett enda objekt på plattan, utan stöd eller prime torn. Experimentell."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Annan app (MCP, lokalt program)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Modeller som AI:n får välja slumpmässigt:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forcas inbyggda testmodeller"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Välj mapp..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Använd inbyggda"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Välj en mapp med modeller som AI:n får välja från"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Installera NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Laddar ner NumPy från internet (pypi.org) till Forcas Python, för skripten som AI:n kör på nivån Avancerad och för insticksmoduler."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca laddar ner NumPy från internet (pypi.org) och lägger till det i Forcas Python, där AI:ns skript och dina insticksmoduler kan använda det. Fortsätta?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy kunde inte installeras:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy för AI:ns Python-skript: installeras..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy för AI:ns Python-skript: installerat"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy för AI:ns Python-skript: inte installerat"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "För en app som bara startar lokala MCP-servrar (ett \"command\", inte en adress): Forcas program forca-mcp skickar vidare dess meddelanden till Forca AI, utan Node.js. Lägg till posten \"forca\" nedan i appens \"mcpServers\"-inställningar. Den hittar nyckeln själv, så en ny nyckel kräver ingen ändring här."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Utskriftsrisker hittade %1% ställe på den här plattan som kan misslyckas. Visa > Utskriftsrisker visar var och vad du kan prova."
+msgstr[1] "Utskriftsrisker hittade %1% ställen på den här plattan som kan misslyckas. Visa > Utskriftsrisker visar var och vad du kan prova."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Plattrapport: inga varningar."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Plattrapport: %1% varning."
+msgstr[1] "Plattrapport: %1% varningar."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Öppna plattrapporten"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "En del av plattan ligger utanför det utskrivbara området. Flytta objekten till byggplattan."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Objekten är %1% mm höga, högre än den utskrivbara höjden (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Objekten är %1% mm höga, nära den utskrivbara höjden (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Ett objekt är %1% mm från byggplattans kant, där första lagret fäster sämst på många skrivare."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "Lagerhöjden %1% mm är över %2% mm, det mesta en %3% mm nozzel skriver ut bra: lagren kanske inte fäster vid varandra."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "Första lagrets höjd %1% mm är över %2% mm, det mesta en %3% mm nozzel skriver ut bra: det kanske inte fäster på byggplattan."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: nozzeltemperaturen %2% °C ligger utanför filamentets rekommenderade %3% till %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Filamentens nozzeltemperaturer skiljer sig med %1% °C. Kontrollera att de kan skrivas ut tillsammans."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Filamentens byggplattetemperaturer på den här plattan skiljer sig med %1% °C; byggplattan kan bara ha en av dem."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% risk hittad"
+msgstr[1] "%1% risker hittade"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Tunn och hög"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Liten fotyta"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Korta lager"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% inte åtgärdad."
+msgstr[1] "%1% inte åtgärdade."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Plattrapport"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Kopiera som text"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Plattrapporten gäller bara FFF-utskrifter."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Platta %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Den här plattan är tom."
+
+# AI Translated
+msgid "Checks"
+msgstr "Kontroller"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Inget att påpeka."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Inget att påpeka. Bered plattan för att lägga till beredningsprogrammets egna kontroller."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Bered plattan för att kontrollera den efter risker."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Knappen Utskriftsrisker visar var och vad du kan prova."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Bered plattan för att se utskriftstid och vikt."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Utskriftstid:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Kostnad:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Lager:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Filamentbyten:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Position:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "mitt vid X %1%, Y %2% (byggplattans mitt X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Byggplatta:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objekt:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Projektet har %1% platta; den här rapporten gäller en."
+msgstr[1] "Projektet har %1% plattor; den här rapporten gäller en."
+
+# AI Translated
+msgid "Process:"
+msgstr "Process:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Ändrat och inte sparat"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Inga. Förinställningarna är som de sparades."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm bred"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² på plattan"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s per lager"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Brim eller raft"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Den här delen är ungefär %1% mm bred och %2% mm hög. Nozzeln kan få den att vingla eller välta. Skriv ut långsammare, skriv ut flera kopior tillsammans, lägg till brim eller en stödvägg bredvid."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Bara %1% mm² av det här %2% mm höga objektet rör vid plattan. Det kan lossna eller välta."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Brim eller raft håller fast det."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Lägg till brim (Övrigt > Brim typ), eller vrid modellen så att en större sida är mot byggplattan."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "De här lagren skrivs ut på så lite som %1% s, mindre än filamentets lagertid (%2% s), så de kanske inte hinner svalna och kan sjunka ihop eller rulla sig. Skriv ut en andra kopia bredvid, eller sänk minimihastigheten för kylning."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Hela plattan i en överblick: kontroller, utskriftstid och vikt, storlek och position, viktiga inställningar och osparade ändringar."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Hela plattan"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Listar var den beredda plattan kan misslyckas: överhäng, långa broar, delar som börjar i luften, tunna höga delar, små fotytor och lager för korta för att svalna."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Plattrapport"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Den aktuella plattan i en överblick: kontroller, utskriftstid och vikt, storlek och position, viktiga inställningar och osparade ändringar."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Markera detta för att knapparna \"Open in OrcaSlicer\" på modellwebbplatser ska öppna modellen i Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Skrivhuvudets kontur"
 
 # AI Translated
 #~ msgid "Show options when importing STEP file"

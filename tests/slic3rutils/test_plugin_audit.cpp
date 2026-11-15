@@ -2469,3 +2469,41 @@ with open(os.path.join(DENIED_DIR, "token.txt"), "w") as f:
     REQUIRE(mgr.last_violation(violation));
     CHECK(violation.reason == "denied path");
 }
+
+TEST_CASE("A Forca AI script writes only in its own folder and never reaches the network, programs or threads", "[audit][Python][ForcaAI]")
+{
+    AuditHarness harness;
+    if (!harness.initialized)
+        SKIP("Bundled Python interpreter unavailable: " + PythonInterpreter::instance().last_error());
+    harness.approve = [](const Prompt&) { return true; }; // a user who answers yes to everything
+    py::gil_scoped_acquire gil;
+    PythonSide python(harness);
+    python.exec("WORK = os.path.join(OUTSIDE, 'work')\nos.makedirs(WORK)");
+
+    {
+        ScopedPluginAuditContext audit(kForcaAIScriptKey, "forca_run_python");
+        PluginAuditManager::instance().add_scoped_allowed_root(python.str("WORK"));
+        python.exec(R"PY(
+own_write   = attempt(lambda: open(os.path.join(WORK, 'out.txt'), 'w').close())
+own_delete  = attempt(lambda: os.remove(os.path.join(WORK, 'out.txt')))
+user_write  = attempt(lambda: open(APPROVED, 'w').close())
+user_delete = attempt(lambda: os.remove(PRIVATE))
+user_read   = attempt(lambda: open(PRIVATE).read())
+network     = attempt(lambda: socket.create_connection(("127.0.0.1", PORT)).close())
+program     = attempt(lambda: subprocess.run(TRUE_COMMAND, check=True))
+thread      = attempt(start_and_join_thread)
+)PY");
+    }
+
+    CHECK(python.str("own_write") == "ok");
+    CHECK(python.str("own_delete") == "ok");
+    CHECK(python.str("user_write") == "denied");
+    CHECK(python.str("user_delete") == "denied");
+    CHECK(python.str("network") == "denied");
+    CHECK(python.str("program") == "denied");
+    CHECK(python.str("thread") == "denied");
+    // A read outside the allowed roots is asked about as for any plugin; the limits above never are.
+    CHECK(python.str("user_read") == "ok");
+    REQUIRE(harness.prompts.size() == 1);
+    CHECK(harness.prompts.front().event == "open");
+}

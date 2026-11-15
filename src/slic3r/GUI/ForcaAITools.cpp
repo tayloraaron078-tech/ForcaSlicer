@@ -454,6 +454,8 @@ void register_forca_ai_tools(ForcaAI& ai)
     register_forca_ai_autonomy_tools(ai);
     register_forca_ai_academy_tools(ai);
     register_forca_ai_openscad_tools(ai);
+    register_forca_ai_python_tools(ai);
+    register_forca_ai_random_model_tools(ai);
 }
 
 }} // namespace Slic3r::GUI

@@ -17609,6 +17609,10 @@ msgstr "Takım değiştirme süresi"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Araç değiştirmek için harcanan zaman. Genellikle araç değiştiriciler veya çok araçlı makineler için geçerlidir. Tek ekstruderli çok malzemeli makineler için bu değer genellikle 0’dır. Yalnızca istatistikler için."
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Takım değiştirmek için geçen süre. Genellikle takım değiştiriciler veya çok takımlı makineler için geçerlidir. Tek ekstrüderli çok malzemeli makinelerde genellikle 0'dır. Baskı süresi tahmininde kullanılır ve takım değiştiricilerde minimum katman süresine sayılır."
+
 msgid "Bed temperature type"
 msgstr "Yatak sıcaklığı tipi"
 
@@ -42578,6 +42582,400 @@ msgstr "Snapmaker U1'in kamerası orijinal yazılımla yalnızca sabit fotoğraf
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "U1'in kamerasını göster"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Düzlemsel olmayan ütüleme kullanılmadı. Yazıcı ayarlarında baskı kafası dış hatlarına ve plakada tek bir nesneye ihtiyaç duyar; destek, prime kulesi, rüzgarlık veya bir katmandan yüksek etek olmamalıdır."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Modelin bir kısmı, baskı kafasının izleyebileceğinden (yaklaşık %1%°) daha dik. Orada düzlemsel olmayan ütüleme kullanılmadı."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Düzlemsel olmayan üst yüzey kullanılmadı. Yazıcı ayarlarında baskı kafası dış hatlarına ve plakada tek bir nesneye ihtiyaç duyar; destek, prime kulesi, rüzgarlık veya bir katmandan yüksek etek olmamalıdır."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Modelin bir kısmı, baskı kafasının izleyebileceğinden (yaklaşık %1%°) daha dik. Orada düzlemsel olmayan üst yüzey kullanılmadı."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Nozul ucu çapı"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Nozulun en ucundaki düz kısmın çapı. Düzlemsel olmayan baskıda baskı kafasını baskıdan uzak tutmak için kullanılır."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Nozul konisi çapı"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Nozulun konisinin bittiği yerdeki çapı: koninin üstü veya silikon çorabın alt kenarı. 0, baskı kafasının dış hatlarının bilinmediği ve düzlemsel olmayan baskının kullanılamadığı anlamına gelir."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Nozul konisi yüksekliği"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Nozul konisi çapının ölçüldüğü, nozul ucunun üzerindeki yükseklik."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Baskı kafası gövdesine mesafe"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Nozul merkezinden, yanında aşağı sarkan baskı kafasının en yakın parçasına olan mesafe: fan kanalı, kılıf veya ısıtıcı blok. 0, nozul konisinin üstünden daha aşağı sarkan bir şey olmadığı anlamına gelir."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Baskı kafası gövdesi yüksekliği"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Nozulun yanındaki baskı kafasının en alçak parçasının nozul ucunun üzerindeki yüksekliği."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Baskı kafası boşluk payı"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Düzlemsel olmayan baskıda, yukarıdaki dış hatlara ek olarak baskı kafası ile baskı arasında bırakılan mesafe. Dış hatların kapsamadığını kapsar: ölçüm hatası ve katmanların köşeleri."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Düzlemsel olmayan ütüleme"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Her katmanın basamağını düz ütülemek yerine, hafif bir eğimi katmanlar boyunca modelin yüzeyini izleyen tek bir geçişte ütüler. Nozul önceden basılmış malzemenin yanında aşağı indiği için yazıcı ayarlarında baskı kafası dış hatları gerekir ve yalnızca bu dış hatların baskı kafasının serbest kaldığını gösterdiği yerlerde kullanılır. Plakada tek bir nesne gerekir; destek veya prime kulesi olmamalıdır."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Düzlemsel olmayan üst yüzey"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Hafif bir eğimin üst yüzeyini, katmanlarının basamakları yerine modelin yüzeyini izleyen tek bir kabuk olarak basar. Altındaki katmanlar bir katman aşağıda biter ve eğimin son katmanı bittiğinde kabuk onların üzerine basılır. Nozul önceden basılmış malzemenin yanında aşağı indiği için yazıcı ayarlarında baskı kafası dış hatları gerekir ve yalnızca bu dış hatların baskı kafasının serbest kaldığını gösterdiği yerlerde kullanılır. Plakada tek bir nesne gerekir; destek veya prime kulesi olmamalıdır. Deneysel."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Başka uygulama (MCP, yerel program)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Yapay zekânın rastgele seçebileceği modeller:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forca'nın yerleşik test modelleri"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Klasör seç..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Yerleşikleri kullan"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Yapay zekânın seçebileceği bir model klasörü seçin"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "NumPy'ı yükle"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "NumPy'ı internetten (pypi.org) Forca'nın Python'una indirir; yapay zekânın Gelişmiş düzeyde çalıştırdığı betikler ve eklentiler için."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca, NumPy'ı internetten (pypi.org) indirip Forca'nın Python'una ekleyecek; yapay zekânın betikleri ve eklentileriniz onu kullanabilecek. Devam edilsin mi?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy yüklenemedi:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "Yapay zekânın Python betikleri için NumPy: yükleniyor..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "Yapay zekânın Python betikleri için NumPy: yüklü"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "Yapay zekânın Python betikleri için NumPy: yüklü değil"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Yalnızca yerel MCP sunucuları başlatan bir uygulama için (adres değil, bir \"command\"): Forca'nın forca-mcp programı mesajlarını Node.js gerekmeden Forca AI'ya iletir. Aşağıdaki \"forca\" girdisini uygulamanın \"mcpServers\" ayarlarına ekleyin. Anahtarı kendisi bulur, bu yüzden yeni bir anahtar burada değişiklik gerektirmez."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Baskı Riskleri bu plakada başarısız olabilecek %1% yer buldu. Görünüm > Baskı Riskleri nerede olduğunu ve neyi denemeniz gerektiğini gösterir."
+msgstr[1] "Baskı Riskleri bu plakada başarısız olabilecek %1% yer buldu. Görünüm > Baskı Riskleri nerede olduklarını ve neyi denemeniz gerektiğini gösterir."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Plaka raporu: uyarı yok."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Plaka raporu: %1% uyarı."
+msgstr[1] "Plaka raporu: %1% uyarı."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Plaka raporunu aç"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Plakanın bir kısmı yazdırılabilir alanın dışında. Nesneleri yatağın üzerine taşıyın."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Nesneler %1% mm yüksekliğinde, yazdırılabilir yükseklikten (%2% mm) daha yüksek."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Nesneler %1% mm yüksekliğinde, yazdırılabilir yüksekliğe (%2% mm) yakın."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Bir nesne yatağın kenarından %1% mm uzakta; birçok yazıcıda ilk katmanın en az yapıştığı yer burasıdır."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "%1% mm katman yüksekliği, %3% mm nozulun iyi bastığı en yüksek değer olan %2% mm'nin üzerinde: katmanlar birbirine yapışmayabilir."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "%1% mm ilk katman yüksekliği, %3% mm nozulun iyi bastığı en yüksek değer olan %2% mm'nin üzerinde: yatağa yapışmayabilir."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: %2% °C nozul sıcaklığı filamentin önerilen %3%–%4% °C aralığının dışında."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Filamentlerin nozul sıcaklıkları arasında %1% °C fark var. Birlikte basılabildiklerini kontrol edin."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Bu plakadaki filamentlerin yatak sıcaklıkları arasında %1% °C fark var; yatak yalnızca birinde olabilir."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% risk bulundu"
+msgstr[1] "%1% risk bulundu"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "İnce ve uzun"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Küçük taban"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Kısa katmanlar"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% tanesiyle ilgilenilmedi."
+msgstr[1] "%1% tanesiyle ilgilenilmedi."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Plaka raporu"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Metin olarak kopyala"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Plaka raporu yalnızca FFF baskılar içindir."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Plaka %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Bu plaka boş."
+
+# AI Translated
+msgid "Checks"
+msgstr "Kontroller"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Belirtilecek bir şey yok."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Belirtilecek bir şey yok. Dilimleyicinin kendi kontrollerini eklemek için plakayı dilimleyin."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Riskleri kontrol etmek için plakayı dilimleyin."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Baskı Riskleri düğmesi nerede ve neyi denemeniz gerektiğini gösterir."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Baskı süresini ve ağırlığı görmek için plakayı dilimleyin."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Baskı süresi:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Maliyet:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Katmanlar:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Filament değişiklikleri:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Konum:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "merkez X %1%, Y %2% (yatak merkezi X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Yatak:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Nesneler:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Projede %1% plaka var; bu rapor birini kapsar."
+msgstr[1] "Projede %1% plaka var; bu rapor birini kapsar."
+
+# AI Translated
+msgid "Process:"
+msgstr "İşlem:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Değiştirildi ve kaydedilmedi"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Yok. Ön ayarlar kaydedildiği gibi."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm genişliğinde"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "Plakada %1% mm²"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "Katman başına %1% sn"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Kenar veya raft"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Bu parça yaklaşık %1% mm genişliğinde ve %2% mm yüksekliğinde. Nozul onu sallayabilir veya devirebilir. Daha yavaş basın, birkaç kopyayı birlikte basın, kenar ekleyin veya yanına bir destek duvarı ekleyin."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "%2% mm yüksekliğindeki bu nesnenin yalnızca %1% mm²'si plakaya değiyor. Kopabilir veya devrilebilir."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Kenar veya raft onu tutar."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Kenar ekleyin (Diğerleri > Kenar tipi) veya modeli daha büyük bir yüzü yatağa bakacak şekilde çevirin."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Bu katmanlar en az %1% sn'de basılıyor; bu, filamentin katman süresinden (%2% sn) kısa, bu yüzden soğumayabilir ve sarkabilir veya kıvrılabilirler. Yanına ikinci bir kopya basın veya soğutma için minimum hızı düşürün."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Bir bakışta tüm plaka: kontroller, baskı süresi ve ağırlık, boyut ve konum, temel ayarlar ve kaydedilmemiş değişiklikler."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Tüm plaka"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Dilimlenmiş plakanın nerede başarısız olabileceğini listeler: çıkıntılar, uzun köprüler, havada başlayan parçalar, ince uzun parçalar, küçük tabanlar ve soğuyamayacak kadar kısa katmanlar."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Plaka raporu"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Bir bakışta geçerli plaka: kontroller, baskı süresi ve ağırlık, boyut ve konum, temel ayarlar ve kaydedilmemiş değişiklikler."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Model sitelerindeki \"Open in OrcaSlicer\" düğmelerinin modeli Forca'da açması için bunu işaretleyin."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Baskı kafası dış hatları"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "STEP dosyasını içe aktarırken seçenekleri göster"

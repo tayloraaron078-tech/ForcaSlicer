@@ -17718,6 +17718,10 @@ msgstr "Įrankių keitimo laikas"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Įrankių keitimo laikas. Jis paprastai taikomas įrankių keitimo įrenginiams arba daugiafunkcinėms staklėms. Vieno ekstruderio kelių medžiagų mašinoms jis paprastai lygus 0. Tik statistiniams duomenims."
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Laikas, kurio reikia įrankiui pakeisti. Paprastai taikoma įrankių keitikliams arba kelių įrankių mašinoms. Vieno ekstruderio kelių medžiagų mašinoms paprastai būna 0. Naudojama spausdinimo laikui įvertinti, o įrankių keitikliuose įskaičiuojama į minimalų sluoksnio laiką."
+
 msgid "Bed temperature type"
 msgstr "Pagrindo temperatūros tipas"
 
@@ -42527,6 +42531,405 @@ msgstr "Snapmaker U1 kamera su gamykline programine įranga daro tik nuotraukas,
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Rodyti U1 kamerą"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Neplokštuminis lyginimas nebuvo naudotas. Reikia spausdinimo galvutės kontūro spausdintuvo nustatymuose ir vieno objekto plokštėje, be atramų, valymo bokšto, apsauginio skydo ar aukštesnio nei vienas sluoksnis apvado."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Dalis modelio statesnė, nei spausdinimo galvutė gali sekti (apie %1%°). Ten neplokštuminis lyginimas nebuvo naudotas."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Neplokštuminis viršutinis paviršius nebuvo naudotas. Reikia spausdinimo galvutės kontūro spausdintuvo nustatymuose ir vieno objekto plokštėje, be atramų, valymo bokšto, apsauginio skydo ar aukštesnio nei vienas sluoksnis apvado."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Dalis modelio statesnė, nei spausdinimo galvutė gali sekti (apie %1%°). Ten neplokštuminis viršutinis paviršius nebuvo naudotas."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Purkštuko galiuko skersmuo"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Plokščios dalies pačiame purkštuko gale skersmuo. Naudojamas, kad neplokštuminio spausdinimo metu galvutė neliestų spaudinio."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Purkštuko kūgio skersmuo"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Purkštuko skersmuo ten, kur baigiasi jo kūgis: kūgio viršuje arba silikoninės kojinės apatiniame krašte. 0 reiškia, kad galvutės kontūras nežinomas ir neplokštuminis spausdinimas negalimas."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Purkštuko kūgio aukštis"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Aukštis virš purkštuko galiuko, kuriame matuojamas purkštuko kūgio skersmuo."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Atstumas iki galvutės korpuso"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Atstumas nuo purkštuko centro iki artimiausios šalia žemai nusileidusios galvutės dalies: ventiliatoriaus kanalo, gaubto ar kaitinimo bloko. 0 reiškia, kad niekas nesileidžia žemiau purkštuko kūgio viršaus."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Galvutės korpuso aukštis"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Žemiausios galvutės dalies šalia purkštuko aukštis virš purkštuko galiuko."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Galvutės tarpo atsarga"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Atstumas, išlaikomas tarp galvutės ir spaudinio neplokštuminio spausdinimo metu, papildomai prie aukščiau esančio kontūro. Jis padengia tai, ko kontūras neapima: matavimo paklaidą ir sluoksnių kampus."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Neplokštuminis lyginimas"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Lygina švelnų šlaitą vienu praėjimu, kuris seka modelio paviršių per sluoksnius, užuot plokščiai lyginęs kiekvieno sluoksnio laiptelį. Purkštukas leidžiasi šalia jau atspausdintos medžiagos, todėl reikia galvutės kontūro spausdintuvo nustatymuose, ir naudojama tik ten, kur kontūras rodo, kad galvutė lieka laisva. Reikia vieno objekto plokštėje, be atramų ir valymo bokšto."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Neplokštuminis viršutinis paviršius"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Spausdina švelnaus šlaito viršutinį paviršių kaip vieną apvalkalą, sekantį modelio paviršių, vietoje jo sluoksnių laiptelių. Po juo esantys sluoksniai baigiasi vienu sluoksniu žemiau, o apvalkalas atspausdinamas ant jų, kai baigiamas paskutinis šlaito sluoksnis. Purkštukas leidžiasi šalia jau atspausdintos medžiagos, todėl reikia galvutės kontūro spausdintuvo nustatymuose, ir naudojama tik ten, kur kontūras rodo, kad galvutė lieka laisva. Reikia vieno objekto plokštėje, be atramų ir valymo bokšto. Eksperimentinis."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Kita programa (MCP, vietinė programa)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Modeliai, kuriuos DI gali pasirinkti atsitiktinai:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forca įtaisyti bandomieji modeliai"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Pasirinkti aplanką..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Naudoti įtaisytus"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Pasirinkite modelių aplanką, iš kurio DI gali rinktis"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Įdiegti NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Atsisiunčia NumPy iš interneto (pypi.org) į Forca Python, skriptams, kuriuos DI vykdo išplėstiniu lygiu, ir papildiniams."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca atsisiųs NumPy iš interneto (pypi.org) ir pridės jį prie Forca Python, kur jį galės naudoti DI skriptai ir jūsų papildiniai. Tęsti?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "Nepavyko įdiegti NumPy:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy DI Python skriptams: diegiama..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy DI Python skriptams: įdiegta"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy DI Python skriptams: neįdiegta"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Programai, kuri paleidžia tik vietinius MCP serverius (\"command\", ne adresą): Forca programa forca-mcp perduoda jos pranešimus Forca AI, be Node.js. Pridėkite žemiau esantį įrašą \"forca\" prie programos \"mcpServers\" nustatymų. Raktą ji randa pati, todėl naujam raktui čia nieko keisti nereikia."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Spausdinimo rizikos rado %1% vietą šioje plokštėje, kuri gali nepavykti. Rodinys > Spausdinimo rizikos parodo, kur ji yra ir ką išbandyti."
+msgstr[1] "Spausdinimo rizikos rado %1% vietas šioje plokštėje, kurios gali nepavykti. Rodinys > Spausdinimo rizikos parodo, kur jos yra ir ką išbandyti."
+msgstr[2] "Spausdinimo rizikos rado %1% vietų šioje plokštėje, kurios gali nepavykti. Rodinys > Spausdinimo rizikos parodo, kur jos yra ir ką išbandyti."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Plokštės ataskaita: įspėjimų nėra."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Plokštės ataskaita: %1% įspėjimas."
+msgstr[1] "Plokštės ataskaita: %1% įspėjimai."
+msgstr[2] "Plokštės ataskaita: %1% įspėjimų."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Atidaryti plokštės ataskaitą"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Dalis plokštės yra už spausdinamos srities ribų. Perkelkite objektus ant pagrindo."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Objektai yra %1% mm aukščio, aukštesni nei spausdinamas aukštis (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Objektai yra %1% mm aukščio, arti spausdinamo aukščio (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Objektas yra %1% mm nuo pagrindo krašto, kur daugelyje spausdintuvų pirmas sluoksnis prilimpa prasčiausiai."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "Sluoksnio aukštis %1% mm viršija %2% mm, daugiausiai, ką %3% mm purkštukas gerai spausdina: sluoksniai gali nesukibti tarpusavyje."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "Pirmo sluoksnio aukštis %1% mm viršija %2% mm, daugiausiai, ką %3% mm purkštukas gerai spausdina: jis gali neprilipti prie pagrindo."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: purkštuko temperatūra %2% °C yra už gijos rekomenduojamo intervalo nuo %3% iki %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Gijų purkštuko temperatūros skiriasi %1% °C. Patikrinkite, ar jas galima spausdinti kartu."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Šios plokštės gijų pagrindo temperatūros skiriasi %1% °C; pagrindas gali turėti tik vieną iš jų."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "Rasta %1% rizika"
+msgstr[1] "Rastos %1% rizikos"
+msgstr[2] "Rasta %1% rizikų"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Plonas ir aukštas"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Mažas atramos plotas"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Trumpi sluoksniai"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% neišspręsta."
+msgstr[1] "%1% neišspręstos."
+msgstr[2] "%1% neišspręstų."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Plokštės ataskaita"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Kopijuoti kaip tekstą"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Plokštės ataskaita skirta tik FFF spaudiniams."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Plokštė %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Ši plokštė tuščia."
+
+# AI Translated
+msgid "Checks"
+msgstr "Patikros"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Nėra ką pažymėti."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Nėra ką pažymėti. Sluoksniuokite plokštę, kad būtų pridėtos ir pačios programos patikros."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Sluoksniuokite plokštę, kad patikrintumėte rizikas."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Mygtukas Spausdinimo rizikos parodo, kur ir ką išbandyti."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Sluoksniuokite plokštę, kad pamatytumėte spausdinimo laiką ir svorį."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Spausdinimo laikas:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Gija:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Kaina:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Sluoksniai:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Gijos keitimai:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Padėtis:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "centras X %1%, Y %2% (pagrindo centras X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Pagrindas:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objektai:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Projekte yra %1% plokštė; ši ataskaita apima vieną."
+msgstr[1] "Projekte yra %1% plokštės; ši ataskaita apima vieną."
+msgstr[2] "Projekte yra %1% plokščių; ši ataskaita apima vieną."
+
+# AI Translated
+msgid "Process:"
+msgstr "Procesas:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Gija %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Pakeista ir neišsaugota"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Nėra. Išankstiniai nustatymai tokie, kokie išsaugoti."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm pločio"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² ant plokštės"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s sluoksniui"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Kraštas arba platforma"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Ši dalis yra apie %1% mm pločio ir %2% mm aukščio. Purkštukas gali ją įsiūbuoti arba nuversti. Spausdinkite lėčiau, spausdinkite kelias kopijas kartu, pridėkite kraštą arba šalia atraminę sienelę."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Tik %1% mm² šio %2% mm aukščio objekto liečia plokštę. Jis gali atšokti arba apvirsti."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Kraštas arba platforma jį prilaiko."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Pridėkite kraštą (Kita > Krašto tipas) arba pasukite modelį taip, kad į pagrindą būtų atsukta didesnė pusė."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Šie sluoksniai atspausdinami vos per %1% s, mažiau nei gijos sluoksnio laikas (%2% s), todėl jie gali neatvėsti ir įlinkti ar susiraityti. Šalia atspausdinkite antrą kopiją arba sumažinkite minimalų aušinimo greitį."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Visa plokštė vienu žvilgsniu: patikros, spausdinimo laikas ir svoris, dydis ir padėtis, pagrindiniai nustatymai ir neišsaugoti pakeitimai."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Visa plokštė"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Išvardija, kur sluoksniuota plokštė gali nepavykti: iškyšos, ilgi tiltai, ore prasidedančios dalys, plonos aukštos dalys, maži atramos plotai ir per trumpi atvėsti sluoksniai."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Plokštės ataskaita"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Dabartinė plokštė vienu žvilgsniu: patikros, spausdinimo laikas ir svoris, dydis ir padėtis, pagrindiniai nustatymai ir neišsaugoti pakeitimai."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Pažymėkite, kad modelių svetainių mygtukai \"Open in OrcaSlicer\" atidarytų modelį Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Galvutės kontūras"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Rodyti parinktis importuojant STEP failą"

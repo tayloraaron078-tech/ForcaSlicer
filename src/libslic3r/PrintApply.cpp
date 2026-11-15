@@ -130,6 +130,9 @@ static inline void model_volume_list_copy_configs(ModelObject &model_object_dst,
         // so a paint edit does NOT need the heavy solid_or_modifier_differ assign_copy + invalidate_all_steps.
         assert(mv_dst.support_interface_region_facets.id() == mv_src.support_interface_region_facets.id());
         mv_dst.support_interface_region_facets.assign(mv_src.support_interface_region_facets);
+        assert(mv_dst.painted_modifier_facets.id() == mv_src.painted_modifier_facets.id());
+        mv_dst.painted_modifier_facets.assign(mv_src.painted_modifier_facets);
+        mv_dst.painted_modifier_depth = mv_src.painted_modifier_depth;
         //FIXME what to do with the materials?
         // mv_dst.m_material_id = mv_src.m_material_id;
         ++ i_src;
@@ -661,7 +664,8 @@ private:
 static inline bool model_volume_solid_or_modifier(const ModelVolume &mv)
 {
     ModelVolumeType type = mv.type();
-    return type == ModelVolumeType::MODEL_PART || type == ModelVolumeType::NEGATIVE_VOLUME || type == ModelVolumeType::PARAMETER_MODIFIER;
+    return type == ModelVolumeType::MODEL_PART || type == ModelVolumeType::NEGATIVE_VOLUME || type == ModelVolumeType::PARAMETER_MODIFIER ||
+           type == ModelVolumeType::PAINTED_MODIFIER;
 }
 
 static inline Transform3f trafo_for_bbox(const Transform3d &object_trafo, const Transform3d &volume_trafo)
@@ -879,10 +883,10 @@ bool verify_update_print_object_regions(
         // Remember whether a given modifier ModelVolume was visited already.
         auto it_model_volume_modifier_last = model_volumes.end();
         for (PrintObjectRegions::VolumeRegion &region : layer_range.volume_regions)
-            if (region.model_volume->is_model_part() || region.model_volume->is_modifier()) {
+            if (region.model_volume->is_model_part() || region.model_volume->is_region_modifier()) {
                 auto it_model_volume = lower_bound_by_predicate(model_volumes.begin(), model_volumes.end(), [&region](const ModelVolume *l){ return l->id() < region.model_volume->id(); });
                 assert(it_model_volume != model_volumes.end() && (*it_model_volume)->id() == region.model_volume->id());
-                if (region.model_volume->is_modifier() && it_model_volume != it_model_volume_modifier_last) {
+                if (region.model_volume->is_region_modifier() && it_model_volume != it_model_volume_modifier_last) {
                     // A modifier ModelVolume is visited for the first time.
                     // A visited modifier may not have had parent volume_regions created overlapping with some model parts or modifiers,
                     // if the visited modifier did not modify their properties. Now the visited modifier's configuration may have changed,
@@ -894,7 +898,7 @@ bool verify_update_print_object_regions(
                     for (int parent_region_id = next_region_id - 1; parent_region_id >= 0; -- parent_region_id) {
                         const PrintObjectRegions::VolumeRegion &parent_region = layer_range.volume_regions[parent_region_id];
                         assert(parent_region.model_volume != region.model_volume);
-                        if (parent_region.model_volume->is_model_part() || parent_region.model_volume->is_modifier()) {
+                        if (parent_region.model_volume->is_model_part() || parent_region.model_volume->is_region_modifier()) {
                             // volume_regions are produced in decreasing order of parent volume_regions ids.
                             // Some regions may not have been generated the last time by generate_print_object_regions().
                             assert(next_region_id == int(layer_range.volume_regions.size()) ||
@@ -1223,14 +1227,14 @@ static PrintObjectRegions* generate_print_object_regions(
                         // Add a negative (subtractor) volume. Such volume has neither region nor parent volume assigned.
                         layer_range.volume_regions.push_back({ &volume, -1, nullptr, bbox });
                     } else {
-                        assert(volume.is_modifier());
+                        assert(volume.is_region_modifier());
                         // Modifiers may be chained one over the other. Check for overlap, merge DynamicPrintConfigs.
                         bool added = false;
                         int  parent_model_part_id = -1;
                         for (int parent_region_id = int(layer_range.volume_regions.size()) - 1; parent_region_id >= 0; -- parent_region_id) {
                             const PrintObjectRegions::VolumeRegion &parent_region = layer_range.volume_regions[parent_region_id];
                             const ModelVolume                      &parent_volume = *parent_region.model_volume;
-                            if (parent_volume.is_model_part() || parent_volume.is_modifier())
+                            if (parent_volume.is_model_part() || parent_volume.is_region_modifier())
                                 if (PrintObjectRegions::BoundingBox parent_bbox = find_modifier_volume_extents(layer_range, parent_region_id); parent_bbox.intersects(*bbox)) {
                                     // Only create new region for a modifier, which actually modifies config of it's parent.
                                     if (PrintRegionConfig config = region_config_from_model_volume(parent_region.region->config(), nullptr, volume, num_extruders, variant_index);
@@ -1255,7 +1259,7 @@ static PrintObjectRegions* generate_print_object_regions(
         for (unsigned int painted_extruder_id : painting_extruders)
             for (int parent_region_id = 0; parent_region_id < int(layer_range.volume_regions.size()); ++ parent_region_id)
                 if (const PrintObjectRegions::VolumeRegion &parent_region = layer_range.volume_regions[parent_region_id];
-                    parent_region.model_volume->is_model_part() || parent_region.model_volume->is_modifier()) {
+                    parent_region.model_volume->is_model_part() || parent_region.model_volume->is_region_modifier()) {
                     PrintRegionConfig cfg = parent_region.region->config();
                     cfg.outer_wall_filament_id.value = painted_extruder_id;
                     cfg.inner_wall_filament_id.value = painted_extruder_id;
@@ -1279,7 +1283,7 @@ static PrintObjectRegions* generate_print_object_regions(
             // FuzzySkinPaintedRegion can override different parts of the Layer than PaintedRegions,
             // so FuzzySkinPaintedRegion has to point to both VolumeRegion and PaintedRegion.
             for (int parent_volume_region_id = 0; parent_volume_region_id < int(layer_range.volume_regions.size()); ++parent_volume_region_id) {
-                if (const PrintObjectRegions::VolumeRegion &parent_volume_region = layer_range.volume_regions[parent_volume_region_id]; parent_volume_region.model_volume->is_model_part() || parent_volume_region.model_volume->is_modifier()) {
+                if (const PrintObjectRegions::VolumeRegion &parent_volume_region = layer_range.volume_regions[parent_volume_region_id]; parent_volume_region.model_volume->is_model_part() || parent_volume_region.model_volume->is_region_modifier()) {
                     PrintRegionConfig cfg = parent_volume_region.region->config();
                     if (cfg.fuzzy_skin.value != FuzzySkinType::Disabled_fuzzy) cfg.fuzzy_skin.value = FuzzySkinType::All;
                     layer_range.fuzzy_skin_painted_regions.push_back({FuzzySkinParentType::VolumeRegion, parent_volume_region_id, get_create_region(std::move(cfg))});
@@ -1349,7 +1353,7 @@ void Print::update_shrinkage_compensation(size_t num_extruders, std::vector<int>
         if (std::none_of(model_object->instances.begin(), model_object->instances.end(), [](const ModelInstance *mi) { return mi->is_printable(); }))
             continue;
         std::vector<const ModelVolume*> modifiers;
-        std::copy_if(model_object->volumes.begin(), model_object->volumes.end(), std::back_inserter(modifiers), [](const ModelVolume *mv) { return mv->is_modifier(); });
+        std::copy_if(model_object->volumes.begin(), model_object->volumes.end(), std::back_inserter(modifiers), [](const ModelVolume *mv) { return mv->is_region_modifier(); });
         for (const ModelVolume *part : model_object->volumes) {
             if (! part->is_model_part())
                 continue;
@@ -1892,7 +1896,8 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
     PrintObjectStatusDB print_object_status_db(m_objects);
 
     // 3) Synchronize ModelObjects & PrintObjects.
-    const std::initializer_list<ModelVolumeType> solid_or_modifier_types { ModelVolumeType::MODEL_PART, ModelVolumeType::NEGATIVE_VOLUME, ModelVolumeType::PARAMETER_MODIFIER };
+    const std::initializer_list<ModelVolumeType> solid_or_modifier_types { ModelVolumeType::MODEL_PART, ModelVolumeType::NEGATIVE_VOLUME, ModelVolumeType::PARAMETER_MODIFIER,
+                                                                         ModelVolumeType::PAINTED_MODIFIER };
     const std::initializer_list<ModelVolumeType> precise_seam_types {
         ModelVolumeType::PRECISE_SEAM_CENTER, ModelVolumeType::PRECISE_SEAM_LEFT,
         ModelVolumeType::PRECISE_SEAM_RIGHT,  ModelVolumeType::PRECISE_SEAM_ENFORCED,
@@ -1912,7 +1917,8 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
         bool solid_or_modifier_differ   = model_volume_list_changed(model_object, model_object_new, solid_or_modifier_types) ||
                                           model_mmu_segmentation_data_changed(model_object, model_object_new) ||
                                           (model_object_new.is_mm_painted() && num_extruders_changed) ||
-                                          model_fuzzy_skin_data_changed(model_object, model_object_new);
+                                          model_fuzzy_skin_data_changed(model_object, model_object_new) ||
+                                          model_painted_modifier_data_changed(model_object, model_object_new);
         // [regional-supports fork] NOTE: support-interface region painting is deliberately NOT in
         // solid_or_modifier_differ. It only affects support generation onward, so it takes the light path below
         // (invalidate posSupportMaterial + sync facets via model_volume_list_copy_configs) exactly like custom
@@ -1983,6 +1989,11 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
                 update_apply_status(this->invalidate_step(psGCodeExport));
             } else if (model_custom_seam_data_changed(model_object, model_object_new)) {
                 update_apply_status(this->invalidate_step(psGCodeExport));
+                // Forca: a painted seam also places the start of a nonplanar ironing pass and of the wall of a
+                // nonplanar top surface, which are made with the fills.
+                for (const PrintObjectStatus &print_object_status : print_objects_range)
+                    if (print_object_status.print_object->m_nonplanar_planned_alone != -1)
+                        update_apply_status(print_object_status.print_object->invalidate_step(posInfill));
             }
             // Synchronize both families once, after cancellation and all affected-step invalidations.
             // This also handles type changes between supports and Precise Seam before copying configs below.
@@ -2015,6 +2026,7 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
 			// [regional-supports fork] the interface-modifier volume carries support_interface_filament on
 			// its config; copy it into the slicing model too, or the regional swap can never read it.
 			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, ModelVolumeType::SUPPORT_INTERFACE_MODIFIER);
+			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, ModelVolumeType::PAINTED_MODIFIER);
 			// Synchronize Precise Seam modifier volumes
 			model_volume_list_copy_configs(model_object /* dst */, model_object_new /* src */, precise_seam_types);
             layer_height_ranges_copy_configs(model_object.layer_config_ranges /* dst */, model_object_new.layer_config_ranges /* src */);
@@ -2383,6 +2395,35 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
     {
         object->update_slicing_parameters();
         m_support_used |= object->config().enable_support;
+    }
+
+    // Forca: nonplanar ironing and the nonplanar top surface are planned only for an object that prints alone. Another
+    // object, a prime tower or a skirt coming or going changes that without changing the object, so its plan is redone.
+    for (PrintObject *object : m_objects)
+        if (object->m_nonplanar_planned_alone != -1 && int(object->prints_alone()) != object->m_nonplanar_planned_alone) {
+            object->m_nonplanar_planned_alone = -1;
+            update_apply_status(object->invalidate_step(posSlice));
+        }
+    // Orca: see precise_z_height_overridden(). The objects it applies to are sliced again when it flips.
+    {
+        const auto precise_z_height = [](const PrintObject *object) { return object->config().precise_z_height.value; };
+        const auto custom_layering  = [](const PrintObject *object) { return object->model_object()->has_custom_layering(); };
+        const auto other_height     = [this](const PrintObject *object) {
+            return std::abs(object->slicing_parameters().object_print_z_height() - m_objects.front()->slicing_parameters().object_print_z_height()) > EPSILON;
+        };
+        const bool overridden = this->has_wipe_tower() &&
+            std::any_of(m_objects.begin(), m_objects.end(), precise_z_height) &&
+            std::any_of(m_objects.begin(), m_objects.end(), custom_layering) &&
+            std::any_of(m_objects.begin(), m_objects.end(), other_height);
+        if (overridden != m_precise_z_height_overridden) {
+            m_precise_z_height_overridden = overridden;
+            for (PrintObject *object : m_objects)
+                if (precise_z_height(object)) {
+                    update_apply_status(object->invalidate_step(posSlice));
+                    // invalidate_step() drops the slicing parameters, and validate() reads them before slicing.
+                    object->update_slicing_parameters();
+                }
+        }
     }
 
 #ifdef _DEBUG

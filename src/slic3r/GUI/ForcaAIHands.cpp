@@ -4,6 +4,7 @@
 #include "ForcaAI.hpp"
 #include "ForcaAIFiles.hpp"
 #include "ForcaAIKeys.hpp"
+#include "ForcaPlateReportDialog.hpp" // forca_plate_report_checks
 #include "ForcaPrintRiskDialog.hpp" // forca_plate_risks
 
 #include "GUI.hpp"
@@ -17,6 +18,8 @@
 #include "Selection.hpp"
 #include "Tab.hpp"
 #include "Jobs/Worker.hpp"
+#include "libslic3r/ForcaPaintRegion.hpp"
+#include "libslic3r/ForcaPlateReport.hpp"
 #include "libslic3r/ForcaPrintRisk.hpp"
 #include "libslic3r/Format/bbs_3mf.hpp"
 #include "libslic3r/Format/ProjectStrategy.hpp" // LoadStrategy, SaveStrategy
@@ -26,6 +29,7 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/TriangleMesh.hpp"
+#include "libslic3r/TriangleSelector.hpp"
 #include "slic3r/Utils/NetworkAgent.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -44,6 +48,7 @@
 #include <libslic3r/BoundingBox.hpp>
 #include <functional>
 #include <map>
+#include <optional>
 #include <libslic3r/libslic3r.h>
 #include <libslic3r/Geometry.hpp>
 #include <libslic3r/PrintBase.hpp>
@@ -757,6 +762,116 @@ ForcaAIResult tool_object_settings(const json& args)
     return ForcaAIResult::json({ { "object", obj_idx }, { "set", applied }, { "removed", removed } });
 }
 
+// Paints support / support-interface / seam areas on an object's parts, as the painting tools do (P5 region painting).
+ForcaAIResult tool_paint_regions(const json& args)
+{
+    std::string err;
+    Plater*     p = plater_ready(err);
+    if (!p)
+        return ForcaAIResult::error(err);
+    int          obj_idx = -1;
+    ModelObject* o       = object_arg(p, args, obj_idx, err);
+    if (!o)
+        return ForcaAIResult::error(err);
+    if (o->instances.empty())
+        return ForcaAIResult::error("The object has no instances.");
+
+    // What to paint: which facet layer and the state each facet gets.
+    const std::string                   paint = args.value("paint", std::string());
+    const std::optional<ForcaPaintKind> kind  = forca_paint_kind(paint);
+    if (!kind)
+        return ForcaAIResult::error("paint must be one of: filament, clear_filament, support_enforcer, support_blocker, "
+                                    "clear_support, support_interface, clear_support_interface, seam_enforcer, "
+                                    "seam_blocker, clear_seam.");
+    FacetsAnnotation ModelVolume::*const layer = kind->layer;
+    EnforcerBlockerType                  state = kind->state;
+    if (kind->needs_filament) {
+        const int    filament = args.value("filament", 0);
+        const size_t slots    = wxGetApp().preset_bundle->filament_presets.size();
+        if (filament < 1 || size_t(filament) > slots || filament > int(EnforcerBlockerType::ExtruderMax))
+            return ForcaAIResult::error(paint + " needs 'filament': the project's filament slot (1 to " +
+                                        std::to_string(slots) + ") to paint with.");
+        state = EnforcerBlockerType(filament);
+    }
+
+    // Where: a shape in plate mm (default: the whole object), and/or only facets facing down.
+    ForcaPaintRegion  region;
+    const std::string shape = args.value("shape", std::string("all"));
+    if (shape == "box")
+        region.shape = ForcaPaintRegion::Shape::Box;
+    else if (shape == "sphere")
+        region.shape = ForcaPaintRegion::Shape::Sphere;
+    else if (shape != "all")
+        return ForcaAIResult::error("shape must be all, box or sphere.");
+    if (region.shape != ForcaPaintRegion::Shape::All) {
+        try {
+            const json& c = args.value("center", json());
+            const json& s = args.value("size", json());
+            if (!c.is_array() || c.size() != 3)
+                return ForcaAIResult::error("A box or sphere needs center [x, y, z] in plate mm (like forca_scene).");
+            region.center = Vec3d(c[0].get<double>(), c[1].get<double>(), c[2].get<double>());
+            if (s.is_number())
+                region.size = Vec3d::Constant(s.get<double>());
+            else if (s.is_array() && s.size() == 3)
+                region.size = Vec3d(s[0].get<double>(), s[1].get<double>(), s[2].get<double>());
+            else
+                return ForcaAIResult::error("A box or sphere needs size: a number or [x, y, z] in mm.");
+        } catch (const std::exception&) {
+            return ForcaAIResult::error("center and size must be numbers.");
+        }
+        if (region.size.minCoeff() < 0.1)
+            return ForcaAIResult::error("Each size must be at least 0.1 mm.");
+    }
+    if (args.contains("facing_down_deg")) {
+        if (!args["facing_down_deg"].is_number())
+            return ForcaAIResult::error("facing_down_deg must be a number of degrees (0 to 90).");
+        region.down_deg = std::clamp(args["facing_down_deg"].get<double>(), 0., 90.);
+    }
+
+    // Which facets of each part, placed as the first instance is.
+    const Transform3d                          instance = o->instances.front()->get_matrix();
+    std::vector<std::pair<ModelVolume*, std::vector<int>>> hits;
+    size_t                                     total = 0;
+    for (ModelVolume* v : o->volumes) {
+        if (!v->is_model_part())
+            continue;
+        std::vector<int> facets = forca_facets_in_region(v->mesh().its, instance * v->get_matrix(), region);
+        total += facets.size();
+        hits.emplace_back(v, std::move(facets));
+    }
+    if (total == 0)
+        return ForcaAIResult::error("No surface of the object is in that region. Check center and size against "
+                                    "forca_scene's bounding box.");
+
+    {
+        Plater::TakeSnapshot snapshot(p, "AI: paint " + paint + " on " + o->name);
+        for (auto& [v, facets] : hits)
+            forca_paint_facets(*v, layer, facets, state);
+    }
+    if (ObjectList* list = wxGetApp().obj_list())
+        list->update_info_items(size_t(obj_idx));
+    p->changed_object(obj_idx);
+
+    json j = { { "object", obj_idx }, { "painted", paint }, { "facets", total } };
+    if (layer == &ModelVolume::mmu_segmentation_facets && state != EnforcerBlockerType::NONE)
+        j["hint"] = "These areas print with filament " + std::to_string(int(state)) +
+                    " and show in its colour in the Prepare view.";
+    else if (layer == &ModelVolume::mmu_segmentation_facets)
+        j["hint"] = "These areas print with the object's own filament again.";
+    else if (layer == &ModelVolume::seam_facets || state == EnforcerBlockerType::NONE)
+        j["hint"] = "Not a colour: the user sees this painting only with the matching paint tool open (Support Painting, "
+                    "Seam Painting, Support Interface Regions).";
+    else if (layer == &ModelVolume::supported_facets)
+        j["hint"] = "Painted support enforcers and blockers take effect when support is on (enable_support); with a "
+                    "'(manual)' support type only enforced areas get support. Not a colour: the user sees them only "
+                    "with the Support Painting tool open. Slice and check forca_risk_report.";
+    else
+        j["hint"] = "The interface under these areas prints with filament " + std::to_string(int(state)) +
+                    " when support is on. Not a colour: the user sees them only with the Support Interface Regions "
+                    "tool open. Slice to check.";
+    return ForcaAIResult::json(j);
+}
+
 ForcaAIResult tool_add_modifier(const json& args)
 {
     std::string err;
@@ -1012,7 +1127,7 @@ ForcaAIResult tool_risk_report(const json& args)
         const ForcaPlateRisk& r    = risks[n];
         const auto            mm   = [](double v) { return std::round(v * 100) / 100; };
         json                  item = { { "n", n + 1 },
-                                       { "object", r.object },
+                                       { "object", r.object.empty() ? std::string("(whole plate)") : r.object },
                                        { "z_mm", { mm(r.risk.z_min), mm(r.risk.z_max) } },
                                        { "layers", { r.risk.first_layer + 1, r.risk.last_layer + 1 } },
                                        { "area_mm2", mm(r.risk.area) },
@@ -1035,6 +1150,24 @@ ForcaAIResult tool_risk_report(const json& args)
             item["type"] = "floating_island";
             item["rule"] = "a new part of the slice with nothing printed under it";
             break;
+        case PrintRiskType::ThinTall:
+            item["type"]     = "thin_tall";
+            item["width_mm"] = mm(r.risk.distance);
+            item["rule"]     = "a part under 8 mm wide standing more than 8 times its width; support does not apply";
+            break;
+        case PrintRiskType::SmallFootprint:
+            item["type"]                = "small_footprint";
+            item["largest_layer_mm2"]   = mm(r.risk.limit);
+            item["object_height_mm"]    = mm(r.risk.distance);
+            item["rule"]                = "first layer under a fifth of the largest layer, or a base 3x narrower than "
+                                          "the object is tall; support_printed_under_it means a brim or raft holds it";
+            break;
+        case PrintRiskType::ShortLayers:
+            item["type"]               = "short_layers";
+            item["shortest_layer_s"]   = mm(r.risk.distance);
+            item["layer_time_s"]       = mm(r.risk.limit);
+            item["rule"]               = "layers shorter than 90% of the filament's slow_down_layer_time (from the G-code)";
+            break;
         }
         json at = json::array(); // where on the bed, mm, one per instance
         for (const Vec3d& pt : r.points)
@@ -1045,7 +1178,9 @@ ForcaAIResult tool_risk_report(const json& args)
     return ForcaAIResult::json({ { "plate", plate + 1 }, { "count", risks.size() }, { "risks", list },
                                  { "hint", "The user sees the same list, numbered, under View > Print Risks. Fixes to "
                                            "suggest: support (enable_support, support_threshold_angle), orientation, "
-                                           "thick_bridges and a lower bridge speed; slice again to check." } });
+                                           "thick_bridges and a lower bridge speed, brim_type for a small footprint, "
+                                           "slower speeds or more copies for thin tall parts and short layers; slice "
+                                           "again to check." } });
 }
 
 // The slice report of a sliced plate (0-based); also shown on the print approval card (ForcaAIPrint.cpp).
@@ -1103,6 +1238,21 @@ json plate_report(int plate_idx, std::string& err)
                { "layers", layers },
                { "toolpath_outside_plate", result->toolpath_outside },
                { "warnings", warnings } };
+    // The plate report's fixed-rule checks (View > Plate Report shows them in words).
+    json checks = json::array();
+    for (const ForcaPlateCheck& c : forca_plate_report_checks(plate_idx)) {
+        json item = { { "check", forca_plate_check_key(c.id) }, { "level", c.warning ? "warning" : "note" } };
+        if (!c.filament.empty())
+            item["filament"] = c.filament;
+        if (c.value != 0 || c.limit != 0) {
+            item["value"] = std::round(c.value * 100) / 100;
+            item["limit"] = std::round(c.limit * 100) / 100;
+        }
+        if (c.low != 0)
+            item["low"] = std::round(c.low * 100) / 100;
+        checks.push_back(item);
+    }
+    j["checks"] = checks;
     return j;
 }
 
@@ -1362,19 +1512,46 @@ void register_forca_ai_hand_tools(ForcaAI& ai)
                       { "object", "type" }),
         tool_add_modifier });
 
+    ai.register_tool({ "forca_paint_regions", "Paint colour, support, interface or seam areas",
+        "Paint areas of an object as the painting tools do: a filament (colour painting: the area prints with that "
+        "filament slot and shows in its colour in the Prepare view), support enforcer / blocker, a Forca "
+        "support-interface region (the interface printed there with one filament, like the Support Interface Regions "
+        "tool), seam enforcer / blocker, or clear any of them. Only 'filament' changes what the user sees on the "
+        "model; the others show only with their paint tool open. The area is the surface inside a box or sphere (center and size in "
+        "plate mm, like forca_scene; default shape 'all' = the whole object), optionally only where it faces down within "
+        "facing_down_deg of straight down (e.g. 45 for overhang undersides). Whole facets are painted. One undo step.",
+        object_schema({ { "object", object_idx },
+                        { "paint", { { "type", "string" }, { "enum", { "filament", "clear_filament",
+                                                                      "support_enforcer", "support_blocker", "clear_support",
+                                                                      "support_interface", "clear_support_interface",
+                                                                      "seam_enforcer", "seam_blocker", "clear_seam" } } } },
+                        { "filament", { { "type", "integer" }, { "minimum", 1 },
+                                        { "description", "filament and support_interface: the filament slot to paint with." } } },
+                        { "shape", { { "type", "string" }, { "enum", { "all", "box", "sphere" } } } },
+                        { "center", vec_prop(3, 3, "Centre [x, y, z] in plate mm.") },
+                        { "size", { { "description", "[x, y, z] mm, or one number for all three (sphere: its diameter)." } } },
+                        { "facing_down_deg", { { "type", "number" }, { "minimum", 0 }, { "maximum", 90 },
+                                               { "description", "Only surfaces facing down within this angle of straight down." } } } },
+                      { "object", "paint" }),
+        tool_paint_regions });
+
     ai.register_tool({ "forca_slice", "Slice a plate",
         "Slice a plate (default: current) and show the Preview. Returns at once; call forca_slice_result for the result.",
         object_schema({ { "plate", { { "type", "integer" }, { "minimum", 1 } } } }), tool_slice });
 
     ai.register_tool({ "forca_slice_result", "Slice result",
         "The state of the slice started by forca_slice. When done: print time, filament length/weight/cost, filament "
-        "changes, layers, and Forca's slicing warnings.",
+        "changes, layers, Forca's slicing warnings, and the plate report's fixed-rule checks (objects outside or near "
+        "the edge of the bed, height, layer height vs nozzle, nozzle temperature vs the filament's range, filaments "
+        "far apart in temperature).",
         object_schema(), tool_slice_result });
 
     ai.register_tool({ "forca_risk_report", "Print risks",
         "Where a sliced plate (default: current) may fail, as View > Print Risks lists it: overhangs past the support "
-        "threshold angle, bridges longer than max_bridge_length and islands that start in mid-air, each with its object, "
-        "height, layers, size, position and whether support is printed under it. Slice first.",
+        "threshold angle, bridges longer than max_bridge_length, islands that start in mid-air, thin tall parts, small "
+        "first layers (footprints) and layers too short to cool (once the G-code is made), each with its object, "
+        "height, layers, size, position and whether support (or, for a footprint, a brim or raft) takes care of it. "
+        "Slice first.",
         object_schema({ { "plate", { { "type", "integer" }, { "minimum", 1 } } } }), tool_risk_report });
 
     ai.register_tool({ "forca_view", "Change the view",

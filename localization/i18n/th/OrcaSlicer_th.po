@@ -17698,6 +17698,10 @@ msgstr "เวลาเปลี่ยนเครื่องมือ"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "เวลาที่ใช้ในการเปลี่ยนเครื่องมือ โดยปกติแล้วจะใช้ได้กับเครื่องเปลี่ยนเครื่องมือหรือเครื่องจักรที่มีเครื่องมือหลายเครื่องมือ สำหรับเครื่องจักรที่ใช้วัสดุหลายชนิดโดยใช้ชุดดันเส้นเดี่ยว โดยทั่วไปจะเป็น 0 สำหรับสถิติเท่านั้น"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "เวลาที่ใช้ในการสลับเครื่องมือ มักใช้กับเครื่องเปลี่ยนเครื่องมือหรือเครื่องหลายเครื่องมือ สำหรับเครื่องหลายวัสดุแบบหัวฉีดเดียวมักเป็น 0 ใช้ในการประมาณเวลาพิมพ์ และในเครื่องเปลี่ยนเครื่องมือจะนับรวมในเวลาขั้นต่ำต่อชั้น"
+
 msgid "Bed temperature type"
 msgstr "ประเภทอุณหภูมิฐานพิมพ์"
 
@@ -42477,6 +42481,395 @@ msgstr "กล้องของ Snapmaker U1 ถ่ายได้เพีย�
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "แสดงกล้องของ U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "ไม่ได้ใช้การรีดผิวแบบไม่ระนาบ ต้องมีโครงร่างหัวพิมพ์ในการตั้งค่าเครื่องพิมพ์ และมีชิ้นงานเดียวบนเพลต โดยไม่มีซัพพอร์ต Prime Tower แนวป้องกันลม หรือเส้นล้อมชิ้นงานที่สูงกว่าหนึ่งชั้น"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "บางส่วนของโมเดลชันกว่าที่หัวพิมพ์จะตามได้ ซึ่งประมาณ %1%° ส่วนนั้นไม่ได้ใช้การรีดผิวแบบไม่ระนาบ"
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "ไม่ได้ใช้ผิวด้านบนแบบไม่ระนาบ ต้องมีโครงร่างหัวพิมพ์ในการตั้งค่าเครื่องพิมพ์ และมีชิ้นงานเดียวบนเพลต โดยไม่มีซัพพอร์ต Prime Tower แนวป้องกันลม หรือเส้นล้อมชิ้นงานที่สูงกว่าหนึ่งชั้น"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "บางส่วนของโมเดลชันกว่าที่หัวพิมพ์จะตามได้ ซึ่งประมาณ %1%° ส่วนนั้นไม่ได้ใช้ผิวด้านบนแบบไม่ระนาบ"
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "เส้นผ่านศูนย์กลางปลายหัวฉีด"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "เส้นผ่านศูนย์กลางของส่วนแบนที่ปลายสุดของหัวฉีด ใช้เพื่อให้หัวพิมพ์ไม่ชนชิ้นงานในการพิมพ์แบบไม่ระนาบ"
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "เส้นผ่านศูนย์กลางกรวยหัวฉีด"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "เส้นผ่านศูนย์กลางของหัวฉีดตรงที่กรวยสิ้นสุด: ด้านบนของกรวย หรือขอบล่างของปลอกซิลิโคน ค่า 0 หมายถึงไม่ทราบโครงร่างหัวพิมพ์ และใช้การพิมพ์แบบไม่ระนาบไม่ได้"
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "ความสูงกรวยหัวฉีด"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "ความสูงเหนือปลายหัวฉีดที่ใช้วัดเส้นผ่านศูนย์กลางกรวยหัวฉีด"
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "ระยะถึงตัวหัวพิมพ์"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "ระยะจากจุดศูนย์กลางหัวฉีดถึงส่วนที่ใกล้ที่สุดของหัวพิมพ์ที่ห้อยต่ำอยู่ข้างๆ เช่น ท่อลมพัดลม ฝาครอบ หรือบล็อกฮีตเตอร์ ค่า 0 หมายถึงไม่มีส่วนใดห้อยต่ำกว่าด้านบนของกรวยหัวฉีด"
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "ความสูงตัวหัวพิมพ์"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "ความสูงเหนือปลายหัวฉีดของส่วนที่ต่ำที่สุดของหัวพิมพ์ข้างหัวฉีด"
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "ระยะเผื่อช่องว่างของหัวพิมพ์"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "ระยะที่เว้นไว้ระหว่างหัวพิมพ์กับชิ้นงานในการพิมพ์แบบไม่ระนาบ เพิ่มจากโครงร่างด้านบน ครอบคลุมสิ่งที่โครงร่างไม่ครอบคลุม เช่น ความคลาดเคลื่อนในการวัดและมุมของชั้น"
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "รีดผิวแบบไม่ระนาบ"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "รีดผิวทางลาดชันน้อยในรอบเดียวที่ไล่ตามผิวโมเดลข้ามชั้น แทนการรีดขั้นบันไดของแต่ละชั้นให้เรียบ หัวฉีดจะเลื่อนลงข้างวัสดุที่พิมพ์ไปแล้ว จึงต้องมีโครงร่างหัวพิมพ์ในการตั้งค่าเครื่องพิมพ์ และจะใช้เฉพาะตรงที่โครงร่างแสดงว่าหัวพิมพ์ไม่ชน ต้องมีชิ้นงานเดียวบนเพลต โดยไม่มีซัพพอร์ตหรือ Prime Tower"
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "ผิวด้านบนแบบไม่ระนาบ"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "พิมพ์ผิวด้านบนของทางลาดชันน้อยเป็นผิวชั้นเดียวที่ไล่ตามผิวโมเดล แทนขั้นบันไดของชั้นต่างๆ ชั้นที่อยู่ข้างใต้จะจบต่ำลงหนึ่งชั้น และจะพิมพ์ผิวทับเมื่อชั้นสุดท้ายของทางลาดเสร็จ หัวฉีดจะเลื่อนลงข้างวัสดุที่พิมพ์ไปแล้ว จึงต้องมีโครงร่างหัวพิมพ์ในการตั้งค่าเครื่องพิมพ์ และจะใช้เฉพาะตรงที่โครงร่างแสดงว่าหัวพิมพ์ไม่ชน ต้องมีชิ้นงานเดียวบนเพลต โดยไม่มีซัพพอร์ตหรือ Prime Tower เป็นฟีเจอร์ทดลอง"
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "แอปอื่น (MCP, โปรแกรมในเครื่อง)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "โมเดลที่ AI สุ่มเลือกได้:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "โมเดลทดสอบในตัวของ Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "เลือกโฟลเดอร์..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "ใช้แบบในตัว"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "เลือกโฟลเดอร์โมเดลที่ AI เลือกได้"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "ติดตั้ง NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "ดาวน์โหลด NumPy จากอินเทอร์เน็ต (pypi.org) ลงใน Python ของ Forca สำหรับสคริปต์ที่ AI รันในระดับขั้นสูงและสำหรับปลั๊กอิน"
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca จะดาวน์โหลด NumPy จากอินเทอร์เน็ต (pypi.org) และเพิ่มลงใน Python ของ Forca ซึ่งสคริปต์ของ AI และปลั๊กอินของคุณใช้ได้ ดำเนินการต่อหรือไม่?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "ติดตั้ง NumPy ไม่สำเร็จ:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy สำหรับสคริปต์ Python ของ AI: กำลังติดตั้ง..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy สำหรับสคริปต์ Python ของ AI: ติดตั้งแล้ว"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy สำหรับสคริปต์ Python ของ AI: ยังไม่ได้ติดตั้ง"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "สำหรับแอปที่เริ่มได้เฉพาะเซิร์ฟเวอร์ MCP ในเครื่อง (\"command\" ไม่ใช่ที่อยู่): โปรแกรม forca-mcp ของ Forca จะส่งต่อข้อความไปยัง Forca AI โดยไม่ต้องใช้ Node.js เพิ่มรายการ \"forca\" ด้านล่างลงในการตั้งค่า \"mcpServers\" ของแอป โปรแกรมจะหาคีย์เอง จึงไม่ต้องแก้ไขที่นี่เมื่อมีคีย์ใหม่"
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "ความเสี่ยงในการพิมพ์พบ %1% จุดบนเพลตนี้ที่อาจพิมพ์ไม่สำเร็จ มุมมอง > ความเสี่ยงในการพิมพ์ แสดงตำแหน่งและสิ่งที่ควรลอง"
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "รายงานเพลต: ไม่มีคำเตือน"
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "รายงานเพลต: คำเตือน %1% รายการ"
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "เปิดรายงานเพลต"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "บางส่วนของเพลตอยู่นอกพื้นที่พิมพ์ได้ ย้ายชิ้นงานให้อยู่บนฐานพิมพ์"
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "ชิ้นงานสูง %1% มม. สูงกว่าความสูงที่พิมพ์ได้ (%2% มม.)"
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "ชิ้นงานสูง %1% มม. ใกล้ความสูงที่พิมพ์ได้ (%2% มม.)"
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "มีชิ้นงานอยู่ห่างจากขอบฐานพิมพ์ %1% มม. ซึ่งเป็นตำแหน่งที่ชั้นแรกยึดติดได้น้อยที่สุดในเครื่องพิมพ์หลายรุ่น"
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "ความสูงชั้น %1% มม. สูงกว่า %2% มม. ซึ่งเป็นค่าสูงสุดที่หัวฉีด %3% มม. พิมพ์ได้ดี ชั้นอาจไม่ติดกัน"
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "ความสูงชั้นแรก %1% มม. สูงกว่า %2% มม. ซึ่งเป็นค่าสูงสุดที่หัวฉีด %3% มม. พิมพ์ได้ดี อาจไม่ยึดติดฐานพิมพ์"
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: อุณหภูมิหัวฉีด %2% °C อยู่นอกช่วงที่แนะนำของเส้นพลาสติก %3% ถึง %4% °C"
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "อุณหภูมิหัวฉีดของเส้นพลาสติกต่างกัน %1% °C ตรวจสอบว่าพิมพ์ร่วมกันได้"
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "อุณหภูมิฐานพิมพ์ของเส้นพลาสติกบนเพลตนี้ต่างกัน %1% °C ฐานพิมพ์ตั้งได้เพียงค่าเดียว"
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "พบความเสี่ยง %1% รายการ"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "บางและสูง"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "พื้นที่ฐานเล็ก"
+
+# AI Translated
+msgid "Short layers"
+msgstr "ชั้นที่ใช้เวลาสั้น"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "ยังไม่ได้จัดการ %1% รายการ"
+
+# AI Translated
+msgid "Plate report"
+msgstr "รายงานเพลต"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "คัดลอกเป็นข้อความ"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "รายงานเพลตใช้ได้กับงานพิมพ์ FFF เท่านั้น"
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "เพลต %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "เพลตนี้ว่างเปล่า"
+
+# AI Translated
+msgid "Checks"
+msgstr "การตรวจสอบ"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "ไม่มีสิ่งที่ต้องแจ้ง"
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "ไม่มีสิ่งที่ต้องแจ้ง สไลซ์เพลตเพื่อเพิ่มการตรวจสอบของตัวสไลเซอร์เอง"
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "สไลซ์เพลตเพื่อตรวจหาความเสี่ยง"
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "ปุ่มความเสี่ยงในการพิมพ์แสดงตำแหน่งและสิ่งที่ควรลอง"
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "สไลซ์เพลตเพื่อดูเวลาพิมพ์และน้ำหนัก"
+
+# AI Translated
+msgid "Print time:"
+msgstr "เวลาพิมพ์:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "เส้นพลาสติก:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "ต้นทุน:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "ชั้น:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "การเปลี่ยนเส้นพลาสติก:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "ตำแหน่ง:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "จุดศูนย์กลางที่ X %1%, Y %2% (ศูนย์กลางฐานพิมพ์ X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "ฐานพิมพ์:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "ชิ้นงาน:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "โปรเจกต์มี %1% เพลต รายงานนี้ครอบคลุมหนึ่งเพลต"
+
+# AI Translated
+msgid "Process:"
+msgstr "กระบวนการ:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "เส้นพลาสติก %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "เปลี่ยนแล้วแต่ยังไม่บันทึก"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "ไม่มี ค่าที่ตั้งไว้ยังเหมือนที่บันทึกไว้"
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "กว้าง %1% มม."
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% มม.² บนเพลต"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% วินาทีต่อชั้น"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "ขอบยึดหรือฐานรอง"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "ส่วนนี้กว้างประมาณ %1% มม. และสูง %2% มม. หัวฉีดอาจทำให้โยกหรือล้มได้ ให้พิมพ์ช้าลง พิมพ์หลายชิ้นพร้อมกัน เพิ่มขอบยึด หรือเพิ่มผนังรองรับข้างๆ"
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "ชิ้นงานที่สูง %2% มม. นี้แตะเพลตเพียง %1% มม.² อาจหลุดหรือล้มได้"
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "ขอบยึดหรือฐานรองช่วยยึดไว้"
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "เพิ่มขอบยึด (อื่นๆ > ชนิด ขอบยึดชิ้นงาน) หรือหมุนโมเดลให้ด้านที่ใหญ่กว่าหันลงฐานพิมพ์"
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "ชั้นเหล่านี้พิมพ์เสร็จเร็วสุดใน %1% วินาที น้อยกว่าเวลาต่อชั้นของเส้นพลาสติก (%2% วินาที) จึงอาจเย็นตัวไม่ทันและยุบหรือม้วนงอ ให้พิมพ์ชิ้นที่สองข้างๆ หรือลดความเร็วขั้นต่ำสำหรับการระบายความร้อน"
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "ภาพรวมทั้งเพลต: การตรวจสอบ เวลาพิมพ์และน้ำหนัก ขนาดและตำแหน่ง การตั้งค่าหลัก และการเปลี่ยนแปลงที่ยังไม่บันทึก"
+
+# AI Translated
+msgid "Whole plate"
+msgstr "ทั้งเพลต"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "แสดงจุดที่เพลตที่สไลซ์แล้วอาจพิมพ์ไม่สำเร็จ: ส่วนยื่น สะพานยาว ส่วนที่เริ่มกลางอากาศ ส่วนบางและสูง พื้นที่ฐานเล็ก และชั้นที่สั้นเกินกว่าจะเย็นตัว"
+
+# AI Translated
+msgid "Plate Report"
+msgstr "รายงานเพลต"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "ภาพรวมของเพลตปัจจุบัน: การตรวจสอบ เวลาพิมพ์และน้ำหนัก ขนาดและตำแหน่ง การตั้งค่าหลัก และการเปลี่ยนแปลงที่ยังไม่บันทึก"
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "ทำเครื่องหมายเพื่อให้ปุ่ม \"Open in OrcaSlicer\" บนเว็บไซต์โมเดลเปิดโมเดลใน Forca"
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "โครงร่างหัวพิมพ์"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "แสดงตัวเลือกเมื่อนำเข้าไฟล์ STEP"

@@ -418,6 +418,21 @@ std::string ForcaAI::mcp_app_config()
            "}";
 }
 
+std::string ForcaAI::stdio_app_config()
+{
+    // forca-mcp sits next to Forca's own program and reads the key from the shared key file itself, so the settings
+    // hold no key and survive "Make a new key".
+    const fs::path exe = fs::path(wxStandardPaths::Get().GetExecutablePath().ToUTF8().data()).parent_path() / "forca-mcp.exe";
+    return "{\n"
+           "  \"mcpServers\": {\n"
+           "    \"forca\": {\n"
+           "      \"command\": " + json(exe.string()).dump() + ",\n"
+           "      \"args\": [\"--port\", \"" + std::to_string(port()) + "\"]\n"
+           "    }\n"
+           "  }\n"
+           "}";
+}
+
 void ForcaAI::set_enabled(bool on)
 {
     if (wxGetApp().app_config)

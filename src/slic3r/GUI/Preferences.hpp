@@ -102,7 +102,7 @@ public:
     wxBoxSizer *create_item_title(wxString title);
     wxBoxSizer *create_item_label(wxString label, const wxString tooltip = "", const wxString wiki_url = "");
     wxBoxSizer *create_item_combobox(wxString title, wxString tooltip, std::string param, std::vector<wxString> vlist, std::function<void(wxString)> onchange = {}, const wxString wiki_url = "");
-    wxBoxSizer *create_item_combobox(wxString title, wxString tooltip, std::string param, std::vector<wxString> vlist, std::vector<std::string> config_name_index, const wxString wiki_url = "");
+    wxBoxSizer *create_item_combobox(wxString title, wxString tooltip, std::string param, std::vector<wxString> vlist, std::vector<std::string> config_name_index, std::function<void(std::string)> onchange = {}, const wxString wiki_url = "");
     wxBoxSizer *create_item_region_combobox(wxString title, wxString tooltip);
     wxBoxSizer *create_item_language_combobox(wxString title, wxString tooltip);
     wxBoxSizer *create_item_loglevel_combobox(wxString title, wxString tooltip, std::vector<wxString> vlist);
@@ -122,7 +122,7 @@ public:
     wxBoxSizer *create_item_forca_obn(); // Forca: Bambu Lab or Open Bamboo Networking
     void        refresh_network_version_combo(); // Forca: after an OBN switch
 #ifdef WIN32
-    wxBoxSizer *create_item_link_association(wxString url_prefix, wxString website_name);
+    wxBoxSizer *create_item_link_association(wxString url_prefix, wxString website_name, const wxString &note = {});
 #endif // WIN32
 
     void create_items();

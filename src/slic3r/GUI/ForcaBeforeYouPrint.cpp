@@ -1,6 +1,7 @@
 #include "ForcaBeforeYouPrint.hpp"
 
 #include "ForcaAcademy.hpp"
+#include "ForcaPlateReportDialog.hpp" // forca_plate_report_summary, forca_show_plate_report
 #include "ForcaPrintJournal.hpp"
 #include "ForcaPrintRiskDialog.hpp" // forca_plate_risks
 #include "GUI.hpp"
@@ -14,6 +15,7 @@
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/ForcaPreflight.hpp"
+#include "libslic3r/ForcaPrintRisk.hpp" // forca_risk_handled
 #include "libslic3r/Preset.hpp"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
@@ -65,21 +67,6 @@ namespace {
 constexpr size_t MAX_CHANGES_SHOWN = 3;
 constexpr size_t MAX_HISTORY_LINES = 3;
 
-// The settings changed and not saved in the process, the edited filament and the printer preset.
-std::vector<ForcaPreflightValue> unsaved_changes(PresetBundle& bundle)
-{
-    std::vector<ForcaPreflightValue> out;
-    const std::vector<PresetCollection*> collections = { &bundle.prints, &bundle.filaments, &bundle.printers };
-    for (PresetCollection* c : collections) {
-        const std::vector<std::string> dirty = c->current_dirty_options();
-        if (dirty.empty())
-            continue;
-        auto changes = forca_preflight_changes(c->get_selected_preset().config, c->get_edited_preset().config, dirty);
-        out.insert(out.end(), changes.begin(), changes.end());
-    }
-    return out;
-}
-
 wxString history_line(const std::string& filament, const ForcaAcademyHistory& h)
 {
     wxString line = format_wxstr(_L("Earlier prints with %1% on this printer: %2% successful, %3% partial, %4% failed."),
@@ -99,6 +86,20 @@ wxStaticText* add_text(wxWindow* parent, wxBoxSizer* sizer, const wxString& text
 }
 
 } // namespace
+
+std::vector<ForcaPreflightValue> forca_unsaved_changes(PresetBundle& bundle)
+{
+    std::vector<ForcaPreflightValue> out;
+    const std::vector<PresetCollection*> collections = { &bundle.prints, &bundle.filaments, &bundle.printers };
+    for (PresetCollection* c : collections) {
+        const std::vector<std::string> dirty = c->current_dirty_options();
+        if (dirty.empty())
+            continue;
+        auto changes = forca_preflight_changes(c->get_selected_preset().config, c->get_edited_preset().config, dirty);
+        out.insert(out.end(), changes.begin(), changes.end());
+    }
+    return out;
+}
 
 bool forca_before_you_print_enabled()
 {
@@ -181,7 +182,7 @@ bool ForcaBeforeYouPrintPanel::refresh(int plate_idx, const std::string& printer
     }
 
     // 2. Settings changed and not saved.
-    const std::vector<ForcaPreflightValue> changes = unsaved_changes(*bundle);
+    const std::vector<ForcaPreflightValue> changes = forca_unsaved_changes(*bundle);
     if (!changes.empty()) {
         wxString list;
         for (size_t i = 0; i < changes.size() && i < MAX_CHANGES_SHOWN; ++i) {
@@ -195,22 +196,38 @@ bool ForcaBeforeYouPrintPanel::refresh(int plate_idx, const std::string& printer
         add_text(this, m_sizer, _L("Changed and not saved:") + " " + list, wrap);
     }
 
-    // 3. Print Risks with no support under them (the plate as sliced; nothing when it isn't).
+    // 3. Print Risks not taken care of (no support, brim or raft; the plate as sliced; nothing when it isn't).
     std::vector<ForcaPlateRisk> risks;
     if (forca_plate_risks(plate_idx, risks)) {
-        const size_t bare = size_t(std::count_if(risks.begin(), risks.end(), [](const ForcaPlateRisk& r) { return !r.risk.supported; }));
+        const size_t bare = size_t(std::count_if(risks.begin(), risks.end(), [](const ForcaPlateRisk& r) { return !forca_risk_handled(r.risk); }));
         if (bare > 0)
             add_text(this, m_sizer,
-                     format_wxstr(_L_PLURAL("Print Risks found %1% place on this plate that may fail, with no support under it. "
-                                            "View > Print Risks shows where and what to try.",
-                                            "Print Risks found %1% places on this plate that may fail, with no support under "
-                                            "them. View > Print Risks shows where and what to try.",
+                     format_wxstr(_L_PLURAL("Print Risks found %1% place on this plate that may fail. View > Print Risks "
+                                            "shows where and what to try.",
+                                            "Print Risks found %1% places on this plate that may fail. View > Print Risks "
+                                            "shows where and what to try.",
                                             bare),
                                   bare),
                      wrap);
     }
 
-    // 4. Details: always offered (the values are always there), collapsed by default.
+    // 4. The plate report's checks: a one-line count and a link to the report.
+    if (const ForcaPlateReportSummary sum = forca_plate_report_summary(plate_idx); sum.ready) {
+        auto* row = new wxBoxSizer(wxHORIZONTAL);
+        auto* t   = new wxStaticText(this, wxID_ANY,
+                                     sum.warnings == 0 ? _L("Plate report: no warnings.")
+                                                       : format_wxstr(_L_PLURAL("Plate report: %1% warning.",
+                                                                                "Plate report: %1% warnings.", sum.warnings),
+                                                                      sum.warnings));
+        t->SetFont(Label::Body_13);
+        row->Add(t, 0, wxRIGHT, FromDIP(8));
+        auto* open_report = new HyperLink(this, _L("Open the plate report"));
+        open_report->Bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent&) { forca_show_plate_report(wxGetTopLevelParent(this), m_plate_idx); });
+        row->Add(open_report, 0);
+        m_sizer->Add(row, 0, wxEXPAND | wxBOTTOM, FromDIP(3));
+    }
+
+    // 5. Details: always offered (the values are always there), collapsed by default.
     const bool open   = wxGetApp().app_config->get("forca_before_you_print_details") == "1";
     auto*      toggle = new HyperLink(this, (open ? wxString::FromUTF8("\xE2\x96\xBE ") : wxString::FromUTF8("\xE2\x96\xB8 ")) + _L("Details"));
     toggle->Bind(wxEVT_LEFT_DOWN, [this, open](wxMouseEvent&) {

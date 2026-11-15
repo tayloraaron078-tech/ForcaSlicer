@@ -136,6 +136,16 @@ if(ORCA_TOOLS)
     target_compile_definitions(OrcaSlicer_profile_validator PRIVATE -DBOOST_ALL_NO_LIB -DBOOST_USE_WINAPI_VERSION=0x602 -DBOOST_SYSTEM_USE_UTF8)
 endif()
 
+# Forca: forca-mcp, the stdio bridge to Forca AI for AI apps that only start local programs (dev-utils/forca_mcp_stdio.cpp).
+# Standard library, Boost.Beast headers and nlohmann::json only; ForcaMcpBridge.cpp is compiled in, not libslic3r.
+add_executable(forca-mcp dev-utils/forca_mcp_stdio.cpp libslic3r/ForcaMcpBridge.cpp libslic3r/ForcaMcpBridge.hpp)
+target_include_directories(forca-mcp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/deps_src)
+target_link_libraries(forca-mcp boost_headeronly nlohmann_json)
+target_compile_definitions(forca-mcp PRIVATE -DBOOST_ALL_NO_LIB -DBOOST_USE_WINAPI_VERSION=0x602)
+if (WIN32)
+    target_link_libraries(forca-mcp ws2_32 mswsock shell32 ole32)
+endif()
+
 # Create a slic3r executable
 # Process manifests for various platforms.
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/msw/OrcaSlicer.rc.in ${CMAKE_CURRENT_BINARY_DIR}/OrcaSlicer.rc @ONLY)
@@ -286,9 +296,11 @@ if (WIN32)
     endif ()
     # copy libpython to the bin folder for Windows
     add_custom_command(TARGET OrcaSlicer POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "$<TARGET_FILE_DIR:OrcaSlicer>/python"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_PREFIX_PATH}/libpython" "$<TARGET_FILE_DIR:OrcaSlicer>/python"
-        COMMENT "Copying Python runtime into the build tree"
+        COMMAND ${CMAKE_COMMAND} "-DSOURCE=${CMAKE_PREFIX_PATH}/libpython"
+            "-DDESTINATION=$<TARGET_FILE_DIR:OrcaSlicer>/python"
+            "-DSTAMP=${CMAKE_CURRENT_BINARY_DIR}/python_runtime_$<CONFIG>.stamp"
+            -P "${CMAKE_SOURCE_DIR}/cmake/modules/StagePythonRuntime.cmake"
+        COMMENT "Updating the Python runtime in the build tree"
         VERBATIM)
 
     if (CMAKE_CONFIGURATION_TYPES)
@@ -396,6 +408,7 @@ message(STATUS "libslic3r-CMAKE_BUILD_TYPE: ${build_type}")
 message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
 if (WIN32)
     install(TARGETS OrcaSlicer RUNTIME DESTINATION ".")
+    install(TARGETS forca-mcp RUNTIME DESTINATION ".") # Forca: the Forca AI stdio bridge
     if (MSVC)
         install(TARGETS OrcaSlicer_app_gui RUNTIME DESTINATION ".")
     endif ()

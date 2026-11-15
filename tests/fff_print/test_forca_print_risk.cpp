@@ -1,4 +1,5 @@
-// Forca: the print-risk map (ForcaPrintRisk). Small models with one risk each: a bridge, an overhang, a floating island.
+// Forca: the print-risk map (ForcaPrintRisk). Small models with one risk each: a bridge, an overhang, a floating island,
+// a thin tall pillar, a small first layer; and layer times too short to cool.
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
@@ -107,4 +108,54 @@ TEST_CASE("A part that starts in mid-air is a floating island, supported only wh
     const std::vector<PrintRisk> with_support = risks_of(model, { { "enable_support", "1" }, { "support_type", "normal(auto)" } });
     REQUIRE(count(with_support, PrintRiskType::FloatingIsland) == 1);
     CHECK(first(with_support, PrintRiskType::FloatingIsland).supported);
+}
+
+TEST_CASE("A pillar standing more than eight times its width is a thin tall risk", "[ForcaPrintRisk]")
+{
+    // 4 mm wide: 40 mm tall is 10 times its width, 20 mm only 5 times.
+    const std::vector<PrintRisk> tall = risks_of({ box(4, 4, 40, 0, 0, 0) }, { { "brim_type", "no_brim" } });
+    REQUIRE(count(tall, PrintRiskType::ThinTall) == 1);
+    CHECK_THAT(first(tall, PrintRiskType::ThinTall).distance, WithinAbs(4., 0.5));
+    CHECK_FALSE(first(tall, PrintRiskType::ThinTall).supported);
+
+    CHECK(count(risks_of({ box(4, 4, 20, 0, 0, 0) }), PrintRiskType::ThinTall) == 0);
+}
+
+TEST_CASE("A first layer much smaller than the object is a small footprint, held when there is a brim", "[ForcaPrintRisk]")
+{
+    // A 6 x 6 mm stem under a 30 x 30 mm block: the first layer is 4% of the largest layer, the object 12 mm tall.
+    const auto model = { box(6, 6, 6, 12, 12, 0), box(30, 30, 6, 0, 0, 6) };
+
+    const std::vector<PrintRisk> bare = risks_of(model, { { "brim_type", "no_brim" } });
+    REQUIRE(count(bare, PrintRiskType::SmallFootprint) == 1);
+    const PrintRisk& r = first(bare, PrintRiskType::SmallFootprint);
+    CHECK_THAT(r.area, WithinAbs(36., 2.));
+    CHECK_THAT(r.limit, WithinAbs(900., 10.));
+    CHECK_THAT(r.distance, WithinAbs(12., 0.01));
+    CHECK_FALSE(r.supported);
+
+    const std::vector<PrintRisk> brim = risks_of(model, { { "brim_type", "outer_only" }, { "brim_width", "5" } });
+    REQUIRE(count(brim, PrintRiskType::SmallFootprint) == 1);
+    CHECK(first(brim, PrintRiskType::SmallFootprint).supported);
+
+    // A plain 20 mm cube stands on all of its base.
+    CHECK(count(risks_of({ box(20, 20, 20, 0, 0, 0) }, { { "brim_type", "no_brim" } }), PrintRiskType::SmallFootprint) == 0);
+}
+
+TEST_CASE("Runs of layers shorter than the layer time are short-layer risks", "[ForcaPrintRisk]")
+{
+    // Layer time 10 s: a layer under 9 s is short.
+    const std::vector<ForcaLayerTime> layers = { { 0.2, 30 }, { 0.4, 8 }, { 0.6, 5 }, { 0.8, 9.5 }, { 1.0, 3 } };
+    const std::vector<PrintRisk>      risks  = forca_short_layer_risks(layers, 10.);
+    REQUIRE(risks.size() == 2);
+    CHECK(risks[0].type == PrintRiskType::ShortLayers);
+    CHECK(risks[0].first_layer == 1);
+    CHECK(risks[0].last_layer == 2);
+    CHECK_THAT(risks[0].z_min, WithinAbs(0.4, 1e-9));
+    CHECK_THAT(risks[0].z_max, WithinAbs(0.6, 1e-9));
+    CHECK_THAT(risks[0].distance, WithinAbs(5., 1e-9));
+    CHECK_THAT(risks[0].limit, WithinAbs(10., 1e-9));
+    CHECK(risks[1].first_layer == 4);
+
+    CHECK(forca_short_layer_risks(layers, 0.).empty());
 }

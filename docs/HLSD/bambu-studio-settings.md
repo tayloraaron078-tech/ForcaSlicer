@@ -56,6 +56,12 @@ leaves out a Bambu Studio filament's "none" (it would switch off a scarf the use
 filament that sets a scarf Bambu Studio's defaults for the values its file omits (`adapt_bambu_scarf` in
 `ForcaPresetImport.cpp`). A process's `seam_slope_gap` becomes `seam_gap` when the file has none.
 
+Bambu Studio can't read "nil" in these settings and refuses a whole 3MF project that has one. So a 3MF Forca saves
+holds Bambu Studio's defaults in the unset slots, which Bambu Studio reads as no filament scarf, and lists those slots
+under `forca_filament_scarf_unset`, a key Bambu Studio ignores. On load Forca turns the listed slots back into unset,
+so they stay apart from a filament the user set to "none" (`forca_scarf_to_3mf` / `forca_scarf_from_3mf`, applied to
+the project settings and embedded presets in `bbs_3mf.cpp`).
+
 Bambu Studio's `print_in_clockwise` (P2S, X2D) is not a setting in Forca: OrcaSlicer's `wall_direction` has only ccw
 and cw, so a printer-level key could not tell a user's explicit choice from the default. The P2S and X2D process
 profiles set `"wall_direction": "cw"` instead. `seam_placement_away_from_overhangs` is not ported: OrcaSlicer's seam

@@ -63,6 +63,8 @@ src/slic3r/GUI/Gizmos/GLGizmoMmuSegmentation.cpp
 src/slic3r/GUI/Gizmos/GLGizmoMmuSegmentation.hpp
 src/slic3r/GUI/Gizmos/GLGizmoFuzzySkin.cpp
 src/slic3r/GUI/Gizmos/GLGizmoFuzzySkin.hpp
+src/slic3r/GUI/Gizmos/GLGizmoPaintedModifier.cpp
+src/slic3r/GUI/Gizmos/GLGizmoPaintedModifier.hpp
 src/slic3r/GUI/Gizmos/GLGizmoMove.cpp
 src/slic3r/GUI/Gizmos/GLGizmoRotate.cpp
 src/slic3r/GUI/Gizmos/GLGizmoScale.cpp
@@ -234,6 +236,7 @@ src/libslic3r/PrintConfig.cpp
 src/libslic3r/Zipper.cpp
 src/libslic3r/PrintObject.cpp
 src/libslic3r/PrintObjectSlice.cpp
+src/libslic3r/NonplanarIroning.cpp
 src/libslic3r/PlaceholderParser.cpp
 src/libslic3r/Support/TreeSupport.cpp
 src/libslic3r/Model.cpp

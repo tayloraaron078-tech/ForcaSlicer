@@ -433,6 +433,7 @@ public:
         TriangleSplittingData seam;
         TriangleSplittingData mmu;
         TriangleSplittingData fuzzy;
+        TriangleSplittingData painted_modifier;
         // [regional-supports fork] support-interface region painting
         TriangleSplittingData support_interface_region;
     };

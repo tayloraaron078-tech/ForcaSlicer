@@ -432,7 +432,7 @@ wxBoxSizer* PreferencesDialog::create_item_combobox(wxString title, wxString too
     return sizer;
 }
 
-wxBoxSizer *PreferencesDialog::create_item_combobox(wxString title, wxString tooltip, std::string param, std::vector<wxString> vlist, std::vector<std::string> config_name_index, const wxString wiki_url)
+wxBoxSizer *PreferencesDialog::create_item_combobox(wxString title, wxString tooltip, std::string param, std::vector<wxString> vlist, std::vector<std::string> config_name_index, std::function<void(std::string)> onchange, const wxString wiki_url)
 {
     assert(vlist.size() == config_name_index.size());
     unsigned int current_index = 0;
@@ -448,8 +448,9 @@ wxBoxSizer *PreferencesDialog::create_item_combobox(wxString title, wxString too
     auto [sizer, combobox] = create_item_combobox_base(title, tooltip, param, vlist, current_index);
 
     //// save config
-    combobox->GetDropDown().Bind(wxEVT_COMBOBOX, [this, param, config_name_index](wxCommandEvent& e) {
+    combobox->GetDropDown().Bind(wxEVT_COMBOBOX, [this, param, config_name_index, onchange](wxCommandEvent& e) {
         app_config->set(param, config_name_index[e.GetSelection()]);
+        if (onchange != nullptr) onchange(config_name_index[e.GetSelection()]);
         e.Skip();
     });
 
@@ -1574,7 +1575,7 @@ void PreferencesDialog::refresh_network_version_combo()
 }
 
 #ifdef WIN32
-wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
+wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name, const wxString &note)
 {
     // TRN %s is a URL scheme, for example "prusaslicer".
     wxString title = wxString::Format(_L("Associate %s://"), url_prefix);
@@ -1639,6 +1640,15 @@ wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix
     update_current_association_str();
 
     v_sizer->Add(registered_instance_title, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, FromDIP(DESIGN_LEFT_MARGIN));
+
+    // Forca: an optional plain-language line saying what the link type is for.
+    if (!note.empty()) {
+        auto* note_text = new wxStaticText(m_parent, wxID_ANY, note);
+        note_text->SetForegroundColour(DESIGN_GRAY600_COLOR);
+        note_text->SetFont(::Label::Body_12);
+        note_text->Wrap(DESIGN_WINDOW_SIZE.x - FromDIP(DESIGN_LEFT_MARGIN) - FromDIP(60));
+        v_sizer->Add(note_text, 0, wxLEFT | wxTOP, FromDIP(DESIGN_LEFT_MARGIN));
+    }
 
     checkbox->Bind(wxEVT_TOGGLEBUTTON, [=](wxCommandEvent& e) {
         if (checkbox->GetValue())
@@ -2205,7 +2215,8 @@ void PreferencesDialog::create_items()
         g_sizer->Add(associate_url_cura);
 
         // Forca: orcaslicer:// ("Open in OrcaSlicer" on model sites) is no longer claimed automatically; opt in here.
-        auto associate_url_orca    = create_item_link_association(L"orcaslicer", "Makerworld.com / Printables.com (\"Open in OrcaSlicer\")");
+        auto associate_url_orca    = create_item_link_association(L"orcaslicer", "Makerworld.com / Printables.com (\"Open in OrcaSlicer\")",
+            _L("Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."));
         g_sizer->Add(associate_url_orca);
     }
 #endif // _WIN32
@@ -2267,6 +2278,33 @@ void PreferencesDialog::create_items()
            "You can still switch the view type in the preview afterwards."),
         "preview_default_view_type", PreviewViewTypeLabels, PreviewViewTypeValues);
     g_sizer->Add(item_preview_view_type);
+
+    auto item_reduced_detail_mode = create_item_combobox(
+        _L("Simplify preview while dragging"),
+        _L("What the sliced preview draws while you drag the camera or a preview slider, or zoom with the mouse wheel, so that large prints stay responsive. "
+           "The full toolpaths are restored as soon as you let go.\n"
+           "Off: the full toolpaths.\n"
+           "Solid model: the sliced objects and the prime tower as solid shapes in the colors of the current view, cut to the visible layer range, "
+           "with its bottom and top layers and the supports drawn as toolpaths. Negative volumes are not cut out. "
+           "A print made object by object, or one on a belt printer, keeps its full toolpaths.\n"
+           "Shell only: every layer without its sparse infill, internal solid infill, internal bridges and gap fill, which lie under the walls and skins. "
+           "Walls, top and bottom surfaces, bridges, supports and the prime tower are drawn whole, so the print looks the same from outside.\n"
+           "The bottom and top layers of the visible range are always drawn whole; a layer with no infill of its own, as with infill combination, takes the layers down to the nearest one with infill along."),
+        "preview_reduced_detail_mode",
+        {_L("Off"), _L("Solid model"), _L("Shell only")},
+        {"off", "solid", "shell"},
+        // apply the new mode immediately to the currently loaded preview
+        [](std::string value) {
+            if (Plater* plater = wxGetApp().plater()) {
+                if (GLCanvas3D* canvas = plater->get_preview_canvas3D()) {
+                    canvas->get_gcode_viewer().set_reduced_detail_mode(value);
+                    canvas->set_as_dirty();
+                    canvas->request_extra_frame();
+                }
+            }
+        }
+    );
+    g_sizer->Add(item_reduced_detail_mode);
 
     auto item_dim_previous_layers = create_item_checkbox(
         _L("Dim lower layers"),

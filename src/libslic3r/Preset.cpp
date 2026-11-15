@@ -1327,6 +1327,8 @@ static std::vector<std::string> s_Preset_print_options{
     "ironing_spacing",
     "ironing_angle",
     "ironing_angle_fixed",
+    "nonplanar_ironing",
+    "nonplanar_top_surface",
     "ironing_inset",
     "support_ironing",
     "support_ironing_pattern",
@@ -1510,6 +1512,7 @@ static std::vector<std::string> s_Preset_print_options{
     "wipe_inward",
     "wipe_inward_distance",
     "wipe_before_external_loop",
+    "retract_after_outer_wall",
     "bridge_density",
     "internal_bridge_density",
     "precise_outer_wall",
@@ -1694,7 +1697,7 @@ static std::vector<std::string> s_Preset_printer_options {
     "single_extruder_multi_material", "manual_filament_change", "file_start_gcode", "machine_start_gcode", "machine_end_gcode", "before_layer_change_gcode", "printing_by_object_gcode", "layer_change_gcode", "time_lapse_gcode", "wrapping_detection_gcode", "change_filament_gcode", "change_extrusion_role_gcode",
     "printer_model", "printer_variant", "printer_extruder_id", "printer_extruder_variant", "extruder_variant_list", "default_nozzle_volume_type",
     "printable_height", "extruder_printable_height", "extruder_clearance_radius", "extruder_clearance_height_to_lid", "extruder_clearance_height_to_rod", "extruder_clearance_dist_to_rod",
-    "nozzle_height", "master_extruder_id",
+    "nozzle_height", "nozzle_tip_diameter", "nozzle_cone_diameter", "nozzle_cone_height", "printhead_body_distance", "printhead_body_height", "printhead_clearance_margin", "master_extruder_id",
     "default_print_profile", "inherits",
     "scan_first_layer", "enable_power_loss_recovery", "wrapping_detection_layers", "wrapping_exclude_area", "machine_load_filament_time", "machine_unload_filament_time", "machine_tool_change_time", "time_cost", "machine_pause_gcode", "template_custom_gcode",
     "nozzle_type", "nozzle_hrc","auxiliary_fan", "fan_direction", "nozzle_volume","upward_compatible_machine", "z_hop_types", "travel_slope", "retract_lift_enforce","support_chamber_temp_control","support_air_filtration","support_cooling_filter","cooling_filter_enabled","printer_structure","farthest_point_timelapse",
@@ -4084,13 +4087,13 @@ size_t PresetCollection::first_visible_idx_by_type(const std::string& filament_t
             return idx;
     }
 
-    // 3. Any visible preset
-    return first_visible_idx();
+    return size_t(-1);
 }
 
 std::string PresetCollection::filament_id_by_type(const std::string& filament_type) const
 {
-    return preset(first_visible_idx_by_type(filament_type)).filament_id;
+    const size_t idx = first_visible_idx_by_type(filament_type);
+    return idx == size_t(-1) ? std::string() : preset(idx).filament_id;
 }
 
 std::vector<std::string> PresetCollection::diameters_of_selected_printer()

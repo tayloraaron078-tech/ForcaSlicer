@@ -28,6 +28,7 @@ add_executable(${_TEST_NAME}_tests
     test_clipper_offset.cpp
     test_clipper_utils.cpp
     test_cut_connectors.cpp
+    test_cut.cpp
     test_config.cpp
     test_config_variant_expansion.cpp
     test_locales_utils.cpp
@@ -36,6 +37,7 @@ add_executable(${_TEST_NAME}_tests
     test_toolordering_nozzle_group.cpp
     test_parallel_resolve.cpp
     test_preset_bundle_loading.cpp
+    test_preset_collection.cpp
     test_preset_setting_id.cpp
     test_preset_diff.cpp
     test_publish_settings.cpp
@@ -47,6 +49,9 @@ add_executable(${_TEST_NAME}_tests
     test_fill_corner_smoothing.cpp
     test_forca_ai_safe_path.cpp
     test_forca_preset_merge.cpp
+    test_forca_plate_report.cpp
+    test_forca_paint_region.cpp
+    test_forca_mcp_bridge.cpp
     test_forca_preset_import.cpp
     test_forca_openscad.cpp
     test_forca_preflight.cpp
@@ -64,11 +69,13 @@ add_executable(${_TEST_NAME}_tests
     test_placeholder_parser.cpp
     test_png_read_write.cpp
     test_polygon.cpp
+    test_printhead_clearance.cpp
     test_mutable_polygon.cpp
     test_mutable_priority_queue.cpp
     test_minimum_spanning_tree.cpp
     test_nozzle_volume_type.cpp
     test_obj.cpp
+    test_painted_modifier.cpp
     test_step.cpp
     test_stl.cpp
     test_triangle_mesh_deal.cpp
@@ -87,6 +94,7 @@ add_executable(${_TEST_NAME}_tests
     test_wipe_tower_estimate.cpp
     test_wipe_tower.cpp
     test_wipe_path.cpp
+    test_slicing.cpp
     test_optimizers.cpp
     test_ordering_strategies.cpp
     test_parameter_utils.cpp

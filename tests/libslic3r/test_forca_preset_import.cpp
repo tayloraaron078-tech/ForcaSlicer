@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <fstream>
 #include <miniz.h>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <utility>
 #include <vector>
@@ -445,6 +446,32 @@ TEST_CASE("A Bambu Studio filament's scarf seam imports, with Bambu Studio's def
     CHECK(height.value == 10.);
     CHECK(height.percent);
     CHECK(config.option<ConfigOptionFloatsOrPercentsNullable>("filament_scarf_gap")->get_at(0).value == 0.);
+}
+
+// In a 3MF, Forca writes Bambu Studio's defaults for unset filament scarf slots and lists them, so it can tell them
+// apart from a filament the user set to "none" (no scarf, whatever the process says) when it reads the file back.
+TEST_CASE("A filament scarf set to none stays set through a 3MF, next to an unset one", "[ForcaPresetImport]")
+{
+    const nlohmann::json original = nlohmann::json::parse(R"({"filament_scarf_seam_type":["none","nil"],"filament_scarf_length":["5","nil"]})");
+    nlohmann::json       settings = original;
+    REQUIRE(forca_scarf_to_3mf(settings));
+    CHECK(settings["filament_scarf_seam_type"] == nlohmann::json::array({"none", "none"}));
+    CHECK(settings["filament_scarf_length"] == nlohmann::json::array({"5", "10"}));
+    CHECK(settings["forca_filament_scarf_unset"] ==
+          nlohmann::json::array({"filament_scarf_seam_type=1", "filament_scarf_length=1"}));
+
+    REQUIRE(forca_scarf_from_3mf(settings));
+    CHECK(settings == original);
+}
+
+TEST_CASE("3MF settings without unset scarf slots or Forca's list are left as they are", "[ForcaPresetImport]")
+{
+    // A Bambu Studio project, or a Forca one whose filaments all set their scarf.
+    const nlohmann::json original = nlohmann::json::parse(R"({"filament_scarf_seam_type":["none","external"],"layer_height":"0.2"})");
+    nlohmann::json       settings = original;
+    CHECK_FALSE(forca_scarf_to_3mf(settings));
+    CHECK_FALSE(forca_scarf_from_3mf(settings));
+    CHECK(settings == original);
 }
 
 TEST_CASE("A Bambu Studio process's scarf gap becomes the seam gap when the file doesn't set one", "[ForcaPresetImport]")

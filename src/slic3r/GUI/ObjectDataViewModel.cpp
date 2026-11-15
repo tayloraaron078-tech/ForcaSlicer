@@ -64,6 +64,16 @@ static constexpr char WarningIcon[]     = "obj_warning";
 static constexpr char WarningManifoldIcon[] = "obj_warning";
 static constexpr char LockIcon[]            = "cut_";
 
+// Volumes printed with a filament of their own choice.
+static bool volume_shows_extruder(Slic3r::ModelVolumeType type)
+{
+    return type == Slic3r::ModelVolumeType::MODEL_PART || type == Slic3r::ModelVolumeType::PARAMETER_MODIFIER ||
+           type == Slic3r::ModelVolumeType::PAINTED_MODIFIER ||
+           // [regional-supports fork] the interface modifier shows its interface filament (its chosen
+           // support_interface_filament), so it survives a save/reopen build of the tree.
+           type == Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER;
+}
+
 ObjectDataViewModelNode::ObjectDataViewModelNode(PartPlate* part_plate, wxString name) :
     m_parent(nullptr),
     m_name(name),
@@ -109,9 +119,7 @@ ObjectDataViewModelNode::ObjectDataViewModelNode(ObjectDataViewModelNode*   pare
     m_is_text_volume(is_text_volume),
     m_is_svg_volume(is_svg_volume),
     m_idx(idx),
-    // [regional-supports fork] the interface modifier keeps its filament column value (its chosen
-    // support_interface_filament), so it survives a save/reopen build of the tree.
-    m_extruder(type == Slic3r::ModelVolumeType::MODEL_PART || type == Slic3r::ModelVolumeType::PARAMETER_MODIFIER || type == Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER ? extruder : "")
+    m_extruder(volume_shows_extruder(type) ? extruder : "")
 {
     set_icons();
     init_container();
@@ -216,8 +224,7 @@ void ObjectDataViewModelNode::set_icons()
 void ObjectDataViewModelNode::set_extruder_icon()
 {
     if (m_type & (itInstance | itInstanceRoot | itLayerRoot) ||
-        // [regional-supports fork] the interface modifier shows its interface filament, so allow its badge
-        ((m_type & itVolume) && m_volume_type != Slic3r::ModelVolumeType::MODEL_PART && m_volume_type != Slic3r::ModelVolumeType::PARAMETER_MODIFIER && m_volume_type != Slic3r::ModelVolumeType::SUPPORT_INTERFACE_MODIFIER))
+        ((m_type & itVolume) && ! volume_shows_extruder(m_volume_type)))
         return; // don't set colored bitmap for Instance
 
     UpdateExtruderAndColorIcon();
@@ -418,8 +425,7 @@ void ObjectDataViewModelNode::SetPlateIdx(const int& idx)
 
 void ObjectDataViewModelNode::UpdateExtruderAndColorIcon(wxString extruder /*= ""*/)
 {
-    if (m_type == itVolume && m_volume_type != ModelVolumeType::MODEL_PART && m_volume_type != ModelVolumeType::PARAMETER_MODIFIER &&
-        m_volume_type != ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)   // [regional-supports fork]
+    if (m_type == itVolume && ! volume_shows_extruder(m_volume_type))
         return;
     if (extruder.empty())
         extruder = m_extruder;
@@ -434,7 +440,7 @@ void ObjectDataViewModelNode::UpdateExtruderAndColorIcon(wxString extruder /*= "
             extruder_idx = atoi(m_parent->GetExtruder().c_str());
         }
         // BBS
-        else if (m_type & itVolume && (m_volume_type == ModelVolumeType::PARAMETER_MODIFIER ||
+        else if (m_type & itVolume && (m_volume_type == ModelVolumeType::PARAMETER_MODIFIER || m_volume_type == ModelVolumeType::PAINTED_MODIFIER ||
                                        m_volume_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)) { // [regional-supports fork]
             m_extruder_bmp = *get_default_extruder_color_icon();
             return;
@@ -707,7 +713,7 @@ wxDataViewItem ObjectDataViewModel::AddVolumeChild( const wxDataViewItem &parent
     if (extruder == 0) {
         // [regional-supports fork] the interface modifier shows its own filament column (its chosen
         // support_interface_filament), defaulting to "default" like a parameter modifier.
-        if (volume_type == ModelVolumeType::PARAMETER_MODIFIER ||
+        if (volume_type == ModelVolumeType::PARAMETER_MODIFIER || volume_type == ModelVolumeType::PAINTED_MODIFIER ||
             volume_type == ModelVolumeType::SUPPORT_INTERFACE_MODIFIER)
             extruder_str = _L("default");
         else

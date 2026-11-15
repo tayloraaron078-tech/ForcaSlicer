@@ -31,3 +31,14 @@ speed that layer time calls for.
 
 Use a small number (3–5) on models with a thin section under a wide one; it costs only the extra time on those few
 layers.
+
+## How the layer time is counted
+
+The layer time that the slowdown and the fan go by is the one the Preview shows for that layer: Forca times each
+layer as the G-code is written, with the printer's acceleration, cornering and motion limits, not just the length
+of each move over its speed. On a fast printer with moderate acceleration that is often 1.3 to 2 times the plain
+estimate, so short layers are slowed less than a plain estimate would ask for, and still cool as long as you set.
+
+Also counted: a `G4` dwell in your own G-code, and on a **toolchanger** the **Tool change time** (printer settings)
+for each tool change on the layer, since the layer below keeps cooling while the tools are swapped. A layer that
+starts with a filament change is timed from its first extrusion. Filament load and unload times are not counted.

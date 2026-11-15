@@ -17988,6 +17988,10 @@ msgstr "툴 체인지 시간"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "툴 체인지를 전환하는 데 소요되는 시간입니다. 일반적으로 공구 교환기 또는 다중 공구 기계에 적용 가능합니다. 단일 압출기 다중 재료 기계의 경우 일반적으로 0입니다. 통계용으로만 사용됩니다"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "도구를 바꾸는 데 걸리는 시간입니다. 보통 툴 체인저나 멀티 툴 기계에 해당합니다. 단일 압출기 멀티 재료 기계에서는 보통 0입니다. 출력 시간 추정에 사용되며, 툴 체인저에서는 최소 레이어 시간에도 포함됩니다."
+
 msgid "Bed temperature type"
 msgstr "베드 온도 유형"
 
@@ -43004,6 +43008,395 @@ msgstr "Snapmaker U1의 카메라는 기본 펌웨어에서 정지 사진만 찍
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "U1 카메라 표시"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "비평면 다림질이 사용되지 않았습니다. 프린터 설정의 프린트 헤드 윤곽과 플레이트 위의 단일 객체가 필요하며, 서포트, 프라임 타워, 드래프트 실드, 한 레이어보다 높은 스커트가 없어야 합니다."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "모델 일부가 프린트 헤드가 따라갈 수 있는 경사(약 %1%°)보다 가파릅니다. 그곳에는 비평면 다림질이 사용되지 않았습니다."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "비평면 상단 표면이 사용되지 않았습니다. 프린터 설정의 프린트 헤드 윤곽과 플레이트 위의 단일 객체가 필요하며, 서포트, 프라임 타워, 드래프트 실드, 한 레이어보다 높은 스커트가 없어야 합니다."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "모델 일부가 프린트 헤드가 따라갈 수 있는 경사(약 %1%°)보다 가파릅니다. 그곳에는 비평면 상단 표면이 사용되지 않았습니다."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "노즐 팁 직경"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "노즐 맨 끝의 평평한 부분 직경입니다. 비평면 출력에서 프린트 헤드가 출력물에 닿지 않게 하는 데 사용됩니다."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "노즐 원뿔 직경"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "노즐 원뿔이 끝나는 위치의 직경입니다(원뿔 윗부분 또는 실리콘 양말의 아래쪽 가장자리). 0이면 프린트 헤드 윤곽을 알 수 없어 비평면 출력을 사용할 수 없습니다."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "노즐 원뿔 높이"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "노즐 원뿔 직경을 측정하는 위치의 노즐 팁 위 높이입니다."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "프린트 헤드 본체까지 거리"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "노즐 중심에서 그 옆에 낮게 내려온 프린트 헤드의 가장 가까운 부분(팬 덕트, 슈라우드, 히터 블록)까지의 거리입니다. 0이면 노즐 원뿔 윗부분보다 낮게 내려온 것이 없다는 뜻입니다."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "프린트 헤드 본체 높이"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "노즐 옆 프린트 헤드의 가장 낮은 부분이 노즐 팁에서 얼마나 높은지입니다."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "프린트 헤드 여유 간격"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "비평면 출력에서 위 윤곽에 더해 프린트 헤드와 출력물 사이에 유지하는 거리입니다. 측정 오차와 레이어 모서리처럼 윤곽이 다루지 못하는 부분을 보완합니다."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "비평면 다림질"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "각 레이어의 계단을 평평하게 다림질하는 대신, 완만한 경사를 레이어를 가로질러 모델 표면을 따라가는 한 번의 패스로 다림질합니다. 노즐이 이미 출력된 재료 옆으로 내려가므로 프린터 설정의 프린트 헤드 윤곽이 필요하며, 그 윤곽으로 헤드가 닿지 않는다고 확인된 곳에서만 사용됩니다. 플레이트에 단일 객체만 있어야 하며 서포트나 프라임 타워는 없어야 합니다."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "비평면 상단 표면"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "완만한 경사의 상단 표면을 레이어의 계단 대신 모델 표면을 따라가는 하나의 스킨으로 출력합니다. 그 아래 레이어는 한 레이어 낮게 끝나며, 경사의 마지막 레이어가 끝나면 그 위에 스킨이 출력됩니다. 노즐이 이미 출력된 재료 옆으로 내려가므로 프린터 설정의 프린트 헤드 윤곽이 필요하며, 그 윤곽으로 헤드가 닿지 않는다고 확인된 곳에서만 사용됩니다. 플레이트에 단일 객체만 있어야 하며 서포트나 프라임 타워는 없어야 합니다. 실험적 기능입니다."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "다른 앱(MCP, 로컬 프로그램)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "AI가 무작위로 고를 수 있는 모델:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forca 내장 테스트 모델"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "폴더 선택..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "내장 사용"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "AI가 고를 수 있는 모델 폴더를 선택하세요"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "NumPy 설치"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "NumPy를 인터넷(pypi.org)에서 Forca의 Python으로 내려받습니다. 고급 수준에서 AI가 실행하는 스크립트와 플러그인용입니다."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca가 NumPy를 인터넷(pypi.org)에서 내려받아 Forca의 Python에 추가하며, AI의 스크립트와 플러그인이 이를 사용할 수 있습니다. 계속할까요?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy를 설치할 수 없습니다:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "AI의 Python 스크립트용 NumPy: 설치 중..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "AI의 Python 스크립트용 NumPy: 설치됨"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "AI의 Python 스크립트용 NumPy: 설치 안 됨"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "로컬 MCP 서버만 시작하는 앱용(주소가 아닌 \"command\"): Forca의 forca-mcp 프로그램이 메시지를 Forca AI로 전달하며 Node.js가 필요 없습니다. 아래 \"forca\" 항목을 앱의 \"mcpServers\" 설정에 추가하세요. 키는 스스로 찾으므로 새 키가 생겨도 여기서 바꿀 것이 없습니다."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "출력 위험이 이 플레이트에서 실패할 수 있는 곳 %1%개를 찾았습니다. 보기 > 출력 위험에서 위치와 시도할 방법을 볼 수 있습니다."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "플레이트 보고서: 경고 없음."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "플레이트 보고서: 경고 %1%개."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "플레이트 보고서 열기"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "플레이트 일부가 출력 가능 영역 밖에 있습니다. 객체를 베드 위로 옮기세요."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "객체 높이가 %1% mm로 출력 가능 높이(%2% mm)보다 높습니다."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "객체 높이가 %1% mm로 출력 가능 높이(%2% mm)에 가깝습니다."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "객체가 베드 가장자리에서 %1% mm 떨어져 있습니다. 많은 프린터에서 첫 레이어가 가장 덜 붙는 곳입니다."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "레이어 높이 %1% mm가 %3% mm 노즐이 잘 출력할 수 있는 최대치 %2% mm를 넘습니다. 레이어끼리 붙지 않을 수 있습니다."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "첫 레이어 높이 %1% mm가 %3% mm 노즐이 잘 출력할 수 있는 최대치 %2% mm를 넘습니다. 베드에 붙지 않을 수 있습니다."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: 노즐 온도 %2% °C가 필라멘트 권장 범위 %3%~%4% °C를 벗어났습니다."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "필라멘트의 노즐 온도 차이가 %1% °C입니다. 함께 출력할 수 있는지 확인하세요."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "이 플레이트 필라멘트의 베드 온도 차이가 %1% °C입니다. 베드는 그중 하나의 온도만 가질 수 있습니다."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "위험 %1%개 발견"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "가늘고 높음"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "작은 접지면"
+
+# AI Translated
+msgid "Short layers"
+msgstr "짧은 레이어"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1%개는 처리되지 않음."
+
+# AI Translated
+msgid "Plate report"
+msgstr "플레이트 보고서"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "텍스트로 복사"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "플레이트 보고서는 FFF 출력 전용입니다."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "플레이트 %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "이 플레이트는 비어 있습니다."
+
+# AI Translated
+msgid "Checks"
+msgstr "점검"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "지적할 사항이 없습니다."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "지적할 사항이 없습니다. 플레이트를 슬라이스하면 슬라이서 자체 점검이 추가됩니다."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "위험을 점검하려면 플레이트를 슬라이스하세요."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "출력 위험 버튼에서 위치와 시도할 방법을 볼 수 있습니다."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "출력 시간과 무게를 보려면 플레이트를 슬라이스하세요."
+
+# AI Translated
+msgid "Print time:"
+msgstr "출력 시간:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "필라멘트:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "비용:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "레이어:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "필라멘트 변경:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "위치:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "중심 X %1%, Y %2% (베드 중심 X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "베드:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "객체:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "프로젝트에 플레이트가 %1%개 있습니다. 이 보고서는 그중 하나를 다룹니다."
+
+# AI Translated
+msgid "Process:"
+msgstr "프로세스:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "필라멘트 %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "변경되었으나 저장 안 됨"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "없음. 프리셋이 저장된 그대로입니다."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "폭 %1% mm"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "플레이트 위 %1% mm²"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "레이어당 %1%초"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "브림 또는 라프트"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "이 부분은 폭 약 %1% mm, 높이 %2% mm입니다. 노즐 때문에 흔들리거나 넘어질 수 있습니다. 더 느리게 출력하거나, 여러 개를 함께 출력하거나, 브림을 추가하거나, 옆에 지지 벽을 추가하세요."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "높이 %2% mm인 이 객체는 %1% mm²만 플레이트에 닿습니다. 떨어지거나 넘어질 수 있습니다."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "브림이나 라프트가 붙잡아 줍니다."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "브림을 추가하거나(기타 > 브림 유형), 더 넓은 면이 베드를 향하도록 모델을 돌리세요."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "이 레이어들은 최소 %1%초 만에 출력되어 필라멘트의 레이어 시간(%2%초)보다 짧으므로 충분히 식지 않아 처지거나 말릴 수 있습니다. 옆에 두 번째 사본을 출력하거나 냉각용 최소 속도를 낮추세요."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "플레이트 전체를 한눈에: 점검, 출력 시간과 무게, 크기와 위치, 주요 설정, 저장하지 않은 변경 사항."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "플레이트 전체"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "슬라이스된 플레이트에서 실패할 수 있는 곳을 나열합니다: 오버행, 긴 브릿지, 공중에서 시작하는 부분, 가늘고 높은 부분, 작은 접지면, 식기에 너무 짧은 레이어."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "플레이트 보고서"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "현재 플레이트를 한눈에: 점검, 출력 시간과 무게, 크기와 위치, 주요 설정, 저장하지 않은 변경 사항."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "모델 사이트의 \"Open in OrcaSlicer\" 버튼이 Forca에서 모델을 열도록 하려면 선택하세요."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "프린트 헤드 윤곽"
 
 # AI Translated
 #~ msgid "Show options when importing STEP file"

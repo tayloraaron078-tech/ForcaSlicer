@@ -5,11 +5,15 @@
 
 #include <functional>
 #include <string>
+#include <vector>
 
 class wxBoxSizer;
 class wxWindow;
 
-namespace Slic3r { namespace GUI {
+namespace Slic3r {
+class PresetBundle;
+struct ForcaPreflightValue;
+namespace GUI {
 
 // Forca: the send dialogs' "Before you print" block (HQ PLAN_forca_academy_part2.md §6b). For the plate about to be
 // sent it shows, when there is something to say:
@@ -44,6 +48,9 @@ private:
 wxString forca_option_label(const std::string& key);
 // A serialized option value as the settings pages show it: On/Off, an enum's label, a number with its unit.
 wxString forca_option_value(const std::string& key, const std::string& value);
+
+// The settings changed and not saved in the process, the edited filament and the printer preset.
+std::vector<ForcaPreflightValue> forca_unsaved_changes(PresetBundle& bundle);
 
 // App config "forca_before_you_print" (default on).
 bool forca_before_you_print_enabled();

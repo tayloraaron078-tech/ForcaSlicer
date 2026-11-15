@@ -3,6 +3,8 @@
 
 #include <wx/dialog.h>
 
+#include <atomic>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -23,6 +25,7 @@ class ForcaAIDialog : public wxDialog
 {
 public:
     explicit ForcaAIDialog(wxWindow* parent);
+    ~ForcaAIDialog() override { *m_alive = false; }
     void refresh(); // state + activity (also called by ForcaAI whenever they change)
 
 private:
@@ -43,6 +46,11 @@ private:
     wxButton*                m_grant_btn  { nullptr };
     wxButton*                m_bed_btn    { nullptr };
     wxButton*                m_revoke_btn { nullptr };
+    wxStaticText*            m_numpy_text { nullptr }; // NumPy for the AI's Python scripts: only the user installs it
+    wxButton*                m_numpy_btn  { nullptr };
+    bool                     m_numpy_busy { false };
+    // False once this window is gone: the install thread's CallAfter checks it before touching the window.
+    std::shared_ptr<std::atomic<bool>> m_alive { std::make_shared<std::atomic<bool>>(true) };
 };
 
 }} // namespace Slic3r::GUI

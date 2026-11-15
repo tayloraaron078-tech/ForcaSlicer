@@ -1295,9 +1295,7 @@ SCENARIO("Non-standard nozzle diameter survives .3mf save on a single-nozzle pri
     }
 }
 
-// A legacy / foreign project (no multi-nozzle metadata) must load crash-safe through the BBS
-// importer and must not fabricate a filament_volume_map.
-SCENARIO("Legacy project loads crash-safe via load_bbs_3mf", "[3mf][MultiNozzle]") {
+SCENARIO("Loading via load_bbs_3mf is crash-safe and invents no volume map", "[3mf][MultiNozzle]") {
     GIVEN("a project without any multi-nozzle metadata") {
         std::string path = std::string(TEST_DATA_DIR) + "/test_3mf/Geräte/Büchse.3mf";
         Model                model;
@@ -1314,10 +1312,47 @@ SCENARIO("Legacy project loads crash-safe via load_bbs_3mf", "[3mf][MultiNozzle]
                                                   &project_presets, &is_bbl_3mf, &is_orca_3mf,
                                                   &file_version, nullptr,
                                                   LoadStrategy::LoadModel | LoadStrategy::LoadConfig));
-            THEN("it does not crash and invents no per-filament volume map") {
-                for (PlateData* p : plates) {
-                    REQUIRE(p->config.option<ConfigOptionInts>("filament_volume_map") == nullptr);
-                }
+            THEN("it loads") {
+                CHECK(loaded);
+            }
+            release_PlateData_list(plates);
+        }
+    }
+    GIVEN("a project whose plate has no per-filament volume map") {
+        Model model;
+        REQUIRE(load_stl((std::string(TEST_DATA_DIR) + "/test_3mf/Prusa.stl").c_str(), &model));
+        model.add_default_instances();
+        ScopedTemporaryDir backup_dir("orca_no_volume_map");
+        model.set_backup_path(backup_dir.string());
+        DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
+        PlateData          plate;
+        plate.plate_index = 0;
+
+        ScopedTemporaryFile temp(".3mf");
+        const std::string   path = temp.string();
+        StoreParams         store_params;
+        store_params.path     = path.c_str();
+        store_params.model    = &model;
+        store_params.config   = &config;
+        store_params.plate_data_list.push_back(&plate);
+        store_params.strategy = SaveStrategy::Zip64 | SaveStrategy::Silence;
+        REQUIRE(store_bbs_3mf(store_params));
+
+        WHEN("loaded through the BBS importer") {
+            Model                     dst_model;
+            DynamicPrintConfig        dst_config;
+            ConfigSubstitutionContext ctxt{ ForwardCompatibilitySubstitutionRule::Enable };
+            PlateDataPtrs             plates;
+            std::vector<Preset*>      project_presets;
+            bool   is_bbl_3mf = false, is_orca_3mf = false;
+            Semver file_version;
+            const bool loaded = load_bbs_3mf(path.c_str(), &dst_config, &ctxt, &dst_model, &plates, &project_presets,
+                                             &is_bbl_3mf, &is_orca_3mf, &file_version, nullptr,
+                                             LoadStrategy::LoadModel | LoadStrategy::LoadConfig);
+            THEN("the loaded plate has no per-filament volume map") {
+                REQUIRE(loaded);
+                REQUIRE(plates.size() == 1);
+                CHECK(plates.front()->config.option<ConfigOptionInts>("filament_volume_map") == nullptr);
             }
             release_PlateData_list(plates);
         }
@@ -2957,4 +2992,68 @@ TEST_CASE("The command line refuses a 3MF from a newer OrcaSlicer but not a Bamb
         CHECK(file_version.maj() == 99); // newer than Orca's own version, and still loaded
         CHECK_FALSE(bbs_3mf_too_new_for_cli(is_orca_3mf, file_version, app));
     }
+}
+
+// Bambu Studio's filament_scarf_* settings can't be unset, and Bambu Studio refuses the whole project when they hold
+// "nil". The project file carries Bambu Studio's defaults instead, and Forca reads the unset slots back as unset.
+TEST_CASE("Unset filament scarf slots are saved readable for Bambu Studio and load back unset", "[3mf][ForcaPresetImport]")
+{
+    ScopedTemporaryDir  backup_dir("orca_scarf_3mf");
+    ScopedTemporaryFile file(".3mf");
+    Model               model;
+    model.set_backup_path(backup_dir.string());
+    model.add_object()->add_volume(make_cube(10., 10., 10.));
+    model.objects.front()->add_instance();
+
+    // The first filament leaves the scarf to the process, the second sets its own.
+    DynamicPrintConfig  saved;
+    ConfigSubstitutionContext strict{ForwardCompatibilitySubstitutionRule::Disable};
+    saved.set_deserialize({{"filament_scarf_seam_type", "nil,external"},
+                           {"filament_scarf_height", "nil,15%"},
+                           {"filament_scarf_gap", "nil,0.1"},
+                           {"filament_scarf_length", "nil,20"}},
+                          strict);
+    PlateData   plate;
+    plate.plate_index = 0;
+    const std::string path = file.string();
+    StoreParams       sp;
+    sp.path     = path.c_str();
+    sp.model    = &model;
+    sp.config   = &saved;
+    sp.strategy = SaveStrategy::Zip64 | SaveStrategy::Silence;
+    sp.plate_data_list.push_back(&plate);
+    REQUIRE(store_bbs_3mf(sp));
+
+    std::string text;
+    REQUIRE(read_cad_recipe_entry(path, text, "Metadata/project_settings.config"));
+    const nlohmann::json settings = nlohmann::json::parse(text);
+    CHECK(settings["filament_scarf_seam_type"] == nlohmann::json::array({"none", "external"}));
+    CHECK(settings["filament_scarf_height"] == nlohmann::json::array({"10%", "15%"}));
+    CHECK(settings["filament_scarf_gap"][0] == "0");
+    CHECK(settings["filament_scarf_length"][0] == "10");
+    CHECK(settings.contains("forca_filament_scarf_unset"));
+
+    Model                     loaded_model;
+    ScopedTemporaryDir        load_dir("orca_scarf_3mf_load");
+    loaded_model.set_backup_path(load_dir.string());
+    DynamicPrintConfig        loaded;
+    ConfigSubstitutionContext ctxt{ForwardCompatibilitySubstitutionRule::Enable};
+    PlateDataPtrs             plates;
+    std::vector<Preset *>     project_presets;
+    bool                      is_bbl_3mf = false, is_orca_3mf = false;
+    Semver                    file_version;
+    REQUIRE(load_bbs_3mf(path.c_str(), &loaded, &ctxt, &loaded_model, &plates, &project_presets, &is_bbl_3mf, &is_orca_3mf,
+                         &file_version, nullptr, LoadStrategy::LoadModel | LoadStrategy::LoadConfig));
+    release_PlateData_list(plates);
+
+    for (const char *key : {"filament_scarf_seam_type", "filament_scarf_height", "filament_scarf_gap", "filament_scarf_length"}) {
+        INFO(key);
+        const auto *option = dynamic_cast<const ConfigOptionVectorBase *>(loaded.option(key));
+        REQUIRE(option != nullptr);
+        REQUIRE(option->size() == 2);
+        CHECK(option->is_nil(0));
+        CHECK_FALSE(option->is_nil(1));
+        CHECK(loaded.option(key)->serialize() == saved.option(key)->serialize());
+    }
+    CHECK_FALSE(loaded.has("forca_filament_scarf_unset"));
 }

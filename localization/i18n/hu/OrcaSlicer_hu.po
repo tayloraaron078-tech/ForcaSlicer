@@ -17781,6 +17781,10 @@ msgstr "Szerszámváltási idő"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "A szerszámváltáshoz szükséges idő. Ez általában szerszámváltós vagy több szerszámos gépeknél releváns. Egyextruderes többanyagú gépeknél jellemzően 0. Csak statisztikai célra."
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "A szerszámváltáshoz szükséges idő. Általában szerszámváltókra vagy többszerszámos gépekre vonatkozik. Egyextruderes többanyagos gépeknél jellemzően 0. A nyomtatási idő becsléséhez használatos, és szerszámváltóknál beleszámít a minimális rétegidőbe."
+
 msgid "Bed temperature type"
 msgstr "Asztalhőmérséklet típusa"
 
@@ -42684,6 +42688,400 @@ msgstr "A Snapmaker U1 kamerája a gyári firmware-rel csak állóképeket kész
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Az U1 kamerájának megjelenítése"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "A nem sík vasalás nem lett használva. Ehhez kell a nyomtatófej körvonala a nyomtatóbeállításokban és egyetlen objektum a tálcán, támasz, törlőtorony, huzatvédő és egy rétegnél magasabb szoknya nélkül."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "A modell egy része meredekebb annál, amit a nyomtatófej követni tud (kb. %1%°). Ott nem lett használva a nem sík vasalás."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "A nem sík felső felület nem lett használva. Ehhez kell a nyomtatófej körvonala a nyomtatóbeállításokban és egyetlen objektum a tálcán, támasz, törlőtorony, huzatvédő és egy rétegnél magasabb szoknya nélkül."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "A modell egy része meredekebb annál, amit a nyomtatófej követni tud (kb. %1%°). Ott nem lett használva a nem sík felső felület."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Fúvókacsúcs átmérője"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "A fúvóka legvégén lévő lapos rész átmérője. Nem sík nyomtatáskor arra szolgál, hogy a nyomtatófej ne érjen a nyomathoz."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Fúvókakúp átmérője"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "A fúvóka átmérője ott, ahol a kúpja véget ér: a kúp tetején vagy a szilikonzokni alsó szélén. 0 esetén a nyomtatófej körvonala nem ismert, és a nem sík nyomtatás nem érhető el."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Fúvókakúp magassága"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "A fúvókacsúcs feletti magasság, ahol a fúvókakúp átmérőjét mérik."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Távolság a nyomtatófej testéig"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Távolság a fúvóka közepétől a nyomtatófej legközelebbi, mellette mélyen lelógó részéig: ventilátorcsatorna, burkolat vagy fűtőblokk. 0 esetén semmi sem lóg lejjebb a fúvókakúp tetejénél."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Nyomtatófej testének magassága"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "A nyomtatófej fúvóka melletti legalsó részének magassága a fúvókacsúcs felett."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Nyomtatófej szabad távolságának ráhagyása"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "A nyomtatófej és a nyomat között nem sík nyomtatáskor tartott távolság a fenti körvonalon felül. Lefedi, amit a körvonal nem: a mérési hibát és a rétegek sarkait."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Nem sík vasalás"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Egy enyhe lejtőt egyetlen menetben vasal, amely a rétegeken át követi a modell felületét, ahelyett hogy minden réteg lépcsőjét laposra vasalná. A fúvóka már kinyomtatott anyag mellett halad lefelé, ezért ehhez kell a nyomtatófej körvonala a nyomtatóbeállításokban, és csak ott használható, ahol a körvonal szerint a fej szabad marad. Egyetlen objektum kell a tálcán, támasz és törlőtorony nélkül."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Nem sík felső felület"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Egy enyhe lejtő felső felületét egyetlen, a modell felületét követő héjként nyomtatja a rétegek lépcsői helyett. Az alatta lévő rétegek egy réteggel lejjebb érnek véget, és a héj akkor kerül rájuk, amikor a lejtő utolsó rétege elkészült. A fúvóka már kinyomtatott anyag mellett halad lefelé, ezért ehhez kell a nyomtatófej körvonala a nyomtatóbeállításokban, és csak ott használható, ahol a körvonal szerint a fej szabad marad. Egyetlen objektum kell a tálcán, támasz és törlőtorony nélkül. Kísérleti."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Más alkalmazás (MCP, helyi program)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Modellek, amelyek közül az MI véletlenszerűen választhat:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "A Forca beépített tesztmodelljei"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Mappa kiválasztása..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Beépítettek használata"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Válasszon egy modellmappát, amelyből az MI választhat"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "NumPy telepítése"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Letölti a NumPy-t az internetről (pypi.org) a Forca Pythonjába, a Haladó szinten az MI által futtatott szkriptekhez és a bővítményekhez."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "A Forca letölti a NumPy-t az internetről (pypi.org), és hozzáadja a Forca Pythonjához, ahol az MI szkriptjei és a bővítményei használhatják. Folytatja?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "A NumPy telepítése nem sikerült:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy az MI Python-szkriptjeihez: telepítés..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy az MI Python-szkriptjeihez: telepítve"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy az MI Python-szkriptjeihez: nincs telepítve"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Olyan alkalmazáshoz, amely csak helyi MCP-kiszolgálókat indít (\"command\", nem cím): a Forca forca-mcp programja továbbítja az üzeneteit a Forca AI-nak, Node.js nélkül. Adja hozzá az alábbi \"forca\" bejegyzést az alkalmazás \"mcpServers\" beállításaihoz. A kulcsot magától megtalálja, így új kulcs esetén itt nincs teendő."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "A Nyomtatási kockázatok %1% olyan helyet talált ezen a tálcán, amely hibás lehet. A Nézet > Nyomtatási kockázatok mutatja, hol van és mit érdemes kipróbálni."
+msgstr[1] "A Nyomtatási kockázatok %1% olyan helyet talált ezen a tálcán, amely hibás lehet. A Nézet > Nyomtatási kockázatok mutatja, hol vannak és mit érdemes kipróbálni."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Tálcajelentés: nincs figyelmeztetés."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Tálcajelentés: %1% figyelmeztetés."
+msgstr[1] "Tálcajelentés: %1% figyelmeztetés."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Tálcajelentés megnyitása"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "A tálca egy része a nyomtatható területen kívül esik. Helyezze az objektumokat az asztalra."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Az objektumok %1% mm magasak, magasabbak a nyomtatható magasságnál (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Az objektumok %1% mm magasak, közel a nyomtatható magassághoz (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Egy objektum %1% mm-re van az asztal szélétől, ahol sok nyomtatón az első réteg tapad a legkevésbé."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "A %1% mm-es rétegmagasság nagyobb %2% mm-nél, amennyit egy %3% mm-es fúvóka még jól nyomtat: a rétegek nem biztos, hogy összetapadnak."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "A %1% mm-es első rétegmagasság nagyobb %2% mm-nél, amennyit egy %3% mm-es fúvóka még jól nyomtat: nem biztos, hogy megtapad az asztalon."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: a %2% °C-os fúvókahőmérséklet kívül esik a filament ajánlott %3%–%4% °C-os tartományán."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "A filamentek fúvókahőmérséklete %1% °C-kal eltér. Ellenőrizze, hogy együtt nyomtathatók-e."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "A tálca filamentjeinek asztalhőmérséklete %1% °C-kal eltér; az asztal csak az egyiken lehet."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% kockázat található"
+msgstr[1] "%1% kockázat található"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Vékony és magas"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Kis talpfelület"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Rövid rétegek"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% nincs kezelve."
+msgstr[1] "%1% nincs kezelve."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Tálcajelentés"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Másolás szövegként"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "A tálcajelentés csak FFF-nyomtatásokhoz érhető el."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "%1%. tálca"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Ez a tálca üres."
+
+# AI Translated
+msgid "Checks"
+msgstr "Ellenőrzések"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Nincs mit jelezni."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Nincs mit jelezni. Szeletelje a tálcát, hogy a szeletelő saját ellenőrzései is bekerüljenek."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Szeletelje a tálcát a kockázatok ellenőrzéséhez."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "A Nyomtatási kockázatok gomb mutatja, hol és mit érdemes kipróbálni."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Szeletelje a tálcát a nyomtatási idő és a tömeg megtekintéséhez."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Nyomtatási idő:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Költség:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Rétegek:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Filamentcserék:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Pozíció:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "középpont: X %1%, Y %2% (asztal közepe X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Asztal:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objektumok:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "A projektnek %1% tálcája van; ez a jelentés egyet fed le."
+msgstr[1] "A projektnek %1% tálcája van; ez a jelentés egyet fed le."
+
+# AI Translated
+msgid "Process:"
+msgstr "Folyamat:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "%1%. filament: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Módosítva, nincs mentve"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Nincs. Az előbeállítások a mentett állapotban vannak."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm széles"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² a tálcán"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s rétegenként"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Perem vagy tutaj"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Ez az alkatrész kb. %1% mm széles és %2% mm magas. A fúvóka megbillentheti vagy ledöntheti. Nyomtassa lassabban, nyomtasson több példányt együtt, adjon hozzá peremet vagy egy támasztófalat mellé."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Ennek a %2% mm magas objektumnak csak %1% mm²-e érinti a tálcát. Leválhat vagy feldőlhet."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Egy perem vagy tutaj lent tartja."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Adjon hozzá peremet (Egyéb > Perem típusa), vagy fordítsa el a modellt, hogy egy nagyobb oldala nézzen az asztal felé."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Ezek a rétegek akár %1% s alatt elkészülnek, kevesebb idő alatt, mint a filament rétegideje (%2% s), így nem biztos, hogy lehűlnek, és megereszkedhetnek vagy felpöndörödhetnek. Nyomtasson mellé egy második példányt, vagy csökkentse a hűtéshez tartozó minimális sebességet."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Az egész tálca egy pillantásra: ellenőrzések, nyomtatási idő és tömeg, méret és pozíció, fő beállítások és nem mentett módosítások."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Egész tálca"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Felsorolja, hol hibázhat a szeletelt tálca: túlnyúlások, hosszú áthidalások, levegőben kezdődő részek, vékony magas részek, kis talpfelületek és túl rövid, le nem hűlő rétegek."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Tálcajelentés"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Az aktuális tálca egy pillantásra: ellenőrzések, nyomtatási idő és tömeg, méret és pozíció, fő beállítások és nem mentett módosítások."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Jelölje be, hogy a modelloldalak \"Open in OrcaSlicer\" gombjai a Forcában nyissák meg a modellt."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Nyomtatófej körvonala"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Beállítások megjelenítése STEP fájl importálásakor"

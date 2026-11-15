@@ -15,7 +15,9 @@
 
 class wxWindow;
 
-namespace Slic3r { namespace GUI {
+namespace Slic3r {
+struct GCodeProcessorResult;
+namespace GUI {
 
 class GLCanvas3D;
 
@@ -23,8 +25,12 @@ class GLCanvas3D;
 // last position when `z` is above them all, -1 when there are none.
 int forca_risk_slider_index(const std::vector<double>& zs, double z);
 
-// The journal tag and playbook (playbooks/<tag>.md) of a risk: "bridging" for a bridge, "supports" for the others.
+// The journal tag and playbook (playbooks/<tag>.md) of a risk: "bridging" for a bridge, "bed_adhesion" for a small
+// footprint, "spaghetti" for a thin tall part, "supports" for the others; none for short layers.
 std::string forca_risk_academy_tag(PrintRiskType type);
+
+// Each printed layer's top and print time (normal mode), from a plate's G-code.
+std::vector<ForcaLayerTime> forca_gcode_layer_times(const GCodeProcessorResult& result);
 
 // The recorded prints tagged `tag`, on `printer` (empty: any printer) with any of `filaments`, newest first.
 std::vector<boost::filesystem::path> forca_risk_tagged_prints(const std::vector<ForcaAcademyPrint>& prints,
@@ -36,16 +42,16 @@ std::vector<boost::filesystem::path> forca_risk_tagged_prints(const std::vector<
 struct ForcaPlateRisk
 {
     PrintRisk          risk;
-    std::string        object;
+    std::string        object;                // empty for a risk of the whole plate (short layers)
     double             threshold_deg = 0;     // the support threshold angle the overhangs were measured with
     double             max_bridge    = 0;     // max_bridge_length, mm
     bool               support_on    = false; // the object has support turned on
     std::vector<Vec3d> points;                // one per instance, on the bed at the risk's first layer, mm
 };
 
-// The risks of a plate's sliced objects (-1: the current plate), lowest first. GUI thread. Each slice is checked once
-// and kept, so the Print Risks window, Forca AI and "Before you print" share the work. False (and no risks) when the
-// plate is not FFF, is slicing, or is not sliced up to support yet.
+// The risks of a plate's sliced objects (-1: the current plate), lowest first; short layers once its G-code is made.
+// GUI thread. Each slice is checked once and kept, so the Print Risks window, Forca AI and "Before you print" share the
+// work. False (and no risks) when the plate is not FFF, is slicing, or is not sliced up to support yet.
 bool forca_plate_risks(int plate_idx, std::vector<ForcaPlateRisk>& risks);
 
 // Opens the Print Risks window (one at a time; not modal), or refreshes it and brings it to the front.

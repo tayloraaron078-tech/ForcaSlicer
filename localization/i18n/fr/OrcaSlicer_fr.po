@@ -17396,6 +17396,10 @@ msgstr "Délai nécessaire au changement d’outil"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Durée nécessaire pour changer d’outil. Il s’applique généralement aux changeurs d’outils ou aux machines multi-outils. Pour les machines multi-matériaux mono-extrudeuses, il est généralement égal à 0. Pour les statistiques uniquement"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Temps nécessaire pour changer d'outil. S'applique généralement aux changeurs d'outils ou aux machines multi-outils. Pour les machines multimatériaux à extrudeur unique, il vaut généralement 0. Il sert à l'estimation de la durée d'impression et, sur les changeurs d'outils, compte dans le temps de couche minimal."
+
 msgid "Bed temperature type"
 msgstr "Type de température du plateau"
 
@@ -41706,6 +41710,400 @@ msgstr "La caméra de la Snapmaker U1 ne prend que des images fixes avec le firm
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Afficher la caméra de la U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Le lissage non plan n'a pas été utilisé. Il faut le contour de la tête d'impression dans les paramètres de l'imprimante et un seul objet sur le plateau, sans supports, tour d’amorçage, paravent ni jupe de plus d'une couche."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Une partie du modèle est plus raide que ce que la tête d'impression peut suivre, environ %1%°. Le lissage non plan n'y a pas été utilisé."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "La surface supérieure non plane n'a pas été utilisée. Il faut le contour de la tête d'impression dans les paramètres de l'imprimante et un seul objet sur le plateau, sans supports, tour d’amorçage, paravent ni jupe de plus d'une couche."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Une partie du modèle est plus raide que ce que la tête d'impression peut suivre, environ %1%°. La surface supérieure non plane n'y a pas été utilisée."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Diamètre de la pointe de la buse"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Diamètre du plat à l'extrémité de la buse. Sert à garder la tête d'impression à distance de l'impression en impression non plane."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Diamètre du cône de la buse"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Diamètre de la buse là où son cône se termine : le haut du cône, ou le bord inférieur de la chaussette en silicone. 0 signifie que le contour de la tête d'impression n'est pas connu et que l'impression non plane n'est pas disponible."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Hauteur du cône de la buse"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Hauteur au-dessus de la pointe de la buse à laquelle le diamètre du cône de la buse est mesuré."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Distance au corps de la tête d'impression"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Distance entre le centre de la buse et la partie de la tête d'impression la plus proche qui descend bas à côté : une conduite de ventilateur, le carénage ou le bloc de chauffe. 0 signifie que rien ne descend plus bas que le haut du cône de la buse."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Hauteur du corps de la tête d'impression"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Hauteur au-dessus de la pointe de la buse de la partie la plus basse de la tête d'impression à côté de la buse."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Marge de dégagement de la tête d'impression"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Distance gardée entre la tête d'impression et l'impression en impression non plane, en plus du contour ci-dessus. Elle couvre ce que le contour ne couvre pas : l'erreur de mesure et les coins des couches."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Lissage non plan"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Lisse une pente douce en un seul passage qui suit la surface du modèle à travers ses couches, au lieu de lisser à plat la marche de chaque couche. La buse descend à côté de matière déjà imprimée, il faut donc le contour de la tête d'impression dans les paramètres de l'imprimante, et il n'est utilisé que là où ce contour montre que la tête reste dégagée. Il faut un seul objet sur le plateau, sans supports ni tour d’amorçage."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Surface supérieure non plane"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Imprime la surface supérieure d'une pente douce comme une seule peau qui suit la surface du modèle, au lieu des marches de ses couches. Les couches dessous s'arrêtent une couche plus bas, et la peau est imprimée par-dessus quand la dernière couche de la pente est terminée. La buse descend à côté de matière déjà imprimée, il faut donc le contour de la tête d'impression dans les paramètres de l'imprimante, et il n'est utilisé que là où ce contour montre que la tête reste dégagée. Il faut un seul objet sur le plateau, sans supports ni tour d’amorçage. Expérimental."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Autre application (MCP, programme local)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Modèles que l'IA peut choisir au hasard :"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Modèles de test intégrés de Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Choisir un dossier..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Utiliser ceux intégrés"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Choisissez un dossier de modèles dans lequel l'IA peut choisir"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Installer NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Télécharge NumPy depuis Internet (pypi.org) dans le Python de Forca, pour les scripts que l'IA exécute au niveau Avancé et pour les plugins."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca va télécharger NumPy depuis Internet (pypi.org) et l'ajouter au Python de Forca, où les scripts de l'IA et vos plugins pourront l'utiliser. Continuer ?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy n'a pas pu être installé :\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy pour les scripts Python de l'IA : installation..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy pour les scripts Python de l'IA : installé"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy pour les scripts Python de l'IA : non installé"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Pour une application qui ne lance que des serveurs MCP locaux (une \"command\", pas une adresse) : le programme forca-mcp de Forca transmet ses messages à Forca AI, sans Node.js. Ajoutez l'entrée \"forca\" ci-dessous aux paramètres \"mcpServers\" de l'application. Il trouve la clé tout seul, donc une nouvelle clé ne demande aucun changement ici."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Risques d'impression a trouvé %1% endroit de ce plateau qui peut échouer. Affichage > Risques d'impression montre où il se trouve et quoi essayer."
+msgstr[1] "Risques d'impression a trouvé %1% endroits de ce plateau qui peuvent échouer. Affichage > Risques d'impression montre où ils se trouvent et quoi essayer."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Rapport du plateau : aucun avertissement."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Rapport du plateau : %1% avertissement."
+msgstr[1] "Rapport du plateau : %1% avertissements."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Ouvrir le rapport du plateau"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Une partie du plateau est hors de la zone imprimable. Déplacez les objets sur le plateau."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Les objets font %1% mm de haut, plus que la hauteur imprimable (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Les objets font %1% mm de haut, près de la hauteur imprimable (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Un objet est à %1% mm du bord du plateau, là où la première couche adhère le moins sur beaucoup d'imprimantes."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "La hauteur de couche de %1% mm dépasse %2% mm, le maximum qu'une buse de %3% mm imprime bien : les couches risquent de mal adhérer entre elles."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "La hauteur de première couche de %1% mm dépasse %2% mm, le maximum qu'une buse de %3% mm imprime bien : elle risque de mal adhérer au plateau."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1% : la température de buse de %2% °C est hors de la plage recommandée du filament, de %3% à %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Les températures de buse des filaments ont %1% °C d'écart. Vérifiez qu'ils peuvent s'imprimer ensemble."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Les températures de plateau des filaments de ce plateau ont %1% °C d'écart ; le plateau ne peut être qu'à l'une d'elles."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% risque trouvé"
+msgstr[1] "%1% risques trouvés"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Fin et haut"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Petite empreinte"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Couches courtes"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% non traité."
+msgstr[1] "%1% non traités."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Rapport du plateau"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Copier en texte"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Le rapport du plateau ne concerne que les impressions FFF."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Plateau %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Ce plateau est vide."
+
+# AI Translated
+msgid "Checks"
+msgstr "Vérifications"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Rien à signaler."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Rien à signaler. Découpez le plateau pour ajouter les vérifications du trancheur lui-même."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Découpez le plateau pour en vérifier les risques."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Le bouton Risques d'impression montre où et quoi essayer."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Découpez le plateau pour voir sa durée d'impression et son poids."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Durée d'impression :"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament :"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Coût :"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Couches :"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Changements de filament :"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Position :"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "centre à X %1%, Y %2% (centre du plateau X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Plateau :"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objets :"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Le projet a %1% plateau ; ce rapport en couvre un."
+msgstr[1] "Le projet a %1% plateaux ; ce rapport en couvre un."
+
+# AI Translated
+msgid "Process:"
+msgstr "Traitement :"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1% : %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Modifié et non enregistré"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Aucun. Les préréglages sont tels qu'enregistrés."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm de large"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² sur le plateau"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s par couche"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Bordure ou radeau"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Cette pièce fait environ %1% mm de large et %2% mm de haut. La buse peut la faire osciller ou la renverser. Imprimez-la plus lentement, imprimez plusieurs copies ensemble, ajoutez une bordure ou un mur de support à côté."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Seuls %1% mm² de cet objet de %2% mm de haut touchent le plateau. Il peut se décoller ou basculer."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Une bordure ou un radeau le maintient."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Ajoutez une bordure (Autres > Type de bordure), ou tournez le modèle pour qu'un côté plus grand soit face au plateau."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Ces couches s'impriment en à peine %1% s, moins que le temps de couche du filament (%2% s), elles risquent donc de mal refroidir et de s'affaisser ou de gondoler. Imprimez une deuxième copie à côté, ou baissez la vitesse minimale pour le refroidissement."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Tout le plateau en un coup d'œil : vérifications, durée d'impression et poids, taille et position, réglages clés et modifications non enregistrées."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Tout le plateau"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Liste où le plateau découpé peut échouer : surplombs, longs ponts, parties qui commencent dans le vide, parties fines et hautes, petites empreintes et couches trop courtes pour refroidir."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Rapport du plateau"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Le plateau actuel en un coup d'œil : vérifications, durée d'impression et poids, taille et position, réglages clés et modifications non enregistrées."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Cochez ceci pour que les boutons \"Open in OrcaSlicer\" des sites de modèles ouvrent le modèle dans Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Contour de la tête d'impression"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Afficher les options lors de l'importation d'un fichier STEP"

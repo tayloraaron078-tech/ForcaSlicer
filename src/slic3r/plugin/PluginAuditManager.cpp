@@ -694,6 +694,13 @@ void PluginAuditManager::add_scoped_allowed_root(const boost::filesystem::path& 
 // Denied filenames
 // ---------------------------------------------------------------------------
 
+bool PluginAuditManager::inside_scoped_write_root(const boost::filesystem::path& candidate) const
+{
+    return std::any_of(m_scoped_allowed_roots.begin(), m_scoped_allowed_roots.end(), [&candidate](const AllowedRoot& root) {
+        return root.allow_write && is_inside_allowed_root(candidate, root.path);
+    });
+}
+
 void PluginAuditManager::add_denied_filename(const std::string& filename)
 {
     if (filename.empty())
@@ -1859,6 +1866,28 @@ int audit_plugin_event(PluginAuditManager& mgr, const std::string& event_name, A
         for (const auto& target : targets) {
             if (mgr.is_denied_path(boost::filesystem::path(target)))
                 return report_denied(mgr, event_name, {false, "denied path"}, target);
+        }
+    }
+
+    // Forca AI scripts: limits no grant, prompt or running operation lifts (kForcaAIScriptKey).
+    if (mgr.current_plugin() == kForcaAIScriptKey) {
+        switch (event_type) {
+        case AuditEventCategory::Http:
+        case AuditEventCategory::Socket:
+        case AuditEventCategory::ProcessCreate:
+        case AuditEventCategory::ProcessReplace:
+        case AuditEventCategory::Threading:
+            return report_denied(mgr, event_name, {false, "Forca AI scripts may not use the network, start programs or start threads"});
+        case AuditEventCategory::FsReadWrite:
+        case AuditEventCategory::FsCreate:
+        case AuditEventCategory::FsDelete:
+            if (targets.empty())
+                return report_denied(mgr, event_name, {false, "Forca AI scripts write only inside their own folder"});
+            for (const auto& target : targets)
+                if (!mgr.inside_scoped_write_root(boost::filesystem::path(target)))
+                    return report_denied(mgr, event_name, {false, "Forca AI scripts write only inside their own folder"}, target);
+            break;
+        default: break;
         }
     }
 

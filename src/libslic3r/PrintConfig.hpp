@@ -199,6 +199,7 @@ inline bool is_smoothable_infill_pattern(InfillPattern pattern, int multiline = 
     case ipTriangles:
     case ipStars:
     case ipCubic:
+    case ipQuarterCubic:
         return multiline > 1;
     default:
         return false;
@@ -1605,6 +1606,8 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat, ironing_speed))
     ((ConfigOptionFloat, ironing_angle))
     ((ConfigOptionBool, ironing_angle_fixed))
+    ((ConfigOptionBool, nonplanar_ironing))
+    ((ConfigOptionBool, nonplanar_top_surface))
     // Filament Ironing
     ((ConfigOptionPercentsNullable, filament_ironing_flow))
     ((ConfigOptionFloatsNullable, filament_ironing_spacing))
@@ -1667,6 +1670,7 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool,                 wipe_inward))
     ((ConfigOptionFloatOrPercent,        wipe_inward_distance))
     ((ConfigOptionBool,                 wipe_before_external_loop))
+    ((ConfigOptionBool,                 retract_after_outer_wall))
     ((ConfigOptionEnum<WallInfillOrder>, wall_infill_order))
     ((ConfigOptionBool,                 precise_outer_wall))
     ((ConfigOptionPercent,              bridge_density))
@@ -2124,6 +2128,12 @@ PRINT_CONFIG_CLASS_DERIVED_DEFINE(
     ((ConfigOptionFloat,              extruder_clearance_height_to_lid))//BBS
     ((ConfigOptionFloat,              extruder_clearance_radius))
     ((ConfigOptionFloat,              nozzle_height))
+    ((ConfigOptionFloat,              nozzle_tip_diameter))
+    ((ConfigOptionFloat,              nozzle_cone_diameter))
+    ((ConfigOptionFloat,              nozzle_cone_height))
+    ((ConfigOptionFloat,              printhead_body_distance))
+    ((ConfigOptionFloat,              printhead_body_height))
+    ((ConfigOptionFloat,              printhead_clearance_margin))
     ((ConfigOptionStrings,            extruder_colour))
     ((ConfigOptionPoints,             extruder_offset))
     ((ConfigOptionBools,              reduce_fan_stop_start_freq))
@@ -2658,7 +2668,10 @@ private:
 bool is_XL_printer(const DynamicPrintConfig &cfg);
 bool is_XL_printer(const PrintConfig &cfg);
 
-Polygon get_shared_poly(const std::vector<Pointfs>& extruder_polys);
+// The area every extruder can reach: the whole bed when no extruder has an area of its own, and empty
+// when the extruder areas do not overlap.
+Polygon get_shared_poly(const std::vector<Pointfs>& extruder_polys, const Pointfs& bed);
+// The bed to place objects on. With use_share it is the shared area, or the whole bed when there is none.
 Points get_bed_shape(const DynamicPrintConfig &cfg, bool use_share = true);
 Points get_bed_shape(const PrintConfig &cfg, bool use_share = false);
 Points get_bed_shape(const SLAPrinterConfig &cfg);

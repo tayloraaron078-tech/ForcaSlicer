@@ -2293,3 +2293,157 @@ TEST_CASE("Nozzle change ramming is symmetric for identical filaments", "[MultiF
     }
     CHECK_THAT(medians[0], Catch::Matchers::WithinRel(medians[1], 0.01));
 }
+
+// A parked tool cools to its filament's idle temperature, whatever the standby temperature delta is. So a tool that
+// is picked up again has to be set back to its printing temperature, and waited for, before it extrudes -- also with
+// the delta at 0, and with or without the preheat ahead of the change.
+TEST_CASE("A tool parked at its idle temperature is heated again when it is picked up", "[MultiFilament]")
+{
+    const int preheat_time = GENERATE(0, 30);
+    DYNAMIC_SECTION("preheat_time " << preheat_time) {
+        const std::string gcode = slice_with_object_overrides(
+            { cube(10), cube(10) },
+            multifilament_config(2, {
+                { "nozzle_diameter",                  "0.4,0.4" },
+                { "printer_extruder_id",              "1,2" },
+                { "printer_extruder_variant",         "Direct Drive Standard,Direct Drive Standard" },
+                { "extruder_printable_height",        "0,0" },
+                { "single_extruder_multi_material",   0 },
+                { "enable_prime_tower",               0 },
+                { "ooze_prevention",                  1 },
+                { "standby_temperature_delta",        0 },
+                { "idle_temperature",                 "150,150" },
+                { "preheat_time",                     preheat_time },
+                { "nozzle_temperature_initial_layer", "215,215" },
+                { "nozzle_temperature",               "240,240" },
+            }),
+            // One filament per object: a tool change on every layer.
+            { { { "extruder", 1 } }, { { "extruder", 2 } } });
+
+        int                selects = 0, parked = 0, cold_starts = 0;
+        int                waiting_for = -1; // the tool picked last, until it is waited for
+        std::istringstream stream(gcode);
+        for (std::string line; std::getline(stream, line);) {
+            if (line.size() >= 2 && line[0] == 'T' && std::isdigit((unsigned char) line[1])) {
+                ++selects;
+                waiting_for = std::stoi(line.substr(1));
+            } else if (line.rfind("M104 S150 ", 0) == 0) {
+                ++parked;
+            } else if (waiting_for >= 0 && line.rfind("M109 S", 0) == 0) {
+                // The wait names the picked tool and a printing temperature.
+                CHECK(line.find(" T" + std::to_string(waiting_for)) != std::string::npos);
+                CHECK(std::stoi(line.substr(6)) >= 215);
+                waiting_for = -1;
+            } else if (waiting_for >= 0 && line.rfind("G1 ", 0) == 0 && line.find(" X") != std::string::npos) {
+                const size_t e = line.find(" E");
+                if (e != std::string::npos && line[e + 2] != '-') { // the picked tool extrudes without the wait
+                    ++cold_starts;
+                    waiting_for = -1;
+                }
+            }
+        }
+        // 10 mm cubes at the default 0.2 mm layer height: 50 layers, a tool change on each.
+        REQUIRE(selects >= 40);
+        // With a preheat, a tool that returns within preheat_time is not cooled at all (these layers are that short).
+        if (preheat_time == 0)
+            CHECK(parked >= 40);
+        CHECK(cold_starts == 0);
+    }
+}
+
+// Regression for #14753: emit M104 after T0 in single-extruder MM to override firmware/CFS reset.
+TEST_CASE("Single-extruder MM emits M104 after T0 toolchange", "[MultiFilament]")
+{
+    const int expected_temp = 240;
+    const std::string gcode = slice({ cube(20) },
+        multifilament_config(2, {
+            { "nozzle_temperature",               std::to_string(expected_temp) + "," + std::to_string(expected_temp) },
+            { "nozzle_temperature_initial_layer", std::to_string(expected_temp) + "," + std::to_string(expected_temp) },
+            { "machine_start_gcode",              "" },
+            { "enable_prime_tower",               "0" },
+        }));
+
+    bool found_t0 = false;
+    std::string first_cmd_after_t0;
+    int first_temp_after_t0 = -1;
+    GCodeReader reader;
+    reader.parse_buffer(gcode, [&](GCodeReader& self, const GCodeReader::GCodeLine& line) {
+        const std::string cmd(line.cmd());
+        if (cmd.empty())
+            return;
+        if (!found_t0) {
+            if (cmd == "T0")
+                found_t0 = true;
+        } else {
+            first_cmd_after_t0 = cmd;
+            float s_val = 0;
+            if (line.has_value('S', s_val))
+                first_temp_after_t0 = int(s_val);
+            self.quit_parsing();
+        }
+    });
+
+    REQUIRE(found_t0);
+    REQUIRE(first_cmd_after_t0 == "M104");
+    REQUIRE(first_temp_after_t0 == expected_temp);
+}
+
+// Single-filament prints must not get an M104 after start G-code when no T command was written.
+TEST_CASE("Single-filament print does not emit M104 after start G-code", "[MultiFilament]")
+{
+    const std::string gcode = slice({ cube(20) },
+        multifilament_config(1, {
+            { "machine_start_gcode", "; START_GCODE_END\n" },
+            { "enable_prime_tower",  "0" },
+        }));
+
+    const size_t start_pos = gcode.find("; START_GCODE_END");
+    REQUIRE(start_pos != std::string::npos);
+    const size_t layer_pos = gcode.find(";LAYER_CHANGE", start_pos);
+    REQUIRE(layer_pos != std::string::npos);
+
+    const std::string between = gcode.substr(start_pos, layer_pos - start_pos);
+    CHECK(between.find("M104") == std::string::npos);
+    CHECK(between.find("M109") == std::string::npos);
+    CHECK(between.find("T0") == std::string::npos);
+}
+
+// A custom M104 in filament start G-code must be preserved after T0 and the slicer's default M104.
+TEST_CASE("Custom M104 in filament start G-code wins on a T0-only print", "[MultiFilament]")
+{
+    const int slicer_temp = 240;
+    const int custom_temp = 255;
+    const std::string gcode = slice({ cube(20) },
+        multifilament_config(2, {
+            { "nozzle_temperature",               std::to_string(slicer_temp) + "," + std::to_string(slicer_temp) },
+            { "nozzle_temperature_initial_layer", std::to_string(slicer_temp) + "," + std::to_string(slicer_temp) },
+            { "filament_start_gcode",             std::string("M104 S") + std::to_string(custom_temp) + "\n" },
+            { "machine_start_gcode",              "" },
+            { "enable_prime_tower",               "0" },
+        }));
+
+    bool found_t0 = false;
+    std::vector<int> temps_after_t0;
+    GCodeReader reader;
+    reader.parse_buffer(gcode, [&](GCodeReader& self, const GCodeReader::GCodeLine& line) {
+        const std::string cmd(line.cmd());
+        if (cmd == ";LAYER_CHANGE" || line.comment() == "LAYER_CHANGE") {
+            if (found_t0)
+                self.quit_parsing();
+            return;
+        }
+        if (!found_t0) {
+            if (cmd == "T0")
+                found_t0 = true;
+        } else if (cmd == "M104" || cmd == "M109") {
+            float s_val = 0;
+            if (line.has_value('S', s_val))
+                temps_after_t0.push_back(int(s_val));
+        }
+    });
+
+    REQUIRE(found_t0);
+    REQUIRE(temps_after_t0.size() >= 2);
+    CHECK(temps_after_t0.front() == slicer_temp);
+    CHECK(temps_after_t0.back() == custom_temp);
+}

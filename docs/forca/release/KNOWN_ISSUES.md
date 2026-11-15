@@ -11,7 +11,7 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper), a Snapmaker U1
   (stock firmware) and a stock Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.6.0 development line** (its main branch, merged up to 7 November 2026, just after
+- **Built on OrcaSlicer's 2.6.0 development line** (its main branch, merged up to 15 November 2026, after
   OrcaSlicer 2.5.0 was released), not a stable release. OrcaSlicer 2.5.0 calls projects saved in Forca newer and
   suggests an update; they still open.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
@@ -64,6 +64,14 @@ differently).
   match.
 - Libraries a file `include`s (BOSL2 and the like) must be where OpenSCAD finds them.
 
+## Nonplanar ironing and top surface (experimental)
+- **Tested on one printer**, a Flashforge Adventurer 5M with a 0.4 nozzle (ramps and a dome). Other printers need
+  their printhead outline measured and entered first; a wrong outline can let the printhead touch the print.
+- **One object per plate**, without supports, a raft or a prime tower; otherwise Forca prints the plate as usual
+  and says why.
+- Each run of lines starts and ends with a straight move down and up, which can leave small marks (move them with a
+  painted seam); valleys next to side walls can stay a little unfilled.
+
 ## Forca AI (experimental)
 - **Off by default**; only works on the same computer; needs the key shown in the Forca AI window.
 - **One camera viewer at a time:** a Bambu printer's camera accepts one viewer. If Bambu Handy, another slicer or a
@@ -73,6 +81,10 @@ differently).
 - A plate picture from the AI shows the objects only (not the bed or modifier boxes).
 - AI clients (for example Claude Code) load Forca's tool list when they connect; after updating Forca, reconnect them.
 - No macOS entry point for the Forca AI window yet (Windows builds only anyway).
+- **Python scripts** (Advanced level) run without NumPy until you click **Install NumPy** in the Forca AI window
+  (downloads it from pypi.org).
+- **forca-mcp in a sandboxed AI app** (Codex, for one) may say "no Forca AI key": the sandbox hides Forca's key
+  file. Pass `--key-file` with the file's path, as the Forca AI guide shows.
 - **Print grants** work on Bambu Lab printers and on Klipper and stock Flashforge printers Forca can read. Other print
   hosts: the AI can still ask, and you send.
 - **The camera bed check can't see the whole plate:** a Bambu H2S camera, for one, doesn't show the strip nearest the

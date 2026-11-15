@@ -18002,6 +18002,10 @@ msgstr "Час зміни інструмента"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Час, необхідний для перемикання інструментів. Зазвичай застосовується для змінників інструментів або багатофункціональних машин. Для одноекструдерних машин з підтримкою кількох матеріалів зазвичай становить 0. Використовується лише для статистики"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Час на зміну інструмента. Зазвичай стосується змінників інструмента та багатоінструментальних машин. Для багатоматеріальних машин з одним екструдером зазвичай 0. Використовується для оцінки часу друку, а на змінниках інструмента враховується в мінімальному часі шару."
+
 msgid "Bed temperature type"
 msgstr "Тип температури стола"
 
@@ -43182,6 +43186,410 @@ msgstr "Камера Snapmaker U1 на заводській прошивці р�
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Показати камеру U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Непланарне розгладжування не використано. Потрібні контур друкувальної головки в налаштуваннях принтера й один об'єкт на пластині, без підтримок, підготовчої вежі, захисного екрана та спідниці, вищої за один шар."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Частина моделі крутіша, ніж може пройти друкувальна головка (близько %1%°). Там непланарне розгладжування не використано."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Непланарну верхню поверхню не використано. Потрібні контур друкувальної головки в налаштуваннях принтера й один об'єкт на пластині, без підтримок, підготовчої вежі, захисного екрана та спідниці, вищої за один шар."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Частина моделі крутіша, ніж може пройти друкувальна головка (близько %1%°). Там непланарну верхню поверхню не використано."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Діаметр кінчика сопла"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Діаметр пласкої площадки на самому кінчику сопла. Потрібен, щоб під час непланарного друку головка не зачіпала модель."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Діаметр конуса сопла"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Діаметр сопла там, де закінчується його конус: угорі конуса або по нижньому краю силіконового чохла. 0 означає, що контур друкувальної головки невідомий і непланарний друк недоступний."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Висота конуса сопла"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Висота над кінчиком сопла, на якій вимірюється діаметр конуса сопла."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Відстань до корпусу головки"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Відстань від центра сопла до найближчої низько звислої поруч частини головки: повітроводу вентилятора, кожуха чи нагрівального блока. 0 означає, що ніщо не звисає нижче за верх конуса сопла."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Висота корпусу головки"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Висота над кінчиком сопла найнижчої частини головки поруч із соплом."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Запас зазору головки"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Відстань, що під час непланарного друку зберігається між головкою та моделлю понад контур вище. Вона покриває те, чого контур не враховує: похибку вимірювань і кути шарів."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Непланарне розгладжування"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Розгладжує пологий схил одним проходом, що йде за поверхнею моделі крізь її шари, замість того щоб розгладжувати сходинку кожного шару пласко. Сопло опускається поруч із уже надрукованим матеріалом, тому потрібен контур друкувальної головки в налаштуваннях принтера, і функція застосовується лише там, де контур показує, що головка проходить вільно. Потрібен один об'єкт на пластині, без підтримок і підготовчої вежі."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Непланарна верхня поверхня"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Друкує верхню поверхню пологого схилу однією оболонкою, що йде за поверхнею моделі, замість сходинок її шарів. Шари під нею закінчуються на шар нижче, а оболонка друкується поверх них, коли готовий останній шар схилу. Сопло опускається поруч із уже надрукованим матеріалом, тому потрібен контур друкувальної головки в налаштуваннях принтера, і функція застосовується лише там, де контур показує, що головка проходить вільно. Потрібен один об'єкт на пластині, без підтримок і підготовчої вежі. Експериментально."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Інший застосунок (MCP, локальна програма)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Моделі, з яких ШІ може вибрати навмання:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Вбудовані тестові моделі Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Вибрати теку..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Використати вбудовані"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Виберіть теку з моделями, з яких може вибирати ШІ"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Встановити NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Завантажує NumPy з інтернету (pypi.org) у Python Forca — для скриптів, які ШІ запускає на рівні «Розширений», і для плагінів."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca завантажить NumPy з інтернету (pypi.org) і додасть його до Python Forca, де ним зможуть користуватися скрипти ШІ та ваші плагіни. Продовжити?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "Не вдалося встановити NumPy:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy для скриптів Python ШІ: встановлення..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy для скриптів Python ШІ: встановлено"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy для скриптів Python ШІ: не встановлено"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Для застосунку, що запускає лише локальні MCP-сервери (\"command\", а не адреса): програма forca-mcp від Forca передає його повідомлення до Forca AI, без Node.js. Додайте запис \"forca\" нижче до налаштувань \"mcpServers\" застосунку. Ключ вона знаходить сама, тож для нового ключа тут нічого змінювати не треба."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Ризики друку знайшли на цій пластині %1% місце, де друк може не вдатися. Вигляд > Ризики друку покаже, де воно і що спробувати."
+msgstr[1] "Ризики друку знайшли на цій пластині %1% місця, де друк може не вдатися. Вигляд > Ризики друку покаже, де вони і що спробувати."
+msgstr[2] "Ризики друку знайшли на цій пластині %1% місць, де друк може не вдатися. Вигляд > Ризики друку покаже, де вони і що спробувати."
+msgstr[3] "Ризики друку знайшли на цій пластині %1% місця, де друк може не вдатися. Вигляд > Ризики друку покаже, де вони і що спробувати."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Звіт про пластину: попереджень немає."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Звіт про пластину: %1% попередження."
+msgstr[1] "Звіт про пластину: %1% попередження."
+msgstr[2] "Звіт про пластину: %1% попереджень."
+msgstr[3] "Звіт про пластину: %1% попередження."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Відкрити звіт про пластину"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Частина пластини виходить за межі області друку. Перемістіть об'єкти на стіл."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Висота об'єктів %1% мм, більша за висоту друку (%2% мм)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Висота об'єктів %1% мм, близько до висоти друку (%2% мм)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Об'єкт за %1% мм від краю столу, де на багатьох принтерах перший шар тримається найгірше."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "Висота шару %1% мм більша за %2% мм — межу, яку добре друкує сопло %3% мм: шари можуть погано злипатися."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "Висота першого шару %1% мм більша за %2% мм — межу, яку добре друкує сопло %3% мм: шар може не прилипнути до столу."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: температура сопла %2% °C поза рекомендованим для філаменту діапазоном від %3% до %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Температури сопла для філаментів відрізняються на %1% °C. Перевірте, чи можна друкувати ними разом."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Температури столу для філаментів на цій пластині відрізняються на %1% °C; стіл може мати лише одну з них."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "Знайдено %1% ризик"
+msgstr[1] "Знайдено %1% ризики"
+msgstr[2] "Знайдено %1% ризиків"
+msgstr[3] "Знайдено %1% ризику"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Тонке й високе"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Мала площа опори"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Короткі шари"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% не усунено."
+msgstr[1] "%1% не усунено."
+msgstr[2] "%1% не усунено."
+msgstr[3] "%1% не усунено."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Звіт про пластину"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Копіювати як текст"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Звіт про пластину доступний лише для друку FFF."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Пластина %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Ця пластина порожня."
+
+# AI Translated
+msgid "Checks"
+msgstr "Перевірки"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Зауважень немає."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Зауважень немає. Наріжте пластину, щоб додати власні перевірки слайсера."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Наріжте пластину, щоб перевірити її на ризики."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Кнопка «Ризики друку» покаже, де і що спробувати."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Наріжте пластину, щоб побачити час друку й вагу."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Час друку:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Філамент:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Ціна:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Шари:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Зміни філаменту:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Положення:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "центр у X %1%, Y %2% (центр столу X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Стіл:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Об'єкти:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "У проєкті %1% пластина; цей звіт охоплює одну."
+msgstr[1] "У проєкті %1% пластини; цей звіт охоплює одну."
+msgstr[2] "У проєкті %1% пластин; цей звіт охоплює одну."
+msgstr[3] "У проєкті %1% пластини; цей звіт охоплює одну."
+
+# AI Translated
+msgid "Process:"
+msgstr "Процес:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Філамент %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Змінено й не збережено"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Немає. Профілі такі, як збережено."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% мм завширшки"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% мм² на пластині"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% с на шар"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Кайма або підкладка"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Ця частина завширшки близько %1% мм і заввишки %2% мм. Сопло може її розхитати або збити. Друкуйте повільніше, друкуйте кілька копій разом, додайте кайму або опорну стінку поруч."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Лише %1% мм² цього об'єкта заввишки %2% мм торкаються пластини. Він може відірватися або перекинутися."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Кайма або підкладка його утримує."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Додайте кайму (Інше > Тип кайми) або поверніть модель так, щоб до столу була звернена більша сторона."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Ці шари друкуються всього за %1% с — менше за час шару для філаменту (%2% с), тож вони можуть не охолонути й провиснути або загнутися. Надрукуйте поруч другу копію або зменште мінімальну швидкість для охолодження."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Уся пластина з першого погляду: перевірки, час друку й вага, розмір і положення, ключові налаштування та незбережені зміни."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Уся пластина"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Показує, де нарізана пластина може не надрукуватися: нависання, довгі мости, частини, що починаються в повітрі, тонкі високі частини, малі площі опори та закороткі для охолодження шари."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Звіт про пластину"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Поточна пластина з першого погляду: перевірки, час друку й вага, розмір і положення, ключові налаштування та незбережені зміни."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Позначте, щоб кнопки \"Open in OrcaSlicer\" на сайтах моделей відкривали модель у Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Контур друкувальної головки"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Показувати параметри під час імпортування файлу STEP"

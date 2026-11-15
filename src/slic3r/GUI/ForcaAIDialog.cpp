@@ -7,7 +7,11 @@
 #include "I18N.hpp"
 #include "MsgDialog.hpp"
 #include "Widgets/Label.hpp"
+#include "format.hpp"
 
+#include <atomic>
+#include <memory>
+#include <thread>
 #include <vector>
 #include <string>
 #include <cstddef>
@@ -23,6 +27,7 @@
 #include <wx/event.h>
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>
+#include <wx/dirdlg.h>
 #include <wx/listbase.h>
 #include <wx/colour.h>
 #include <wx/dynarray.h>
@@ -285,6 +290,7 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
     m_client->Append("Claude Desktop");
     m_client->Append("Codex (ChatGPT)");
     m_client->Append(_L("Other app (MCP)"));
+    m_client->Append(_L("Other app (MCP, local program)"));
     m_client->SetSelection(0);
     m_client->Bind(wxEVT_CHOICE, [this](wxCommandEvent&) {
         refresh();
@@ -403,6 +409,68 @@ ForcaAIDialog::ForcaAIDialog(wxWindow* parent)
         refresh();
     });
 
+    // "Pick a random model" (forca_pick_random_model): the user's folder, else Forca's built-in test models.
+    root->Add(new wxStaticText(this, wxID_ANY, _L("Models the AI may pick at random:")), 0, wxLEFT | wxRIGHT, pad);
+    auto* model_row  = new wxBoxSizer(wxHORIZONTAL);
+    auto* model_text = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_MIDDLE);
+    auto  show_model_folder = [model_text]() {
+        const boost::filesystem::path folder = forca_ai_model_folder();
+        model_text->SetLabel(folder.empty() ? _L("Forca's built-in test models") : from_path(folder));
+        model_text->SetToolTip(model_text->GetLabel());
+    };
+    show_model_folder();
+    auto* model_choose = new wxButton(this, wxID_ANY, _L("Choose folder..."));
+    auto* model_reset  = new wxButton(this, wxID_ANY, _L("Use built-in"));
+    model_row->Add(model_text, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+    model_row->Add(model_choose, 0, wxRIGHT, FromDIP(8));
+    model_row->Add(model_reset, 0);
+    root->Add(model_row, 0, wxLEFT | wxRIGHT | wxTOP | wxBOTTOM | wxEXPAND, FromDIP(6));
+    model_choose->Bind(wxEVT_BUTTON, [this, show_model_folder](wxCommandEvent&) {
+        wxDirDialog dir(this, _L("Choose a folder of models the AI may pick from"), from_path(forca_ai_model_folder()));
+        if (dir.ShowModal() != wxID_OK)
+            return;
+        forca_ai_set_model_folder(into_path(dir.GetPath()));
+        show_model_folder();
+        Layout();
+    });
+    model_reset->Bind(wxEVT_BUTTON, [this, show_model_folder](wxCommandEvent&) {
+        forca_ai_set_model_folder({});
+        show_model_folder();
+        Layout();
+    });
+
+    // NumPy for forca_run_python scripts: the AI cannot install anything, so the user does, here.
+    auto* numpy_row = new wxBoxSizer(wxHORIZONTAL);
+    m_numpy_text    = new wxStaticText(this, wxID_ANY, "");
+    m_numpy_btn     = new wxButton(this, wxID_ANY, _L("Install NumPy"));
+    m_numpy_btn->SetToolTip(_L("Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI "
+                               "runs at the Advanced level and for plugins."));
+    numpy_row->Add(m_numpy_text, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(8));
+    numpy_row->Add(m_numpy_btn, 0);
+    root->Add(numpy_row, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, pad);
+    m_numpy_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+        MessageDialog ask(this, _L("Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, "
+                                   "where the AI's scripts and your plugins can use it. Continue?"),
+                          _L("Forca AI"), wxICON_QUESTION | wxYES_NO);
+        if (ask.ShowModal() != wxID_YES)
+            return;
+        m_numpy_busy = true;
+        refresh();
+        // The download blocks for up to two minutes: off the GUI thread, back through CallAfter.
+        std::thread([this, alive = m_alive]() {
+            const std::string error = forca_ai_install_numpy();
+            wxGetApp().CallAfter([this, alive, error]() {
+                if (!*alive)
+                    return;
+                m_numpy_busy = false;
+                refresh();
+                if (!error.empty())
+                    MessageDialog(this, format_wxstr(_L("NumPy could not be installed:\n%1%"), from_u8(error)), _L("Forca AI"),
+                                  wxICON_WARNING | wxOK).ShowModal();
+            });
+        }).detach();
+    });
+
     auto* feed_label = new wxStaticText(this, wxID_ANY, _L("What the AI has done (newest first):"));
     root->Add(feed_label, 0, wxLEFT | wxRIGHT, pad);
     m_activity = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, FromDIP(wxSize(560, 200)), wxLC_REPORT | wxLC_SINGLE_SEL);
@@ -479,6 +547,12 @@ void ForcaAIDialog::refresh()
     m_bed_btn->Enable(advanced && grant.id != 0);
     m_revoke_btn->Enable(grant.id != 0);
 
+    const bool numpy = !m_numpy_busy && forca_ai_numpy_installed();
+    m_numpy_text->SetLabel(m_numpy_busy ? _L("NumPy for the AI's Python scripts: installing...") :
+                           numpy        ? _L("NumPy for the AI's Python scripts: installed") :
+                                          _L("NumPy for the AI's Python scripts: not installed"));
+    m_numpy_btn->Enable(!m_numpy_busy && !numpy);
+
     switch (ai.state()) {
     case ForcaAI::State::Connected: m_state->SetForegroundColour(wxColour("#009688")); break; // Forca teal
     case ForcaAI::State::Listening: m_state->SetForegroundColour(wxColour("#2F6FDE")); break; // Forca blue
@@ -486,7 +560,7 @@ void ForcaAIDialog::refresh()
     default:                        m_state->SetForegroundColour(wxColour("#6B7488")); break;
     }
     m_state->SetLabel(wxString::FromUTF8(ai.state_text().c_str()));
-    // 0 Claude Code, 1 Claude Desktop, 2 Codex, 3 any other MCP app
+    // 0 Claude Code, 1 Claude Desktop, 2 Codex, 3 any other MCP app, 4 one that only starts local (stdio) servers
     const int client = m_client->GetSelection();
     switch (client) {
     case 1:
@@ -507,6 +581,12 @@ void ForcaAIDialog::refresh()
                                      "Authorization header below. Apps that read an mcp.json file, such as LM Studio, take "
                                      "it as it is."));
         break;
+    case 4:
+        m_command_label->SetLabel(_L("For an app that only starts local MCP servers (a \"command\", not an address): "
+                                     "Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. "
+                                     "Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the "
+                                     "key by itself, so a new key needs no change here."));
+        break;
     default: m_command_label->SetLabel(_L("To connect Claude Code, run this once in a terminal:")); break;
     }
     m_command_label->Wrap(-1);
@@ -518,6 +598,7 @@ void ForcaAIDialog::refresh()
         m_command->SetValue(wxString::FromUTF8(client == 1 ? ai.claude_desktop_config() :
                                                client == 2 ? ai.codex_config() :
                                                client == 3 ? ai.mcp_app_config() :
+                                               client == 4 ? ai.stdio_app_config() :
                                                              ai.claude_code_command()));
     Layout();
 

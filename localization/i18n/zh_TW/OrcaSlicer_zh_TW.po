@@ -18500,6 +18500,10 @@ msgstr "換工具時間"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "切換工具所需的時間。通常適用於工具切換式列印裝置或多工具列印裝置。對於單擠出機多材料列印裝置，此值通常為 0。僅用於統計。"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "切換工具所需的時間。通常適用於工具切換器或多工具機器。對於單擠出機多材料機器，通常為 0。用於列印時間估算，並且在工具切換器上計入最短層時間。"
+
 msgid "Bed temperature type"
 msgstr "熱床溫度類型"
 
@@ -43915,3 +43919,393 @@ msgstr "Snapmaker U1 的相機在原廠韌體下只拍靜態照片，而本分�
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "顯示 U1 的相機"
+
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "未使用非平面熨燙。它需要列印裝置設定中的列印頭輪廓，且列印板上只有一個物件，不含支撐、換料塔、防風罩或高於一層的 Skirt。"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "模型的一部分比列印頭能跟隨的坡度（約 %1%°）更陡。那裡未使用非平面熨燙。"
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "未使用非平面頂面。它需要列印裝置設定中的列印頭輪廓，且列印板上只有一個物件，不含支撐、換料塔、防風罩或高於一層的 Skirt。"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "模型的一部分比列印頭能跟隨的坡度（約 %1%°）更陡。那裡未使用非平面頂面。"
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "噴嘴尖端直徑"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "噴嘴最尖端平面的直徑。用於在非平面列印中使列印頭避開列印件。"
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "噴嘴錐體直徑"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "噴嘴錐體結束處的直徑：錐體頂部，或矽膠套的下邊緣。0 表示列印頭輪廓未知，無法使用非平面列印。"
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "噴嘴錐體高度"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "測量噴嘴錐體直徑處距噴嘴尖端的高度。"
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "到列印頭機身的距離"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "從噴嘴中心到旁邊低垂的列印頭最近部分（風道、護罩或加熱塊）的距離。0 表示沒有任何部分低於噴嘴錐體頂部。"
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "列印頭機身高度"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "噴嘴旁列印頭最低部分距噴嘴尖端的高度。"
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "列印頭間隙餘量"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "非平面列印時，在上述輪廓之外列印頭與列印件之間保持的距離。它涵蓋輪廓未包含的部分：測量誤差和層的邊角。"
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "非平面熨燙"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "用一次沿模型表面跨越各層的走刀熨燙平緩斜坡，而不是把每層的台階熨平。噴嘴會在已列印材料旁下降，因此需要列印裝置設定中的列印頭輪廓，並且只在輪廓顯示列印頭不會碰撞的地方使用。列印板上只能有一個物件，不含支撐或換料塔。"
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "非平面頂面"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "將平緩斜坡的頂面列印為一層沿模型表面的外皮，而不是其各層的台階。其下方的層提前一層結束，斜坡的最後一層完成後在其上列印外皮。噴嘴會在已列印材料旁下降，因此需要列印裝置設定中的列印頭輪廓，並且只在輪廓顯示列印頭不會碰撞的地方使用。列印板上只能有一個物件，不含支撐或換料塔。實驗性功能。"
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "其他應用程式（MCP、本機程式）"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "AI 可隨機選擇的模型："
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forca 內建測試模型"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "選擇資料夾..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "使用內建"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "選擇一個供 AI 挑選模型的資料夾"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "安裝 NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "從網際網路（pypi.org）下載 NumPy 到 Forca 的 Python，供 AI 在進階等級執行的指令碼和外掛使用。"
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca 將從網際網路（pypi.org）下載 NumPy 並加入 Forca 的 Python，AI 的指令碼和你的外掛都可以使用它。要繼續嗎？"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "無法安裝 NumPy：\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "AI 的 Python 指令碼所用 NumPy：正在安裝..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "AI 的 Python 指令碼所用 NumPy：已安裝"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "AI 的 Python 指令碼所用 NumPy：未安裝"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "適用於只能啟動本機 MCP 伺服器的應用程式（\"command\"，而不是位址）：Forca 的 forca-mcp 程式把它的訊息轉給 Forca AI，無需 Node.js。將下方的 \"forca\" 項目加入該應用程式的 \"mcpServers\" 設定。它會自行找到金鑰，因此換新金鑰時這裡無需變更。"
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "列印風險在此列印板上發現 %1% 處可能失敗的地方。檢視 > 列印風險會顯示位置和可嘗試的做法。"
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "列印板報告：無警告。"
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "列印板報告：%1% 個警告。"
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "開啟列印板報告"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "列印板的一部分在可列印區域之外。請將物件移到列印板上。"
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "物件高 %1% mm，超過可列印高度（%2% mm）。"
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "物件高 %1% mm，接近可列印高度（%2% mm）。"
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "有物件距列印板邊緣 %1% mm，許多列印裝置在此處首層附著最差。"
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "層高 %1% mm 超過 %2% mm，即 %3% mm 噴嘴能印好的上限：層與層之間可能黏不牢。"
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "首層高度 %1% mm 超過 %2% mm，即 %3% mm 噴嘴能印好的上限：可能黏不住列印板。"
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%：噴嘴溫度 %2% °C 超出線材建議的 %3% 至 %4% °C。"
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "各線材的噴嘴溫度相差 %1% °C。請確認它們能一起列印。"
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "此列印板上各線材的列印板溫度相差 %1% °C；列印板只能設為其中一個溫度。"
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "發現 %1% 個風險"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "細而高"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "底面積小"
+
+# AI Translated
+msgid "Short layers"
+msgstr "短層"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% 個未處理。"
+
+# AI Translated
+msgid "Plate report"
+msgstr "列印板報告"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "複製為文字"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "列印板報告僅適用於 FFF 列印。"
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "列印板 %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "此列印板為空。"
+
+# AI Translated
+msgid "Checks"
+msgstr "檢查"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "沒有需要指出的問題。"
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "沒有需要指出的問題。切片此列印板以加入切片軟體自身的檢查。"
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "切片此列印板以檢查風險。"
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "「列印風險」按鈕會顯示位置和可嘗試的做法。"
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "切片此列印板以查看列印時間和重量。"
+
+# AI Translated
+msgid "Print time:"
+msgstr "列印時間："
+
+# AI Translated
+msgid "Filament:"
+msgstr "線材："
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "成本："
+
+# AI Translated
+msgid "Layers:"
+msgstr "層數："
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "換料次數："
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "位置："
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "中心位於 X %1%, Y %2%（列印板中心 X %3%, Y %4%）"
+
+# AI Translated
+msgid "Bed:"
+msgstr "列印板："
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "物件："
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "該專案有 %1% 個列印板；本報告只涵蓋其中一個。"
+
+# AI Translated
+msgid "Process:"
+msgstr "列印參數："
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "線材 %1%：%2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "已變更但未儲存"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "無。預設與儲存時一致。"
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "寬 %1% mm"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "列印板上 %1% mm²"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "每層 %1% 秒"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Brim 或筏層"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "此部分寬約 %1% mm，高 %2% mm。噴嘴可能讓它晃動或撞倒它。請放慢列印、一起列印多個副本、新增 Brim，或在旁邊新增支撐牆。"
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "這個高 %2% mm 的物件只有 %1% mm² 接觸列印板。它可能脫落或傾倒。"
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Brim 或筏層可固定它。"
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "新增 Brim（其他 > Brim 類型），或旋轉模型讓較大的一面朝向列印板。"
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "這些層最快只需 %1% 秒就列印完，短於線材的層時間（%2% 秒），因此可能來不及冷卻而下垂或翹曲。請在旁邊再列印一個副本，或降低冷卻時的最低速度。"
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "一覽整個列印板：檢查、列印時間和重量、尺寸和位置、關鍵設定以及未儲存的變更。"
+
+# AI Translated
+msgid "Whole plate"
+msgstr "整個列印板"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "列出已切片的列印板可能失敗的地方：懸空、長橋接、從半空開始的部分、細而高的部分、底面積小的部分，以及太短而來不及冷卻的層。"
+
+# AI Translated
+msgid "Plate Report"
+msgstr "列印板報告"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "一覽目前列印板：檢查、列印時間和重量、尺寸和位置、關鍵設定以及未儲存的變更。"
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "勾選此項，讓模型網站上的 \"Open in OrcaSlicer\" 按鈕在 Forca 中開啟模型。"
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "列印頭輪廓"

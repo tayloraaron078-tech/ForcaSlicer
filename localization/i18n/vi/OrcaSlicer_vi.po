@@ -18434,6 +18434,10 @@ msgid "Time taken to switch tools. It's usually applicable for tool changers or 
 msgstr "Thời gian để thay công cụ. Nó thường áp dụng cho máy thay công cụ hoặc máy đa công cụ. Đối với máy đa vật liệu extruder đơn, nó thường là 0. Chỉ cho thống kê."
 
 # AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Thời gian để đổi công cụ. Thường áp dụng cho máy đổi công cụ hoặc máy nhiều công cụ. Với máy đa vật liệu một đầu đùn thường là 0. Được dùng để ước tính thời gian in và, trên máy đổi công cụ, được tính vào thời gian lớp tối thiểu."
+
+# AI Translated
 msgid "Bed temperature type"
 msgstr "Loại nhiệt độ bàn in"
 
@@ -43448,6 +43452,395 @@ msgstr "Camera của Snapmaker U1 chỉ chụp ảnh tĩnh khi dùng firmware g�
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Hiện camera của U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Không dùng ủi phi phẳng. Cần đường viền đầu in trong cài đặt máy in và một vật thể duy nhất trên bàn in, không có support, prime tower, tấm chắn gió hoặc viền cao hơn một lớp."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Một phần mô hình dốc hơn mức đầu in có thể đi theo, khoảng %1%°. Ở đó không dùng ủi phi phẳng."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "Không dùng bề mặt trên phi phẳng. Cần đường viền đầu in trong cài đặt máy in và một vật thể duy nhất trên bàn in, không có support, prime tower, tấm chắn gió hoặc viền cao hơn một lớp."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Một phần mô hình dốc hơn mức đầu in có thể đi theo, khoảng %1%°. Ở đó không dùng bề mặt trên phi phẳng."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Đường kính đầu mũi phun"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Đường kính phần phẳng ở ngay đầu mũi phun. Dùng để giữ đầu in không chạm vật in khi in phi phẳng."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Đường kính chóp mũi phun"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Đường kính mũi phun tại nơi chóp kết thúc: đỉnh chóp hoặc mép dưới của vỏ silicon. 0 nghĩa là chưa biết đường viền đầu in và không thể in phi phẳng."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Chiều cao chóp mũi phun"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Chiều cao phía trên đầu mũi phun nơi đo đường kính chóp mũi phun."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Khoảng cách đến thân đầu in"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Khoảng cách từ tâm mũi phun đến phần gần nhất của đầu in treo thấp bên cạnh: ống dẫn quạt, vỏ che hoặc khối gia nhiệt. 0 nghĩa là không có gì treo thấp hơn đỉnh chóp mũi phun."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Chiều cao thân đầu in"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Chiều cao phía trên đầu mũi phun của phần thấp nhất của đầu in bên cạnh mũi phun."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Biên khoảng hở đầu in"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Khoảng cách giữ giữa đầu in và vật in khi in phi phẳng, cộng thêm vào đường viền ở trên. Nó bù cho những gì đường viền không tính: sai số đo và các góc của lớp."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Ủi phi phẳng"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Ủi một sườn dốc thoải trong một lượt đi theo bề mặt mô hình qua các lớp, thay vì ủi phẳng bậc của từng lớp. Mũi phun hạ xuống cạnh vật liệu đã in, nên cần đường viền đầu in trong cài đặt máy in, và chỉ dùng ở nơi đường viền cho thấy đầu in không bị vướng. Cần một vật thể duy nhất trên bàn in, không có support hoặc prime tower."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Bề mặt trên phi phẳng"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "In bề mặt trên của một sườn dốc thoải thành một lớp vỏ duy nhất đi theo bề mặt mô hình, thay vì các bậc của các lớp. Các lớp bên dưới kết thúc thấp hơn một lớp, và lớp vỏ được in phủ lên khi lớp cuối cùng của sườn dốc xong. Mũi phun hạ xuống cạnh vật liệu đã in, nên cần đường viền đầu in trong cài đặt máy in, và chỉ dùng ở nơi đường viền cho thấy đầu in không bị vướng. Cần một vật thể duy nhất trên bàn in, không có support hoặc prime tower. Thử nghiệm."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Ứng dụng khác (MCP, chương trình cục bộ)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Mô hình AI có thể chọn ngẫu nhiên:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Mô hình thử tích hợp của Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Chọn thư mục..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Dùng mô hình tích hợp"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Chọn thư mục mô hình để AI chọn"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Cài NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Tải NumPy từ internet (pypi.org) vào Python của Forca, cho các script AI chạy ở mức Nâng cao và cho plugin."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca sẽ tải NumPy từ internet (pypi.org) và thêm vào Python của Forca, nơi các script của AI và plugin của bạn có thể dùng. Tiếp tục?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "Không thể cài NumPy:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy cho script Python của AI: đang cài..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy cho script Python của AI: đã cài"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy cho script Python của AI: chưa cài"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Cho ứng dụng chỉ khởi chạy máy chủ MCP cục bộ (một \"command\", không phải địa chỉ): chương trình forca-mcp của Forca chuyển tin nhắn của nó tới Forca AI, không cần Node.js. Thêm mục \"forca\" bên dưới vào cài đặt \"mcpServers\" của ứng dụng. Nó tự tìm khóa, nên khóa mới không cần thay đổi gì ở đây."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Rủi ro khi in đã tìm thấy %1% chỗ trên bàn in này có thể bị lỗi. Xem > Rủi ro khi in cho biết vị trí và nên thử gì."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Báo cáo bàn in: không có cảnh báo."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Báo cáo bàn in: %1% cảnh báo."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Mở báo cáo bàn in"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Một phần bàn in nằm ngoài vùng in được. Di chuyển các vật thể lên bàn in."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Các vật thể cao %1% mm, cao hơn chiều cao in được (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Các vật thể cao %1% mm, gần chiều cao in được (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Một vật thể cách mép bàn in %1% mm, nơi lớp đầu bám kém nhất trên nhiều máy in."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "Chiều cao lớp %1% mm vượt quá %2% mm, mức tối đa đầu phun %3% mm in tốt: các lớp có thể không dính vào nhau."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "Chiều cao lớp đầu %1% mm vượt quá %2% mm, mức tối đa đầu phun %3% mm in tốt: lớp đầu có thể không bám bàn in."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: nhiệt độ đầu phun %2% °C nằm ngoài khoảng khuyến nghị của filament là %3% đến %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Nhiệt độ đầu phun của các filament chênh nhau %1% °C. Hãy kiểm tra xem chúng có in cùng nhau được không."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Nhiệt độ bàn in của các filament trên bàn này chênh nhau %1% °C; bàn in chỉ có thể ở một trong số đó."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "Tìm thấy %1% rủi ro"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Mảnh và cao"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Đế nhỏ"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Lớp ngắn"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% chưa được xử lý."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Báo cáo bàn in"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Sao chép dạng văn bản"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "Báo cáo bàn in chỉ dành cho bản in FFF."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Bàn in %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Bàn in này trống."
+
+# AI Translated
+msgid "Checks"
+msgstr "Kiểm tra"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Không có gì cần lưu ý."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Không có gì cần lưu ý. Hãy slice bàn in để thêm các kiểm tra của chính phần mềm slice."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Hãy slice bàn in để kiểm tra rủi ro."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "Nút Rủi ro khi in cho biết vị trí và nên thử gì."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Hãy slice bàn in để xem thời gian in và khối lượng."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Thời gian in:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Chi phí:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Lớp:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Thay filament:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Vị trí:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "tâm tại X %1%, Y %2% (tâm bàn in X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Bàn in:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Vật thể:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "Dự án có %1% bàn in; báo cáo này chỉ gồm một bàn."
+
+# AI Translated
+msgid "Process:"
+msgstr "Process:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Đã thay đổi và chưa lưu"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Không có. Các cài đặt sẵn vẫn như đã lưu."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "rộng %1% mm"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² trên bàn in"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% giây mỗi lớp"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Brim hoặc bè"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Phần này rộng khoảng %1% mm và cao %2% mm. Mũi phun có thể làm nó rung hoặc đổ. Hãy in chậm hơn, in nhiều bản cùng lúc, thêm brim hoặc thêm một tường hỗ trợ bên cạnh."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Chỉ %1% mm² của vật thể cao %2% mm này chạm bàn in. Nó có thể bong ra hoặc đổ."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Brim hoặc bè giữ nó lại."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Thêm brim (Khác > Loại brim), hoặc xoay mô hình để mặt lớn hơn hướng xuống bàn in."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Các lớp này in nhanh nhất chỉ %1% giây, ít hơn thời gian lớp của filament (%2% giây), nên có thể không kịp nguội và bị võng hoặc cong. Hãy in thêm một bản bên cạnh, hoặc giảm tốc độ tối thiểu khi làm mát."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Toàn bộ bàn in trong một cái nhìn: kiểm tra, thời gian in và khối lượng, kích thước và vị trí, cài đặt chính và các thay đổi chưa lưu."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Toàn bàn in"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Liệt kê nơi bàn in đã slice có thể lỗi: phần nhô, cầu dài, phần bắt đầu giữa không trung, phần mảnh và cao, đế nhỏ và lớp quá ngắn để nguội."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Báo cáo bàn in"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Bàn in hiện tại trong một cái nhìn: kiểm tra, thời gian in và khối lượng, kích thước và vị trí, cài đặt chính và các thay đổi chưa lưu."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Đánh dấu để các nút \"Open in OrcaSlicer\" trên trang web mô hình mở mô hình trong Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Đường viền đầu in"
 
 # AI Translated
 #~ msgid "Show options when importing STEP file"

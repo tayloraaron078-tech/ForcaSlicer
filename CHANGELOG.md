@@ -14,6 +14,92 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+## 0.1.0-alpha.11 — 2026-11-15
+
+### Added
+- **Nonplanar ironing (experimental):** a gentle slope is ironed in one pass that follows the model across its
+  layers, instead of step by step. Turn on **Quality > Ironing > Nonplanar ironing**; it needs the new **Printhead
+  outline** values in the printer settings (filled in for the Flashforge Adventurer 5M 0.4 and 0.6), and is used only
+  where that outline shows the printhead stays clear of the print. One object per plate, no supports or prime tower.
+  The flat nozzle tip is lifted clear of the foot of a slope, and **Printhead clearance margin** (0.2 mm by default) is kept
+  on top of the outline. With rectilinear ironing the pass starts at the highest lines and steps downhill, which keeps
+  the level nozzle tip from ploughing the slope beside it. The part that crosses a crest starts a little before it, so no
+  part starts on a small peak that was printed moments ago, and the short lines at a round rim are ironed in one go.
+- **Nonplanar top surface (experimental, first version):** **Quality > Ironing > Nonplanar top surface** prints the top of
+  a gentle slope as one skin that follows the model, instead of the steps of its layers. The layers under the slope end
+  one layer lower, and the slope's last layer prints a wall and top-surface lines over them, as thick as the gap
+  underneath. Ironing, when on, irons that skin. Same limits as nonplanar ironing: printhead outline set, one object,
+  no supports or prime tower. The skin keeps its thickness with Z contouring on, runs on over the top of a slope,
+  crosses the top-surface lines under it, and the lines of a round top are printed in one run. Print-tested on an
+  Adventurer 5M (ramp and dome).
+- **Nonplanar options warn where a slope is too steep:** when part of the model is steeper than the printhead outline
+  can follow, nonplanar ironing and nonplanar top surface say so, with the steepest slope the printhead can follow, and
+  leave that part planar.
+- **Painted seam for nonplanar passes:** a seam painted on a slope (the Seam painting tool) places the start of the
+  nonplanar ironing pass, which then works outward from that line to both sides, and the start of the wall around a
+  nonplanar top surface.
+- **Plate report:** one page about the plate, by fixed rules only: checks (objects outside or near the edge of the
+  bed, too tall, layers thicker than 80% of the nozzle, nozzle temperatures outside the filament's range, filaments far
+  apart in temperature) with the slicer's own warnings, the Print Risks count, print time, weight, cost and layers,
+  the plate's size and position, the presets and key settings, and every setting changed and not saved. Open it from
+  the Print Risks window, **View > Plate Report...** or **Before you print**, which also counts its warnings. **Copy as
+  text** puts it on the clipboard. Forca AI gets the same checks in its slice result.
+- **Print Risks finds three more kinds of risk:** thin and tall parts, small footprints (a first layer much smaller
+  than the object, or a narrow base under a tall object; a brim or raft takes care of it) and short layers (layers
+  printed faster than the filament's layer time, from the G-code).
+- **Forca AI picks a random model:** asked to choose something to print, the AI picks a model file from a folder you
+  set in the Forca AI window, or from Forca's built-in test models. Forca downloads nothing.
+- **Forca AI paints areas:** a filament (colour painting, which shows on the model in the Prepare view), support
+  enforcers and blockers, support-interface regions and seam enforcers and blockers, inside a box or sphere or on
+  surfaces facing down; one undo step each.
+- **Forca AI runs Python scripts (Advanced only)** in Forca's embedded Python, with the plugin API. A script writes
+  only in its own folder (`Documents\Forca AI\Scripts`) and never uses the network, starts programs or threads,
+  whatever is granted; reading other files asks you first. NumPy is not included: **Install NumPy** in the Forca AI
+  window downloads it (from pypi.org) when you want scripts to use it.
+- **forca-mcp:** a small program that comes with Forca, for AI apps that can only start local MCP servers. The Forca
+  AI window's **Other app (MCP, local program)** gives its settings; no Node.js needed.
+
+### Changed
+- **Preferences > Files:** the `orcaslicer://` link option now says what it is for (the "Open in OrcaSlicer"
+  buttons on model websites).
+- **Before you print** counts the Print Risks that nothing takes care of (support, or a brim or raft for a small
+  footprint).
+- **Layer cooling times layers as the Preview does**, with acceleration, cornering and the printer's motion limits
+  (OrcaSlicer's estimate, from the merge below). It takes the place of Forca's own estimate of the acceleration time
+  (alpha.4), so the minimum layer time and the fan now go by the layer time the Preview shows.
+
+### Fixed
+- **Merged OrcaSlicer up to `main` `b4a9565dee` (2026-11-15)**: painted modifiers (settings modifiers painted on a
+  part), painting variable layer height directly on objects, variable layer height on several objects and with a
+  prime tower, OpenSSL 3.5.9 and libcurl 8.23.0, layer cooling that keeps outer walls out of the resonance
+  avoidance range, seam dents after an outer wall, bridges in another filament anchored on their neighbours, top and
+  bottom support interfaces with synchronized gaps, Snapmaker filament sync and U1 rod clearance, per-nozzle settings
+  copied to every tool of a toolchanger, a Reload from Disk shortcut, and crash fixes (Measure tool, empty first
+  layer, printable areas that do not overlap, OpenGL context, exit with a Python thread).
+- **Projects saved in Forca open in Bambu Studio again.** Since the per-filament scarf seam (alpha.9), a 3MF from
+  Forca held "nil" for filaments that leave the scarf to the process, and Bambu Studio refused the whole project
+  ("Invalid configuration file", then "The file does not contain any geometry data"). Forca now writes Bambu Studio's
+  values there and still reads those filaments back as not setting a scarf. Projects saved before this fix still need
+  re-saving in Forca.
+- **Toolchangers: the part fan is set after every tool change.** The fan command was written just before the tool
+  select, so it reached the tool being put away, and a toolchanger whose firmware does not carry the fan speed over
+  (a StealthChanger, for one) printed with the new tool's fan off. Forca now repeats the fan speed, and the auxiliary
+  fan's, right after the select. Printers with one nozzle and several filaments are unchanged.
+- **Minimum layer time is reached exactly.** With relative extrusion (the default), the cooling slow-down counted
+  the filament amount of the line before onto lines that move none, so it took a layer for longer than it prints
+  and slowed it too little: about 1 % short on a small one-tool layer, more after every tool change with a long
+  tool-change retraction. And on a layer printed by several tools, every tool after the first was slowed a little
+  too much. Both are fixed, so small layers slow down slightly more than before and now meet the layer time set.
+- **Toolchangers: the tool change time counts toward the minimum layer time.** The layer below keeps cooling while
+  the tools are swapped, so a layer with a tool change is slowed down by that much less, and its fan follows the
+  longer layer time. It uses **Tool change time** (printer settings), as the print time estimate does; printers that
+  leave it at 0 print as before.
+- **Toolchangers: a tool parked at its idle temperature heats up again.** With ooze prevention on, a filament's
+  idle temperature set and the standby temperature variation at 0, a parked tool cooled to the idle temperature
+  and was never set back: with a preheat time it got a heat command but no wait, without one it stayed at the idle
+  temperature. Forca now sets the printing temperature and waits for it after the tool is picked up, as it already
+  did when a temperature variation is used.
+
 ## 0.1.0-alpha.10 — 2026-11-08
 
 ### Added

@@ -1,6 +1,7 @@
 #ifndef slic3r_ForcaAI_hpp_
 #define slic3r_ForcaAI_hpp_
 
+#include <boost/filesystem/path.hpp>
 #include <nlohmann/json.hpp>
 
 #include <algorithm>
@@ -98,6 +99,7 @@ public:
     std::string claude_desktop_config();  // claude_desktop_config.json for Claude Desktop's chat (needs Node.js)
     std::string codex_config();           // lines for Codex's config.toml (ChatGPT's coding agent)
     std::string mcp_app_config();         // the common "mcpServers" JSON with url + headers (LM Studio and others)
+    std::string stdio_app_config();       // "mcpServers" JSON starting forca-mcp, for apps that only run local programs
 
     // Control level (HQ PLAN_forca_ai.md §10a). Guarded, the default, is R1 + R2 as above. Advanced: the AI may also
     // overwrite the user's files and edit their presets (Forca backs each file up first, ForcaAIFiles), and a print
@@ -176,6 +178,22 @@ void register_forca_ai_print_tools(ForcaAI& ai);
 void register_forca_ai_academy_tools(ForcaAI& ai);
 // ForcaAIOpenScad.cpp: OpenSCAD tools (the parameters of a .scad file; rendering a file or the AI's own code).
 void register_forca_ai_openscad_tools(ForcaAI& ai);
+// ForcaAIPython.cpp: forca_run_python, Advanced level only, under the plugin audit hook's Forca AI script limits.
+void register_forca_ai_python_tools(ForcaAI& ai);
+// NumPy for AI scripts (and plugins: one shared package folder). Only the user installs it, from the Forca AI window.
+bool forca_ai_numpy_installed();
+// Downloads NumPy from PyPI with the bundled uv. Blocks for up to two minutes: call it on a worker thread. Returns
+// the error, empty when NumPy is installed.
+std::string forca_ai_install_numpy();
+// ForcaAIRandomModel.cpp: forca_pick_random_model, from the user's model folder or Forca's built-in test models.
+constexpr size_t FORCA_AI_MODEL_LIMIT = 5000; // model files listed at most
+constexpr int    FORCA_AI_MODEL_DEPTH = 4;    // subfolder levels searched below the model folder
+bool                                 forca_ai_is_model_file(const boost::filesystem::path& file);
+// The model files in `folder` and its subfolders (up to FORCA_AI_MODEL_DEPTH), sorted, at most `limit`.
+std::vector<boost::filesystem::path> forca_ai_model_files(const boost::filesystem::path& folder, size_t limit);
+boost::filesystem::path              forca_ai_model_folder(); // empty: none chosen (app config forca_ai_model_folder)
+void                                 forca_ai_set_model_folder(const boost::filesystem::path& folder);
+void                                 register_forca_ai_random_model_tools(ForcaAI& ai);
 // ForcaAIPrinters.cpp: per-printer opt-in (the AI sees only printers the user ticked) + read-only status tools.
 std::set<std::string>    forca_ai_printer_optins();
 void                     forca_ai_set_printer_optin(const std::string& dev_id, bool on);

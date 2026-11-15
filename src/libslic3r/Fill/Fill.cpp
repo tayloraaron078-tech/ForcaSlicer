@@ -4,11 +4,13 @@
 #include <cstdlib>
 #include <cmath>
 #include <iterator>
+#include <limits>
 #include <math.h>
 #include <set>
 #include <map>
 #include <stdio.h>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 #include <queue>
@@ -46,6 +48,8 @@
 #include "libslic3r.h"
 #include "libslic3r/ExtrusionEntityCollection.hpp"
 #include "libslic3r/MultiMaterialSegmentation.hpp"
+#include "libslic3r/Model.hpp"
+#include "libslic3r/TriangleSelector.hpp"
 #include "libslic3r/Slicing.hpp"
 #include "libslic3r/SurfaceCollection.hpp"
 
@@ -920,6 +924,20 @@ static bool is_sub_top_island(const ExPolygon &island, const ExPolygons &sub_top
     return !local_mask.empty() && !opening_ex(intersection_ex(island, local_mask, ApplySafetyOffset::Yes), 0.5f * min_width).empty();
 }
 
+// Forca: the direction of the lines of a nonplanar top surface (Layer::make_nonplanar_shell()).
+static float nonplanar_shell_angle(const PrintRegionConfig &config) { return float(Geometry::deg2rad(config.solid_infill_direction.value)); }
+
+// Forca: whether a nonplanar top surface is printed on most of this part of the layer.
+static bool under_nonplanar_shell(const Layer &layer, const ExPolygon &expolygon)
+{
+    if (layer.nonplanar_shell_above.empty())
+        return false;
+    double covered = 0.;
+    for (const ExPolygon &part : intersection_ex(ExPolygons{ expolygon }, layer.nonplanar_shell_above))
+        covered += part.area();
+    return covered > 0.5 * expolygon.area();
+}
+
 std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_param)
 {
 	std::vector<SurfaceFill> surface_fills;
@@ -1080,6 +1098,14 @@ std::vector<SurfaceFill> group_fills(const Layer &layer, LockRegionParam &lock_p
                     auto m = layer.object()->trafo().matrix();
                     align_offset = atan2((float)m(1, 0), (float)m(0, 0));
                     params.angle += align_offset;
+                }
+
+                // Forca: a top surface that a nonplanar top surface is printed on runs half way between the two
+                // directions solid layers alternate between: the skin's lines cross it, and it crosses the layer
+                // under it. Lines laid along the lines below them leave the grooves between those open.
+                if (params.extrusion_role == erTopSolidInfill && under_nonplanar_shell(layer, surface.expolygon)) {
+                    params.angle       = nonplanar_shell_angle(region_config) + float(M_PI / 4.);
+                    params.fixed_angle = true;
                 }
 
                 // Calculate the actual flow we'll be using for this infill.
@@ -1723,6 +1749,301 @@ int Layer::choose_ironing_extruder(const PrintRegionConfig &cfg,
 }
 
 // Create ironing extrusions over top surfaces.
+// Forca: the lines of a nonplanar ironing pass, put in an order that steps downhill. The nozzle's flat tip is level,
+// so beside a line its uphill edge is in the surface and its downhill edge above it. Stepping downhill, the edge that
+// presses in passes last and leaves the surface ironed. Stepping uphill it ploughs into what is not ironed yet, and
+// nothing smooths that again. The lines are those of a monotonic rectilinear fill; they are cut where their height
+// turns from rising to falling or back, and each part is run from its high side.
+// Forca: where a seam is painted on the surfaces that a layer works on along the model: the painted areas of the
+// layers whose steps it covers and its own, seen from above. Empty without seam painting.
+static Polygons nonplanar_painted_seam(const Layer &layer, const std::vector<Layer::NonplanarIroningSource> &sources)
+{
+    const PrintObject &object  = *layer.object();
+    const auto        &volumes = object.model_object()->volumes;
+    if (std::none_of(volumes.begin(), volumes.end(), [](const ModelVolume *volume) { return volume->is_model_part() && volume->is_seam_painted(); }))
+        return {};
+    std::vector<Polygons> by_layer;
+    object.project_and_append_custom_facets(true, EnforcerBlockerType::ENFORCER, by_layer);
+    Polygons   out;
+    const auto add = [&object, &by_layer, &out](const Layer *of) {
+        const size_t index = std::find(object.layers().begin(), object.layers().end(), of) - object.layers().begin();
+        if (index < by_layer.size())
+            polygons_append(out, by_layer[index]);
+    };
+    add(&layer);
+    for (const Layer::NonplanarIroningSource &source : sources)
+        add(source.layer);
+    return union_(out);
+}
+
+// Forca: the middle of the largest painted seam area on `area`, if any.
+static std::optional<Point> nonplanar_seam_point(const Polygons &painted, const ExPolygon &area)
+{
+    std::optional<Point> out;
+    double               largest = 0.;
+    if (! painted.empty())
+        for (const ExPolygon &piece : intersection_ex(ExPolygons{ area }, painted))
+            if (const double size = piece.area(); size > largest) {
+                largest = size;
+                out     = piece.contour.centroid();
+            }
+    return out;
+}
+
+// Forca: a closed loop as a path that starts and ends at its point nearest to `start`.
+static Polyline loop_from(const Polygon &polygon, const Point &start)
+{
+    size_t nearest = 0;
+    Point  foot    = polygon.points.front();
+    double best    = std::numeric_limits<double>::max();
+    for (size_t i = 0; i < polygon.points.size(); ++i) {
+        const Vec2d  a = polygon.points[i].cast<double>(), edge = polygon.points[(i + 1) % polygon.points.size()].cast<double>() - a;
+        const double length2 = edge.squaredNorm();
+        const double t = length2 > 0. ? std::clamp((start.cast<double>() - a).dot(edge) / length2, 0., 1.) : 0.;
+        const Vec2d  projected = a + t * edge;
+        const double distance  = (start.cast<double>() - projected).squaredNorm();
+        if (distance < best) {
+            best    = distance;
+            nearest = i;
+            foot    = Point(coord_t(std::round(projected.x())), coord_t(std::round(projected.y())));
+        }
+    }
+    Polyline out;
+    out.points.emplace_back(foot);
+    for (size_t k = 1; k <= polygon.points.size(); ++k)
+        out.points.emplace_back(polygon.points[(nearest + k) % polygon.points.size()]);
+    out.points.emplace_back(foot);
+    out.points.erase(std::unique(out.points.begin(), out.points.end()), out.points.end());
+    return out;
+}
+
+// `seam`: where a seam is painted on the area. The pass then starts on the line through it and works outward to both
+// sides, whatever the heights are.
+static Polylines nonplanar_ironing_downhill(Polylines polylines, const Layer &layer, const std::optional<Point> &seam)
+{
+    // The direction of the lines: that of the longest segment. The links between the lines are short.
+    Vec2d  along  = Vec2d::Zero();
+    double longest = 0.;
+    for (const Polyline &polyline : polylines)
+        for (size_t i = 1; i < polyline.points.size(); ++i) {
+            const Vec2d  segment = (polyline.points[i] - polyline.points[i - 1]).cast<double>();
+            const double length  = segment.norm();
+            if (length > longest) {
+                longest = length;
+                along   = segment / length;
+            }
+        }
+    if (longest <= 0.)
+        return polylines;
+    const Vec2d across(-along.y(), along.x());
+    const auto  position = [&across](const Point &point) { return unscale<double>(across.dot(point.cast<double>())); };
+
+    // The mean height of the lines, by their position across the lines.
+    std::vector<BoundingBox> source_boxes;
+    for (const Layer::NonplanarIroningSource &source : layer.nonplanar_ironing_sources)
+        source_boxes.emplace_back(get_extents(source.area));
+    const auto height_at = [&layer, &source_boxes](const Point &point) {
+        for (size_t i = 0; i < source_boxes.size(); ++i)
+            if (source_boxes[i].contains(point) && layer.nonplanar_ironing_sources[i].area.contains(point))
+                return layer.nonplanar_ironing_sources[i].layer->print_z;
+        return layer.print_z;
+    };
+    const double SAMPLE = 0.5; // mm
+    std::map<int, std::pair<double, double>> bins; // height * length, length
+    for (const Polyline &polyline : polylines)
+        for (size_t i = 1; i < polyline.points.size(); ++i) {
+            const Point &a       = polyline.points[i - 1];
+            const Vec2d  segment = (polyline.points[i] - a).cast<double>();
+            const double length  = unscale<double>(segment.norm());
+            const int    samples = std::max(1, int(std::ceil(length / SAMPLE)));
+            for (int k = 0; k < samples; ++k) {
+                const Point point = a + (segment * ((k + 0.5) / samples)).cast<coord_t>();
+                auto       &bin   = bins[int(std::floor(position(point) / SAMPLE))];
+                bin.first  += height_at(point) * length / samples;
+                bin.second += length / samples;
+            }
+        }
+
+    // Where the height turns, ignoring changes smaller than a layer, and whether the first part rises.
+    std::vector<std::pair<double, double>> profile; // position, height
+    for (const auto &[index, bin] : bins)
+        profile.emplace_back((index + 0.5) * SAMPLE, bin.first / bin.second);
+    const double        threshold = layer.height;
+    std::vector<double> cuts;
+    int                 first = 0, direction = 0;
+    size_t              high = 0, low = 0, part_begin = 0;
+    for (size_t i = 0; i < profile.size(); ++i) {
+        const double height = profile[i].second;
+        if (height > profile[high].second) high = i;
+        if (height < profile[low].second)  low = i;
+        if (direction == 0) {
+            if (profile[high].second - profile[low].second >= threshold)
+                first = direction = high > low ? 1 : -1;
+        } else if (direction > 0 && profile[high].second - height >= threshold) {
+            // A crest. The part that runs on over it starts before it, where the lines are less than a layer lower
+            // and the slope is slight: a small crest was printed moments ago, and is still soft when a part starts
+            // on it.
+            size_t cut = high;
+            while (cut > part_begin && profile[high].second - profile[cut - 1].second < threshold)
+                --cut;
+            cuts.emplace_back(profile[cut].first);
+            direction  = -1;
+            part_begin = low = i;
+        } else if (direction < 0 && height - profile[low].second >= threshold) {
+            cuts.emplace_back(profile[low].first);
+            direction  = 1;
+            part_begin = low;
+            high = i;
+        }
+        if (direction > 0) low = i;
+        if (direction < 0) high = i;
+    }
+    if (seam) {
+        double lowest = std::numeric_limits<double>::max(), highest = std::numeric_limits<double>::lowest();
+        for (const Polyline &polyline : polylines)
+            for (const Point &point : polyline.points) {
+                lowest  = std::min(lowest, position(point));
+                highest = std::max(highest, position(point));
+            }
+        if (const double at = position(*seam); at > lowest && at < highest) {
+            // Two parts, and the first counts as rising: it is run back from the seam.
+            cuts.assign(1, at);
+            first = 1;
+        }
+    }
+    if (first == 0)
+        return polylines;
+
+    // Cut the lines into the parts, dropping the links that cross a cut, and run each part from its high side.
+    std::vector<Polylines> parts(cuts.size() + 1);
+    double                 sweep = 0.;
+    for (Polyline &polyline : polylines) {
+        if (polyline.points.size() < 2)
+            continue;
+        sweep += position(polyline.points.back()) - position(polyline.points.front());
+        Polyline piece;
+        size_t   piece_part = 0;
+        for (const Point &point : polyline.points) {
+            const size_t part = std::upper_bound(cuts.begin(), cuts.end(), position(point)) - cuts.begin();
+            if (part != piece_part && ! piece.points.empty()) {
+                if (piece.points.size() >= 2)
+                    parts[piece_part].emplace_back(std::move(piece));
+                piece = Polyline();
+            }
+            piece_part = part;
+            piece.points.emplace_back(point);
+        }
+        if (piece.points.size() >= 2)
+            parts[piece_part].emplace_back(std::move(piece));
+    }
+    Polylines out;
+    for (size_t part = 0; part < parts.size(); ++part) {
+        const bool rises = (first > 0) == (part % 2 == 0);
+        // A part that rises across the lines is run against that direction.
+        if (rises == (sweep > 0.)) {
+            std::reverse(parts[part].begin(), parts[part].end());
+            for (Polyline &piece : parts[part])
+                piece.reverse();
+        }
+        append(out, std::move(parts[part]));
+    }
+    return out;
+}
+
+// Forca: a nonplanar ironing pass leaves the surface straight up after each of its paths and comes straight down on
+// the next. Where the lines get short quickly (the rim of a round area) the fill does not link them, and each line
+// would get that lift and plunge of its own. Lines that follow each other closely are linked here, where the link
+// stays on the ironed area. `max_across` limits how far the link goes across lines that run at `angle`: a link from
+// one line to the next one crosses no line that is printed already, however long it is.
+static Polylines link_nonplanar_ironing_lines(Polylines polylines, const ExPolygon &area, double max_link = scale_(1.5), double angle = 0.,
+                                              double max_across = std::numeric_limits<double>::max())
+{
+    const Vec2d      across(- std::sin(angle), std::cos(angle));
+    const ExPolygons inside = offset_ex(area, float(scale_(0.02)));
+    Polylines        out;
+    for (Polyline &polyline : polylines) {
+        if (polyline.points.empty())
+            continue;
+        if (! out.empty()) {
+            const Line link(out.back().points.back(), polyline.points.front());
+            if (link.length() <= max_link && std::abs((link.b - link.a).cast<double>().dot(across)) <= max_across &&
+                std::any_of(inside.begin(), inside.end(), [&link](const ExPolygon &expolygon) { return expolygon.contains(link); })) {
+                append(out.back().points, std::move(polyline.points));
+                continue;
+            }
+        }
+        out.emplace_back(std::move(polyline));
+    }
+    return out;
+}
+
+// Forca: the nonplanar top surface that this layer prints (PrintObject::plan_nonplanar_shell): a wall around each of
+// its areas and the lines of a top surface inside it, in 2D. Layer::make_contour_z() puts them on the model.
+void Layer::make_nonplanar_shell()
+{
+    if (this->nonplanar_shell_sources.empty() || m_regions.empty())
+        return;
+    for (size_t region_id = 0; region_id < m_regions.size(); ++region_id) {
+        ExPolygons area;
+        for (const NonplanarIroningSource &source : this->nonplanar_shell_sources)
+            if (std::min(source.region_id, m_regions.size() - 1) == region_id)
+                area.emplace_back(source.area);
+        if (area.empty())
+            continue;
+        // The steps of neighbouring layers are a hair apart.
+        area = closing_ex(area, float(scale_(0.02)));
+        LayerRegion             *layerm = m_regions[region_id];
+        const PrintRegionConfig &config = layerm->region().config();
+        const Flow               wall   = layerm->flow(frExternalPerimeter);
+        const Flow               top    = layerm->flow(frTopSolidInfill);
+        std::unique_ptr<Fill>    f(Fill::new_from_type(ipRectilinear));
+        f->set_bounding_box(this->object()->bounding_box());
+        f->layer_id        = this->id();
+        f->z               = this->print_z;
+        f->overlap         = 0;
+        f->spacing         = top.spacing();
+        f->angle           = nonplanar_shell_angle(config);
+        f->fixed_angle     = true;
+        f->link_max_length = coord_t(scale_(3. * f->spacing));
+        FillParams params;
+        params.density   = 1.;
+        params.monotonic = true;
+        auto *shell = new ExtrusionEntityCollection();
+        shell->no_sort = true;
+        const Polygons painted_seam = nonplanar_painted_seam(*this, this->nonplanar_shell_sources);
+        for (const ExPolygon &expolygon : area) {
+            // The wall starts where a seam is painted on the skin.
+            const std::optional<Point> seam = nonplanar_seam_point(painted_seam, expolygon);
+            Polylines walls;
+            for (const ExPolygon &ring : offset_ex(expolygon, - float(0.5 * wall.scaled_width())))
+                for (const Polygon &polygon : to_polygons(ring))
+                    walls.emplace_back(seam ? loop_from(polygon, *seam) : polygon.split_at_first_point());
+            extrusion_entities_append_paths(shell->entities, std::move(walls), erExternalPerimeter, wall.mm3_per_mm(), wall.width(), float(this->height));
+            // The lines overlap the wall a little, as a top surface does.
+            for (ExPolygon &inner : offset_ex(expolygon, - float(wall.scaled_width() - 0.2 * top.scaled_width()))) {
+                Surface   surface(stTop, std::move(inner));
+                Polylines lines;
+                try {
+                    lines = f->fill_surface(&surface, params);
+                } catch (InfillFailedException &) {
+                }
+                // At the rim of a round skin the first and the last line end several millimetres from the ends of
+                // the lines next to them.
+                lines = link_nonplanar_ironing_lines(std::move(lines), surface.expolygon, scale_(6.), f->angle, 1.5 * scale_(f->spacing));
+                extrusion_entities_append_paths(shell->entities, std::move(lines), erTopSolidInfill, top.mm3_per_mm(), top.width(), float(this->height));
+            }
+        }
+        if (shell->entities.empty()) {
+            delete shell;
+            continue;
+        }
+        for (ExtrusionEntity *entity : shell->entities)
+            if (auto *path = dynamic_cast<ExtrusionPath*>(entity))
+                path->nonplanar_shell = true;
+        layerm->fills.entities.push_back(shell);
+    }
+}
+
 void Layer::make_ironing()
 {
 	// LayerRegion::slices contains surfaces marked with SurfaceType.
@@ -1787,8 +2108,14 @@ void Layer::make_ironing()
 	std::vector<IroningParams> by_extruder;
     double default_layer_height = this->object()->config().layer_height;
 
+	// Forca: a layer that prints a nonplanar top surface may have nothing else left of a region, and still irons it.
+	const auto irons_nonplanar_steps = [this](const LayerRegion *layerm) {
+		return std::any_of(this->nonplanar_ironing_sources.begin(), this->nonplanar_ironing_sources.end(), [this, layerm](const NonplanarIroningSource &source) {
+			return source.region_id < m_regions.size() && m_regions[source.region_id] == layerm;
+		});
+	};
 	for (LayerRegion *layerm : m_regions)
-		if (! layerm->slices.empty()) {
+		if (! layerm->slices.empty() || irons_nonplanar_steps(layerm)) {
 			IroningParams ironing_params;
 			const PrintRegionConfig &config = layerm->region().config();
 			ironing_params.extruder = Layer::choose_ironing_extruder(
@@ -1859,6 +2186,8 @@ void Layer::make_ironing()
 
 		// Create the ironing extrusions for regions <i, j)
 		ExPolygons ironing_areas;
+		// Forca: this pass also irons the steps of lower layers (nonplanar ironing).
+		bool       lower_steps = false;
 		double nozzle_dmr = nozzle_diameter_for_filament(this->object()->print()->config(), ironing_params.extruder, this->object()->print()->is_BBL_printer());
 		if (ironing_params.just_infill) {
 			//TODO just_infill is currently not used.
@@ -1910,10 +2239,29 @@ void Layer::make_ironing()
 					append(polys, std::move(infills));
 				polys = union_safety_offset(polys);
 			}
+			// Forca: nonplanar ironing. Steps handed to a higher layer are left out here, and the steps of lower
+			// layers are ironed here, with the settings of their own region where this layer irons it too.
+			if (! this->nonplanar_ironing_deferred.empty())
+				polys = diff(polys, this->nonplanar_ironing_deferred);
+			Polygons outline = to_polygons(this->lslices);
+			for (const NonplanarIroningSource &source : this->nonplanar_ironing_sources) {
+				const LayerRegion *layerm = source.region_id < m_regions.size() ? m_regions[source.region_id] : nullptr;
+				const auto         same_region = [layerm](const IroningParams &params) { return params.layerm == layerm; };
+				if (std::any_of(by_extruder.begin() + i, by_extruder.begin() + j, same_region) ||
+					(i == 0 && std::none_of(by_extruder.begin(), by_extruder.end(), same_region))) {
+					polygons_append(polys, source.area);
+					lower_steps = true;
+				}
+				polygons_append(outline, source.area);
+			}
+			if (lower_steps) {
+				polys   = union_safety_offset(polys);
+				outline = union_safety_offset(outline);
+			}
 			// Trim the top surfaces with half the nozzle diameter.
             // BBS: ironing inset
             double ironing_areas_offset = ironing_params.inset == 0 ? float(scale_(0.5 * nozzle_dmr)) : scale_(ironing_params.inset);
-			ironing_areas = intersection_ex(polys, offset(this->lslices, - ironing_areas_offset));
+			ironing_areas = intersection_ex(polys, offset(outline, - ironing_areas_offset));
 		}
 
         // Create the filler object.
@@ -1925,6 +2273,7 @@ void Layer::make_ironing()
 		float  extrusion_width  = Flow::rounded_rectangle_extrusion_width_from_spacing(float(nozzle_dmr), float(extrusion_height));
 		double flow_mm3_per_mm = nozzle_dmr * extrusion_height;
         Surface surface_fill(stTop, ExPolygon());
+        const Polygons painted_seam = lower_steps ? nonplanar_painted_seam(*this, this->nonplanar_ironing_sources) : Polygons();
         for (ExPolygon &expoly : ironing_areas) {
 			surface_fill.expolygon = std::move(expoly);
 			Polylines polylines;
@@ -1932,6 +2281,9 @@ void Layer::make_ironing()
 				polylines = f->fill_surface(&surface_fill, fill_params);
 			} catch (InfillFailedException &) {
 			}
+			if (lower_steps && ironing_params.pattern == ipRectilinear)
+				polylines = link_nonplanar_ironing_lines(
+					nonplanar_ironing_downhill(std::move(polylines), *this, nonplanar_seam_point(painted_seam, surface_fill.expolygon)), surface_fill.expolygon);
 	        if (! polylines.empty()) {
 		        // Save into layer.
 				ExtrusionEntityCollection *eec = nullptr;

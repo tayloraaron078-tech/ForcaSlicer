@@ -20,6 +20,12 @@ struct PluginPermissions;
 // reader maps that form onto the boolean permission.
 inline constexpr const char* kThreadPermissionTarget = "thread";
 
+// Forca: the audit key of the Python scripts Forca AI runs (forca_run_python, ForcaAIPython.cpp). Its limits hold
+// whatever the user grants or answers (HQ PLAN_forca_ai.md R1/R2): a script writes, creates and deletes only inside a
+// scoped allowed root (its own folder), and never uses the network, starts a program or starts a thread. Reads follow
+// the normal rules: the allowed roots, else the user is asked.
+inline constexpr const char* kForcaAIScriptKey = "forca-ai-script";
+
 struct AuditDecision {
     bool        allowed = true;
     std::string reason;
@@ -88,6 +94,8 @@ public:
     // prompt-or-deny path instead.
     void add_global_allowed_root(const boost::filesystem::path& root, bool allow_write = true);
     void add_scoped_allowed_root(const boost::filesystem::path& root, bool allow_write = true);
+    // Forca: true when candidate is inside a writable root of the current scope (not a global root).
+    bool inside_scoped_write_root(const boost::filesystem::path& candidate) const;
 
     // --- denied-filenames registry ---
     // Filenames a plugin may never touch, in any directory, regardless of the enclosing allowed

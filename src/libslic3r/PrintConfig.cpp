@@ -3039,6 +3039,58 @@ void PrintConfigDef::init_fff_params()
     def->mode = comDevelop;
     def->set_default_value(new ConfigOptionFloat(2.5));
 
+    // Forca: the printhead's outline around the nozzle, for nonplanar printing (PrintheadProfile).
+    def = this->add("nozzle_tip_diameter", coFloat);
+    def->label = L("Nozzle tip diameter");
+    def->tooltip = L("Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("nozzle_cone_diameter", coFloat);
+    def->label = L("Nozzle cone diameter");
+    def->tooltip = L("Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. "
+                     "0 means the printhead's outline is not known, and nonplanar printing is not available.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("nozzle_cone_height", coFloat);
+    def->label = L("Nozzle cone height");
+    def->tooltip = L("Height above the nozzle tip at which the nozzle cone diameter is measured.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("printhead_body_distance", coFloat);
+    def->label = L("Distance to printhead body");
+    def->tooltip = L("Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: "
+                     "a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("printhead_body_height", coFloat);
+    def->label = L("Printhead body height");
+    def->tooltip = L("Height above the nozzle tip of the lowest part of the printhead beside the nozzle.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0));
+
+    def = this->add("printhead_clearance_margin", coFloat);
+    def->label = L("Printhead clearance margin");
+    def->tooltip = L("Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. "
+                     "It covers what the outline does not: measuring error and the corners of the layers.");
+    def->sidetext = L("mm");
+    def->min = 0;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0.2));
+
     def          = this->add("bed_mesh_min", coPoint);
     def->label   = L("Bed mesh min");
     def->tooltip = L(
@@ -3439,7 +3491,8 @@ void PrintConfigDef::init_fff_params()
     def = this->add("machine_tool_change_time", coFloat);
     def->label = L("Tool change time");
     def->tooltip = L("Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. "
-                     "For single-extruder multi-material machines, it's typically 0. For statistics only.");
+                     "For single-extruder multi-material machines, it's typically 0. It is used for the print time "
+                     "estimate and, on tool changers, counts toward the minimum layer time.");
     def->sidetext = L_CONTEXT("s", "second");	// seconds, CIS languages need translation
     def->min = 0;
     def->mode = comAdvanced;
@@ -5599,6 +5652,30 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
 
+    // Forca: PrintObject::plan_nonplanar_ironing()
+    def           = this->add("nonplanar_ironing", coBool);
+    def->label    = L("Nonplanar ironing");
+    def->category = L("Quality");
+    def->tooltip  = L("Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing "
+                      "the step of each layer flat. The nozzle moves down beside material that is already printed, so this "
+                      "needs the printhead outline in the printer settings, and it is only used where that outline shows "
+                      "the printhead stays clear. Needs a single object on the plate, without supports or a prime tower.");
+    def->mode     = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
+    // Forca: PrintObject::plan_nonplanar_shell()
+    def           = this->add("nonplanar_top_surface", coBool);
+    def->label    = L("Nonplanar top surface");
+    def->category = L("Quality");
+    def->tooltip  = L("Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the "
+                      "steps of its layers. The layers under it end one layer lower, and the skin is printed over them when "
+                      "the slope's last layer is done. The nozzle moves down beside material that is already printed, so "
+                      "this needs the printhead outline in the printer settings, and it is only used where that outline "
+                      "shows the printhead stays clear. Needs a single object on the plate, without supports or a prime "
+                      "tower. Experimental.");
+    def->mode     = comAdvanced;
+    def->set_default_value(new ConfigOptionBool(false));
+
     def           = this->add("ironing_expansion", coFloat);
     def->label    = L("Ironing expansion");
     def->category = L("Quality");
@@ -7088,6 +7165,17 @@ void PrintConfigDef::init_fff_params()
                      "an external perimeter is printed immediately after a de-retraction move.");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionBool(false));
+
+    def = this->add("retract_after_outer_wall", coBool);
+    def->label = L("Retract after outer wall");
+    def->category = L("Quality");
+    def->tooltip = L("Always retract when the nozzle leaves an outer wall, even if the travel is shorter than the "
+                     "travel distance threshold.\n\n"
+                     "Without a retraction, a very short travel, for example to gap infill inside a thin wall, can drag "
+                     "the end of the outer wall inward and leave a visible dent at the seam.");
+    // Orca: on for everyone, hidden from the regular UI until long-term tests settle it.
+    def->mode = comDevelop;
+    def->set_default_value(new ConfigOptionBool(true));
 
     def = this->add("wipe_speed", coFloatOrPercent);
     def->label = L("Wipe speed");
@@ -10668,6 +10756,8 @@ std::set<std::string> print_options_with_variant = {
     "inner_wall_speed",
     "small_perimeter_speed",  //coFloatsOrPercents
     "small_perimeter_threshold",
+    "small_support_perimeter_speed",  //coFloatsOrPercents
+    "small_support_perimeter_threshold",
     "sparse_infill_speed",
     "internal_solid_infill_speed",
     "top_surface_speed",
@@ -14369,23 +14459,39 @@ static Points to_points(const std::vector<Vec2d> &dpts)
     return pts;
 }
 
-Polygon get_shared_poly(const std::vector<Pointfs>& extruder_polys)
+Polygon get_shared_poly(const std::vector<Pointfs>& extruder_polys, const Pointfs& bed)
 {
     Polygon result;
-    for (int index = 0; index < extruder_polys.size(); index++)
-    {
-        const Pointfs& extruder_area = extruder_polys[index];
-        if (index == 0)
-            result.points = to_points(extruder_area);
-        else {
-            Polygon extruer_poly;
-            extruer_poly.points = to_points(extruder_area);
-            Polygons result_polygon = intersection(extruer_poly, result);
-            result = result_polygon[0];
+    bool    limited = false;
+    for (const Pointfs& extruder_area : extruder_polys) {
+        // Not a shape: this extruder reaches the whole bed.
+        if (extruder_area.size() < 3)
+            continue;
+        Polygon extruder_poly;
+        extruder_poly.points = to_points(extruder_area);
+        if (!limited) {
+            result  = std::move(extruder_poly);
+            limited = true;
+            continue;
         }
+        Polygons shared = intersection(extruder_poly, result);
+        if (shared.empty())
+            return {};
+        result = shared.front();
     }
+    if (!limited)
+        result.points = to_points(make_counter_clockwise(bed));
     return result;
 }
+
+// Objects are placed on the area every extruder reaches. Without one, an object can still be printed
+// by the extruders that reach it, so place on the whole bed: slicing rejects what cannot be reached.
+static Points placement_bed_shape(const std::vector<Pointfs>& extruder_polys, const Pointfs& bed)
+{
+    Points shared = get_shared_poly(extruder_polys, bed).points;
+    return shared.empty() ? to_points(make_counter_clockwise(bed)) : shared;
+}
+
 Points get_bed_shape(const DynamicPrintConfig &config, bool use_share)
 {
     const ConfigOptionPoints *bed_shape_opt = config.opt<ConfigOptionPoints>("printable_area");
@@ -14399,37 +14505,19 @@ Points get_bed_shape(const DynamicPrintConfig &config, bool use_share)
         return {};
     }
 
-    Polygon bed_poly;
     if (use_share) {
         const ConfigOptionPointsGroups *extruder_area_opt = config.opt<ConfigOptionPointsGroups>("extruder_printable_area");
-        if (extruder_area_opt && (extruder_area_opt->size() > 0)) {
-            const std::vector<Pointfs>& extruder_areas = extruder_area_opt->values;
-            bed_poly = get_shared_poly(extruder_areas);
-        }
-        else
-            bed_poly.points = to_points(make_counter_clockwise(bed_shape_opt->values));
+        if (extruder_area_opt)
+            return placement_bed_shape(extruder_area_opt->values, bed_shape_opt->values);
     }
-    else
-        bed_poly.points = to_points(make_counter_clockwise(bed_shape_opt->values));
-
-    return bed_poly.points;
+    return to_points(make_counter_clockwise(bed_shape_opt->values));
 }
 
 Points get_bed_shape(const PrintConfig &cfg, bool use_share)
 {
-    Polygon bed_poly;
-    if (use_share) {
-        const std::vector<Pointfs>& extruder_areas = cfg.extruder_printable_area.values;
-        if (extruder_areas.size() > 0) {
-            bed_poly = get_shared_poly(extruder_areas);
-        }
-        else
-            bed_poly.points = to_points(make_counter_clockwise(cfg.printable_area.values));
-    }
-    else
-        bed_poly.points = to_points(make_counter_clockwise(cfg.printable_area.values));
-
-    return bed_poly.points;
+    if (use_share)
+        return placement_bed_shape(cfg.extruder_printable_area.values, cfg.printable_area.values);
+    return to_points(make_counter_clockwise(cfg.printable_area.values));
 }
 
 Points get_bed_shape(const SLAPrinterConfig &cfg) { return to_points(make_counter_clockwise(cfg.printable_area.values)); }

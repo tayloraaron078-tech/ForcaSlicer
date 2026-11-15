@@ -10,9 +10,16 @@ Forca AI is experimental.
 ## What it can do
 
 An AI you connect can load and arrange models, design models in OpenSCAD ([OpenSCAD models](../openscad.md#forca-ai)),
-choose presets, add modifiers and support regions, slice and read the results, save a copy of the project, and, with
-the print journal on, read your [Forca Academy](forca-academy.md) journal and its Insights. For printers you choose, it
+choose presets, add modifiers and support regions, paint filament colours, support, support-interface and seam areas
+(only colours show on the model; the others show with their paint tool open), slice and read the
+results (with [Print Risks](print-risks.md) and the plate report's checks), save a copy of the project, and, with the
+print journal on, read your [Forca Academy](forca-academy.md) journal and its Insights. For printers you choose, it
 can read their status and take a camera snapshot.
+
+**Pick a random model:** ask the AI to choose something to print and it picks a model file at random from the folder
+you set under **Models the AI may pick at random** in the Forca AI window (subfolders included), or from Forca's
+built-in test models (3DBenchy, Voron cube, Cali Cat, ...) when you haven't chosen one. Forca never downloads models
+itself.
 
 ## Turn it on
 
@@ -84,6 +91,17 @@ settings**: you get the address and an `Authorization: Bearer <key>` header, in 
   Open WebUI or Cherry Studio: add an MCP server of type Streamable HTTP with the address and the header (or the key as
   its bearer token).
 
+### Connect an app that only starts local programs
+
+Some apps can only start an MCP server as a program on your computer (a `"command"`), not connect to an address. For
+those, choose **Other app (MCP, local program)** and click **Copy settings**: the `"forca"` entry starts
+`forca-mcp.exe`, which comes with Forca and passes the app's messages to Forca AI. It needs no Node.js and reads the
+key by itself, so **Make a new key** needs no change in the app. Forca must be running with Forca AI on.
+
+If the app runs its helper programs in a sandbox, `forca-mcp.exe` may report **no Forca AI key**: the sandbox hides
+your real user folders. Add the key file's place to the entry's arguments:
+`"--key-file", "C:\\Users\\<you>\\AppData\\Local\\ForcaSlicer\\forca-ai-key.txt"`.
+
 xAI's and OpenAI's own server-side tool connections can't reach Forca: like Claude's connectors, they connect from
 the internet. Small local models often struggle with Forca's many tools; a larger model with good tool use works best.
 
@@ -98,6 +116,14 @@ the internet. Small local models often struggle with Forca's many tools; a large
 | Your files | Never saved over: every save gets a new "(Claude <date>)" name. | May save over your files; Forca first copies each one into `Documents\Forca AI\Backups`. |
 | Your presets | Never edited. | May edit your own presets (never system presets). |
 | Printing | It can only *ask*: you approve on a card in Forca, then choose the printer and press Send in the usual print dialog. | A print request opens the print dialog directly; you still press Send. |
+
+At Advanced the AI can also **run Python scripts** inside Forca, with the same plugin API Forca's plugins use (the
+models, presets, the sliced plate). A script may write only in its own folder, `Documents\Forca AI\Scripts\<date
+time>`, where the script is kept too, so you can see what ran. It can't use the network, start programs or threads,
+whatever you allow, and reading your other files asks you first. NumPy is not part of Forca's Python, and Forca doesn't download
+it for AI scripts. Scripts that need NumPy work only after you add it yourself: click **Install NumPy** in the
+Forca AI window, and Forca downloads it from pypi.org (it needs the internet once). Without it the AI uses plain Python
+instead. See [SECURITY.md](../../../SECURITY.md).
 
 At **every** level the AI can't delete files, discard your unsaved edits, or heat, move or reconfigure a printer, and
 it never sees printer access codes, passwords, API keys or network addresses. It can't set, in any preset it makes or

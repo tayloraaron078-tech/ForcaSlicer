@@ -2,6 +2,8 @@
 
 #include "Preset.hpp"
 
+#include <nlohmann/json_fwd.hpp>
+
 #include <string>
 #include <utility>
 #include <vector>
@@ -100,5 +102,13 @@ std::vector<std::string> forca_extract_bambu_bundle(const std::string &bundle, c
 std::string forca_best_filament_parent(PresetBundle &bundle, const std::string &missing_parent,
                                        const std::string &vendor, const std::string &type,
                                        const std::vector<std::string> &printers);
+
+// Bambu Studio's filament_scarf_* settings have no unset value, and Bambu Studio refuses a whole 3MF project whose
+// settings hold "nil" in one of them. forca_scarf_to_3mf() gives each unset slot Bambu Studio's own default (type
+// "none": the filament sets no scarf) and lists those slots under "forca_filament_scarf_unset", which Bambu Studio
+// ignores; forca_scarf_from_3mf() turns the listed slots back into unset and removes the list. A file without the
+// list is left as it is. Both take the settings JSON of a 3MF and return whether they changed it.
+bool forca_scarf_to_3mf(nlohmann::json &settings);
+bool forca_scarf_from_3mf(nlohmann::json &settings);
 
 } // namespace Slic3r

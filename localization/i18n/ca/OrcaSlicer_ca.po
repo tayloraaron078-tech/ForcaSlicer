@@ -17888,6 +17888,10 @@ msgstr "Temps de canvi d'eina"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "Temps necessari per canviar d'eina. Normalment s'aplica per a canviadors d'eines o màquines multieina. Per a màquines multimaterial d'una sola extrusora, normalment és 0. Només per a estadístiques"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "Temps que es triga a canviar d'eina. Normalment s'aplica a canviadors d'eines o màquines multieina. Per a màquines multimaterial d'un sol extrusor sol ser 0. S'utilitza per a l'estimació del temps d'impressió i, en canviadors d'eines, compta per al temps mínim de capa."
+
 msgid "Bed temperature type"
 msgstr "Tipus de temperatura del llit"
 
@@ -42814,6 +42818,400 @@ msgstr "La càmera de la Snapmaker U1 només fa fotos fixes amb el firmware de f
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "Mostra la càmera de la U1"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "No s'ha fet servir el planxat no pla. Cal el contorn del capçal a la configuració de la impressora i un sol objecte a la placa, sense suports, torre de purga, escut contra corrents d'aire ni una faldilla de més d'una capa."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "Part del model és més inclinada del que el capçal pot seguir, que és d'uns %1%°. Allà no s'ha fet servir el planxat no pla."
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "No s'ha fet servir la superfície superior no plana. Cal el contorn del capçal a la configuració de la impressora i un sol objecte a la placa, sense suports, torre de purga, escut contra corrents d'aire ni una faldilla de més d'una capa."
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "Part del model és més inclinada del que el capçal pot seguir, que és d'uns %1%°. Allà no s'ha fet servir la superfície superior no plana."
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "Diàmetre de la punta del broquet"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "Diàmetre de la part plana a la punta del broquet. S'utilitza per mantenir el capçal lluny de la peça en la impressió no plana."
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "Diàmetre del con del broquet"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "Diàmetre del broquet on acaba el con: la part superior del con o la vora inferior de la funda de silicona. 0 vol dir que no es coneix el contorn del capçal i la impressió no plana no està disponible."
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "Alçada del con del broquet"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "Alçada sobre la punta del broquet on es mesura el diàmetre del con del broquet."
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "Distància al cos del capçal"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "Distància del centre del broquet a la part del capçal més propera que penja baixa al costat: un conducte de ventilador, la carcassa o el bloc calefactor. 0 vol dir que res penja més avall que la part superior del con del broquet."
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "Alçada del cos del capçal"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "Alçada sobre la punta del broquet de la part més baixa del capçal al costat del broquet."
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "Marge de separació del capçal"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "Distància que es manté entre el capçal i la peça en la impressió no plana, a més del contorn anterior. Cobreix el que el contorn no cobreix: l'error de mesura i les cantonades de les capes."
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "Planxat no pla"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "Planxa un pendent suau en una sola passada que segueix la superfície del model a través de les capes, en lloc de planxar pla l'esglaó de cada capa. El broquet baixa al costat de material ja imprès, així que cal el contorn del capçal a la configuració de la impressora, i només s'utilitza on aquest contorn mostra que el capçal queda lliure. Cal un sol objecte a la placa, sense suports ni torre de purga."
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "Superfície superior no plana"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "Imprimeix la superfície superior d'un pendent suau com una sola pell que segueix la superfície del model, en lloc dels esglaons de les seves capes. Les capes de sota acaben una capa més avall, i la pell s'imprimeix a sobre quan s'acaba l'última capa del pendent. El broquet baixa al costat de material ja imprès, així que cal el contorn del capçal a la configuració de la impressora, i només s'utilitza on aquest contorn mostra que el capçal queda lliure. Cal un sol objecte a la placa, sense suports ni torre de purga. Experimental."
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "Una altra aplicació (MCP, programa local)"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "Models que la IA pot triar a l'atzar:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Models de prova integrats de Forca"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "Tria una carpeta..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "Fes servir els integrats"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "Tria una carpeta de models d'on la IA pot triar"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "Instal·la NumPy"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "Baixa NumPy d'internet (pypi.org) al Python de Forca, per als scripts que la IA executa al nivell Avançat i per als connectors."
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca baixarà NumPy d'internet (pypi.org) i l'afegirà al Python de Forca, on els scripts de la IA i els vostres connectors el poden fer servir. Voleu continuar?"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "No s'ha pogut instal·lar NumPy:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "NumPy per als scripts Python de la IA: s'està instal·lant..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "NumPy per als scripts Python de la IA: instal·lat"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "NumPy per als scripts Python de la IA: no instal·lat"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "Per a una aplicació que només inicia servidors MCP locals (una \"command\", no una adreça): el programa forca-mcp de Forca passa els seus missatges a Forca AI, sense necessitat de Node.js. Afegiu l'entrada \"forca\" de sota a la configuració \"mcpServers\" de l'aplicació. Troba la clau tot sol, així que una clau nova no necessita cap canvi aquí."
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "Riscos d'impressió ha trobat %1% lloc d'aquesta placa que pot fallar. Vista > Riscos d'impressió mostra on és i què provar."
+msgstr[1] "Riscos d'impressió ha trobat %1% llocs d'aquesta placa que poden fallar. Vista > Riscos d'impressió mostra on són i què provar."
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "Informe de la placa: cap advertència."
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "Informe de la placa: %1% advertència."
+msgstr[1] "Informe de la placa: %1% advertències."
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "Obre l'informe de la placa"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "Part de la placa és fora de l'àrea imprimible. Moveu els objectes sobre el llit."
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "Els objectes fan %1% mm d'alçada, més que l'alçada imprimible (%2% mm)."
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "Els objectes fan %1% mm d'alçada, a prop de l'alçada imprimible (%2% mm)."
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "Un objecte és a %1% mm de la vora del llit, on la primera capa s'enganxa menys en moltes impressores."
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "L'alçada de capa de %1% mm supera %2% mm, el màxim que un broquet de %3% mm imprimeix bé: les capes poden no enganxar-se entre elles."
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "L'alçada de la primera capa de %1% mm supera %2% mm, el màxim que un broquet de %3% mm imprimeix bé: pot no enganxar-se al llit."
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: la temperatura del broquet de %2% °C és fora de l'interval recomanat pel filament, de %3% a %4% °C."
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "Les temperatures de broquet dels filaments es diferencien en %1% °C. Comproveu que es puguin imprimir junts."
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "Les temperatures de llit dels filaments d'aquesta placa es diferencien en %1% °C; el llit només pot estar a una d'elles."
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% risc trobat"
+msgstr[1] "%1% riscos trobats"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "Prim i alt"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "Base petita"
+
+# AI Translated
+msgid "Short layers"
+msgstr "Capes curtes"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% sense resoldre."
+msgstr[1] "%1% sense resoldre."
+
+# AI Translated
+msgid "Plate report"
+msgstr "Informe de la placa"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "Copia com a text"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "L'informe de la placa només és per a impressions FFF."
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "Placa %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "Aquesta placa és buida."
+
+# AI Translated
+msgid "Checks"
+msgstr "Comprovacions"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "Res a destacar."
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "Res a destacar. Lamineu la placa per afegir les comprovacions del mateix laminador."
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "Lamineu la placa per comprovar-ne els riscos."
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "El botó Riscos d'impressió mostra on són i què provar."
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "Lamineu la placa per veure'n el temps d'impressió i el pes."
+
+# AI Translated
+msgid "Print time:"
+msgstr "Temps d'impressió:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "Filament:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "Cost:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "Capes:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "Canvis de filament:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "Posició:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "centre a X %1%, Y %2% (centre del llit X %3%, Y %4%)"
+
+# AI Translated
+msgid "Bed:"
+msgstr "Llit:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "Objectes:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "El projecte té %1% placa; aquest informe en cobreix una."
+msgstr[1] "El projecte té %1% plaques; aquest informe en cobreix una."
+
+# AI Translated
+msgid "Process:"
+msgstr "Procés:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "Filament %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "Canviat i no desat"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "Cap. Els perfils estan tal com es van desar."
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "%1% mm d'amplada"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "%1% mm² sobre la placa"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "%1% s per capa"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "Vora d'adherència o rai"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "Aquesta part fa unes %1% mm d'amplada i s'aixeca %2% mm. El broquet la pot fer tremolar o tombar. Imprimiu-la més a poc a poc, imprimiu-ne diverses còpies juntes, afegiu una vora d'adherència o afegiu una paret de suport al costat."
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "Només %1% mm² d'aquest objecte de %2% mm d'alçada toca la placa. Es pot desenganxar o bolcar."
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "Una vora d'adherència o un rai el subjecta."
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "Afegiu una vora d'adherència (Altres > Tipus de Vora d'Adherència), o gireu el model perquè un costat més gran quedi cap al llit."
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "Aquestes capes s'imprimeixen en tan sols %1% s, menys que el temps de capa del filament (%2% s), així que poden no refredar-se i es poden enfonsar o arrissar. Imprimiu-ne una segona còpia al costat, o baixeu la velocitat mínima per al refredament."
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "Tota la placa d'un cop d'ull: comprovacions, temps d'impressió i pes, mida i posició, paràmetres clau i canvis no desats."
+
+# AI Translated
+msgid "Whole plate"
+msgstr "Tota la placa"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "Llista on pot fallar la placa laminada: voladissos, ponts llargs, parts que comencen a l'aire, parts primes i altes, bases petites i capes massa curtes per refredar-se."
+
+# AI Translated
+msgid "Plate Report"
+msgstr "Informe de la placa"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "La placa actual d'un cop d'ull: comprovacions, temps d'impressió i pes, mida i posició, paràmetres clau i canvis no desats."
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "Marqueu-ho perquè els botons \"Open in OrcaSlicer\" dels webs de models obrin el model a Forca."
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "Contorn del capçal"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Mostra opcions en importar fitxers STEP"

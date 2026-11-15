@@ -18401,6 +18401,10 @@ msgstr "ツール交換時間"
 msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. For statistics only."
 msgstr "ツールの切り替えに要する時間です。通常はツールチェンジャーやマルチツール機に該当します。シングル押出機のマルチマテリアル機では通常0です。統計用の値です。"
 
+# AI Translated
+msgid "Time taken to switch tools. It's usually applicable for tool changers or multi-tool machines. For single-extruder multi-material machines, it's typically 0. It is used for the print time estimate and, on tool changers, counts toward the minimum layer time."
+msgstr "ツールの切り替えにかかる時間。通常はツールチェンジャーやマルチツール機に適用されます。単一エクストルーダーのマルチマテリアル機では通常 0 です。プリント時間の見積もりに使われ、ツールチェンジャーでは最小レイヤー時間にも含まれます。"
+
 msgid "Bed temperature type"
 msgstr "ベッド温度タイプ"
 
@@ -43894,6 +43898,395 @@ msgstr "Snapmaker U1 のカメラは純正ファームウェアでは静止画�
 # AI Translated
 msgid "Show the U1's camera"
 msgstr "U1 のカメラを表示"
+
+# AI Translated
+msgid "Nonplanar ironing was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "非平面アイロンは使用されませんでした。プリンター設定のプリントヘッド外形と、プレート上の1つのオブジェクトが必要です（サポート、プライムタワー、保護シールド、1層より高いスカートは不可）。"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar ironing was not used there."
+msgstr "モデルの一部が、プリントヘッドが追従できる傾斜（約%1%°）より急です。その部分では非平面アイロンは使用されませんでした。"
+
+# AI Translated
+msgid "Nonplanar top surface was not used. It needs the printhead outline in the printer settings and a single object on the plate, without supports, a prime tower, a draft shield or a skirt taller than one layer."
+msgstr "非平面上面は使用されませんでした。プリンター設定のプリントヘッド外形と、プレート上の1つのオブジェクトが必要です（サポート、プライムタワー、保護シールド、1層より高いスカートは不可）。"
+
+# AI Translated
+msgid "Part of the model is steeper than the printhead can follow, which is about %1%°. Nonplanar top surface was not used there."
+msgstr "モデルの一部が、プリントヘッドが追従できる傾斜（約%1%°）より急です。その部分では非平面上面は使用されませんでした。"
+
+# AI Translated
+msgid "Nozzle tip diameter"
+msgstr "ノズル先端の直径"
+
+# AI Translated
+msgid "Diameter of the flat at the very tip of the nozzle. Used to keep the printhead clear of the print in nonplanar printing."
+msgstr "ノズル先端の平らな部分の直径。非平面印刷でプリントヘッドが造形物に当たらないようにするために使用します。"
+
+# AI Translated
+msgid "Nozzle cone diameter"
+msgstr "ノズルコーンの直径"
+
+# AI Translated
+msgid "Diameter of the nozzle where its cone ends: the top of the cone, or the lower edge of the silicone sock. 0 means the printhead's outline is not known, and nonplanar printing is not available."
+msgstr "ノズルのコーンが終わる位置の直径（コーンの上端、またはシリコンソックスの下端）。0 はプリントヘッド外形が不明で、非平面印刷が使用できないことを意味します。"
+
+# AI Translated
+msgid "Nozzle cone height"
+msgstr "ノズルコーンの高さ"
+
+# AI Translated
+msgid "Height above the nozzle tip at which the nozzle cone diameter is measured."
+msgstr "ノズルコーンの直径を測る位置の、ノズル先端からの高さ。"
+
+# AI Translated
+msgid "Distance to printhead body"
+msgstr "プリントヘッド本体までの距離"
+
+# AI Translated
+msgid "Distance from the centre of the nozzle to the nearest part of the printhead that hangs low beside it: a fan duct, the shroud or the heater block. 0 means nothing hangs lower than the top of the nozzle cone."
+msgstr "ノズル中心から、その横で低く垂れ下がるプリントヘッドの最も近い部分（ファンダクト、カバー、ヒーターブロック）までの距離。0 はノズルコーン上端より低く垂れ下がる部分がないことを意味します。"
+
+# AI Translated
+msgid "Printhead body height"
+msgstr "プリントヘッド本体の高さ"
+
+# AI Translated
+msgid "Height above the nozzle tip of the lowest part of the printhead beside the nozzle."
+msgstr "ノズル横にあるプリントヘッドの最も低い部分の、ノズル先端からの高さ。"
+
+# AI Translated
+msgid "Printhead clearance margin"
+msgstr "プリントヘッドのクリアランスマージン"
+
+# AI Translated
+msgid "Distance kept between the printhead and the print in nonplanar printing, on top of the outline above. It covers what the outline does not: measuring error and the corners of the layers."
+msgstr "非平面印刷で、上の外形に加えてプリントヘッドと造形物の間に保つ距離。外形で表せないもの（測定誤差やレイヤーの角）を補います。"
+
+# AI Translated
+msgid "Nonplanar ironing"
+msgstr "非平面アイロン"
+
+# AI Translated
+msgid "Iron a gentle slope in one pass that follows the model's surface across its layers, instead of ironing the step of each layer flat. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower."
+msgstr "各レイヤーの段差を平らにアイロンする代わりに、緩やかな斜面をレイヤーをまたいでモデル表面に沿う1回のパスでアイロンします。ノズルは既に印刷された材料の横を下がるため、プリンター設定のプリントヘッド外形が必要で、その外形でヘッドが当たらないと分かる場所でのみ使用されます。プレート上に1つのオブジェクトのみで、サポートやプライムタワーは使えません。"
+
+# AI Translated
+msgid "Nonplanar top surface"
+msgstr "非平面上面"
+
+# AI Translated
+msgid "Print the top surface of a gentle slope as one skin that follows the model's surface, instead of the steps of its layers. The layers under it end one layer lower, and the skin is printed over them when the slope's last layer is done. The nozzle moves down beside material that is already printed, so this needs the printhead outline in the printer settings, and it is only used where that outline shows the printhead stays clear. Needs a single object on the plate, without supports or a prime tower. Experimental."
+msgstr "緩やかな斜面の上面を、レイヤーの段差ではなくモデル表面に沿う1枚のスキンとして印刷します。その下のレイヤーは1層低い位置で終わり、斜面の最後のレイヤーが終わったときにその上にスキンが印刷されます。ノズルは既に印刷された材料の横を下がるため、プリンター設定のプリントヘッド外形が必要で、その外形でヘッドが当たらないと分かる場所でのみ使用されます。プレート上に1つのオブジェクトのみで、サポートやプライムタワーは使えません。実験的機能です。"
+
+# AI Translated
+msgid "Other app (MCP, local program)"
+msgstr "その他のアプリ（MCP、ローカルプログラム）"
+
+# AI Translated
+msgid "Models the AI may pick at random:"
+msgstr "AI がランダムに選べるモデル:"
+
+# AI Translated
+msgid "Forca's built-in test models"
+msgstr "Forca 内蔵のテストモデル"
+
+# AI Translated
+msgid "Choose folder..."
+msgstr "フォルダーを選択..."
+
+# AI Translated
+msgid "Use built-in"
+msgstr "内蔵を使用"
+
+# AI Translated
+msgid "Choose a folder of models the AI may pick from"
+msgstr "AI が選べるモデルのフォルダーを選択"
+
+# AI Translated
+msgid "Install NumPy"
+msgstr "NumPy をインストール"
+
+# AI Translated
+msgid "Downloads NumPy from the internet (pypi.org) into Forca's Python, for the scripts the AI runs at the Advanced level and for plugins."
+msgstr "NumPy をインターネット（pypi.org）から Forca の Python にダウンロードします。詳細レベルで AI が実行するスクリプトとプラグイン用です。"
+
+# AI Translated
+msgid "Forca will download NumPy from the internet (pypi.org) and add it to Forca's Python, where the AI's scripts and your plugins can use it. Continue?"
+msgstr "Forca は NumPy をインターネット（pypi.org）からダウンロードし、Forca の Python に追加します。AI のスクリプトとプラグインで使えるようになります。続行しますか？"
+
+# AI Translated
+msgid "NumPy could not be installed:\n%1%"
+msgstr "NumPy をインストールできませんでした:\n%1%"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installing..."
+msgstr "AI の Python スクリプト用 NumPy: インストール中..."
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: installed"
+msgstr "AI の Python スクリプト用 NumPy: インストール済み"
+
+# AI Translated
+msgid "NumPy for the AI's Python scripts: not installed"
+msgstr "AI の Python スクリプト用 NumPy: 未インストール"
+
+# AI Translated
+msgid "For an app that only starts local MCP servers (a \"command\", not an address): Forca's forca-mcp program passes its messages to Forca AI, with no Node.js needed. Add the \"forca\" entry below to the app's \"mcpServers\" settings. It finds the key by itself, so a new key needs no change here."
+msgstr "ローカル MCP サーバーしか起動できないアプリ用（アドレスではなく \"command\"）: Forca の forca-mcp プログラムがメッセージを Forca AI に渡します。Node.js は不要です。下の \"forca\" エントリをアプリの \"mcpServers\" 設定に追加してください。キーは自動で見つけるため、新しいキーでもここを変更する必要はありません。"
+
+# AI Translated
+msgid "Print Risks found %1% place on this plate that may fail. View > Print Risks shows where and what to try."
+msgid_plural "Print Risks found %1% places on this plate that may fail. View > Print Risks shows where and what to try."
+msgstr[0] "プリントリスクで、このプレート上に失敗する可能性のある箇所が %1% 件見つかりました。表示 > プリントリスクで場所と対策を確認できます。"
+
+# AI Translated
+msgid "Plate report: no warnings."
+msgstr "プレートレポート: 警告はありません。"
+
+# AI Translated
+msgid "Plate report: %1% warning."
+msgid_plural "Plate report: %1% warnings."
+msgstr[0] "プレートレポート: 警告 %1% 件。"
+
+# AI Translated
+msgid "Open the plate report"
+msgstr "プレートレポートを開く"
+
+# AI Translated
+msgid "Part of the plate is outside the printable area. Move the objects onto the bed."
+msgstr "プレートの一部が印刷可能範囲の外にあります。オブジェクトをベッド上に移動してください。"
+
+# AI Translated
+msgid "The objects are %1% mm tall, taller than the printable height (%2% mm)."
+msgstr "オブジェクトの高さは %1% mm で、印刷可能な高さ（%2% mm）を超えています。"
+
+# AI Translated
+msgid "The objects are %1% mm tall, close to the printable height (%2% mm)."
+msgstr "オブジェクトの高さは %1% mm で、印刷可能な高さ（%2% mm）に近づいています。"
+
+# AI Translated
+msgid "An object is %1% mm from the edge of the bed, where the first layer sticks least on many printers."
+msgstr "オブジェクトがベッドの端から %1% mm の位置にあります。多くのプリンターで最初のレイヤーが最も付きにくい場所です。"
+
+# AI Translated
+msgid "Layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: layers may not stick to each other."
+msgstr "レイヤー高さ %1% mm は、%3% mm ノズルがきれいに印刷できる上限 %2% mm を超えています。レイヤー同士が接着しない可能性があります。"
+
+# AI Translated
+msgid "First layer height %1% mm is above %2% mm, the most a %3% mm nozzle prints well: it may not stick to the bed."
+msgstr "最初のレイヤー高さ %1% mm は、%3% mm ノズルがきれいに印刷できる上限 %2% mm を超えています。ベッドに付かない可能性があります。"
+
+# AI Translated
+msgid "%1%: nozzle temperature %2% °C is outside the filament's recommended %3% to %4% °C."
+msgstr "%1%: ノズル温度 %2% °C がフィラメントの推奨範囲 %3%～%4% °C の外です。"
+
+# AI Translated
+msgid "The filaments' nozzle temperatures are %1% °C apart. Check that they can print together."
+msgstr "フィラメントのノズル温度の差が %1% °C あります。一緒に印刷できるか確認してください。"
+
+# AI Translated
+msgid "The filaments' bed temperatures on this plate are %1% °C apart; the bed can only be at one of them."
+msgstr "このプレートのフィラメントのベッド温度の差が %1% °C あります。ベッドはそのうち1つの温度にしかできません。"
+
+# AI Translated
+msgid "%1% risk found"
+msgid_plural "%1% risks found"
+msgstr[0] "%1% 件のリスクが見つかりました"
+
+# AI Translated
+msgid "Thin and tall"
+msgstr "細くて高い"
+
+# AI Translated
+msgid "Small footprint"
+msgstr "接地面が小さい"
+
+# AI Translated
+msgid "Short layers"
+msgstr "短いレイヤー"
+
+# AI Translated
+msgid "%1% not taken care of."
+msgid_plural "%1% not taken care of."
+msgstr[0] "%1% 件は未対策です。"
+
+# AI Translated
+msgid "Plate report"
+msgstr "プレートレポート"
+
+# AI Translated
+msgid "Copy as text"
+msgstr "テキストとしてコピー"
+
+# AI Translated
+msgid "The plate report is for FFF prints only."
+msgstr "プレートレポートは FFF 印刷専用です。"
+
+# AI Translated
+msgid "Plate %1%"
+msgstr "プレート %1%"
+
+# AI Translated
+msgid "This plate is empty."
+msgstr "このプレートは空です。"
+
+# AI Translated
+msgid "Checks"
+msgstr "チェック"
+
+# AI Translated
+msgid "Nothing to point out."
+msgstr "特に指摘することはありません。"
+
+# AI Translated
+msgid "Nothing to point out. Slice the plate to add the slicer's own checks."
+msgstr "特に指摘することはありません。プレートをスライスすると、スライサー自体のチェックも加わります。"
+
+# AI Translated
+msgid "Slice the plate to check it for risks."
+msgstr "リスクを確認するには、プレートをスライスしてください。"
+
+# AI Translated
+msgid "The Print Risks button shows where and what to try."
+msgstr "プリントリスクボタンで場所と対策を確認できます。"
+
+# AI Translated
+msgid "Slice the plate to see its print time and weight."
+msgstr "プリント時間と重量を見るには、プレートをスライスしてください。"
+
+# AI Translated
+msgid "Print time:"
+msgstr "プリント時間:"
+
+# AI Translated
+msgid "Filament:"
+msgstr "フィラメント:"
+
+# AI Translated
+msgid "%1% g, %2% m"
+msgstr "%1% g, %2% m"
+
+# AI Translated
+msgid "Cost:"
+msgstr "コスト:"
+
+# AI Translated
+msgid "Layers:"
+msgstr "レイヤー:"
+
+# AI Translated
+msgid "Filament changes:"
+msgstr "フィラメント交換:"
+
+# AI Translated
+msgid "%1% x %2% x %3% mm"
+msgstr "%1% x %2% x %3% mm"
+
+# AI Translated
+msgid "Position:"
+msgstr "位置:"
+
+# AI Translated
+msgid "centre at X %1%, Y %2% (bed centre X %3%, Y %4%)"
+msgstr "中心 X %1%, Y %2%（ベッド中心 X %3%, Y %4%）"
+
+# AI Translated
+msgid "Bed:"
+msgstr "ベッド:"
+
+# AI Translated
+msgid "%1% x %2% mm"
+msgstr "%1% x %2% mm"
+
+# AI Translated
+msgid "Objects:"
+msgstr "オブジェクト:"
+
+# AI Translated
+msgid "The project has %1% plate; this report covers one."
+msgid_plural "The project has %1% plates; this report covers one."
+msgstr[0] "このプロジェクトには %1% 枚のプレートがあります。このレポートはそのうち1枚を対象にしています。"
+
+# AI Translated
+msgid "Process:"
+msgstr "プロセス:"
+
+# AI Translated
+msgid "Filament %1%: %2%"
+msgstr "フィラメント %1%: %2%"
+
+# AI Translated
+msgid "Changed and not saved"
+msgstr "変更済み・未保存"
+
+# AI Translated
+msgid "None. The presets are as saved."
+msgstr "ありません。プリセットは保存したままです。"
+
+# AI Translated
+msgid "%1% mm wide"
+msgstr "幅 %1% mm"
+
+# AI Translated
+msgid "%1% mm² on the plate"
+msgstr "プレート上 %1% mm²"
+
+# AI Translated
+msgid "%1% s per layer"
+msgstr "1層あたり %1% 秒"
+
+# AI Translated
+msgid "Brim or raft"
+msgstr "ブリムまたはラフト"
+
+# AI Translated
+msgid "This part is about %1% mm wide and stands %2% mm tall. The nozzle can make it wobble or knock it off. Print it slower, print several copies together, add a brim, or add a support wall beside it."
+msgstr "この部分は幅約 %1% mm、高さ %2% mm です。ノズルで揺れたり倒れたりすることがあります。速度を落とす、複数のコピーを一緒に印刷する、ブリムを追加する、横にサポートウォールを追加するなどを試してください。"
+
+# AI Translated
+msgid "Only %1% mm² of this %2% mm tall object touches the plate. It may come loose or tip over."
+msgstr "高さ %2% mm のこのオブジェクトは、%1% mm² しかプレートに接していません。外れたり倒れたりする可能性があります。"
+
+# AI Translated
+msgid "A brim or raft holds it down."
+msgstr "ブリムまたはラフトで固定されます。"
+
+# AI Translated
+msgid "Add a brim (Others > Brim type), or turn the model so a larger side faces the bed."
+msgstr "ブリムを追加する（その他 > ブリムタイプ）か、より大きな面がベッドに向くようにモデルを回転してください。"
+
+# AI Translated
+msgid "These layers print in as little as %1% s, less than the filament's layer time (%2% s), so they may not cool and can sag or curl. Print a second copy beside it, or lower the minimum speed for cooling."
+msgstr "これらのレイヤーは最短 %1% 秒で印刷され、フィラメントのレイヤー時間（%2% 秒）より短いため、冷えきらずに垂れたり反ったりする可能性があります。横に2つ目のコピーを印刷するか、冷却の最低速度を下げてください。"
+
+# AI Translated
+msgid "The whole plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "プレート全体をひと目で: チェック、プリント時間と重量、サイズと位置、主な設定、未保存の変更。"
+
+# AI Translated
+msgid "Whole plate"
+msgstr "プレート全体"
+
+# AI Translated
+msgid "List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall parts, small footprints and layers too short to cool."
+msgstr "スライス済みプレートで失敗しそうな場所を一覧表示します: オーバーハング、長いブリッジ、空中から始まる部分、細くて高い部分、接地面の小さい部分、冷えきらない短いレイヤー。"
+
+# AI Translated
+msgid "Plate Report"
+msgstr "プレートレポート"
+
+# AI Translated
+msgid "The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."
+msgstr "現在のプレートをひと目で: チェック、プリント時間と重量、サイズと位置、主な設定、未保存の変更。"
+
+# AI Translated
+msgid "Tick this to make the \"Open in OrcaSlicer\" buttons on model websites open the model in Forca."
+msgstr "モデルサイトの「Open in OrcaSlicer」ボタンでモデルを Forca で開くには、これにチェックを入れます。"
+
+# AI Translated
+msgid "Printhead outline"
+msgstr "プリントヘッド外形"
 
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "STEPファイルインポート時にオプションを表示"

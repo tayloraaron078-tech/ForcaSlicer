@@ -106,6 +106,7 @@
 #include "libslic3r/ForcaPresetImport.hpp"
 #include "ForcaPrintJournal.hpp"
 #include "ForcaPrintRiskDialog.hpp"
+#include "ForcaPlateReportDialog.hpp" // forca_show_plate_report
 #include "ForcaAIDialog.hpp"
 #ifdef SLIC3R_CAD
 #include "slic3r/GUI/CAD/DesignPanel.hpp"
@@ -3644,8 +3645,14 @@ void MainFrame::init_menubar_as_editor()
 
         // Forca: the print-risk map's list of the sliced plate's risks (ForcaPrintRiskDialog.hpp).
         append_menu_item(viewMenu, wxID_ANY, _L("Print Risks") + dots,
-            _L("List where the sliced plate may fail: overhangs, long bridges and parts that start in mid-air."),
+            _L("List where the sliced plate may fail: overhangs, long bridges, parts that start in mid-air, thin tall "
+               "parts, small footprints and layers too short to cool."),
             [this](wxCommandEvent&) { forca_show_print_risks(this); }, "", nullptr,
+            [this]() { return m_plater != nullptr && m_plater->printer_technology() == ptFFF; }, this);
+        // Forca: the plate report (ForcaPlateReportDialog.hpp).
+        append_menu_item(viewMenu, wxID_ANY, _L("Plate Report") + dots,
+            _L("The current plate at a glance: checks, print time and weight, size and position, key settings and unsaved changes."),
+            [this](wxCommandEvent&) { forca_show_plate_report(this, -1); }, "", nullptr,
             [this]() { return m_plater != nullptr && m_plater->printer_technology() == ptFFF; }, this);
 
         append_menu_check_item(
