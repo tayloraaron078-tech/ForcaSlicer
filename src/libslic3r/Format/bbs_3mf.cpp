@@ -93,6 +93,10 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/format.hpp>
 #include <openssl/md5.h>
 #include <string>
 #include <vector>
@@ -386,6 +390,7 @@ static constexpr const char* FIRST_LAYER_PRINT_SEQUENCE_ATTR = "first_layer_prin
 static constexpr const char* OTHER_LAYERS_PRINT_SEQUENCE_ATTR = "other_layers_print_sequence";
 static constexpr const char* OTHER_LAYERS_PRINT_SEQUENCE_NUMS_ATTR = "other_layers_print_sequence_nums";
 static constexpr const char* SPIRAL_VASE_MODE = "spiral_mode";
+static constexpr const char* SKIRT_START_ANGLE_ATTR = "skirt_start_angle";
 static constexpr const char* IMEX_PARALLEL_MODE_ATTR = "imex_parallel_mode";
 // The same attribute before the feature was renamed IMEX. Plate metadata is matched by exact
 // string and written with set_key_value, so it never passes through handle_legacy: without this
@@ -3521,7 +3526,12 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                             type = static_cast<CustomGCode::Type>(tree.get<int>("<xmlattr>.type"));
                             extra = tree.get<std::string>("<xmlattr>.extra");
                         }
-                        m_model->plates_custom_gcodes[plate_id - 1].gcodes.push_back(CustomGCode::Item{ print_z, type, extruder, color, extra });
+                        CustomGCode::Item item{ print_z, type, extruder, color, extra };
+                        // Forca: a mid-layer pause (see CustomGCode::Item). Other slicers ignore these attributes and
+                        // read the item as a pause at the start of the layer.
+                        item.mid_layer_filament   = tree.get<int>("<xmlattr>.forca_mid_layer_filament", 0);
+                        item.mid_layer_occurrence = tree.get<int>("<xmlattr>.forca_mid_layer_occurrence", 0);
+                        m_model->plates_custom_gcodes[plate_id - 1].gcodes.push_back(item);
                     }
                 }
             };
@@ -4726,6 +4736,13 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
                 bool spiral_mode = false;
                 std::istringstream(value) >> std::boolalpha >> spiral_mode;
                 m_curr_plater->config.set_key_value("spiral_mode", new ConfigOptionBool(spiral_mode));
+            }
+            else if (key == SKIRT_START_ANGLE_ATTR) {
+                // plate override of the skirt start point, ignored when it is not a valid angle
+                size_t parsed = 0;
+                const double skirt_start_angle = string_to_double_decimal_point(value, &parsed);
+                if (parsed > 0 && skirt_start_angle >= -180. && skirt_start_angle <= 180.)
+                    m_curr_plater->config.set_key_value("skirt_start_angle", new ConfigOptionFloat(skirt_start_angle));
             }
             else if (key == IMEX_PARALLEL_MODE_ATTR || key == IXEX_PARALLEL_MODE_ATTR_LEGACY) {
                 m_curr_plater->config.set_key_value("imex_parallel_mode", new ConfigOptionString(value));
@@ -8651,6 +8668,11 @@ bool _BBS_3MF_Exporter::_add_model_config_file_to_archive(mz_zip_archive& archiv
                 if (spiral_mode_opt)
                     stream << "    <" << METADATA_TAG << " " << KEY_ATTR << "=\"" << SPIRAL_VASE_MODE << "\" " << VALUE_ATTR << "=\"" << spiral_mode_opt->getBool() << "\"/>\n";
 
+                // plate override of the skirt start point, written with a decimal point in every locale
+                auto* skirt_start_angle_opt = plate_data->config.option<ConfigOptionFloat>("skirt_start_angle");
+                if (skirt_start_angle_opt)
+                    stream << "    <" << METADATA_TAG << " " << KEY_ATTR << "=\"" << SKIRT_START_ANGLE_ATTR << "\" " << VALUE_ATTR << "=\"" << float_to_string_decimal_point(skirt_start_angle_opt->value) << "\"/>\n";
+
                 {
                     // Mode names are user supplied free text, so the value has to be escaped for an
                     // attribute. xml_escape_double_quotes_attribute_value() is used rather than
@@ -9262,6 +9284,10 @@ bool _BBS_3MF_Exporter::_add_custom_gcode_per_print_z_file_to_archive(mz_zip_arc
                 code_tree.put("<xmlattr>.extruder", code.extruder);
                 code_tree.put("<xmlattr>.color", code.color);
                 code_tree.put("<xmlattr>.extra", code.extra);
+                if (code.is_mid_layer_pause()) {
+                    code_tree.put("<xmlattr>.forca_mid_layer_filament", code.mid_layer_filament);
+                    code_tree.put("<xmlattr>.forca_mid_layer_occurrence", code.mid_layer_occurrence);
+                }
 
                 //BBS
                 std::string gcode = //code.type == CustomGCode::ColorChange ? config->opt_string("color_change_gcode")    :

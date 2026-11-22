@@ -7,6 +7,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "catch2/generators/catch_generators_range.hpp"
 #include "libslic3r/Model.hpp"
+#include "libslic3r/CustomGCode.hpp"
 #include "libslic3r/ForcaOpenScad.hpp"
 #include "libslic3r/Format/3mf.hpp"
 #include "libslic3r/Format/bbs_3mf.hpp"
@@ -1555,6 +1556,7 @@ SCENARIO("BBS 3MF round-trips per-plate IMEX state (parallel mode + head filamen
         plate0->plate_index = 0;
         plate0->config.set_key_value("imex_parallel_mode",     new ConfigOptionString(hostile_mode));
         plate0->config.set_key_value("imex_head_filament_map", new ConfigOptionString(hostile_hfm));
+        plate0->config.set_key_value("skirt_start_angle",      new ConfigOptionFloat(12.5));
         src_plates.push_back(plate0);
 
         WHEN("the model is saved to BBS 3MF and loaded back") {
@@ -1596,6 +1598,12 @@ SCENARIO("BBS 3MF round-trips per-plate IMEX state (parallel mode + head filamen
                 auto *hfm_opt = dst_plates[0]->config.option<ConfigOptionString>("imex_head_filament_map");
                 REQUIRE(hfm_opt != nullptr);
                 REQUIRE(hfm_opt->value == hostile_hfm);
+            }
+            THEN("skirt_start_angle round-trips with its fraction") {
+                REQUIRE(dst_plates.size() >= 1);
+                auto *angle_opt = dst_plates[0]->config.option<ConfigOptionFloat>("skirt_start_angle");
+                REQUIRE(angle_opt != nullptr);
+                REQUIRE_THAT(angle_opt->value, Catch::Matchers::WithinAbs(12.5, 1e-6));
             }
 
             release_PlateData_list(dst_plates);
@@ -3056,4 +3064,61 @@ TEST_CASE("Unset filament scarf slots are saved readable for Bambu Studio and lo
         CHECK(loaded.option(key)->serialize() == saved.option(key)->serialize());
     }
     CHECK_FALSE(loaded.has("forca_filament_scarf_unset"));
+}
+
+// A pause placed in the middle of a layer keeps the color change it belongs to through a project save and load.
+TEST_CASE("A mid-layer pause survives a 3MF round-trip", "[3mf][MidLayerPause]")
+{
+    ScopedSlic3rTemporaryDir temporary_dir("orca_mid_layer_pause");
+
+    Model model;
+    ModelObject *object = model.add_object();
+    object->add_volume(make_cube(10.0, 10.0, 10.0));
+    object->add_instance();
+    CustomGCode::Item layer_pause{ 2.0, CustomGCode::PausePrint, 1, "", "" };
+    CustomGCode::Item mid_layer_pause{ 5.0, CustomGCode::PausePrint, 2, "", "" };
+    mid_layer_pause.mid_layer_filament   = 2;
+    mid_layer_pause.mid_layer_occurrence = 1;
+    model.plates_custom_gcodes[0].gcodes = { layer_pause, mid_layer_pause };
+    model.plates_custom_gcodes[0].mode   = CustomGCode::Mode::MultiAsSingle;
+
+    DynamicPrintConfig source;
+    source.set_key_value("machine_pause_gcode", new ConfigOptionString("M601"));
+    source.set_key_value("template_custom_gcode", new ConfigOptionString(""));
+
+    model.set_backup_path((temporary_dir.path() / "source_backup").string());
+    const std::string path_string = (temporary_dir.path() / "round_trip.3mf").string();
+    auto plate = std::make_unique<PlateData>();
+    plate->plate_index = 0;
+    StoreParams store_params;
+    store_params.path = path_string.c_str();
+    store_params.model = &model;
+    store_params.config = &source;
+    store_params.plate_data_list.push_back(plate.get());
+    store_params.strategy = SaveStrategy::Zip64 | SaveStrategy::Silence;
+    REQUIRE(store_bbs_3mf(store_params));
+
+    Model reloaded_model;
+    DynamicPrintConfig reloaded;
+    ConfigSubstitutionContext substitutions{ForwardCompatibilitySubstitutionRule::Disable};
+    PlateDataPtrs reloaded_plates;
+    std::vector<Preset *> project_presets;
+    bool is_bbl_3mf = false;
+    bool is_orca_3mf = false;
+    Semver file_version;
+    const bool loaded = load_bbs_3mf(
+        path_string.c_str(), &reloaded, &substitutions, &reloaded_model, &reloaded_plates,
+        &project_presets, &is_bbl_3mf, &is_orca_3mf, &file_version, nullptr,
+        LoadStrategy::LoadModel | LoadStrategy::LoadConfig);
+    release_PlateData_list(reloaded_plates);
+
+    REQUIRE(loaded);
+    REQUIRE(reloaded_model.plates_custom_gcodes.count(0) == 1);
+    const std::vector<CustomGCode::Item> &gcodes = reloaded_model.plates_custom_gcodes.at(0).gcodes;
+    REQUIRE(gcodes.size() == 2);
+    CHECK_FALSE(gcodes[0].is_mid_layer_pause());
+    CHECK(gcodes[1].is_mid_layer_pause());
+    CHECK(gcodes[1].mid_layer_filament == 2);
+    CHECK(gcodes[1].mid_layer_occurrence == 1);
+    CHECK_THAT(gcodes[1].print_z, Catch::Matchers::WithinAbs(5.0, 1e-6));
 }

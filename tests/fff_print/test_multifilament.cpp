@@ -29,6 +29,7 @@
 #include "libslic3r/Layer.hpp"
 #include "libslic3r/libslic3r.h"
 #include <limits>
+#include <iterator>
 #include <map>
 #include <optional>
 #include <regex>
@@ -348,6 +349,78 @@ TEST_CASE("Per-object wall filament override is honored", "[MultiFilament]")
         { {}, { { "outer_wall_filament_id", 2 }, { "inner_wall_filament_id", 2 } } });
     CHECK(tools_for_role(gcode, "perimeter") == std::set<int>{ 0, 1 });
     CHECK(tools_for_role(gcode, "infill")    == std::set<int>{ 0 }); // infill not overridden: stays on F1
+}
+
+// Filament 3 prints nothing but the brim, so the brim still needs a pass of its own.
+TEST_CASE("Brim prints with its assigned filament", "[MultiFilament]")
+{
+    const int   brim_filament  = GENERATE(2, 3);
+    const char *print_sequence = GENERATE("by layer", "by object");
+    DYNAMIC_SECTION("brim filament " << brim_filament << ", " << print_sequence) {
+        const std::string gcode = slice({ cube(20) },
+            multifilament_config(3, {
+                { "outer_wall_filament_id", 2 },
+                { "inner_wall_filament_id", 2 },
+                { "brim_filament_id",       brim_filament },
+                { "skirt_loops",            0 },
+                { "brim_type",              "outer_only" },
+                { "brim_width",             5 },
+                { "print_sequence",         print_sequence },
+            }));
+        CHECK(tools_for_role(gcode, "brim")      == std::set<int>{ brim_filament - 1 });
+        CHECK(tools_for_role(gcode, "perimeter") == std::set<int>{ 1 });
+    }
+}
+
+// Only the brim and the tool ordering depend on the brim filament on a flat bed.
+TEST_CASE("Changing the brim filament keeps the sliced object", "[MultiFilament]")
+{
+    DynamicPrintConfig config = multifilament_config(3, {
+        { "outer_wall_filament_id", 2 },
+        { "inner_wall_filament_id", 2 },
+        { "brim_filament_id",       2 },
+        { "skirt_loops",            0 },
+        { "brim_type",              "outer_only" },
+        { "brim_width",             5 },
+    });
+    // init_print sets this on its own copy; set it here too so the re-apply below differs in the brim filament only.
+    config.set_key_value("gcode_comments", new ConfigOptionBool(true));
+
+    Print print;
+    Model model;
+    init_print(std::vector<TriangleMesh>{ cube(20) }, print, model, config);
+    REQUIRE(tools_for_role(gcode(print), "brim") == std::set<int>{ 1 });
+
+    config.set_deserialize_strict({ { "brim_filament_id", 3 } });
+    DynamicPrintConfig changed = DynamicPrintConfig::full_print_config();
+    changed.apply(config);
+    print.apply(model, changed);
+    CHECK(print.objects().front()->is_step_done(posSupportMaterial));
+    CHECK_FALSE(print.is_step_done(psSkirtBrim));
+    CHECK(tools_for_role(gcode(print), "brim") == std::set<int>{ 2 });
+}
+
+// The wall filament prints the first layer first; a brim left on Default goes with it,
+// a brim assigned to the infill filament waits for that filament's pass.
+TEST_CASE("Brim waits for its assigned filament when another prints first", "[MultiFilament]")
+{
+    auto [brim_filament, brim_tool] = GENERATE(table<int, int>({ { 0, 0 }, { 2, 1 } }));
+    DYNAMIC_SECTION("brim filament " << brim_filament) {
+        const std::string gcode = slice({ cube(20) },
+            multifilament_config(2, {
+                { "outer_wall_filament_id",     1 },
+                { "inner_wall_filament_id",     1 },
+                { "sparse_infill_filament_id",  2 },
+                { "internal_solid_filament_id", 2 },
+                { "top_surface_filament_id",    2 },
+                { "bottom_surface_filament_id", 2 },
+                { "brim_filament_id",           brim_filament },
+                { "skirt_loops",                0 },
+                { "brim_type",                  "outer_only" },
+                { "brim_width",                 5 },
+            }));
+        CHECK(tools_for_role(gcode, "brim") == std::set<int>{ brim_tool });
+    }
 }
 
 // 0-based tool indices extruding under the ";TYPE:" marker of `feature`.
@@ -2351,6 +2424,61 @@ TEST_CASE("A tool parked at its idle temperature is heated again when it is pick
     }
 }
 
+// The preheat backtrace does not reach past the print's start position (here G28), so a tool whose first use comes
+// sooner than preheat_time after it is preheated right after the start position, the earliest point allowed -- unless
+// the start G-code already heats it to its printing temperature.
+TEST_CASE("A tool first used within the preheat time of the print start is preheated after the start position", "[MultiFilament]")
+{
+    const bool start_heats_t1 = GENERATE(false, true);
+    CAPTURE(start_heats_t1);
+    // A start G-code that sets a temperature replaces the slicer's own start temperatures for every tool.
+    const std::string start_gcode = std::string("M104 S200 T0\n") + (start_heats_t1 ? "M104 S200 T1\n" : "") +
+                                    "G28 ; home\nM109 S200 T0\n";
+    const std::string gcode = slice_with_object_overrides(
+        { cube(5), cube(5) },
+        multifilament_config(2, {
+            { "nozzle_diameter",                  "0.4,0.4" },
+            { "printer_extruder_id",              "1,2" },
+            { "printer_extruder_variant",         "Direct Drive Standard,Direct Drive Standard" },
+            { "extruder_printable_height",        "0,0" },
+            { "single_extruder_multi_material",   0 },
+            { "enable_prime_tower",               0 },
+            { "ooze_prevention",                  1 },
+            // The setting's maximum, far longer than the first layer of a 5 mm cube, so T1's first pick is within
+            // it of the start.
+            { "preheat_time",                     120 },
+            { "preheat_steps",                    1 },
+            { "nozzle_temperature_initial_layer", "200,200" },
+            { "nozzle_temperature",               "200,200" },
+            { "machine_start_gcode",              start_gcode },
+        }),
+        { { { "extruder", 1 } }, { { "extruder", 2 } } });
+
+    std::vector<std::string> lines;
+    {
+        std::istringstream stream(gcode);
+        for (std::string line; std::getline(stream, line);)
+            lines.push_back(line);
+    }
+    const auto first = [&lines](auto pred) {
+        return size_t(std::find_if(lines.begin(), lines.end(), pred) - lines.begin());
+    };
+    const size_t home    = first([](const std::string& l) { return l.rfind("G28", 0) == 0; });
+    const size_t pick_t1 = first([](const std::string& l) { return l.rfind("T1", 0) == 0; });
+    const size_t preheat = first([](const std::string& l) {
+        return l.rfind("M104", 0) == 0 && l.find("preheat T1") != std::string::npos;
+    });
+    REQUIRE(home < lines.size());
+    REQUIRE(pick_t1 < lines.size());
+    if (start_heats_t1) {
+        CHECK(preheat == lines.size());
+    } else {
+        REQUIRE(preheat < lines.size());
+        CHECK(home < preheat);
+        CHECK(preheat < pick_t1);
+    }
+}
+
 // Regression for #14753: emit M104 after T0 in single-extruder MM to override firmware/CFS reset.
 TEST_CASE("Single-extruder MM emits M104 after T0 toolchange", "[MultiFilament]")
 {
@@ -2446,4 +2574,166 @@ TEST_CASE("Custom M104 in filament start G-code wins on a T0-only print", "[Mult
     REQUIRE(temps_after_t0.size() >= 2);
     CHECK(temps_after_t0.front() == slicer_temp);
     CHECK(temps_after_t0.back() == custom_temp);
+}
+
+// A pause placed on the moves slider sits before one color change of its layer: after the previous color printed
+// and before the change, so the change and its purge run after the print resumes. Two 10 mm cubes on filaments
+// 1 and 2 at 0.2 mm layers change color once per layer, so at 5 mm the layer changes to exactly one of them.
+TEST_CASE("A mid-layer pause comes just before its color change", "[MultiFilament][MidLayerPause]")
+{
+    const double pause_z = 5.0;
+    const auto   slice_with_pause = [pause_z](int filament, int occurrence) {
+        DynamicPrintConfig config = multifilament_config(2, {
+            { "enable_prime_tower",       "0" },
+            { "layer_height",             "0.2" },
+            { "initial_layer_print_height", "0.2" },
+            { "use_relative_e_distances", "1" },
+            { "machine_pause_gcode",      "M601 ; test pause" },
+        });
+        const std::vector<std::vector<ConfigBase::SetDeserializeItem>> overrides{ { { "extruder", "1" } }, { { "extruder", "2" } } };
+        TriangleMesh second = cube(10);
+        second.translate(20.0, 0.0, 0.0);
+        Print print;
+        Model model;
+        init_print({ cube(10), std::move(second) }, print, model, config, &overrides);
+        CustomGCode::Item pause{ pause_z, CustomGCode::PausePrint, filament, "", "" };
+        pause.mid_layer_filament   = filament;
+        pause.mid_layer_occurrence = occurrence;
+        model.plates_custom_gcodes[model.curr_plate_index].gcodes = { pause };
+        print.apply(model, config);
+        return Test::gcode(print);
+    };
+    const auto lines_of = [](const std::string &gcode) {
+        std::vector<std::string> lines;
+        std::istringstream stream(gcode);
+        for (std::string line; std::getline(stream, line);)
+            lines.emplace_back(std::move(line));
+        return lines;
+    };
+    const auto is_pause = [](const std::string &line) { return line.rfind("M601 ; test pause", 0) == 0; };
+    const auto is_extrusion = [](const std::string &line) {
+        const size_t e = line.find(" E");
+        return line.rfind("G1 ", 0) == 0 && (line.find(" X") != std::string::npos || line.find(" Y") != std::string::npos) &&
+               e != std::string::npos && line[e + 2] != '-';
+    };
+
+    int pauses = 0;
+    for (int filament : { 1, 2 }) {
+        const std::vector<std::string> lines = lines_of(slice_with_pause(filament, 0));
+        const auto pause = std::find_if(lines.begin(), lines.end(), is_pause);
+        if (pause == lines.end())
+            continue;
+        ++pauses;
+        INFO("pause before the change to filament " << filament);
+        CHECK(std::count_if(lines.begin(), lines.end(), is_pause) == 1);
+
+        // On the layer at 5 mm, after that layer printed something.
+        auto layer_start = std::find_if(std::make_reverse_iterator(pause), lines.rend(),
+                                        [](const std::string &line) { return line.rfind(";Z:", 0) == 0; });
+        REQUIRE(layer_start != lines.rend());
+        CHECK_THAT(std::stod(layer_start->substr(3)), Catch::Matchers::WithinAbs(pause_z, 1e-3));
+        CHECK(std::any_of(layer_start.base(), pause, is_extrusion));
+
+        // Followed by the change to that filament with nothing extruded in between.
+        const auto change = std::find_if(pause, lines.end(), [](const std::string &line) {
+            return line.size() >= 2 && line[0] == 'T' && std::isdigit((unsigned char) line[1]); });
+        REQUIRE(change != lines.end());
+        CHECK(*change == "T" + std::to_string(filament - 1));
+        CHECK(std::none_of(pause, change, is_extrusion));
+    }
+    CHECK(pauses == 1);
+
+    // The layer makes one change only, so a pause at its second change is left out rather than placed elsewhere.
+    for (int filament : { 1, 2 }) {
+        const std::vector<std::string> lines = lines_of(slice_with_pause(filament, 1));
+        CHECK(std::none_of(lines.begin(), lines.end(), is_pause));
+    }
+}
+
+// Two filaments on a two-nozzle Marlin printer that emits its machine limits, with the second
+// filament printing the infill so that its nozzle is used.
+static DynamicPrintConfig two_nozzle_map_config(const std::string &filament_map, const std::string &physical_extruder_map = "0")
+{
+    DynamicPrintConfig config = multifilament_config(2, {
+        { "gcode_flavor",                   "marlin2" },
+        { "emit_machine_limits_to_gcode",   1 },
+        { "single_extruder_multi_material", 0 },
+        { "nozzle_diameter",                "0.4,0.4" },
+        { "extruder_printable_height",      "0,0" },
+        { "printer_extruder_id",            "1,2" },
+        { "printer_extruder_variant",       "Direct Drive Standard,Direct Drive Standard" },
+        { "filament_map_mode",              "Manual" },
+        { "filament_map",                   filament_map },
+        { "physical_extruder_map",          physical_extruder_map },
+        { "sparse_infill_filament_id",      2 },
+        { "enable_prime_tower",             0 },
+        { "skirt_loops",                    0 },
+        { "brim_type",                      "no_brim" },
+        // the nozzles sit at different offsets, so the body shows which nozzle printed
+        { "extruder_offset",                "0x0,10x5" },
+    });
+    size_flush_to_nozzles(config);
+    // one value per nozzle and, for the paired keys, per silent/normal column
+    for (const char *key : { "machine_max_acceleration_x", "machine_max_acceleration_y", "machine_max_acceleration_z",
+                             "machine_max_acceleration_e", "machine_max_acceleration_extruding", "machine_max_acceleration_retracting",
+                             "machine_max_acceleration_travel", "machine_max_speed_x", "machine_max_speed_y", "machine_max_speed_z",
+                             "machine_max_speed_e", "machine_max_jerk_x", "machine_max_jerk_y", "machine_max_jerk_z",
+                             "machine_max_jerk_e", "machine_max_junction_deviation" })
+        config.set_key_value(key, new ConfigOptionFloats({ 500, 0, 1000, 0 }));
+    return config;
+}
+
+// The G-code without the timestamp line and the config block, which echo the config under test.
+static std::string gcode_body(const std::string &gcode)
+{
+    std::string body;
+    bool        in_config = false;
+    std::istringstream in(gcode);
+    for (std::string line; std::getline(in, line);) {
+        if (line.rfind("; CONFIG_BLOCK_START", 0) == 0)
+            in_config = true;
+        if (! in_config && line.rfind("; generated by", 0) != 0)
+            body += line + "\n";
+        if (line.rfind("; CONFIG_BLOCK_END", 0) == 0)
+            in_config = false;
+    }
+    return body;
+}
+
+// A filament_map entry the printer has no nozzle for prints on the first nozzle.
+TEST_CASE("A filament_map entry outside the nozzle range prints that filament on the first nozzle", "[MultiFilament]")
+{
+    const std::string nozzle1 = gcode_body(slice({ cube(20) }, two_nozzle_map_config("1,1")));
+    const std::string nozzle2 = gcode_body(slice({ cube(20) }, two_nozzle_map_config("1,2")));
+    REQUIRE(nozzle1.find("M201 ") != std::string::npos);
+    // the nozzles are distinguishable in the body
+    REQUIRE(nozzle1 != nozzle2);
+
+    const std::string bad_value = GENERATE(as<std::string>(), "0", "3", "-1", "100");
+    DYNAMIC_SECTION("filament 2 mapped to nozzle " << bad_value) {
+        const std::string body = gcode_body(slice({ cube(20) }, two_nozzle_map_config("1," + bad_value)));
+        CHECK(body == nozzle1);
+        CHECK(body != nozzle2);
+    }
+}
+
+// In-range maps are left as they are.
+TEST_CASE("A filament_map within the nozzle range is not changed", "[MultiFilament]")
+{
+    DynamicPrintConfig config = two_nozzle_map_config("1,2");
+    Print              print;
+    init_and_process_print({ cube(20) }, print, config);
+    CHECK(print.config().filament_map.values == std::vector<int>({ 1, 2 }));
+}
+
+// The map value is a firmware tool number, so a value outside the nozzle range must not index the
+// per-nozzle first-filament table.
+TEST_CASE("A physical_extruder_map entry outside the nozzle range still exports", "[MultiFilament]")
+{
+    const std::string map = GENERATE(as<std::string>(), "0,-1", "0,2", "0,100", "-1,0");
+    DYNAMIC_SECTION("physical_extruder_map " << map) {
+        const std::string gcode = slice({ cube(20) }, two_nozzle_map_config("1,2", map));
+        CHECK(gcode.find("; CONFIG_BLOCK_END") != std::string::npos);
+        CHECK(gcode.find("; EXECUTABLE_BLOCK_END") != std::string::npos);
+    }
 }

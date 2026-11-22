@@ -27,6 +27,7 @@
 #include "HMS.hpp"
 #include "I18N.hpp"
 #include "Widgets/Label.hpp"
+#include "LazyPage.hpp" // MainFrame::m_monitor_page
 #include "MainFrame.hpp"
 #include "Monitor.hpp"
 #include "StatusPanel.hpp"

@@ -45103,6 +45103,50 @@ msgid "Printhead outline"
 msgstr "Printkopomtrek"
 
 # AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Pauze toevoegen bij kleurwissel"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Verwijdert de pauze vóór deze kleurwissel."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Pauzeert vlak vóór de laatste kleurwissel tot hier in deze laag. De filamentwissel en het spoelen gebeuren na het hervatten."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Schuif de schuifregelaar naar of voorbij een kleurwissel in deze laag om ervoor te pauzeren."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "De pauze midden in de laag op %1% mm is weggelaten: die laag wisselt daar niet meer naar filament %2%. Schuif de onderste schuifregelaar naar een kleurwissel in die laag en voeg de pauze opnieuw toe."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pauze midden in deze laag, vóór de wissel naar filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pauze midden in deze laag, vóór wissel %1% naar filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Pauze vóór de wissel naar filament %1% verwijderen"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Pauze vóór wissel %1% naar filament %2% verwijderen"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Verwijdert deze pauze midden in de laag. De kleurwissel blijft."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Midden laag"
+
+# AI Translated
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Opties tonen bij het importeren van een STEP-bestand"
 

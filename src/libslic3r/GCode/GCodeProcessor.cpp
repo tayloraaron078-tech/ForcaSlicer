@@ -1055,7 +1055,8 @@ public:
     void insert_lines(const Backtrace&                                                    backtrace,
                       const std::string&                                                  cmd,
                       std::function<std::string(unsigned int, const std::vector<float>&)> line_inserter,
-                      std::function<std::string(const std::string&)>                      line_replacer)
+                      std::function<std::string(const std::string&)>                      line_replacer,
+                      std::function<bool(const std::string&)>                             makes_start_line_redundant)
     {
         // Orca: find start pos by seaching G28/G29/PRINT_START/START_PRINT commands
         auto is_start_pos = [](const std::string& curr_cmd) {
@@ -1081,12 +1082,23 @@ public:
                     curr_cmd = GCodeReader::GCodeLine::extract_cmd(rev_it->line);
             }
 
-            // we met the previous evenience of cmd, or the start position, stop inserting lines
-            if (rev_it != m_lines.rend() && (curr_cmd == cmd || is_start_pos(curr_cmd)))
+            // we met the previous evenience of cmd, stop inserting lines
+            if (rev_it != m_lines.rend() && curr_cmd == cmd)
                 break;
+            // Orca: at the start position, insert the line right after it (the earliest point allowed) and stop, so a
+            // command first used sooner than the backtrace time after the start still gets its line. Only when time
+            // passes in between and no cached line already does its job (e.g. the start G-code heats every tool), and
+            // without the last_time_insertion check: the lines before the first move all have time 0, its initial value.
+            const bool at_start_pos = rev_it != m_lines.rend() && is_start_pos(curr_cmd);
+            const bool insert_here  = at_start_pos ?
+                                          rev_it->times[Normal] < m_times[Normal] &&
+                                              std::none_of(m_lines.begin(), m_lines.end(), [&](const LineData& data) {
+                                                  return makes_start_line_redundant(data.line);
+                                              }) :
+                                          rev_it->times[Normal] != last_time_insertion;
 
             // insert the line for the current step
-            if (rev_it != m_lines.rend() && rev_it != start_rev_it && rev_it->times[Normal] != last_time_insertion) {
+            if (rev_it != m_lines.rend() && rev_it != start_rev_it && insert_here) {
                 last_time_insertion = rev_it->times[Normal];
                 std::vector<float> time_diffs;
                 time_diffs.push_back(m_times[Normal] - last_time_insertion);
@@ -1106,6 +1118,8 @@ public:
 
                 ++m_added_lines_counter;
             }
+            if (at_start_pos)
+                break;
         }
     }
 
@@ -1551,17 +1565,17 @@ void GCodeProcessor::run_post_process()
                     if (m_print != nullptr)
                         m_print->active_step_add_warning(PrintStateBase::WarningLevel::CRITICAL, warning);
                 }
+                // Orca: use the locally-tracked layer index (current_layer_id) rather than
+                // the stale m_layer_id from the analysis pass. current_layer_id == 0 means
+                // we haven't reached the first ;LAYER_CHANGE marker yet (e.g. tool change
+                // inside start gcode); == 1 means we are inside the first printed layer.
+                // Both cases should use the first-layer nozzle temperature.
+                const int temperature = int(current_layer_id > 1 ? m_filament_nozzle_temp[tool_number] :
+                                                                 m_filament_nozzle_temp_first_layer[tool_number]);
                 export_line.insert_lines(
                     backtrace, cmd,
                     // line inserter
-                    [tool_number, this, &current_layer_id](unsigned int id, const std::vector<float>& time_diffs) {
-                        // Orca: use the locally-tracked layer index (current_layer_id) rather than
-                        // the stale m_layer_id from the analysis pass. current_layer_id == 0 means
-                        // we haven't reached the first ;LAYER_CHANGE marker yet (e.g. tool change
-                        // inside start gcode); == 1 means we are inside the first printed layer.
-                        // Both cases should use the first-layer nozzle temperature.
-                        const int temperature = int(current_layer_id > 1 ? m_filament_nozzle_temp[tool_number] :
-                                                                         m_filament_nozzle_temp_first_layer[tool_number]);
+                    [tool_number, this, temperature](unsigned int id, const std::vector<float>& time_diffs) {
                         // Orca: M104.1 for XL printers, I can't find the documentation for this so I copied the C++ comments from
                         // Prusa-Firmware-Buddy here
                         /**
@@ -1604,6 +1618,18 @@ void GCodeProcessor::run_post_process()
                             }
                         }
                         return line;
+                    },
+                    // makes the preheat right after the start position redundant: the start G-code already heats the
+                    // tool to at least the preheat temperature (not to an idle temperature)
+                    [this, tool_number, temperature](const std::string& line) {
+                        if (!GCodeReader::GCodeLine::cmd_is(line, "M104") && !GCodeReader::GCodeLine::cmd_is(line, "M109"))
+                            return false;
+                        GCodeReader::GCodeLine gline;
+                        GCodeReader reader;
+                        reader.parse_line(line, [&gline](GCodeReader& reader, const GCodeReader::GCodeLine& l) { gline = l; });
+                        float tool, temp;
+                        return gline.has_value('T', tool) && gline.has_value('S', temp) && int(temp) >= temperature &&
+                               static_cast<int>(tool) == (tool_number < m_physical_extruder_map.size() ? m_physical_extruder_map[tool_number] : tool_number);
                     }
                 );
             }
@@ -3779,6 +3805,7 @@ void GCodeProcessor::reset()
     m_travel_dist = 0.0f;
     m_fan_speed = 0.0f;
     m_z_offset = 0.0f;
+    m_pressure_advance = 0.0f;
 
     m_extrusion_role = erNone;
 

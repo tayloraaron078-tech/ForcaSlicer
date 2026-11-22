@@ -43743,3 +43743,48 @@ msgstr "勾选此项，让模型网站上的 \"Open in OrcaSlicer\" 按钮在 Fo
 # AI Translated
 msgid "Printhead outline"
 msgstr "打印头轮廓"
+
+
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "在颜色更换处添加暂停打印"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "删除此颜色更换前的暂停打印。"
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "在该层中到此为止的最后一次颜色更换之前暂停。耗材丝更换和冲刷在恢复打印后进行。"
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "将滑块移到该层的某次颜色更换处或其后，即可在其之前暂停。"
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "已省略 %1% mm 层中间的暂停：该层在那里不再更换为耗材丝 %2%。请将下方滑块移到该层的某次颜色更换处，然后重新添加暂停。"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "在该层中间暂停，位于更换为耗材丝 %1% 之前"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "在该层中间暂停，位于第 %1% 次更换为耗材丝 %2% 之前"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "删除更换为耗材丝 %1% 之前的暂停打印"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "删除第 %1% 次更换为耗材丝 %2% 之前的暂停打印"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "删除此层中间的暂停。颜色更换保留。"
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "层中间"

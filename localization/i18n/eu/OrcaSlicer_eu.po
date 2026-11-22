@@ -42426,6 +42426,50 @@ msgstr "Markatu hau eredu-webguneetako \"Open in OrcaSlicer\" botoiek eredua For
 msgid "Printhead outline"
 msgstr "Buruaren ingurua"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Gehitu pausa kolore aldaketan"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Kendu kolore aldaketa honen aurreko pausa."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Pausa egiten du geruza honetan hona arteko azken kolore aldaketaren aurretik. Filamentu aldaketa eta haren purga berrekin ondoren egiten dira."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Mugitu graduatzailea geruza honetako kolore aldaketa batera edo haratago, haren aurretik pausa egiteko."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "%1% mm-ko geruzaren erdiko pausa kendu egin da: geruza horrek ez du han %2% filamentura aldatzen jada. Mugitu beheko graduatzailea geruza horretako kolore aldaketa batera eta gehitu pausa berriro."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pausa geruza honen erdian, %1% filamenturako aldaketaren aurretik"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pausa geruza honen erdian, %2% filamenturako %1%. aldaketaren aurretik"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Ezabatu %1% filamenturako aldaketaren aurreko pausa"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Ezabatu %2% filamenturako %1%. aldaketaren aurreko pausa"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Kendu geruzaren erdiko pausa hau. Kolore aldaketa mantentzen da."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Geruza erdia"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Erakutsi aukerak STEP fitxategia inportatzean"
 

@@ -43591,6 +43591,50 @@ msgstr "Позначте, щоб кнопки \"Open in OrcaSlicer\" на сай
 msgid "Printhead outline"
 msgstr "Контур друкувальної головки"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Додати паузу при зміні кольору"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Видалити паузу перед цією зміною кольору."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Пауза безпосередньо перед останньою зміною кольору до цього місця на цьому шарі. Зміна філаменту та його очищення відбудуться після відновлення."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Перемістіть повзунок до зміни кольору на цьому шарі або далі, щоб поставити паузу перед нею."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Паузу в середині шару на %1% мм пропущено: цей шар більше не переходить там на філамент %2%. Перемістіть нижній повзунок до зміни кольору на цьому шарі та додайте паузу знову."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Пауза в середині цього шару, перед зміною на філамент %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Пауза в середині цього шару, перед зміною № %1% на філамент %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Видалити паузу перед зміною на філамент %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Видалити паузу перед зміною № %1% на філамент %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Видалити цю паузу в середині шару. Зміна кольору залишиться."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Середина шару"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Показувати параметри під час імпортування файлу STEP"
 

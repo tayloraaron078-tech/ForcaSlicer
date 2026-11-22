@@ -44288,6 +44288,50 @@ msgstr "モデルサイトの「Open in OrcaSlicer」ボタンでモデルを Fo
 msgid "Printhead outline"
 msgstr "プリントヘッド外形"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "色変更で一時停止を追加"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "この色変更の前の一時停止を削除します。"
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "このレイヤーで、ここまでの最後の色変更の直前に一時停止します。フィラメントの交換とパージは再開後に行われます。"
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "このレイヤーの色変更の位置かそれより先にスライダーを動かすと、その前で一時停止できます。"
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "%1% mm のレイヤー途中の一時停止は省略されました。そのレイヤーはそこでフィラメント %2% に変更しなくなりました。下のスライダーをそのレイヤーの色変更に合わせ、一時停止を追加し直してください。"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "このレイヤーの途中で一時停止（フィラメント %1% への変更の前）"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "このレイヤーの途中で一時停止（フィラメント %2% への %1% 回目の変更の前）"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "フィラメント %1% への変更前の一時停止を削除"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "フィラメント %2% への %1% 回目の変更前の一時停止を削除"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "このレイヤー途中の一時停止を削除します。色変更はそのまま残ります。"
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "レイヤー途中"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "STEPファイルインポート時にオプションを表示"
 

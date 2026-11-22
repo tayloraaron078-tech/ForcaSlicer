@@ -220,7 +220,7 @@ private:
     // Belt printers: the print Z of each viewer layer, in the viewer's layer numbering.
     std::vector<double> m_belt_layer_zs;
     //BBS: save m_gcode_result as well
-    const GCodeProcessorResult* m_gcode_result;
+    const GCodeProcessorResult* m_gcode_result{ nullptr };
     std::array<unsigned int, static_cast<size_t>(EMoveType::Count)> m_move_type_counts{};
     std::array<std::array<float, static_cast<size_t>(PrintEstimatedStatistics::ETimeMode::Count)>, static_cast<size_t>(EMoveType::Count)> m_move_type_times{};
     std::array<float, static_cast<size_t>(EMoveType::Count)> m_move_type_distances{};
@@ -354,10 +354,10 @@ private:
         // the quad, cut by the other caps
         std::array<float, 2> quad_z_range{ -FLT_MAX, FLT_MAX };
         std::array<float, 4> quad_plane{ 0.0f, 0.0f, 0.0f, 1.0f };
-        // which of the sampled cap colours it takes, none for the body's own
+        // which of the sampled cap colours it takes
         std::optional<size_t> color_index;
     };
-    // the bottom cap, then the top one, as the colours are indexed, then the section view's; a cap
+    // the bottom cap, then the top one, then the section view's, as the colours are indexed; a cap
     // the solid is not cut at is left without a quad
     void init_solid_model_caps(const std::array<float, 2>& z_range, std::array<SolidModelCap, 3>& caps) const;
     void release_caster_depth();
@@ -392,8 +392,8 @@ private:
         {
             // unset where the view colours by filament, or no vertex of the role was found there
             std::optional<ColorRGBA> body;
-            // the bottom and top caps
-            std::array<std::optional<ColorRGBA>, 2> caps;
+            // the bottom and top caps, then the section view's, sampled over every layer of the solid
+            std::array<std::optional<ColorRGBA>, 3> caps;
         };
         std::vector<Body> bodies;
     };
@@ -517,6 +517,19 @@ public:
     IMSlider *get_layers_slider() { return m_layers_slider; }
     void enable_moves_slider(bool enable) const;
     void update_moves_slider(bool set_to_max = false);
+    // Forca: mid-layer pauses at the color changes shown on the moves slider (IMSlider::MidLayerPauseHooks).
+    struct MidLayerColorChange
+    {
+        float  print_z;
+        int    filament;   // 1-based, the filament changed to
+        int    occurrence; // of the changes to that filament on the layer, from 0
+        size_t move_id;    // the Tool_change move in m_gcode_result->moves
+    };
+    std::vector<MidLayerColorChange>   mid_layer_color_changes(size_t move_id) const;
+    std::optional<size_t>              moves_slider_move(int slider_pos) const;
+    std::optional<MidLayerColorChange> mid_layer_color_change_at(int slider_pos) const;
+    std::vector<CustomGCode::Item>::iterator find_mid_layer_pause(const MidLayerColorChange &change);
+    void                               set_mid_layer_pause_hooks();
     void update_layers_slider_mode();
 
     const libvgcode::Interval& get_gcode_view_full_range() const { return m_viewer.get_view_full_range(); }
@@ -533,8 +546,8 @@ public:
     }
     // ORCA: select a view type in the preview combo box and apply it
     void select_view_type(libvgcode::EViewType type);
-    // ORCA: apply the "preview_default_view_type" preference, see the definition for the supported values
-    void apply_default_view_type();
+    // ORCA: apply the "preview_default_view_type" preference, or the view of the calibration being previewed
+    void apply_default_view_type(std::optional<libvgcode::EViewType> calibration_view = std::nullopt);
 
     // ORCA: stable, locale independent name of a view type, as stored in the application config
     static std::string view_type_to_config_name(libvgcode::EViewType type);

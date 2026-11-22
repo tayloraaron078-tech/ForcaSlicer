@@ -43,7 +43,8 @@
 #include "slic3r/GUI/GLCanvas3D.hpp"
 #include "slic3r/GUI/I18N.hpp"
 #include "slic3r/GUI/Plater.hpp"
-
+#include "slic3r/GUI/format.hpp"
+#include <optional>
 namespace Slic3r {
 
 using namespace CustomGCode;
@@ -201,6 +202,9 @@ bool IMSlider::init_texture()
         result &= IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/im_gcode_pause.svg", 14, 14, m_pause_icon_id);
         result &= IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/im_gcode_custom.svg", 14, 14, m_custom_icon_id);
         result &= IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/im_slider_delete.svg", 14, 14, m_delete_icon_id);
+    } else {
+        // Forca: marks the mid-layer pauses on the moves slider.
+        result &= IMTexture::load_from_svg_file(Slic3r::resources_dir() + "/images/im_gcode_pause.svg", 14, 14, m_pause_icon_id);
     }
 
     return result;
@@ -264,6 +268,12 @@ Info IMSlider::GetTicksValues() const
             values.emplace_back(CustomGCode::Item{m_values[tick.tick], tick.type, tick.extruder, tick.color, tick.extra});
         }
 
+    // Forca: the mid-layer pauses, which have no tick, kept in print_z order with the rest.
+    if (!m_mid_layer_pauses.empty()) {
+        values.insert(values.end(), m_mid_layer_pauses.begin(), m_mid_layer_pauses.end());
+        std::stable_sort(values.begin(), values.end());
+    }
+
     if (m_force_mode_apply) custom_gcode_per_print_z.mode = m_mode;
 
     return custom_gcode_per_print_z;
@@ -271,6 +281,11 @@ Info IMSlider::GetTicksValues() const
 
 void IMSlider::SetTicksValues(const Info &custom_gcode_per_print_z)
 {
+    m_mid_layer_pauses.clear();
+    for (const CustomGCode::Item &item : custom_gcode_per_print_z.gcodes)
+        if (item.is_mid_layer_pause())
+            m_mid_layer_pauses.push_back(item);
+
     if (m_values.empty()) {
         m_ticks.mode = m_mode;
         return;
@@ -283,6 +298,8 @@ void IMSlider::SetTicksValues(const Info &custom_gcode_per_print_z)
     m_ticks.ticks.clear();
     const std::vector<CustomGCode::Item> &heights = custom_gcode_per_print_z.gcodes;
     for (auto h : heights) {
+        if (h.is_mid_layer_pause())
+            continue;
         int tick = get_tick_from_value(h.print_z, true);
         if (tick >= 0) m_ticks.ticks.emplace(TickCode{tick, h.type, h.extruder, h.color, h.extra});
     }
@@ -605,6 +622,25 @@ bool IMSlider::horizontal_slider(const char* str_id, int* value, int v_min, int 
     window->DrawList->AddCircleFilled(handle_center, handle_radius - handle_border, handle_clr);
     window->DrawList->AddCircle(handle_center, handle_radius + 3.0f * m_scale, handle_clr, 0, 2.0f * m_scale);
 
+    // Forca: the mid-layer pauses of the layer shown, marked above the groove; a right click on the handle opens
+    // their menu, as on the layer slider.
+    if (m_mid_layer_pause_hooks.marks) {
+        const ImVec2 icon_size = ImVec2(14.0f, 14.0f) * m_scale;
+        for (int mark : m_mid_layer_pause_hooks.marks()) {
+            if (mark < v_min || mark > v_max)
+                continue;
+            const float mark_pos = get_pos_from_value(v_min, v_max, mark, groove);
+            window->DrawList->AddRectFilled(ImVec2(mark_pos - 1.0f * m_scale, groove.Min.y - 4.0f * m_scale),
+                                            ImVec2(mark_pos + 1.0f * m_scale, groove.Max.y + 4.0f * m_scale), BRAND_COLOR);
+            button_with_pos(m_pause_icon_id, icon_size, ImVec2(mark_pos - 0.5f * icon_size.x, bg_rect.Min.y - icon_size.y - 2.0f * m_scale));
+        }
+        const bool menu_open = ImGui::IsPopupOpen("moves_slider_pause_menu");
+        if (!menu_open && ImGui::ItemHoverable(handle, id) && context.IO.MouseClicked[1])
+            m_show_menu = true;
+        else if (!menu_open && (context.IO.MouseClicked[1] || context.IO.MouseClicked[0]))
+            m_show_menu = false;
+    }
+
     // draw label
     const std::string value_label = std::to_string(*value);
     const ImVec2 text_content_size = ImGui::CalcTextSize(value_label.c_str());
@@ -719,6 +755,11 @@ void IMSlider::draw_custom_label_block(const ImVec2 anchor, Type type)
     default:
         break;
     }
+    draw_label_block(anchor, label);
+}
+
+void IMSlider::draw_label_block(const ImVec2 anchor, const wxString &label)
+{
     const ImVec2 text_size = ImGui::CalcTextSize(into_u8(label).c_str());
     const ImVec2 padding = ImVec2(4, 2) * m_scale;
     const ImU32  clr = IM_COL32(255, 111, 0, 255);
@@ -857,25 +898,32 @@ void IMSlider::show_tooltip(const TickCode& tick){
         time_str += "\n";
     }
     
+    std::string text;
     switch (tick.type)
     {
     case CustomGCode::ColorChange:
         break;
     case CustomGCode::PausePrint:
-        show_tooltip(time_str + _u8L("Pause:") + " \"" + gcode(PausePrint) + "\"");
+        text = time_str + _u8L("Pause:") + " \"" + gcode(PausePrint) + "\"";
         break;
     case CustomGCode::ToolChange:
-        show_tooltip(time_str + _u8L("Change Filament"));
+        text = time_str + _u8L("Change Filament");
         break;
     case CustomGCode::Template:
-        show_tooltip(time_str + _u8L("Custom Template:") + " \"" + gcode(Template) + "\"");
+        text = time_str + _u8L("Custom Template:") + " \"" + gcode(Template) + "\"";
         break;
     case CustomGCode::Custom:
-        show_tooltip(time_str + _u8L("Custom G-code:") + " \"" + tick.extra + "\"");
+        text = time_str + _u8L("Custom G-code:") + " \"" + tick.extra + "\"";
         break;
     default:
         break;
     }
+    // Forca: a layer with a tick shows its mid-layer pauses through the tick, so they are listed here too.
+    const std::string mid_layer = mid_layer_pause_tooltip(tick.tick);
+    if (!mid_layer.empty())
+        text += (text.empty() ? "" : "\n") + mid_layer;
+    if (!text.empty())
+        show_tooltip(text);
 }
 
 int IMSlider::get_tick_near_point(int v_min, int v_max, const ImVec2& pt, const ImRect& rect) {
@@ -1167,6 +1215,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
 
         // draw ticks
         draw_ticks(h_selected ? higher_slideable_region : lower_slideable_region);
+        draw_mid_layer_pause_marks(h_selected ? higher_slideable_region : lower_slideable_region);
         // draw colored band
         draw_colored_band(groove, h_selected ? higher_slideable_region : lower_slideable_region);
 
@@ -1234,6 +1283,7 @@ bool IMSlider::vertical_slider(const char* str_id, int* higher_value, int* lower
 
         // draw ticks
         draw_ticks(one_slideable_region);
+        draw_mid_layer_pause_marks(one_slideable_region);
         // draw colored band
         draw_colored_band(groove, one_slideable_region);
 
@@ -1292,6 +1342,7 @@ bool IMSlider::render(int canvas_width, int canvas_height)
             result = true;
             SetHigherValue(value);
         }
+        render_mid_layer_pause_menu(value);
         imgui.end();
     } else {
         ImVec2 size = ImVec2(VERTICAL_SLIDER_WINDOW_WIDTH * m_scale, 0.8f * canvas_height);
@@ -1525,6 +1576,130 @@ void IMSlider::render_menu() {
     render_go_to_layer_dialog();
 }
 
+void IMSlider::render_mid_layer_pause_menu(int value)
+{
+    if (!m_mid_layer_pause_hooks.state)
+        return;
+    if (m_show_menu) {
+        ImGui::OpenPopup("moves_slider_pause_menu");
+        m_show_menu = false;
+    }
+    ImGuiWrapper::push_menu_style(m_scale);
+    ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_ChildRounding, 4.0f * m_scale);
+    if (ImGui::BeginPopup("moves_slider_pause_menu", ImGuiWindowFlags_NoMove)) {
+        const int state   = m_mid_layer_pause_hooks.state(value);
+        bool      hovered = false;
+        if (state == 1) {
+            if (menu_item_with_icon(_u8L("Delete Pause").c_str(), "", ImVec2(0, 0), 0, false, true, &hovered))
+                m_mid_layer_pause_hooks.remove(value);
+            if (hovered)
+                show_tooltip(_u8L("Remove the pause before this color change."));
+        } else {
+            if (menu_item_with_icon(_u8L("Add Pause at Color Change").c_str(), "", ImVec2(0, 0), 0, false, state == 0, &hovered))
+                m_mid_layer_pause_hooks.add(value);
+            if (hovered)
+                show_tooltip(state == 0 ?
+                    _u8L("Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume.") :
+                    _u8L("Move the slider to or past a color change on this layer to pause before it."));
+        }
+        ImGui::EndPopup();
+    }
+    ImGui::PopStyleVar(1);
+    ImGuiWrapper::pop_menu_style();
+}
+
+std::vector<size_t> IMSlider::mid_layer_pauses_at(int tick)
+{
+    std::vector<size_t> out;
+    if (m_values.empty() || tick < 0)
+        return out;
+    for (size_t i = 0; i < m_mid_layer_pauses.size(); ++i)
+        if (get_tick_from_value(m_mid_layer_pauses[i].print_z, true) == tick)
+            out.push_back(i);
+    return out;
+}
+
+std::string IMSlider::mid_layer_pause_tooltip(int tick)
+{
+    std::string out;
+    for (size_t i : mid_layer_pauses_at(tick)) {
+        const CustomGCode::Item &item = m_mid_layer_pauses[i];
+        if (!out.empty())
+            out += "\n";
+        if (item.mid_layer_occurrence == 0)
+            out += format(_u8L("Pause in the middle of this layer, before the change to filament %1%"), item.mid_layer_filament);
+        else
+            // TRN %1% counts the changes to filament %2% on this layer: 2 is the second change to it, and so on.
+            out += format(_u8L("Pause in the middle of this layer, before change %1% to filament %2%"),
+                          item.mid_layer_occurrence + 1, item.mid_layer_filament);
+    }
+    return out;
+}
+
+void IMSlider::draw_mid_layer_pause_marks(const ImRect &slideable_region)
+{
+    if (m_mid_layer_pauses.empty() || m_values.empty())
+        return;
+    const ImVec2 tick_box           = ImVec2(52.0f, 16.0f) * m_scale;
+    const ImVec2 tick_offset        = ImVec2(22.0f, 14.0f) * m_scale;
+    const float  tick_width         = 1.0f * m_scale;
+    const ImVec2 icon_offset        = ImVec2(16.0f, 7.0f) * m_scale;
+    const ImVec2 icon_size          = ImVec2(14.0f, 14.0f) * m_scale;
+    const ImU32  tick_clr           = IM_COL32(144, 144, 144, 255);
+    const ImU32  tick_hover_box_clr = m_is_dark ? IM_COL32(65, 65, 71, 255) : IM_COL32(219, 253, 231, 255);
+    const float  center_x           = slideable_region.GetCenter().x;
+
+    std::set<int> ticks;
+    for (const CustomGCode::Item &item : m_mid_layer_pauses)
+        if (const int tick = get_tick_from_value(item.print_z, true); tick >= 0)
+            ticks.insert(tick);
+    for (const int tick : ticks) {
+        // A layer with a tick of its own shows that tick, whose tooltip lists these pauses too.
+        if (m_ticks.ticks.find(TickCode{ tick }) != m_ticks.ticks.end())
+            continue;
+        const float  pos = get_pos_from_value(GetMinValue(), GetMaxValue(), tick, slideable_region);
+        const ImRect hover_box(center_x - tick_box.x / 2, pos - tick_box.y / 2, center_x + tick_box.x / 2, pos + tick_box.y / 2);
+        if (ImGui::IsMouseHoveringRect(hover_box.Min, hover_box.Max)) {
+            ImGui::RenderFrame(hover_box.Min, { slideable_region.Min.x, hover_box.Max.y }, tick_hover_box_clr, false);
+            ImGui::RenderFrame({ slideable_region.Max.x, hover_box.Min.y }, hover_box.Max, tick_hover_box_clr, false);
+            show_tooltip(mid_layer_pause_tooltip(tick));
+            m_tick_value = tick;
+            m_tick_rect  = ImVec4(hover_box.Min.x, hover_box.Min.y, hover_box.Max.x, hover_box.Max.y);
+        }
+        ImGui::RenderFrame({ center_x - tick_offset.x, pos - tick_width }, { center_x - tick_offset.y, pos }, tick_clr, false);
+        ImGui::RenderFrame({ center_x + tick_offset.y, pos - tick_width }, { center_x + tick_offset.x, pos }, tick_clr, false);
+        button_with_pos(m_pause_icon_id, icon_size, ImVec2(center_x + icon_offset.x, pos - icon_offset.y));
+        // TRN Label on the layer slider for a layer that has a pause in its middle, at a color change.
+        draw_label_block(ImVec2(center_x - tick_offset.y, pos), _L("Mid-layer"));
+    }
+}
+
+void IMSlider::render_mid_layer_pause_delete_items()
+{
+    const int                 tick   = GetSelection() == ssLower ? GetLowerValue() : GetHigherValue();
+    const std::vector<size_t> pauses = mid_layer_pauses_at(tick);
+    std::optional<size_t>     to_delete;
+    for (size_t i : pauses) {
+        const CustomGCode::Item &item = m_mid_layer_pauses[i];
+        std::string              label;
+        if (item.mid_layer_occurrence == 0)
+            label = format(_u8L("Delete Pause Before Change to Filament %1%"), item.mid_layer_filament);
+        else
+            // TRN %1% counts the changes to filament %2% on this layer: 2 is the second change to it, and so on.
+            label = format(_u8L("Delete Pause Before Change %1% to Filament %2%"), item.mid_layer_occurrence + 1,
+                           item.mid_layer_filament);
+        bool hovered = false;
+        if (menu_item_with_icon(label.c_str(), "", ImVec2(0, 0), 0, false, true, &hovered))
+            to_delete = i;
+        if (hovered)
+            show_tooltip(_u8L("Remove this pause in the middle of the layer. The color change stays."));
+    }
+    if (to_delete) {
+        m_mid_layer_pauses.erase(m_mid_layer_pauses.begin() + std::ptrdiff_t(*to_delete));
+        post_ticks_changed_event(PausePrint);
+    }
+}
+
 void IMSlider::render_add_menu()
 {
     int extruder_num = m_extruder_colors.size();
@@ -1578,6 +1753,7 @@ void IMSlider::render_add_menu()
             }
         }
 
+        render_mid_layer_pause_delete_items();
         ImGui::EndPopup();
     }
 }
@@ -1636,6 +1812,7 @@ void IMSlider::render_edit_menu(const TickCode& tick)
         default:
             break;
         }
+        render_mid_layer_pause_delete_items();
         ImGui::EndPopup();
     }
 }

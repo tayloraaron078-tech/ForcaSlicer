@@ -14,6 +14,42 @@ repository; the public repository starts with Forca `0.1.0-alpha.1` as one commi
 
 ## Unreleased
 
+## 0.1.0-alpha.12 — 2026-11-22
+
+### Added
+- **Pause in the middle of a layer, at a color change:** in the Preview, move the bottom (moves) slider to or past a
+  color change, right-click its handle and pick **Add Pause at Color Change**. The print pauses after the old color
+  has printed and before the color change, with the nozzle retracted and lifted, so the filament change and its purge
+  run after you resume: time to clean strings between colors. A pause icon on the bottom slider marks it, and the
+  same menu deletes it. The layer slider marks each layer that has one ("Mid-layer"; hover to see which color change
+  it is before), and right-clicking that layer deletes it too. On Bambu printers the pause parks the head. The pause stays with its color change when settings move that change within the layer; if
+  the layer no longer makes that change, the pause is left out with a warning. It uses the printer's pause G-code.
+  Saved in the project; OrcaSlicer, Bambu Studio and older Forca builds read it as a pause at the start of the layer
+  (OrcaSlicer issue 6334).
+
+### Changed
+- **The Calibration Wizard prints each test with the filament you pick in it.** OrcaSlicer's calibrations now load a
+  chosen filament slot and print the test with it; the wizard passes the slot from its own filament list, so on a
+  project with several filaments the test uses that filament (and its tab shows it) rather than the one that happened
+  to be selected.
+
+### Fixed
+- **Merged OrcaSlicer up to `main` `0a2cdfc1a3` (2026-11-21)**: feature speeds can be set in mm³/s or as a percentage
+  of the filament's maximum volumetric speed (they also apply to Forca's filament bridge and overhang speeds), a
+  separate maximum volumetric speed for visible surfaces, a sparse infill strategy selector, a brim filament per
+  object, a filament choice for every calibration, faster slicing, the Type 1 prime tower showing each filament's
+  prime volume, and fixes for mouse-ear brims at rounded corners, the plate skirt start point in 3MF files, Tree
+  Hybrid's first layer, top surfaces printed over a single inner wall, a LAN Bambu printer losing its connection, the
+  Move gizmo with several instances, Creality and Elegoo printer connections, and crashes in Arachne and Clipper2.
+- **Toolchanger preheat near the print start:** with ooze prevention and a preheat time, a tool first used sooner
+  than the preheat time after the start (`G28`/`G29`/`PRINT_START`) got no preheat at all and the print waited for it
+  to heat at the tool change. It is now preheated right after the start position, unless the start G-code already
+  heats it to its printing temperature (OrcaSlicer issue 12826).
+- **Bambu Lab chamber fan left running after a heated print:** on the H2S, H2D, H2D Pro, H2C, P2S and X2D, a print
+  with a heated chamber put the air duct in heating mode and the end G-code never switched it back, so the chamber
+  circulation fan kept running after the print until the mode was changed on the printer. Their end G-code now sets
+  the air duct to cooling mode at the very end. The end G-code comes unchanged from OrcaSlicer and Bambu Studio.
+
 ## 0.1.0-alpha.11 — 2026-11-15
 
 ### Added

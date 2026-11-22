@@ -42473,6 +42473,50 @@ msgstr "Включите, чтобы кнопки \"Open in OrcaSlicer\" на с
 msgid "Printhead outline"
 msgstr "Контур печатающей головки"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Добавить паузу при смене цвета"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Удалить паузу перед этой сменой цвета."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Пауза прямо перед последней сменой цвета до этого места на этом слое. Смена материала и его очистка выполняются после возобновления."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Переместите ползунок к смене цвета на этом слое или дальше, чтобы поставить паузу перед ней."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Пауза в середине слоя на высоте %1% мм пропущена: этот слой больше не переходит там на материал %2%. Переместите нижний ползунок к смене цвета на этом слое и добавьте паузу снова."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Пауза в середине этого слоя, перед сменой на материал %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Пауза в середине этого слоя, перед сменой № %1% на материал %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Удалить паузу перед сменой на материал %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Удалить паузу перед сменой № %1% на материал %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Удалить эту паузу в середине слоя. Смена цвета останется."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Середина слоя"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Показывать настройки импорта STEP"
 

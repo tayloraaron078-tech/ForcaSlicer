@@ -42871,6 +42871,50 @@ msgstr "ทำเครื่องหมายเพื่อให้ปุ่
 msgid "Printhead outline"
 msgstr "โครงร่างหัวพิมพ์"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "เพิ่มการหยุดชั่วคราวที่การเปลี่ยนสี"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "ลบการหยุดชั่วคราวก่อนการเปลี่ยนสีนี้"
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "หยุดชั่วคราวก่อนการเปลี่ยนสีครั้งล่าสุดจนถึงจุดนี้ในเลเยอร์นี้ การเปลี่ยนเส้นพลาสติกและการไล่เส้นจะทำหลังจากพิมพ์ต่อ"
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "เลื่อนแถบเลื่อนไปที่การเปลี่ยนสีในเลเยอร์นี้หรือเลยไป เพื่อหยุดชั่วคราวก่อนการเปลี่ยนสีนั้น"
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "ข้ามการหยุดชั่วคราวกลางเลเยอร์ที่ %1% มม. แล้ว: เลเยอร์นั้นไม่ได้เปลี่ยนเป็นเส้นพลาสติก %2% ที่ตำแหน่งนั้นอีกต่อไป เลื่อนแถบเลื่อนด้านล่างไปที่การเปลี่ยนสีในเลเยอร์นั้นแล้วเพิ่มการหยุดชั่วคราวอีกครั้ง"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "หยุดชั่วคราวกลางเลเยอร์นี้ ก่อนเปลี่ยนเป็นเส้นพลาสติก %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "หยุดชั่วคราวกลางเลเยอร์นี้ ก่อนการเปลี่ยนครั้งที่ %1% เป็นเส้นพลาสติก %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "ลบการหยุดชั่วคราวก่อนเปลี่ยนเป็นเส้นพลาสติก %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "ลบการหยุดชั่วคราวก่อนการเปลี่ยนครั้งที่ %1% เป็นเส้นพลาสติก %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "ลบการหยุดชั่วคราวกลางเลเยอร์นี้ การเปลี่ยนสียังคงอยู่"
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "กลางเลเยอร์"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "แสดงตัวเลือกเมื่อนำเข้าไฟล์ STEP"
 

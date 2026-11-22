@@ -46,6 +46,7 @@
 #include <cstdio>
 #include <limits>
 #include <algorithm>
+#include <iterator>
 #include <map>
 #include <numeric>
 #include <queue>
@@ -1013,6 +1014,10 @@ void ToolOrdering::collect_extruders(const PrintObject &object, const std::vecto
     regional_iface_polys.reserve(regional_iface_regions.size());
     for (const PrintObject::RegionalIfaceRegion &r : regional_iface_regions)
         regional_iface_polys.emplace_back(to_polygons(r.footprint));
+    // A chosen brim filament prints the plate brim on the object's first layer.
+    if (object.config().brim_filament_id.value > 0 && object.has_brim() && !object.print()->config().belt_printer.value &&
+        !object.layers().empty())
+        this->tools_for_layer(object.layers().front()->print_z).extruders.push_back(object.config().brim_filament_id.value);
 
     // Collect the support extruders.
     for (auto support_layer : object.support_layers()) {
@@ -3408,6 +3413,20 @@ void ToolOrdering::assign_custom_gcodes(const Print &print)
 	// If printing on a single extruder machine, make the tool changes trigger color change (M600) events.
 	bool 						tool_changes_as_color_changes = mode == CustomGCode::SingleExtruder && model_mode == CustomGCode::MultiAsSingle;
 
+	// Forca: a mid-layer pause goes to the layer nearest its print_z, within half a layer height. One that no layer
+	// matches is dropped here; GCode::process_layer warns only about those it could not place on their layer.
+	for (const CustomGCode::Item &item : custom_gcode_per_print_z.gcodes) {
+		if (! item.is_mid_layer_pause())
+			continue;
+		auto it_lt = std::min_element(m_layer_tools.begin(), m_layer_tools.end(), [&item](const LayerTools &a, const LayerTools &b) {
+			return std::abs(a.print_z - item.print_z) < std::abs(b.print_z - item.print_z); });
+		if (it_lt != m_layer_tools.end()) {
+			coordf_t print_z_below = it_lt == m_layer_tools.begin() ? 0. : std::prev(it_lt)->print_z;
+			if (std::abs(it_lt->print_z - item.print_z) < 0.5 * (it_lt->print_z - print_z_below) + EPSILON)
+				it_lt->mid_layer_pauses.push_back(&item);
+		}
+	}
+
 	// From the last layer to the first one:
     coordf_t print_z_above = std::numeric_limits<coordf_t>::lowest();
 	for (auto it_lt = m_layer_tools.rbegin(); it_lt != m_layer_tools.rend(); ++ it_lt) {
@@ -3423,7 +3442,8 @@ void ToolOrdering::assign_custom_gcodes(const Print &print)
 		for (; custom_gcode_it != custom_gcode_per_print_z.gcodes.rend() && (
             (print_z_above > lt.print_z && custom_gcode_it->print_z > 0.5 * (lt.print_z + print_z_above))
             || (top_layer && custom_gcode_it->print_z > lt.print_z + 0.0011)
-            || custom_gcode_it->type == CustomGCode::ToolChange); ++ custom_gcode_it) {}
+            || custom_gcode_it->type == CustomGCode::ToolChange
+            || custom_gcode_it->is_mid_layer_pause()); ++ custom_gcode_it) {}
         print_z_above = lt.print_z;
 		if (custom_gcode_it == custom_gcode_per_print_z.gcodes.rend())
 			// Custom G-codes were processed.

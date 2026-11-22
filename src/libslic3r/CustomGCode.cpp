@@ -28,6 +28,10 @@ void Item::from_json(const nlohmann::json& j) {
     j.at("extruder").get_to(extruder);
     if(j.contains("extra"))
         j.at("extra").get_to(extra);
+    if (j.contains("mid_layer_filament"))
+        j.at("mid_layer_filament").get_to(mid_layer_filament);
+    if (j.contains("mid_layer_occurrence"))
+        j.at("mid_layer_occurrence").get_to(mid_layer_occurrence);
 }
 
 void Info::from_json(const nlohmann::json& j) {

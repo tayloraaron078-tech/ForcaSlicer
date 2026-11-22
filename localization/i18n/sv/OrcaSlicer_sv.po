@@ -45323,6 +45323,50 @@ msgid "Printhead outline"
 msgstr "Skrivhuvudets kontur"
 
 # AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Lägg till paus vid färgbyte"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Tar bort pausen före detta färgbyte."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Pausar precis före det senaste färgbytet hit i detta lager. Filamentbytet och rensningen sker när du fortsätter."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Flytta reglaget till eller förbi ett färgbyte i detta lager för att pausa före det."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Pausen mitt i lagret på %1% mm utelämnades: det lagret byter inte längre till filament %2% där. Flytta det nedre reglaget till ett färgbyte i det lagret och lägg till pausen igen."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Paus mitt i detta lager, före bytet till filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Paus mitt i detta lager, före byte %1% till filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Ta bort pausen före bytet till filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Ta bort pausen före byte %1% till filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Tar bort denna paus mitt i lagret. Färgbytet finns kvar."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Mitt i lager"
+
+# AI Translated
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Visa alternativ vid import av STEP-fil"
 

@@ -43843,6 +43843,50 @@ msgid "Printhead outline"
 msgstr "Đường viền đầu in"
 
 # AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Thêm tạm dừng khi đổi màu"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Xóa tạm dừng trước lần đổi màu này."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Tạm dừng ngay trước lần đổi màu cuối cùng tính đến đây trên lớp này. Việc đổi filament và xả nhựa diễn ra sau khi bạn tiếp tục."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Di chuyển thanh trượt tới hoặc qua một lần đổi màu trên lớp này để tạm dừng trước nó."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Đã bỏ qua lần tạm dừng giữa lớp ở %1% mm: lớp đó không còn đổi sang filament %2% ở đó nữa. Di chuyển thanh trượt dưới tới một lần đổi màu trên lớp đó và thêm tạm dừng lại."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Tạm dừng giữa lớp này, trước khi đổi sang filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Tạm dừng giữa lớp này, trước lần đổi thứ %1% sang filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Xóa tạm dừng trước khi đổi sang filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Xóa tạm dừng trước lần đổi thứ %1% sang filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Xóa tạm dừng giữa lớp này. Lần đổi màu vẫn giữ nguyên."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Giữa lớp"
+
+# AI Translated
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Hiện tùy chọn khi nhập file STEP"
 

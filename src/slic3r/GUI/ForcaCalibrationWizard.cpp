@@ -1045,6 +1045,16 @@ std::string ForcaCalibrationWizard::selected_filament_name() const
     return bundle ? bundle->filaments.get_selected_preset_name() : std::string();
 }
 
+int ForcaCalibrationWizard::selected_filament_slot() const
+{
+    if (m_filament_choice) {
+        const int sel = m_filament_choice->GetSelection();
+        if (sel != wxNOT_FOUND && sel < static_cast<int>(m_project_filaments.size()))
+            return sel;
+    }
+    return 0;
+}
+
 ForcaCalibrationStore::Key ForcaCalibrationWizard::current_key() const
 {
     ForcaCalibrationStore::Key k;
@@ -1502,8 +1512,11 @@ bool ForcaCalibrationWizard::build_params_for_current_cal(Calib_Params& out, wxS
     return true;
 }
 
-void ForcaCalibrationWizard::launch_calib(const Calib_Params& params, bool skip_confirm)
+void ForcaCalibrationWizard::launch_calib(const Calib_Params& launch_params, bool skip_confirm)
 {
+    // The calibrations load this filament slot in the filament tab and print the test with it (Orca #17621).
+    Calib_Params params = launch_params;
+    params.filament_id  = selected_filament_slot();
     if (m_cal == Cal::Temperature)
         m_plater->calib_temp(params, skip_confirm);
     else if (m_cal == Cal::MaxVolSpeed)
@@ -1511,7 +1524,7 @@ void ForcaCalibrationWizard::launch_calib(const Calib_Params& params, bool skip_
     else if (m_cal == Cal::FlowRate && flow_is_weight())
         launch_weight_plate(skip_confirm);
     else if (m_cal == Cal::FlowRate) // m_flow_pass: classic coarse/fine, or YOLO Recommended/Perfectionist
-        m_plater->calib_flowrate(flow_is_yolo(), m_flow_pass, ipArchimedeanChords, skip_confirm);
+        m_plater->calib_flowrate(flow_is_yolo(), m_flow_pass, ipArchimedeanChords, params.filament_id, 0, skip_confirm);
     else if (m_cal == Cal::Retraction)
         m_plater->calib_retraction(params, skip_confirm);
     else if (m_cal == Cal::Shrinkage)

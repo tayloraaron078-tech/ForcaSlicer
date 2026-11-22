@@ -43213,6 +43213,50 @@ msgstr "Marqueu-ho perquè els botons \"Open in OrcaSlicer\" dels webs de models
 msgid "Printhead outline"
 msgstr "Contorn del capçal"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Afegeix una pausa al canvi de color"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Elimina la pausa abans d'aquest canvi de color."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Fa una pausa just abans de l'últim canvi de color fins aquí en aquesta capa. El canvi de filament i la seva purga es fan després de reprendre."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Mou el control lliscant fins a un canvi de color d'aquesta capa o més enllà per fer una pausa abans."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "S'ha omès la pausa al mig de la capa a %1% mm: aquesta capa ja no canvia al filament %2% en aquest punt. Mou el control lliscant inferior a un canvi de color d'aquesta capa i torna a afegir la pausa."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pausa al mig d'aquesta capa, abans del canvi al filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pausa al mig d'aquesta capa, abans del canvi núm. %1% al filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Eliminar la pausa abans del canvi al filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Eliminar la pausa abans del canvi núm. %1% al filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Elimina aquesta pausa al mig de la capa. El canvi de color es manté."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Mig de capa"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Mostra opcions en importar fitxers STEP"
 

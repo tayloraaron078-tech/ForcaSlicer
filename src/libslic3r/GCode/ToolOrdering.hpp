@@ -196,6 +196,8 @@ public:
     bool                        joins_wipe_tower_layer_below() const { return has_wipe_tower && wipe_tower_print_z != print_z; }
     // Custom G-code (color change, extruder switch, pause) to be performed before this layer starts to print.
     const CustomGCode::Item    *custom_gcode = nullptr;
+    // Forca: pauses in the middle of this layer, each just before one of its color changes (CustomGCode::Item).
+    std::vector<const CustomGCode::Item*> mid_layer_pauses;
 
     // 0-based mixed filament slot → 0-based resolved physical filament for this layer.
     // Populated by ToolOrdering::resolve_mixed_filaments(). Empty when no mixed filaments.

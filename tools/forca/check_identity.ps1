@@ -55,7 +55,7 @@ $must = @(
     @('src/slic3r/GUI/Plater.cpp',                  'SetTitle(m_project_name + " - " SLIC3R_APP_NAME)'),
     @('src/slic3r/GUI/MainFrame.cpp',               'wxBITMAP_TYPE_ICO), SLIC3R_APP_NAME)'),
     @('src/slic3r/GUI/WebGuideDialog.cpp',          'wxID_ANY, SLIC3R_APP_NAME, wxDefaultPosition'),
-    @('src/slic3r/GUI/WebUserLoginDialog.cpp',      'wxID_ANY, SLIC3R_APP_NAME)'),
+    @('src/slic3r/GUI/WebUserLoginDialog.cpp',      'wxID_ANY, SLIC3R_APP_NAME /* Forca */,'),
     # Upstream made the login-page text translatable (2026-10 merge): _u8L() goes through forca_brand(), which shows
     # "Forca Slicer" -- so check that the translated path is still used rather than a hard-coded "OrcaSlicer".
     @('src/slic3r/GUI/HttpServer.cpp',              '_u8L("You can return to OrcaSlicer'),

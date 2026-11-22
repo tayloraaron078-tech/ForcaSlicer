@@ -11,7 +11,7 @@ differently).
 - **Tested mainly on Bambu Lab printers** (mostly an H2S), plus an Elegoo OrangeStorm Giga (Klipper), a Snapmaker U1
   (stock firmware) and a stock Flashforge Adventurer 5M for the non-Bambu printer features. Other brands use OrcaSlicer's own code paths and should
   behave like OrcaSlicer, but haven't been tested with Forca's features.
-- **Built on OrcaSlicer's 2.6.0 development line** (its main branch, merged up to 15 November 2026, after
+- **Built on OrcaSlicer's 2.6.0 development line** (its main branch, merged up to 21 November 2026, after
   OrcaSlicer 2.5.0 was released), not a stable release. OrcaSlicer 2.5.0 calls projects saved in Forca newer and
   suggests an update; they still open.
   Some OrcaSlicer bugs that are fixed in newer Orca builds may still be here. Report them here anyway; we'll check and
@@ -20,6 +20,11 @@ differently).
   enable it in Preferences). Forca hasn't changed it.
 - **Forca's own screens are translated by machine** into all of OrcaSlicer's languages (corrections welcome). The rest of the app
   keeps OrcaSlicer's translations.
+
+## Pause in the middle of a layer
+- **Print-tested on a Bambu Lab H2S only**, where the pause parks the head. On other printers it runs the printer's
+  pause G-code after a retraction and a small lift; whether the head moves away depends on that G-code.
+- Print by object ignores pauses in the middle of a layer.
 
 ## Regional support interfaces
 - The top-Z gap is shared by all regions on an object (one gap for all regions; the filament can differ per region).

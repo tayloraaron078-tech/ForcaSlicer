@@ -43363,6 +43363,50 @@ msgstr "Zaškrtněte, aby tlačítka \"Open in OrcaSlicer\" na webech s modely o
 msgid "Printhead outline"
 msgstr "Obrys tiskové hlavy"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Přidat pauzu při změně barvy"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Odstranit pauzu před touto změnou barvy."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Pozastaví tisk těsně před poslední změnou barvy do tohoto místa v této vrstvě. Výměna filamentu a jeho čištění proběhnou po obnovení tisku."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Posuňte posuvník na změnu barvy v této vrstvě nebo za ni, abyste před ní pozastavili tisk."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Pauza uprostřed vrstvy ve výšce %1% mm byla vynechána: tato vrstva už tam nemění na filament %2%. Posuňte spodní posuvník na změnu barvy v této vrstvě a přidejte pauzu znovu."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pauza uprostřed této vrstvy, před výměnou na filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pauza uprostřed této vrstvy, před %1%. výměnou na filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Smazat pauzu před výměnou na filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Smazat pauzu před %1%. výměnou na filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Odstranit tuto pauzu uprostřed vrstvy. Změna barvy zůstane."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Uprostřed"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Zobrazit možnosti při importu souboru STEP"
 

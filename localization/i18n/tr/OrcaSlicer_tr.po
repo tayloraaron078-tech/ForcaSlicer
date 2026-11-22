@@ -42977,6 +42977,50 @@ msgstr "Model sitelerindeki \"Open in OrcaSlicer\" düğmelerinin modeli Forca'd
 msgid "Printhead outline"
 msgstr "Baskı kafası dış hatları"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Renk değişiminde duraklatma ekle"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Bu renk değişiminden önceki duraklatmayı kaldırır."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Bu katmanda buraya kadarki son renk değişiminden hemen önce duraklatır. Filament değişimi ve temizliği devam ettikten sonra yapılır."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Önünde duraklatmak için kaydırıcıyı bu katmandaki bir renk değişimine veya ötesine taşıyın."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "%1% mm'deki katmanın ortasındaki duraklatma atlandı: o katman artık orada filament %2%'ye geçmiyor. Alttaki kaydırıcıyı o katmandaki bir renk değişimine taşıyın ve duraklatmayı yeniden ekleyin."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Bu katmanın ortasında duraklatma, filament %1%'e geçişten önce"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Bu katmanın ortasında duraklatma, filament %2%'ye %1%. geçişten önce"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Filament %1%'e geçişten önceki duraklatmayı sil"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Filament %2%'ye %1%. geçişten önceki duraklatmayı sil"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Katmanın ortasındaki bu duraklatmayı kaldırır. Renk değişimi kalır."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Katman ortası"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "STEP dosyasını içe aktarırken seçenekleri göster"
 

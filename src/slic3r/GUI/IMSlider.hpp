@@ -9,8 +9,10 @@
 #include <vector>
 #include "libslic3r/CustomGCode.hpp"
 #include <string>
+#include <utility>
 #include <wx/event.h>
 #include <wx/slider.h>
+#include <wx/string.h>
 
 #include <set>
 
@@ -144,6 +146,24 @@ public:
     void on_change_color_mode(bool is_dark);
     void set_menu_enable(bool enable = true) { m_menu_enable = enable; }
 
+    // Forca: pauses in the middle of a layer (CustomGCode::Item::is_mid_layer_pause). The layer slider keeps them so
+    // that GetTicksValues() returns them along with its ticks. The moves slider shows and edits them through hooks
+    // GCodeViewer sets, as they are placed at the color changes of the G-code shown.
+    std::vector<CustomGCode::Item> &mid_layer_pauses() { return m_mid_layer_pauses; }
+    const std::vector<double>      &GetAlternateValues() const { return m_alternate_values; }
+    struct MidLayerPauseHooks
+    {
+        // Moves slider positions of the pauses on the layer shown.
+        std::function<std::vector<int>()> marks;
+        // For a moves slider position: -1 without a color change at or before it on its layer, otherwise whether
+        // that color change has a pause (1) or not (0).
+        std::function<int(int)>  state;
+        std::function<void(int)> add;
+        std::function<void(int)> remove;
+    };
+    void set_mid_layer_pause_hooks(MidLayerPauseHooks hooks) { m_mid_layer_pause_hooks = std::move(hooks); }
+    bool is_sequential_draw_mode() const { return m_draw_mode == dmSequentialFffPrint; }
+
 protected:
     void add_custom_gcode(std::string custom_gcode);
     void add_code_as_tick(CustomGCode::Type type, int selected_extruder = -1);
@@ -240,6 +260,16 @@ private:
     CustomGCode::Type        m_tick_change_event_type;
 
     std::vector<double> m_alternate_values;
+    std::vector<CustomGCode::Item> m_mid_layer_pauses;
+    MidLayerPauseHooks             m_mid_layer_pause_hooks;
+    void                           render_mid_layer_pause_menu(int value);
+    // Layer slider: indices into m_mid_layer_pauses of the pauses on the layer at tick, their tooltip lines, the
+    // marks on the layers that have them and the menu items that delete them.
+    std::vector<size_t>            mid_layer_pauses_at(int tick);
+    std::string                    mid_layer_pause_tooltip(int tick);
+    void                           draw_mid_layer_pause_marks(const ImRect &slideable_region);
+    void                           render_mid_layer_pause_delete_items();
+    void                           draw_label_block(const ImVec2 anchor, const wxString &label);
 
     char m_custom_gcode[1024] = { 0 }; //menu
     char m_layer_number[64] = { 0 }; //menu

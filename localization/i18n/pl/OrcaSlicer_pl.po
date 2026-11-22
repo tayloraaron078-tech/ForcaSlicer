@@ -43524,6 +43524,50 @@ msgid "Printhead outline"
 msgstr "Obrys głowicy"
 
 # AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Dodaj pauzę przy zmianie koloru"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Usuwa pauzę przed tą zmianą koloru."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Wstrzymuje tuż przed ostatnią zmianą koloru do tego miejsca na tej warstwie. Zmiana filamentu i jego czyszczenie nastąpią po wznowieniu."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Przesuń suwak do zmiany koloru na tej warstwie lub za nią, aby wstrzymać przed nią."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Pominięto pauzę w środku warstwy na %1% mm: ta warstwa nie zmienia już tam filamentu na %2%. Przesuń dolny suwak do zmiany koloru na tej warstwie i dodaj pauzę ponownie."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pauza w środku tej warstwy, przed zmianą na filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pauza w środku tej warstwy, przed %1%. zmianą na filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Usuń pauzę przed zmianą na filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Usuń pauzę przed %1%. zmianą na filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Usuwa tę pauzę w środku warstwy. Zmiana koloru pozostaje."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Środek warstwy"
+
+# AI Translated
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Pokaż opcje przy importowaniu pliku STEP"
 

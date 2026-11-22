@@ -42168,6 +42168,50 @@ msgstr "Marca esto para que los botones \"Open in OrcaSlicer\" de los sitios de 
 msgid "Printhead outline"
 msgstr "Contorno del cabezal"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Añadir pausa en el cambio de color"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Quita la pausa antes de este cambio de color."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Pausa justo antes del último cambio de color hasta aquí en esta capa. El cambio de filamento y su purga se hacen al reanudar."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Mueve el deslizador hasta un cambio de color de esta capa o más allá para pausar antes de él."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Se omitió la pausa en mitad de la capa a %1% mm: esa capa ya no cambia al filamento %2% en ese punto. Mueve el deslizador inferior a un cambio de color de esa capa y añade la pausa de nuevo."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pausa en mitad de esta capa, antes del cambio al filamento %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pausa en mitad de esta capa, antes del cambio n.º %1% al filamento %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Borrar la pausa antes del cambio al filamento %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Borrar la pausa antes del cambio n.º %1% al filamento %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Quita esta pausa en mitad de la capa. El cambio de color se mantiene."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Mitad de capa"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Mostrar opciones al importar archivos STEP"
 

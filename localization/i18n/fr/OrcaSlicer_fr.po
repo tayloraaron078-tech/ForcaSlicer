@@ -42105,6 +42105,50 @@ msgstr "Cochez ceci pour que les boutons \"Open in OrcaSlicer\" des sites de mod
 msgid "Printhead outline"
 msgstr "Contour de la tête d'impression"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Ajouter une pause au changement de couleur"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Supprime la pause avant ce changement de couleur."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Met en pause juste avant le dernier changement de couleur jusqu'ici sur cette couche. Le changement de filament et sa purge ont lieu après la reprise."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Déplacez le curseur jusqu'à un changement de couleur de cette couche ou au-delà pour faire une pause avant."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "La pause au milieu de la couche à %1% mm a été omise : cette couche ne passe plus au filament %2% à cet endroit. Placez le curseur du bas sur un changement de couleur de cette couche et ajoutez à nouveau la pause."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pause au milieu de cette couche, avant le passage au filament %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pause au milieu de cette couche, avant le passage n° %1% au filament %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Supprimer la pause avant le passage au filament %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Supprimer la pause avant le passage n° %1% au filament %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Supprime cette pause au milieu de la couche. Le changement de couleur reste."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Mi-couche"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Afficher les options lors de l'importation d'un fichier STEP"
 

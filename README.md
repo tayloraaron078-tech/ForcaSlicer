@@ -278,6 +278,10 @@ lets you pick a new one.
   affected.
 - **Import dialog file-type list:** "Supported files", "Model files without 3MF", 3MF, STL, STEP or OBJ; Forca
   remembers your choice. "Replace with 3D file" (right-click > More) has the same list and remembers its own choice.
+- **Pause in the middle of a layer, at a colour change:** in the Preview, move the bottom slider to a colour change,
+  right-click its handle and choose **Add Pause at Color Change**. The print stops after the old colour, before the
+  filament change, so you can clean strings first; the change and its purge run after you resume. The layer slider
+  marks the layer, and either slider's right-click menu deletes the pause.
 - **A pause or colour change left above the top of a print** (for example from a taller model the project used to
   hold) no longer fires on the last layer. The layer slider hides such marks, so they couldn't be seen or removed.
 - **The input shaping and cornering calibrations switch off overhang slowdown**, so it can't skew those tests.

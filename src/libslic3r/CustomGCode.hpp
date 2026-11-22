@@ -33,7 +33,9 @@ struct Item
                (rhs.type      == this->type       ) &&
                (rhs.extruder  == this->extruder   ) &&
                (rhs.color     == this->color      ) &&
-               (rhs.extra     == this->extra      );
+               (rhs.extra     == this->extra      ) &&
+               (rhs.mid_layer_filament   == this->mid_layer_filament  ) &&
+               (rhs.mid_layer_occurrence == this->mid_layer_occurrence);
     }
     bool operator!=(const Item& rhs) const { return ! (*this == rhs); }
     
@@ -47,6 +49,12 @@ struct Item
     std::string extra;      // this field is used for the extra data like :
                             // - G-code text for the Type::Custom 
                             // - message text for the Type::PausePrint
+    // Forca: a PausePrint with mid_layer_filament > 0 pauses in the middle of the layer at print_z, just before the
+    // color change to that 1-based filament (the mid_layer_occurrence-th change to it on that layer, from 0), so the
+    // whole change, purge included, runs after the print resumes. 0 is the usual pause at the start of the layer.
+    int         mid_layer_filament   = 0;
+    int         mid_layer_occurrence = 0;
+    bool        is_mid_layer_pause() const { return type == PausePrint && mid_layer_filament > 0; }
     void from_json(const nlohmann::json& j);
 };
 

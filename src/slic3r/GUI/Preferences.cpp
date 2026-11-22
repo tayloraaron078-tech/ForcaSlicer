@@ -5,6 +5,7 @@
 #include "ForcaOpenScadImport.hpp"
 #include "format.hpp"
 #include "ForcaReset.hpp"
+#include "slic3r/plugin/host/PluginPages.hpp"
 #include "CloudProvider.hpp"
 #include "ColorPickerDialog.hpp"
 #include "OptionsGroup.hpp"

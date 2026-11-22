@@ -152,6 +152,8 @@ private:
     wxString    format_result(double value) const; // "210 C", "PA 0.042", ... for the active calibration
     void        set_cal(Cal cal);              // switch calibration + sync the picker
     std::string selected_filament_name() const;
+    // 0-based project filament slot picked in the filament list (the calibrations print with it).
+    int selected_filament_slot() const;
     ForcaCalibrationStore::Key current_key() const;
     void        update_status_label();
     void        update_default_preset_name();

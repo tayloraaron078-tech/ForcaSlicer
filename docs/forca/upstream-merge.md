@@ -5,7 +5,7 @@ This is the step-by-step procedure for merging newer OrcaSlicer into Forca. Do i
 ## Ground rules
 
 - **`upstream` (OrcaSlicer) is pull-only** — never push to it. `origin` is Forca's own repo. Every `push` needs the maintainer's explicit approval.
-- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14, upstream `main` `a26501c0ed` on 2026-10-24, `baff031626` on 2026-10-25, `7ac46c9a61` on 2026-10-31, `c01ac8ff44` and then `d8807e03db` (the 2.6.0-dev line) on 2026-11-07, `b4a9565dee` on 2026-11-15. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
+- Forca's base is the `2.5.0-dev` line: originally pinned at `c0c2cc5068`, merged up to `8c03985818` on 2026-09-26, `78f74a6276` on 2026-10-06, `008ee792f6` (the base of upstream's `release/v2.5.0`) on 2026-10-14, upstream `main` `a26501c0ed` on 2026-10-24, `baff031626` on 2026-10-25, `7ac46c9a61` on 2026-10-31, `c01ac8ff44` and then `d8807e03db` (the 2.6.0-dev line) on 2026-11-07, `b4a9565dee` on 2026-11-15, `0a2cdfc1a3` on 2026-11-22. **Merge forward only** — a newer dev commit, or the `2.5.0` stable tag once it exists. Do not merge an *older* stable release (it would be a downgrade).
 - Never merge directly on `Multi_Interface`. Always use a throwaway merge branch so you can abort cleanly.
 - Builds are run locally by the maintainer; the exact build/run/log commands are in [§7](#7-rebuild-full) and [§8](#8-validate).
 
@@ -261,6 +261,35 @@ Forca's divergence falls into a few buckets. Resolve each the same way every tim
 - Dependencies: OpenSSL 3.5.9, libcurl 8.23.0 (#17293), OCCT built with precompiled headers and fewer toolkits
   (#17415), optional OpenVDB (#17401); the deps are rebuilt.
 - New upstream workflows under `.github/workflows` were removed with the rest.
+
+### Notes from the 2026-11-22 merge (`main` `0a2cdfc1a3`)
+
+- Volumetric feature speeds (#16299): `GCode::feature_speed()` turns a speed into mm/s from its `*_volumetric_flow`
+  when `enable_volumetric_speeds` is on, and `volumetric_speed_limit()` caps visible features at the filament's new
+  `filament_max_external_volumetric_speed`. Both read `forca_max_volumetric_speed()` (the object override first), and
+  Forca's filament bridge / 100% overhang speeds (`bridge_speed`, `overhang_wall_bridge_speed` in `_extrude`) go
+  through `feature_speed(..., bridge_volumetric_flow, ...)` like upstream's `FEATURE_SPEED(bridge, ...)`. Keep that if
+  upstream adds more direct `filament_max_volumetric_speed` reads in `_extrude`.
+- `process_layer`: upstream's `prepares_overhang_estimator(layer, overhang_fan)` counts a region's overhang speed for
+  any nozzle, as the parallel precompute does. Forca passes `overhang_estimator_for_all_regions()` (overhang fan or a
+  filament overhang speed) as that flag, in `process_layer` and in both pipelines.
+- Calibration filament choice (#17621): every `calib_*` loads `Calib_Params::filament_id` in the filament tab and
+  assigns the test object to it. Forca's `skip_confirm` comes after upstream's new `filament_id, extruder_id` in
+  `calib_flowrate`; `ForcaCalibrationWizard::launch_calib` sets `filament_id` to the slot picked in its filament list
+  (before the merge it passed `skip_confirm` positionally, which would now land in `filament_id`). `extruder_id`
+  stays 0 there.
+- `deps/wxWidgets`: upstream clones the fork in full (`GIT_SHALLOW OFF`); Forca's two STC submodules stay listed.
+- Brim filament per object (#17655) adds `brim_filament_id` to the object's first layer in `ToolOrdering`, next to
+  Forca's regional interface filaments.
+- `WebUserLoginDialog` got a resizable style; `check_identity.ps1` guards `SLIC3R_APP_NAME /* Forca */,` there now.
+- New upstream workflow `.github/workflows/unstale-on-comment.yml` and the changed ones stay deleted.
+- The Device tab is a `LazyPage<MonitorPanel>` built on first open (#17580); `MainFrame.hpp` only declares it, so a
+  Forca file that uses `m_monitor_page` includes `LazyPage.hpp` (`ForcaAIPrinters.cpp`).
+- OCCT: upstream replaced its seam patch (`0001-BRepMesh-seam-pcurve-selection.patch`); a kept OCCT source with the
+  old patch applied fails the patch step ("patch does not apply"). The old `deps/build/dep_OCCT-prefix` was renamed
+  `.stale-20261122` and OCCT rebuilt from the cached archive.
+- Upstream's new cloud-plugin update tests (`test_plugin_update.cpp`) download through Orca Cloud or check its token
+  store, so five of them skip with `FORCA_SKIP_IF_ORCA_CLOUD_OFF()`.
 
 ## 6. Regenerate the cosmetic layers
 

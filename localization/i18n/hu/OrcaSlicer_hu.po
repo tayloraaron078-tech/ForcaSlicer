@@ -43083,6 +43083,50 @@ msgstr "Jelölje be, hogy a modelloldalak \"Open in OrcaSlicer\" gombjai a Forc�
 msgid "Printhead outline"
 msgstr "Nyomtatófej körvonala"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Szünet hozzáadása a színváltásnál"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Eltávolítja a színváltás előtti szünetet."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Szünetel közvetlenül a réteg eddigi utolsó színváltása előtt. A filamentcsere és az öblítés a folytatás után történik."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Húzza a csúszkát a réteg egy színváltására vagy azon túl, hogy előtte szüneteljen."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "A %1% mm-es réteg közepén lévő szünet kimaradt: ez a réteg ott már nem vált a(z) %2%. filamentre. Húzza az alsó csúszkát a réteg egy színváltására, és adja hozzá újra a szünetet."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Szünet a réteg közepén, a(z) %1%. filamentre váltás előtt"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Szünet a réteg közepén, a(z) %2%. filamentre történő %1%. váltás előtt"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "A(z) %1%. filamentre váltás előtti szünet törlése"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "A(z) %2%. filamentre történő %1%. váltás előtti szünet törlése"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Eltávolítja ezt a réteg közepén lévő szünetet. A színváltás megmarad."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Rétegközép"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Beállítások megjelenítése STEP fájl importálásakor"
 

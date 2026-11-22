@@ -42931,6 +42931,50 @@ msgstr "Pažymėkite, kad modelių svetainių mygtukai \"Open in OrcaSlicer\" at
 msgid "Printhead outline"
 msgstr "Galvutės kontūras"
 
+# AI Translated
+msgid "Add Pause at Color Change"
+msgstr "Pridėti pauzę ties spalvos keitimu"
+
+# AI Translated
+msgid "Remove the pause before this color change."
+msgstr "Pašalinti pauzę prieš šį spalvos keitimą."
+
+# AI Translated
+msgid "Pause just before the last color change up to here on this layer. The filament change and its purge run after you resume."
+msgstr "Sustabdo prieš paskutinį šio sluoksnio spalvos keitimą iki šios vietos. Gijos keitimas ir jos išvalymas atliekami pratęsus."
+
+# AI Translated
+msgid "Move the slider to or past a color change on this layer to pause before it."
+msgstr "Perkelkite slankiklį iki šio sluoksnio spalvos keitimo arba už jo, kad sustabdytumėte prieš jį."
+
+# AI Translated
+msgid "The pause in the middle of the layer at %1% mm was left out: that layer no longer changes to filament %2% there. Move the bottom slider to a color change on that layer and add the pause again."
+msgstr "Pauzė %1% mm sluoksnio viduryje praleista: tas sluoksnis ten nebekeičia į giją %2%. Perkelkite apatinį slankiklį ties to sluoksnio spalvos keitimu ir vėl pridėkite pauzę."
+
+# AI Translated
+msgid "Pause in the middle of this layer, before the change to filament %1%"
+msgstr "Pauzė šio sluoksnio viduryje, prieš keitimą į giją %1%"
+
+# AI Translated
+msgid "Pause in the middle of this layer, before change %1% to filament %2%"
+msgstr "Pauzė šio sluoksnio viduryje, prieš %1%-ą keitimą į giją %2%"
+
+# AI Translated
+msgid "Delete Pause Before Change to Filament %1%"
+msgstr "Pašalinti pauzę prieš keitimą į giją %1%"
+
+# AI Translated
+msgid "Delete Pause Before Change %1% to Filament %2%"
+msgstr "Pašalinti pauzę prieš %1%-ą keitimą į giją %2%"
+
+# AI Translated
+msgid "Remove this pause in the middle of the layer. The color change stays."
+msgstr "Pašalinti šią pauzę sluoksnio viduryje. Spalvos keitimas lieka."
+
+# AI Translated
+msgid "Mid-layer"
+msgstr "Sluoksnio vidurys"
+
 #~ msgid "Show options when importing STEP file"
 #~ msgstr "Rodyti parinktis importuojant STEP failą"
 
